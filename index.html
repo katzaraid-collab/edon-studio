@@ -5,458 +5,431 @@
 <title>EDON – מדליקים לעסק שלך את הדיגיטל</title>
 <meta name="description" content="EDON – אתרים, אפליקציות לקביעת תורים, מיתוג ואינסטגרם לעסקים קטנים. מאפס ועד באוויר תוך 7 ימי עבודה.">
 <link rel="canonical" href="https://edon-studio.vercel.app/">
-<link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="/brand/icon.svg" type="image/svg+xml"><link rel="icon" href="/icon-192.png" sizes="192x192"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest">
 <meta property="og:title" content="EDON – מדליקים לעסק שלך את הדיגיטל">
 <meta property="og:description" content="אתרים, אפליקציות לקביעת תורים, מיתוג ואינסטגרם לעסקים קטנים. מאפס ועד באוויר תוך 7 ימי עבודה.">
 <meta property="og:image" content="https://edon-studio.vercel.app/og.jpg"><meta property="og:type" content="website"><meta property="og:url" content="https://edon-studio.vercel.app/"><meta property="og:locale" content="he_IL">
 <meta name="twitter:card" content="summary_large_image">
-<script>(function(){var h=document.documentElement;h.className='js';try{var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;var k='edon-on'+(h.dataset.theme?'-'+h.dataset.theme:'');if(rm||sessionStorage.getItem(k)||location.hash)h.className+=' on';else h.className+=' lock'}catch(e){h.className+=' on'}})();</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap">
+<script>(function(){var h=document.documentElement,m=true;h.classList.add('js');try{m=localStorage.getItem('edon-m')!=='calm'}catch(e){}if(m)h.classList.add('motion')})();</script>
+<link rel="preload" href="/fonts/heebo.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="/fonts/frank-ruhl.woff" as="font" type="font/woff" crossorigin>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"EDON","url":"https://edon-studio.vercel.app/","description":"אתרים, אפליקציות לקביעת תורים, מיתוג ואינסטגרם לעסקים קטנים.","sameAs":["https://instagram.com/edon.studio_"],"areaServed":"IL"}</script>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="/edon.css">
 </head><body>
-<a class="skip-link" href="#main">דילוג לתוכן</a>
-<div id="prog" aria-hidden="true"></div>
-<div id="cur" aria-hidden="true"></div>
-<div id="dark" aria-hidden="true"></div>
-<div class="hinttoast" id="hint" role="status"></div>
+<a class="skip" href="#main">דילוג לתוכן</a>
+<div class="prog" aria-hidden="true"><i></i></div>
 
-<!-- ===== intro ===== -->
-<div id="intro" role="dialog" aria-modal="true" aria-label="מסך פתיחה">
-  <div class="hud tl"><span class="corner"></span>EDON.STUDIO<br>BUILD 2026.10</div>
-  <div class="hud tr"><span class="corner"></span>STATUS<br><b id="ist">STANDBY</b></div>
-  <div class="hud bl">POWER<br><b>0%</b></div>
-  <div class="hud br">HE · IL<br>RTL READY</div>
-  <div class="boot" id="boot" aria-hidden="true"></div>
-  <div class="pw-wrap">
-    <div class="pw" id="pw" role="switch" aria-checked="false" tabindex="0" aria-label="החליקו או לחצו כדי להדליק את האתר">
-      <div class="track"><span class="lbl off">OFF</span><span class="lbl on">ON</span></div>
-      <div class="knob"><i></i></div>
-    </div>
-    <p class="hint"><span class="he">החליקו כדי להדליק.</span><span class="mono">slide to power on</span></p>
+<header class="top">
+  <a class="brand" href="#top" aria-label="EDON – לראש העמוד"><img class="logo" src="/brand/logo-dark.svg" alt="" width="94" height="22"></a>
+  <div class="tools">
+    <button class="chip msw" type="button" id="msw" aria-pressed="true" aria-label="תנועה מלאה" title="תנועה מלאה או רגועה"><span class="tk" aria-hidden="true"></span><span class="ml">תנועה</span></button>
+    <a class="chip ic" href="https://ig.me/m/edon.studio_" target="_blank" rel="noopener" aria-label="דברו איתנו באינסטגרם (נפתח בחלון חדש)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" class="f"/></svg></a>
+    <button class="chip ic mbtn" type="button" id="mbtn" aria-expanded="false" aria-controls="menu" aria-label="תפריט"><span class="burger" aria-hidden="true"><i></i><i></i></span></button>
   </div>
-  <button class="skip" id="skip" type="button">דילוג ←</button>
-  <div class="surge" id="surge" aria-hidden="true"></div>
-  <div class="bloom" id="bloom" aria-hidden="true"></div>
-  <div class="scan" aria-hidden="true"></div>
-</div>
+</header>
 
-
-<!-- ===== stories: swipe intro ===== -->
-<div id="stories" aria-label="הקדמה קצרה" hidden>
-  <div class="sbars" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-  <button class="sskip" id="sskip" type="button">דילוג ←</button>
-  <div class="sdeck" id="sdeck">
-    <section class="st" data-i="0">
-      <div class="svis v0" aria-hidden="true"><span class="bigsw"><i></i></span></div>
-      <div class="stxt"><span class="mono">01 / 04 · swipe</span><h2><span>היי. אנחנו EDON.</span></h2><p>סטודיו שבונה אתרים ואפליקציות לעסקים קטנים, ומדליק להם את הדיגיטל.</p></div>
-    </section>
-    <section class="st" data-i="1">
-      <div class="svis v1" aria-hidden="true"><div class="sgrid"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i></div><div class="stoast"><b>🔔</b>תור חדש נקבע · יום ג׳ · 15:20</div></div>
-      <div class="stxt"><span class="mono">02 / 04</span><h2><span>תורים שנקבעים לבד.</span></h2><p>הלקוח בוחר שירות, יום ושעה. אתם מקבלים התראה. בלי טלפון באמצע תספורת.</p></div>
-    </section>
-    <section class="st" data-i="2">
-      <div class="svis v2" aria-hidden="true"><div class="fan"><i class="c1">IG<small>פוסטים · רילסים · ביו</small></i><i class="c2">LOGO<small>לוגו · צבעים · פונטים</small></i><i class="c3">WEB<small>אתר · אפליקציה</small></i></div></div>
-      <div class="stxt"><span class="mono">03 / 04</span><h2><span>נראים כמו הליגה הגדולה.</span></h2><p>מיתוג, אינסטגרם ואתר שמדברים באותה שפה. מהלוגו ועד הכפתור האחרון.</p></div>
-    </section>
-    <section class="st" data-i="3">
-      <div class="svis v3" aria-hidden="true"><b class="scount"><span id="scount">01</span><small>days to launch</small></b></div>
-      <div class="stxt"><span class="mono">04 / 04</span><h2><span>מרעיון לאוויר ב־7 ימים.</span></h2><p>מחיר סגור מראש, עיצוב לאישור לפני שורת קוד אחת, וליווי גם אחרי.</p><button class="btn main" id="senter" type="button">להיכנס לאתר <span class="arr">←</span></button></div>
-    </section>
-  </div>
-  <div class="shint" id="shint"><i>←</i>החליקו שמאלה, או הקישו</div>
-</div>
-
-<header id="hdr"><div class="in bar">
-  <div class="logo" aria-label="EDON">ED<button class="o" id="torch" type="button" role="switch" aria-checked="false" aria-label="מצב פנס" title="מצב פנס"></button>N</div>
-  <nav aria-label="ניווט ראשי"><a href="#reel">מה בפנים</a><a href="#services">שירותים</a><a href="#why">למה אפליקציה</a><a href="#process">תהליך</a><a href="#work">עבודות</a><a href="#faq">שאלות</a></nav>
-  <div class="end">
-    <a class="ig" href="https://instagram.com/edon.studio_" target="_blank" rel="noopener" aria-label="EDON באינסטגרם"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg></a>
-    <a class="ig theme" href="x/" title="EDON X – הגרסה האימרסיבית" aria-label="מעבר ל־EDON X, הגרסה האימרסיבית של האתר"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg></a>
-    <a class="btn main sm" href="#contact">דברו איתנו</a>
-    <button class="burger" id="burger" type="button" aria-label="תפריט" aria-expanded="false" aria-controls="menu"><span></span></button>
-  </div>
-</div></header>
-<div id="menu" aria-hidden="true">
-  <a href="#reel" style="--i:0">מה בפנים<span class="mono">02</span></a>
-  <a href="#services" style="--i:1">שירותים<span class="mono">03</span></a>
-  <a href="#why" style="--i:2">למה אפליקציה<span class="mono">05</span></a>
-  <a href="#process" style="--i:3">תהליך<span class="mono">08</span></a>
-  <a href="#work" style="--i:4">עבודות<span class="mono">09</span></a>
-  <a href="#faq" style="--i:5">שאלות<span class="mono">11</span></a>
-  <a href="x/" style="--i:6">EDON X<span class="mono">✦</span></a>
-  <a class="btn main" href="#contact" style="--i:7">דברו איתנו <span class="arr">←</span></a>
-</div>
+<nav class="menu" id="menu" aria-label="ניווט ראשי" hidden>
+  <ol>
+    <li><a href="#app"><span class="mn">01</span>האפליקציה</a></li>
+    <li><a href="#inside"><span class="mn">02</span>מה בפנים</a></li>
+    <li><a href="#process"><span class="mn">03</span>איך זה עובד</a></li>
+    <li><a href="#work"><span class="mn">04</span>עבודות</a></li>
+    <li><a href="#services"><span class="mn">05</span>מחירים</a></li>
+    <li><a href="#faq"><span class="mn">06</span>שאלות</a></li>
+    <li><a href="#contact"><span class="mn">07</span>דברו איתנו</a></li>
+  </ol>
+  <p class="menu-foot"><a href="https://instagram.com/edon.studio_" target="_blank" rel="noopener" dir="ltr">@edon.studio_</a><span>א׳–ה׳ · 09:00–19:00</span></p>
+</nav>
 
 <main id="main">
-  <!-- ===== hero ===== -->
-  <div class="hero" id="top">
-    <div class="bg"></div><div class="glow" id="glow"></div>
-    <div class="in">
-      <div>
-        <p class="top" data-in style="--i:0"><span class="dot"></span><span class="mono">sys online</span><span>אתרים ואפליקציות לעסקים קטנים</span><span class="mono" id="clock"></span></p>
-        <h1><span class="ln"><span class="l1" id="l1">מדליקים לעסק שלך</span></span><span class="ln l2"><span class="lin">את ה<span id="rot">דיגיטל</span>.</span></span></h1>
-        <p class="sub" data-in style="--i:2">אתר, אפליקציה לקביעת תורים, מיתוג ועמוד אינסטגרם. בונים מאפס, מעלים לאוויר תוך 7 ימי עבודה ומלווים אתכם גם אחרי.</p>
-        <div class="ctas" data-in style="--i:3">
-          <a class="btn main" href="#services">לבדיקת מחיר <span class="arr">←</span></a>
-          <a class="btn line" href="#demo" id="tryDemo">לנסות את הדמו החי</a>
-        </div>
-        <div class="stats" data-in style="--i:4">
-          <div><b><span data-count="7">7</span></b><small>ימי עבודה, לכל היותר</small></div>
-          <div><b><span data-count="24">24</span>/7</b><small>הלקוחות קובעים לבד</small></div>
-          <div><b><span data-count="100">100</span>%</b><small>הקוד והדומיין שלכם</small></div>
-        </div>
-      </div>
-      <div class="stage" id="demo" data-in style="--i:2">
-        <p class="cap"><span class="mono">live demo</span><span>ככה נראית אפליקציית תורים של EDON ל<b id="capBiz">ברברשופ</b>. נסו לקבוע תור.</span></p>
-        <div class="dsw" id="dsw" role="tablist" aria-label="בחירת סוג העסק בדמו"></div>
-        <div class="devwrap">
-        <div class="ring" aria-hidden="true"></div>
-        <div class="dev">
-          <div class="notch"></div>
-          <div class="scr"><div class="app" aria-label="דמו של אפליקציית תורים">
-            <div class="sb"><span id="sbt">09:41</span><span class="r">●●● <span style="opacity:.7">5G</span> ▮</span></div>
-            <div class="top"><span class="av" id="aav">א</span><div><b id="aname">ברברשופ אלון</b><small id="asub">פתוח עכשיו · סוגר ב־19:00</small></div><span class="live">LIVE</span></div>
-            <div class="body" id="appBody"></div>
+
+<!-- 1 · power -->
+<section class="scene s-power" id="top" style="--lm:2.6;--lc:1.6" data-calm="pin" aria-labelledby="hero-h">
+  <div class="stick">
+    <div class="grid" aria-hidden="true"></div>
+    <div class="bloom" aria-hidden="true"></div>
+    <div class="pw-col">
+      <p class="kick" aria-hidden="true"><span class="dot"></span><span class="k-off">EDON · מצב המתנה</span><span class="k-on">EDON · דולק</span></p>
+      <button class="power" type="button" id="power-btn" aria-label="הדלקה: מעבר לתוכן">
+        <span class="trk"><span class="lit"></span><span class="lb off">OFF</span><span class="lb on">ON</span></span>
+        <span class="knob"><i></i></span>
+      </button>
+      <h1 class="hero-h" id="hero-h"><span class="ln"><span class="w">מדליקים</span> <span class="w">לעסק</span> <span class="w">שלך</span></span><span class="ln sf"><span class="w">את</span> <span class="w">הדיגיטל.</span></span></h1>
+      <p class="hero-sub">אתרים, אפליקציות לקביעת תורים, מיתוג ואינסטגרם לעסקים קטנים. מאפס ועד באוויר תוך 7 ימי עבודה.</p>
+      <div class="hero-cta"><a class="btn main mag" href="#services">לבדיקת מחיר</a><a class="btn line mag" href="#contact">דברו איתנו</a></div>
+    </div>
+    <p class="cue" aria-hidden="true"><span>גללו כדי להדליק</span><i></i></p>
+  </div>
+</section>
+
+<!-- 2 · manifesto -->
+<section class="scene s-mani" id="manifesto" style="--lm:2.4;--lc:1.5" data-calm="pin" aria-labelledby="mani-h">
+  <div class="stick"><div class="mani">
+    <h2 class="tag" id="mani-h"><span class="num" aria-hidden="true">00</span>למה אנחנו עושים את זה</h2>
+    <p class="mani-t" id="mani-t">אנחנו לא בונים אתרים כדי שיהיו. אנחנו בונים אותם כדי <em>שיעבדו</em>: שיביאו תורים גם כשאתם ישנים, שיחסכו לכם את הטלפונים באמצע היום, ושהעסק שלכם ייראה כמו עסק <em>שסומכים עליו</em> מהשנייה הראשונה.</p>
+    <p class="mani-sign"><img class="logo" src="/brand/logo-dark.svg" alt="EDON" width="94" height="22"><span>אתרים ואפליקציות לעסקים קטנים</span></p>
+  </div></div>
+</section>
+
+<!-- 3 · the phone -->
+<section class="scene s-app" id="app" style="--lm:6.6;--lc:4.2" data-calm="pin" aria-labelledby="app-h">
+  <div class="stick">
+    <h2 class="vh" id="app-h">ככה זה נראה אצל הלקוח שלכם</h2>
+    <div class="chaps">
+      <article class="chap" data-c="0">
+        <p class="cnum"><span class="num">01 / 03</span>דף עסק</p>
+        <h3 class="big"><span class="ln"><span>דף עסק</span></span><span class="ln sf"><span>שמביא פניות.</span></span></h3>
+        <p class="cdesc">חיוג, וואטסאפ, ניווט ושעות פעילות. הכל בלחיצה אחת מהנייד, במיתוג של העסק שלכם.</p>
+      </article>
+      <article class="chap" data-c="1">
+        <p class="cnum"><span class="num">02 / 03</span>קביעת תור</p>
+        <h3 class="big"><span class="ln"><span>תורים</span></span><span class="ln sf"><span>שנקבעים לבד.</span></span></h3>
+        <p class="cdesc">הלקוח בוחר שירות, יום ושעה. שלוש לחיצות, בלי הרשמה ובלי הורדה, ואתם מקבלים התראה.</p>
+      </article>
+      <article class="chap" data-c="2">
+        <p class="cnum"><span class="num">03 / 03</span>דשבורד</p>
+        <h3 class="big"><span class="ln"><span>כל העסק</span></span><span class="ln sf"><span>בכף היד.</span></span></h3>
+        <p class="cdesc">מי מגיע היום, כמה נכנס השבוע ומי ביטל. ומחירים ושעות שאתם מעדכנים בעצמכם.</p>
+      </article>
+    </div>
+
+    <div class="phwrap" aria-hidden="true">
+      <div class="shadow"></div>
+      <div class="bob"><div class="ph3d" id="ph">
+        <span class="layer" style="--z:-.42em"></span><span class="layer" style="--z:0em"></span><span class="layer" style="--z:.42em"></span>
+        <span class="edge l"></span><span class="edge r"></span><span class="edge t"></span><span class="edge b"></span>
+        <div class="face back"><div class="cam"><i></i><i></i><i></i></div><div class="blogo"><span class="o"></span><b>EDON</b></div></div>
+        <div class="face front"><div class="scr">
+          <span class="island"></span>
+          <div class="sbar"><span>09:41</span><span>5G ▮</span></div>
+
+          <div class="screen s0 on"><div class="scrin">
+            <div class="cover"><span class="av">א</span></div>
+            <div class="bz"><b>ברברשופ אלון</b><small>פתוח עכשיו · סוגר ב־19:00</small></div>
+            <div class="acts">
+              <span><i><svg viewBox="0 0 24 24"><path d="M6.6 3.5 9 3l1.6 4.2-2 1.4a12 12 0 0 0 6.8 6.8l1.4-2L21 15l-.5 2.4A2.6 2.6 0 0 1 18 19.6 15.6 15.6 0 0 1 4.4 6 2.6 2.6 0 0 1 6.6 3.5Z"/></svg></i>חיוג</span>
+              <span><i><svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 18.8L4 20Z"/></svg></i>וואטסאפ</span>
+              <span><i><svg viewBox="0 0 24 24"><path d="M3 11 21 3l-8 18-2-8-8-2Z"/></svg></i>ניווט</span>
+            </div>
+            <div class="hrs"><p><span>א׳–ה׳</span><b>09:00–19:00</b></p><p><span>ו׳</span><b>08:00–14:00</b></p><p><span>שבת</span><b>סגור</b></p></div>
+            <div class="gal"><i></i><i></i><i></i></div>
+            <span class="pcta">לקביעת תור</span>
           </div></div>
-          <div class="toast" id="toast" role="status" aria-live="polite"></div>
-        </div>
-        <aside class="owner" id="owner" aria-label="המסך של בעל העסק">
-          <span class="mono">owner view · צד בעל העסק</span>
-          <b class="oname" id="oname">ברברשופ אלון</b>
-          <div class="n"><b id="cnt">0</b><span id="olabel">תורים · היום</span></div>
-          <div class="rev"><span>הכנסה צפויה</span><b id="rev">₪0</b></div>
-          <div class="occ" aria-hidden="true"><i id="occ"></i></div><span class="occt" id="occt"></span>
-          <ul id="olist"></ul>
-        </aside>
-        </div>
-        <a class="btn line sm demo-cta" href="#contact" id="demoCta"><span>רוצים כזאת ל<b id="ctaBiz">ברברשופ</b>?</span><span class="arr">←</span></a>
-      </div>
-    </div>
-  </div>
 
-  <!-- ===== ticker ===== -->
-  <div class="tick" aria-hidden="true">
-    <div class="row">
-      <span>אפליקציות תורים<i>✦</i></span><span class="e">דפי עסק<i>✦</i></span><span>מיתוג<i>✦</i></span><span class="e">אינסטגרם<i>✦</i></span><span>7 ימי עבודה<i>✦</i></span><span class="e">הקוד שלכם<i>✦</i></span>
-      <span>אפליקציות תורים<i>✦</i></span><span class="e">דפי עסק<i>✦</i></span><span>מיתוג<i>✦</i></span><span class="e">אינסטגרם<i>✦</i></span><span>7 ימי עבודה<i>✦</i></span><span class="e">הקוד שלכם<i>✦</i></span>
-    </div>
-    <div class="row b">
-      <span>מספרות<i>●</i></span><span>שטיפות רכב<i>●</i></span><span>קוסמטיקה וציפורניים<i>●</i></span><span>סטודיו ומאמנים<i>●</i></span><span>קליניקות<i>●</i></span><span>מכוני יופי<i>●</i></span><span>בתי קפה ומאפיות<i>●</i></span><span>כל עסק שעובד עם תורים<i>●</i></span>
-      <span>מספרות<i>●</i></span><span>שטיפות רכב<i>●</i></span><span>קוסמטיקה וציפורניים<i>●</i></span><span>סטודיו ומאמנים<i>●</i></span><span>קליניקות<i>●</i></span><span>מכוני יופי<i>●</i></span><span>בתי קפה ומאפיות<i>●</i></span><span>כל עסק שעובד עם תורים<i>●</i></span>
-    </div>
-  </div>
+          <div class="screen s1"><div class="scrin">
+            <div class="ntf"><i><svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0-6 6v4l-2 3h16l-2-3V9a6 6 0 0 0-6-6Zm-2.2 15a2.3 2.3 0 0 0 4.4 0"/></svg></i><div><b>תור חדש נקבע</b><small>יוסי · יום ג׳ · 15:20</small></div></div>
+            <div class="bk-h"><b>בחרו יום ושעה</b><small>תספורת + זקן · 50 דק׳</small></div>
+            <div class="days"><span>היום</span><span>מחר</span><span class="on">ג׳</span><span>ד׳</span><span>ה׳</span></div>
+            <div class="slots">
+              <span>09:00</span><span class="x">09:40</span><span>10:20</span>
+              <span class="x">11:00</span><span>11:40</span><span>13:00</span>
+              <span>13:40</span><span class="x">14:20</span><span class="pk">15:20</span>
+              <span>16:00</span><span class="x">16:40</span><span>17:20</span>
+              <span>18:00</span><span>18:40</span><span class="x">19:20</span>
+            </div>
+            <span class="pcta">המשך לאישור</span>
+          </div></div>
 
+          <div class="screen s2"><div class="scrin">
+            <div class="db-h"><small>היום · יום ג׳</small><b>בוקר טוב, אלון</b></div>
+            <div class="kp"><p><b>8</b><small>תורים</small></p><p class="v"><b>₪640</b><small>צפוי</small></p><p><b>1</b><small>ביטול</small></p></div>
+            <div class="ch"><small>השבוע · ₪4,320</small><div class="bars"><i style="--h:40%"></i><i style="--h:62%"></i><i style="--h:38%"></i><i class="v" style="--h:92%"></i><i style="--h:58%"></i><i style="--h:74%"></i><i style="--h:24%"></i></div></div>
+            <ul class="ap"><li><span>יוסי · תספורת + זקן</span><b>15:20</b></li><li><span>דני · תספורת</span><b>14:20</b></li><li><span>רועי · עיצוב זקן</span><b>13:40</b></li></ul>
+          </div></div>
 
-  <!-- ===== manifesto ===== -->
-  <section id="manifesto" class="mani"><div class="sticky"><div class="in">
-    <p class="tag"><span class="mono">01 / manifesto</span>למה אנחנו עושים את זה</p>
-    <p class="mtext" id="mtext">אנחנו לא בונים אתרים כדי שיהיו. אנחנו בונים אותם כדי ש<em>יעבדו</em>: שיביאו תורים גם כשאתם ישנים, שיחסכו לכם את הטלפונים באמצע היום, ושהעסק שלכם ייראה כמו עסק ש<em>סומכים עליו</em> מהשנייה הראשונה.</p>
-    <p class="msig">EDON · סטודיו לאתרים ואפליקציות לעסקים קטנים</p>
-    <span class="bigbg" aria-hidden="true">EDON</span>
-  </div></div></section>
-
-  <!-- ===== showreel ===== -->
-  <section id="reel" class="reel"><div class="reelsticky">
-    <div class="in reelhead"><p class="tag"><span class="mono">02 / screens</span>מה בפנים</p><h2 class="gl">כל מה שהלקוח רואה. כל מה שאתם רואים.</h2></div>
-    <div class="track" id="reeltrack">
-      <figure data-reveal style="--i:0"><div class="frame"><div class="ms">
-        <div class="cover"><b>א</b></div><h5>ברברשופ אלון</h5><span class="mut">פתוח עכשיו · סוגר ב־19:00 · נתיבות</span>
-        <div class="btn3"><span>📞</span><span>💬</span><span>🧭</span></div>
-        <div class="card"><div class="list"><div><span>א׳–ה׳</span><i>09:00–19:00</i></div><div><span>ו׳</span><i>08:00–14:00</i></div><div><span>שבת</span><i>סגור</i></div></div></div>
-        <div class="cta">לקביעת תור</div>
-      </div></div><figcaption><b>דף העסק</b><span>חיוג, וואטסאפ, ווייז ושעות פעילות, בלחיצה אחת מהנייד.</span></figcaption></figure>
-      <figure data-reveal style="--i:1"><div class="frame"><div class="ms">
-        <h5>בחרו יום ושעה</h5><span class="mut">תספורת + זקן · 50 דק׳</span>
-        <div class="days"><i class="on">היום</i><i>מחר</i><i>ג׳</i><i>ד׳</i><i>ה׳</i></div>
-        <div class="grid"><i class="x">09:00</i><i>09:40</i><i class="x">10:20</i><i>11:00</i><i>11:40</i><i class="x">13:00</i><i class="m">13:40</i><i class="x">14:20</i><i>15:00</i><i>15:40</i><i class="x">16:20</i><i>17:00</i></div>
-        <div class="card mut">שעה שנתפסה נעלמת לכולם. אין תורים כפולים.</div>
-        <div class="cta">המשך לאישור</div>
-      </div></div><figcaption><b>קביעת תור</b><span>שירות, יום ושעה. שלוש לחיצות, בלי הרשמה ובלי הורדה.</span></figcaption></figure>
-      <figure data-reveal style="--i:2"><div class="frame"><div class="ms">
-        <h5>היום · יום ג׳</h5><span class="mut">דשבורד מנהל</span>
-        <div class="kpi"><div><b>8</b><span class="mut">תורים</span></div><div><b>₪640</b><span class="mut">צפוי</span></div><div><b>1</b><span class="mut">ביטול</span></div></div>
-        <div class="bars"><i style="--h:40%;--i:0"></i><i style="--h:60%;--i:1"></i><i style="--h:35%;--i:2"></i><i class="v" style="--h:90%;--i:3"></i><i style="--h:55%;--i:4"></i><i style="--h:70%;--i:5"></i><i style="--h:20%;--i:6"></i></div>
-        <div class="card"><div class="list"><div><span>יוסי · תספורת + זקן</span><i>15:20</i></div><div><span>דני · תספורת</span><i>14:20</i></div><div><span>רועי · עיצוב זקן</span><i>13:40</i></div></div></div>
-      </div></div><figcaption><b>דשבורד מנהל</b><span>מי מגיע היום, כמה נכנס השבוע, ומי ביטל. מהטלפון שלכם.</span></figcaption></figure>
-      <figure data-reveal style="--i:3"><div class="frame"><div class="ms">
-        <h5>לפני ואחרי ✨</h5><span class="mut">גררו את הפס</span>
-        <div class="ba2"><i></i><b></b><small class="l">לפני</small><small class="r">אחרי</small></div>
-        <div class="card mut">ניקוי וחיטוי ריפודים · 60 דק׳ · ₪140</div>
-        <div class="cta">לקבוע את זה</div>
-      </div></div><figcaption><b>גלריה ולפני/אחרי</b><span>העבודה שלכם מוכרת את עצמה. הלקוח רואה וקובע מאותו מסך.</span></figcaption></figure>
-      <figure data-reveal style="--i:4"><div class="frame"><div class="ms">
-        <h5>תזכורות אוטומטיות</h5><span class="mut">נשלחות לבד, יום לפני</span>
-        <div class="chat"><span>היי יוסי 👋 מזכירים: מחר ב־15:20 אצל אלון, תספורת + זקן.</span><span class="act"><b>מגיע ✓</b><b>שינוי</b></span><span class="me">מגיע ✓</span><span>מעולה, נתראה מחר!</span></div>
-        <div class="card mut">כל אישור מתעדכן אצלכם בדשבורד.</div>
-      </div></div><figcaption><b>תזכורת ללקוח</b><span>פחות הברזות, בלי להרים טלפון. הלקוח מאשר או משנה בלחיצה.</span></figcaption></figure>
-      <figure data-reveal style="--i:5"><div class="frame"><div class="ms">
-        <h5>מחירון</h5><span class="mut">מתעדכן מהדשבורד, בלי מתכנת</span>
-        <div class="price"><div><span>תספורת</span><b>₪80</b></div><div><span>עיצוב זקן</span><b>₪40</b></div><div><span>תספורת + זקן</span><b>₪110</b></div><div><span>תספורת ילד</span><b>₪60</b></div></div>
-        <span class="mut">גלריה</span><div class="gal"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-      </div></div><figcaption><b>מחירון וגלריה</b><span>משנים מחיר או מוסיפים תמונה בעצמכם. זה מופיע מיד.</span></figcaption></figure>
-    </div>
-    <div class="reeldots" id="reeldots" aria-hidden="true"></div>
-  </div></section>
-
-  <!-- ===== services / configurator ===== -->
-  <section id="services"><div class="in">
-    <div class="head" data-reveal><div><p class="tag"><span class="mono">03 / services</span>הכל תחת קורת גג אחת</p><h2 class="gl">בוחרים מה שצריך. רואים מחיר מיד.</h2></div>
-      <p class="sub">מחיר סגור מראש, עיצוב לאישור לפני שכותבים קוד ושני סבבי תיקונים בכל חבילה. הדליקו מה שרלוונטי לכם.</p></div>
-    <div class="cfg">
-      <div class="plans" id="plans">
-        <button class="plan" type="button" data-plan="page" aria-pressed="false" data-reveal style="--i:0">
-          <div class="ph"><span class="mono">01 · web</span><span class="tog" aria-hidden="true"></span></div>
-          <h3>דף עסק</h3><p>עמוד אחד מעוצב שמביא פניות מהנייד.</p>
-          <ul><li>כפתורי חיוג, וואטסאפ וניווט בוויז</li><li>מחירון, גלריה ושעות פעילות</li><li>חיבור לדומיין שלכם</li></ul>
-          <div class="pf"><span>החל מ־</span><b>₪1,490</b></div>
-        </button>
-        <button class="plan" type="button" data-plan="app" aria-pressed="true" data-reveal style="--i:1">
-          <span class="chip">הכי מבוקש</span>
-          <div class="ph"><span class="mono">02 · app</span><span class="tog" aria-hidden="true"></span></div>
-          <h3>אפליקציית תורים</h3><p>הלקוח בוחר שירות, יום ושעה. אתם מקבלים התראה.</p>
-          <ul><li>שעות תפוסות נחסמות לכולם</li><li>דשבורד מנהל והתראות פוש</li><li>התקנה למסך הבית, בלי חנות</li></ul>
-          <div class="pf"><span>החל מ־</span><b>₪3,490</b></div>
-        </button>
-        <button class="plan" type="button" data-plan="brand" aria-pressed="false" data-reveal style="--i:2">
-          <div class="ph"><span class="mono">03 · brand</span><span class="tog" aria-hidden="true"></span></div>
-          <h3>מיתוג ואינסטגרם</h3><p>שהעסק ייראה אותו דבר בכל מקום.</p>
-          <ul><li>לוגו, צבעים ופונטים</li><li>ביו, תמונת פרופיל ו־6 כיסויים</li><li>6 פוסטים להשקה ו־2 רילסים</li></ul>
-          <div class="pf"><span>החל מ־</span><b>₪1,990</b></div>
-        </button>
-        <button class="plan care" type="button" data-plan="care" aria-pressed="false" data-reveal style="--i:3">
-          <span class="tog" aria-hidden="true"></span>
-          <div><h3>ליווי חודשי</h3><p>אחסון, גיבוי, תמיכה ועדכוני תוכן קטנים. בלי התחייבות.</p></div>
-          <div class="pf"><b>₪149</b><small>/ לחודש</small></div>
-        </button>
-      </div>
-      <aside class="bill" id="bill" data-reveal style="--i:2" aria-live="polite">
-        <h3>ההצעה שלכם <span class="mono">quote</span></h3>
-        <ul id="lines"></ul>
-        <div class="tot"><span>סה״כ חד־פעמי</span><b id="total">₪3,490</b></div>
-        <div class="promo"><span>מבצע השקה · 3 העסקים הראשונים · 30%</span><b id="promo">₪2,440</b></div>
-        <a class="btn main" href="#contact" id="quote">לקבל הצעה סגורה <span class="arr">←</span></a>
-        <p class="fine">המחיר הסופי נסגר אחרי שיחת אפיון של 20 דקות. בלי הפתעות אחר כך.</p>
-      </aside>
-    </div>
-  </div></section>
-  <div class="cfgbar" id="cfgbar"><div><b id="total2">₪3,490</b><small id="sel2">אפליקציית תורים</small></div><a class="btn main" href="#bill">לפירוט ←</a></div>
-
-  <!-- ===== features ===== -->
-  <section id="features"><div class="in">
-    <div class="head" data-reveal><div><p class="tag"><span class="mono">04 / inside</span>מה נכנס באפליקציה</p><h2 class="gl">הדברים הקטנים שחוסכים לכם יום עבודה.</h2></div><p class="sub">כל אפליקציית תורים של EDON מגיעה עם זה מובנה. לא תוספות, לא "בגרסה הבאה".</p></div>
-    <div class="bento">
-      <article class="tile big" data-reveal style="--i:0"><div class="viz notif" aria-hidden="true"><i></i><i></i><i></i></div><h3>התראת פוש על כל תור וכל ביטול</h3><p>לטלפון שלכם, בשנייה שזה קורה. בלי לפתוח כלום.</p></article>
-      <article class="tile" data-reveal style="--i:1"><div class="viz slots" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i></div><h3>שעה שנתפסה נעלמת לכולם</h3><p>אפס תורים כפולים, גם כששלושה לקוחות מסתכלים באותו רגע.</p></article>
-      <article class="tile" data-reveal style="--i:2"><div class="viz remind" aria-hidden="true"><span class="cal"><b>15:20</b><small>מחר</small></span><span class="bell">🔔</span></div><h3>תזכורת אוטומטית יום לפני</h3><p>הלקוח מאשר או משנה בלחיצה. פחות הברזות.</p></article>
-      <article class="tile big" data-reveal style="--i:3"><div class="viz chart" data-l="השבוע · ₪4,320" aria-hidden="true"><i style="--h:40%;--i:0"></i><i style="--h:62%;--i:1"></i><i style="--h:38%;--i:2"></i><i class="v" style="--h:92%;--i:3"></i><i style="--h:58%;--i:4"></i><i style="--h:74%;--i:5"></i><i style="--h:24%;--i:6"></i></div><h3>דשבורד מנהל</h3><p>מי מגיע, כמה נכנס, מי ביטל. ועריכה של מחירים ושעות בעצמכם.</p></article>
-      <article class="tile" data-reveal style="--i:4"><div class="viz home" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><b>E</b><i></i><i></i></div><h3>התקנה למסך הבית, בלי חנות</h3><p>לינק אחד. בלי אישור של אפל או גוגל, והעדכונים מגיעים מיד.</p></article>
-      <article class="tile" data-reveal style="--i:5"><div class="viz wa" aria-hidden="true"><span class="bub">התור שלך אושר ליום ג׳ · 15:20 ✓</span><span class="ticks">✓✓</span></div><h3>אישור בוואטסאפ</h3><p>הלקוח מקבל אישור ברור, עם כפתור להוספה ליומן.</p></article>
-    </div>
-  </div></section>
-
-  <!-- ===== why ===== -->
-  <section class="why" id="why"><div class="in">
-    <p class="tag" data-reveal><span class="mono">05 / why</span>העובד הכי טוב שלכם</p>
-    <p class="big" data-reveal style="--i:1">האפליקציה שלכם היא <em>העובד הכי טוב</em> בעסק. היא לא מפספסת אף לקוח.</p>
-    <div class="duties">
-      <div class="duty" data-reveal style="--i:0"><div class="num"><span data-count="24">24</span>/7</div><b>עונה ב־2 בלילה</b><small>הלקוח קובע לבד, גם כשאתם ישנים.</small></div>
-      <div class="duty" data-reveal style="--i:1"><div class="num"><span data-count="3">3</span></div><b>לחיצות לתור</b><small>שירות, יום ושעה. זהו.</small></div>
-      <div class="duty" data-reveal style="--i:2"><div class="num"><span data-count="0">0</span></div><b>תורים כפולים</b><small>שעה שנתפסה נעלמת לכולם.</small></div>
-      <div class="duty" data-reveal style="--i:3"><div class="num"><span data-count="1">1</span><span style="font-size:.45em;margin-inline-start:.2em">שנ׳</span></div><b>עד שאתם יודעים</b><small>התראה לטלפון על כל תור וכל ביטול.</small></div>
-    </div>
-  </div></section>
-
-  <!-- ===== journey ===== -->
-  <section id="journey"><div class="in jwrap">
-    <div class="jhead" data-reveal>
-      <p class="tag"><span class="mono">06 / journey</span>מהצד של הלקוח</p>
-      <h2 class="gl">ככה זה נראה אצל הלקוח שלכם.</h2>
-      <p class="sub">מהלינק בביו ועד הביקורת בגוגל. עקבו אחרי הקו.</p>
-      <div class="jstat"><b><span data-count="0">0</span></b><span>שיחות טלפון בכל הדרך</span></div>
-    </div>
-    <ol class="jline" id="jline">
-      <li data-reveal><time>יום א׳ · 21:40</time><div class="jc cust"><small>הלקוח</small>לוחץ על הלינק בביו של האינסטגרם. בוחר "תספורת + זקן", יום ג׳, 15:20. שלוש לחיצות.</div></li>
-      <li data-reveal><time>21:40</time><div class="jc you"><small>אתם</small><span class="mini-toast">🔔 תור חדש נקבע · יוסי · ג׳ 15:20</span>בלי שיחה, בלי לרשום בפתק. השעה כבר חסומה לכל השאר.</div></li>
-      <li data-reveal><time>21:41</time><div class="jc cust bub"><small>הלקוח</small>"התור שלך נקבע ליום ג׳ ב־15:20 אצל אלון."<div class="acts"><span>＋ הוספה ליומן</span><span>ניווט בוויז</span></div></div></li>
-      <li data-reveal><time>יום ב׳ · 15:20</time><div class="jc cust bub"><small>תזכורת אוטומטית</small>"היי יוסי, מזכירים: מחר ב־15:20. מגיע?"<div class="acts"><span>מגיע ✓</span><span>שינוי</span></div></div></li>
-      <li data-reveal><time>יום ג׳ · 15:20</time><div class="jc you"><small>אתם</small>יוסי מגיע בזמן. אף אחד לא מחכה בחוץ כי השעה הייתה חסומה. בסוף התספורת, האפליקציה כבר מציעה לו את התור הבא.</div></li>
-      <li data-reveal><time>17:00</time><div class="jc cust bub"><small>הלקוח</small>"איך היה? <span class="star">★★★★★</span> נשמח לביקורת בגוגל" — בלחיצה אחת.</div></li>
-    </ol>
-  </div></section>
-
-  <!-- ===== before / after ===== -->
-  <section id="ba"><div class="in">
-    <div class="head" data-reveal><div><p class="tag"><span class="mono">07 / before – after</span>לפני ואחרי</p><h2 class="gl">ככה זה נראה היום. ככה זה ייראה מחר.</h2></div><p class="sub">הדליקו את המתג או גררו את הפס. משמאל: ניהול תורים בטלפון ובפתקים. מימין: אותו עסק עם אפליקציה של EDON.</p></div>
-    <div class="ba" id="baw" data-reveal>
-      <div class="pane after">
-        <div class="card">
-          <div class="acard v"><span class="ic">✓</span><div><b>תור חדש נקבע לבד</b><small>יוסי · יום ג׳ · 15:20 · תספורת + זקן</small></div></div>
-          <div class="acard"><span class="ic" style="background:#1d1d25;color:var(--volt)">⊘</span><div><b>השעה נחסמה לכולם</b><small>אין סיכוי לתור כפול</small></div></div>
-          <div class="acard"><span class="ic" style="background:#1d1d25;color:var(--volt)">🔔</span><div><b>קיבלתם התראה. לא הרמתם טלפון.</b><small>הלקוח קיבל תזכורת אוטומטית יום לפני</small></div></div>
-          <div class="acard"><span class="ic" style="background:#1d1d25;color:var(--volt)">7</span><div><b>7 תורים להיום</b><small>כולם במסך אחד, גם מהנייד</small></div></div>
-        </div>
-      </div>
-      <div class="pane before">
-        <div class="card">
-          <div class="miss"><span>📵</span>3 שיחות שלא נענו · באמצע תספורת</div>
-          <div class="bub">היי, יש מקום היום ב־16:00?<small>14:02</small></div>
-          <div class="bub me">סליחה שלא עניתי… 16:00 תפוס, אולי 16:30?<small>15:48</small></div>
-          <div class="bub">לא משנה, קבעתי במקום אחר 🙃<small>15:51</small></div>
-          <div class="note">יום ג׳ 15:00 — יוסי<br><s>יום ג׳ 15:00 — דני ??</s> תור כפול!!</div>
-        </div>
-      </div>
-      <input type="range" min="0" max="100" value="100" id="bar" aria-label="השוואה בין לפני ואחרי">
-      <div class="hd" aria-hidden="true"><i>⇆</i></div>
-      <div class="bsw"><span>לפני</span><button type="button" role="switch" aria-checked="false" id="baflip" aria-label="מעבר בין לפני לאחרי"><i></i></button><span class="v">אחרי · EDON</span></div>
-    </div>
-  </div></section>
-
-  <!-- ===== process ===== -->
-  <section id="process" class="proc"><div class="in">
-    <div class="head" data-reveal><div><p class="tag"><span class="mono">08 / process</span>איך זה עובד</p><h2 class="gl">מרעיון לאוויר בארבעה שלבים.</h2></div><p class="sub">7 ימי עבודה. רואים עיצוב מלא לפני שנכתבת שורת קוד אחת.</p></div>
-    <ol class="steps" id="steps">
-      <li data-reveal style="--i:0"><div class="n">01</div><h3>אפיון</h3><p>20 דקות על העסק, הלקוחות והמטרה. יוצאים עם הצעת מחיר סגורה.</p><small>DAY 01</small></li>
-      <li data-reveal style="--i:1"><div class="n">02</div><h3>עיצוב</h3><p>רואים את העיצוב המלא ומאשרים לפני שכותבים שורת קוד.</p><small>DAYS 02–03</small></li>
-      <li data-reveal style="--i:2"><div class="n">03</div><h3>פיתוח</h3><p>בונים, מחברים תורים והתראות ובודקים באייפון ובאנדרואיד.</p><small>DAYS 04–06</small></li>
-      <li data-reveal style="--i:3"><div class="n">04</div><h3>השקה וליווי</h3><p>דומיין, הדרכה קצרה ורילס שמסביר ללקוחות איך משתמשים.</p><small>DAY 07</small></li>
-    </ol>
-  </div></section>
-
-  <!-- ===== work ===== -->
-  <section id="work" style="padding-top:0"><div class="in">
-    <div class="head" data-reveal><div><p class="tag"><span class="mono">09 / work</span>מהעבודות שלנו</p><h2 class="gl">עבודות אחרונות.</h2></div></div>
-    <div class="work">
-      <article class="case" data-reveal style="--i:0">
-        <div class="txt">
-          <div class="kind"><span>אפליקציית תורים</span><span>מיתוג</span><span>אינסטגרם</span></div>
-          <h3><span class="mono">case 01 · netivot</span>Orel Detailing &amp; Car Wash</h3>
-          <p>שטיפת רכב בנתיבות. התורים נקבעו בטלפון ובהודעות, היום הלקוחות קובעים לבד מהנייד.</p>
-          <ul><li>שעות תפוסות נחסמות לכולם</li><li>התראת פוש על כל תור וביטול</li><li>דשבורד מנהל ואישור בוואטסאפ</li></ul>
-          <a class="btn line" href="https://orelcarwashing.vercel.app" target="_blank" rel="noopener">לאפליקציה החיה <svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
-        </div>
-        <div class="shot"><img alt="המסך הראשי של אפליקציית התורים של Orel Detailing" src="work/orel.webp" width="480" height="1066" loading="lazy" decoding="async"></div>
-      </article>
-      <article class="case" data-reveal style="--i:1">
-        <div class="txt">
-          <div class="kind"><span>מערכת ניהול</span><span>אפליקציית צוות</span></div>
-          <h3><span class="mono">case 02 · netivot</span>האופה</h3>
-          <p>בוטיק לחם בנתיבות. אפליקציה פנימית לצוות שמרכזת את ההזמנות, הייצור והאריזה במקום אחד.</p>
-          <ul><li>ניהול הזמנות</li><li>מעקב ייצור ואריזה</li><li>כניסה לצוות בקוד אישי מהמנהל</li></ul>
-          <a class="btn line" href="https://haofeapp.com/" target="_blank" rel="noopener">haofeapp.com <svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
-        </div>
-        <div class="shot ho" aria-hidden="true"><div class="scrn">
-          <span class="lg">ה</span><b>האופה</b><small>בוטיק לחם · נתיבות</small>
-          <span class="t">כניסה לצוות</span><small style="align-self:stretch;text-align:right">קוד אישי בן 12 ספרות</small>
-          <span class="code"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
-          <span class="go2">כניסה</span>
-          <small style="margin-top:6px">החיבור נשמר במכשיר ל־30 יום</small>
+          <span class="glare"></span>
         </div></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 · what's inside -->
+<section class="scene s-inside" id="inside" style="--lm:4.6;--lc:4.2" data-calm="pin" aria-labelledby="in-h">
+  <div class="stick">
+    <div class="in-copy">
+      <p class="tag"><span class="num">02</span>מה נכנס באפליקציה</p>
+      <h2 class="h2" id="in-h">הדברים הקטנים <em>שחוסכים לכם יום עבודה.</em></h2>
+      <ol class="feats">
+        <li class="ft on"><span class="n">01</span><div><h3>התראה על כל תור וכל ביטול</h3><p>לטלפון שלכם, בשנייה שזה קורה. בלי לפתוח כלום.</p></div></li>
+        <li class="ft"><span class="n">02</span><div><h3>שעה שנתפסה נעלמת לכולם</h3><p>אפס תורים כפולים, גם כששלושה לקוחות מסתכלים באותו רגע.</p></div></li>
+        <li class="ft"><span class="n">03</span><div><h3>תזכורת אוטומטית יום לפני</h3><p>הלקוח מאשר או משנה בלחיצה. פחות הברזות.</p></div></li>
+        <li class="ft"><span class="n">04</span><div><h3>דשבורד מנהל</h3><p>מי מגיע, כמה נכנס, מי ביטל. ועריכה של מחירים ושעות בעצמכם.</p></div></li>
+        <li class="ft"><span class="n">05</span><div><h3>התקנה למסך הבית, בלי חנות</h3><p>לינק אחד. בלי אישור של אפל או גוגל, והעדכונים מגיעים מיד.</p></div></li>
+        <li class="ft"><span class="n">06</span><div><h3>אישור בוואטסאפ</h3><p>הלקוח מקבל אישור ברור, עם כפתור להוספה ליומן.</p></div></li>
+      </ol>
+    </div>
+    <div class="panel" aria-hidden="true">
+      <span class="plabel">EDON · אפליקציה</span><span class="pcount"><b>01</b> / 06</span>
+      <span class="pidx">01</span>
+      <div class="pv on" data-v="0"><div class="pvb notifs">
+        <p><i></i><span><b>תור חדש נקבע</b><small>יוסי · ג׳ · 15:20</small></span><em>עכשיו</em></p>
+        <p><i class="c"></i><span><b>תור בוטל</b><small>דני · ד׳ · 11:40</small></span><em>לפני 4 דק׳</em></p>
+        <p><i></i><span><b>תור חדש נקבע</b><small>רועי · ה׳ · 09:00</small></span><em>לפני 12 דק׳</em></p>
+      </div></div>
+      <div class="pv" data-v="1"><div class="pvb pslots">
+        <span>09:00</span><span class="x">09:40</span><span>10:20</span><span class="x">11:00</span>
+        <span>11:40</span><span class="x">13:00</span><span class="pk">15:20</span><span>16:00</span>
+        <span class="x">16:40</span><span>17:20</span><span>18:00</span><span class="x">18:40</span>
+      </div></div>
+      <div class="pv" data-v="2"><div class="pvb premind">
+        <p class="msg">היי יוסי, מזכירים: מחר ב־15:20 אצל אלון, תספורת + זקן.</p>
+        <div class="rb"><span class="y">מגיע ✓</span><span>שינוי</span></div>
+      </div></div>
+      <div class="pv" data-v="3"><div class="pvb pchart">
+        <small>השבוע · ₪4,320</small>
+        <div class="bars"><i style="--h:38%"></i><i style="--h:60%"></i><i style="--h:44%"></i><i class="v" style="--h:94%"></i><i style="--h:56%"></i><i style="--h:72%"></i><i style="--h:26%"></i></div>
+      </div></div>
+      <div class="pv" data-v="4"><div class="pvb phome">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><b>E</b><i></i><i></i><i></i><i></i>
+      </div></div>
+      <div class="pv" data-v="5"><div class="pvb pwa">
+        <p class="bub">התור שלך אושר ליום ג׳ · 15:20 ✓<span class="tk">✓✓</span></p>
+        <span class="cal">＋ הוספה ליומן</span>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · before / after -->
+<section class="scene s-ba" id="ba" style="--lm:3;--lc:2.4" data-calm="pin" aria-labelledby="ba-h">
+  <div class="stick">
+    <div class="ba-head">
+      <p class="tag"><span class="num">03</span>לפני ואחרי</p>
+      <h2 class="h2" id="ba-h">ככה זה נראה היום. <em>ככה זה ייראה מחר.</em></h2>
+    </div>
+    <div class="ba-stage">
+      <div class="ba-side before" role="group" aria-label="לפני: ניהול תורים בטלפון ובפתקים">
+        <span class="ba-lb">לפני</span>
+        <div class="ba-items">
+          <p class="bi miss"><i aria-hidden="true">✕</i><span><b>3 שיחות שלא נענו</b><small>באמצע תספורת</small></span></p>
+          <div class="bi chat">
+            <p class="in">היי, יש מקום היום ב־16:00?<small>14:02</small></p>
+            <p class="out">סליחה שלא עניתי… 16:00 תפוס, אולי 16:30?<small>15:48</small></p>
+            <p class="in">לא משנה, קבעתי במקום אחר 🙃<small>15:51</small></p>
+          </div>
+          <div class="bi note"><p>יום ג׳ 15:00 — יוסי</p><p>יום ג׳ 15:00 — דני ??</p><b>תור כפול!!</b></div>
+        </div>
+      </div>
+      <div class="ba-side after" role="group" aria-label="אחרי: אותו עסק עם אפליקציה של EDON">
+        <span class="ba-lb">אחרי · EDON</span>
+        <div class="ba-items">
+          <p class="bi ok"><i aria-hidden="true">✓</i><span><b>תור חדש נקבע לבד</b><small>יוסי · יום ג׳ · 15:20 · תספורת + זקן</small></span></p>
+          <p class="bi ok"><i aria-hidden="true">⊘</i><span><b>השעה נחסמה לכולם</b><small>אין סיכוי לתור כפול</small></span></p>
+          <p class="bi ok"><i aria-hidden="true">●</i><span><b>קיבלתם התראה. לא הרמתם טלפון.</b><small>הלקוח קיבל תזכורת אוטומטית יום לפני</small></span></p>
+          <p class="bi ok big7"><i aria-hidden="true">7</i><span><b>7 תורים להיום</b><small>כולם במסך אחד, גם מהנייד</small></span></p>
+        </div>
+      </div>
+      <div class="ba-line" aria-hidden="true"><span class="ba-knob">⇆</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · process -->
+<section class="scene s-build" id="process" style="--lm:5" data-calm="flow" aria-labelledby="b-h">
+  <div class="stick">
+    <div class="b-top">
+      <p class="tag"><span class="num">04</span>איך זה עובד</p>
+      <h2 class="outline" id="b-h"><span class="o1">מרעיון לאוויר</span><span class="o2 sf">ב־7 ימים.</span></h2>
+    </div>
+    <div class="b-wrap"><ol class="b-track" id="track">
+      <li class="step"><span class="day">יום 1</span><span class="sn">01</span><h3>אפיון</h3><p>20 דקות על העסק, הלקוחות והמטרה. יוצאים עם הצעת מחיר סגורה.</p></li>
+      <li class="step"><span class="day">ימים 2–3</span><span class="sn">02</span><h3>עיצוב</h3><p>רואים את העיצוב המלא ומאשרים, לפני שנכתבת שורת קוד אחת.</p></li>
+      <li class="step"><span class="day">ימים 4–6</span><span class="sn">03</span><h3>פיתוח</h3><p>בונים, מחברים תורים והתראות ובודקים באייפון ובאנדרואיד.</p></li>
+      <li class="step"><span class="day">יום 7</span><span class="sn">04</span><h3>השקה וליווי</h3><p>דומיין, הדרכה קצרה ורילס שמסביר ללקוחות איך משתמשים.</p></li>
+      <li class="step end"><span class="day">יום 7 · באוויר</span><span class="sw-ic" aria-hidden="true"></span><h3>העסק שלכם באוויר.</h3><p>וגם אחרי ההשקה, אנחנו כאן לעדכונים ולתמיכה.</p></li>
+    </ol></div>
+    <div class="b-meter" aria-hidden="true"><span>יום <b id="dayn">1</b> מתוך 7</span><i><b></b></i></div>
+  </div>
+</section>
+
+<!-- 7 · work -->
+<section class="scene s-work" id="work" style="--lm:3.2" data-calm="flow" aria-labelledby="w-h">
+  <div class="stick">
+    <div class="w-title">
+      <p class="tag lite"><span class="num">05</span>מהעבודות שלנו</p>
+      <h2 class="w-h" id="w-h"><span>עבודות</span><span class="sf">שכבר באוויר.</span></h2>
+    </div>
+    <div class="fl f1" style="--r:-8deg" data-dx="-46" data-dy="-34" data-r0="-34" data-d="1.3" aria-hidden="true"><div class="orel"><img src="/work/orel.webp" alt="" width="480" height="1066" loading="lazy" decoding="async"></div></div>
+    <div class="fl f4" style="--r:5deg" data-dx="4" data-dy="-56" data-r0="28" data-d=".7" aria-hidden="true"><span class="live"><i></i>באוויר · נתיבות</span></div>
+    <div class="fl f3" style="--r:-3deg" data-dx="48" data-dy="-30" data-r0="22" data-d="1" aria-hidden="true"><div class="toast"><i></i><span><b>תור חדש נקבע</b><small>יום ג׳ · 15:20</small></span></div></div>
+    <div class="fl f2" style="--r:6deg" data-dx="50" data-dy="44" data-r0="30" data-d="1.4" aria-hidden="true"><div class="ofe"><span class="ol">ה</span><b>האופה</b><small>בוטיק לחם · נתיבות</small><span class="in">כניסה לצוות</span></div></div>
+    <div class="fl f6" style="--r:-5deg" data-dx="-50" data-dy="40" data-r0="-26" data-d=".9" aria-hidden="true"><p class="wbub">התור שלך אושר ✓<span>✓✓</span></p></div>
+    <div class="fl f5" style="--r:8deg" data-dx="-6" data-dy="58" data-r0="40" data-d="1.1" aria-hidden="true"><span class="slot">15:20</span></div>
+  </div>
+</section>
+
+<section class="cases" aria-label="פרויקטים">
+  <a class="case" href="https://orelcarwashing.vercel.app" target="_blank" rel="noopener" data-rv>
+    <span class="cn">01</span>
+    <h3>Orel Detailing &amp; Car Wash</h3>
+    <p>שטיפת רכב בנתיבות. התורים נקבעו בטלפון ובהודעות, והיום הלקוחות קובעים לבד מהנייד.</p>
+    <span class="go">לאפליקציה החיה <span aria-hidden="true">↖</span><span class="vh">(נפתח בחלון חדש)</span></span>
+  </a>
+  <a class="case" href="https://haofeapp.com/" target="_blank" rel="noopener" data-rv>
+    <span class="cn">02</span>
+    <h3>האופה</h3>
+    <p>בוטיק לחם בנתיבות. אפליקציה פנימית לצוות שמרכזת הזמנות, ייצור ואריזה במקום אחד.</p>
+    <span class="go">haofeapp.com <span aria-hidden="true">↖</span><span class="vh">(נפתח בחלון חדש)</span></span>
+  </a>
+  <a class="case next" href="#contact" data-rv>
+    <span class="cn">03</span>
+    <h3>המקום הבא שמור <em>לעסק שלכם.</em></h3>
+    <p>3 העסקים הראשונים מקבלים 30% הנחה, בתמורה להמלצה ולאישור להציג את העבודה.</p>
+    <span class="go">לשריון מקום <span aria-hidden="true">←</span></span>
+  </a>
+</section>
+
+<!-- 8 · services -->
+<section class="services" id="services" aria-labelledby="sv-h">
+  <div class="sv-head" data-rv>
+    <p class="tag"><span class="num">06</span>מחירים</p>
+    <h2 class="h2" id="sv-h">בוחרים מה שצריך. <em>רואים מחיר מיד.</em></h2>
+    <p class="lead">מחיר סגור מראש, עיצוב לאישור לפני שכותבים קוד ושני סבבי תיקונים בכל חבילה. הדליקו את מה שרלוונטי לכם.</p>
+  </div>
+  <div class="sv-grid">
+    <div class="plans">
+      <article class="plan" data-plan="page" data-rv>
+        <div class="pl-top"><span class="num">01</span><button class="psw" type="button" aria-pressed="false" aria-label="הוספת דף עסק להצעה"><i></i></button></div>
+        <h3>דף עסק</h3><p>עמוד אחד מעוצב שמביא פניות מהנייד.</p>
+        <ul><li>כפתורי חיוג, וואטסאפ וניווט בוויז</li><li>מחירון, גלריה ושעות פעילות</li><li>חיבור לדומיין שלכם</li></ul>
+        <p class="pr"><small>החל מ־</small>₪1,490</p>
       </article>
-      <div class="slot3" data-reveal>
-        <div><span class="mono">case 03 · slot available</span><h3>המקום הבא שמור לעסק שלכם.</h3><p>3 העסקים הראשונים מקבלים 30% הנחה, בתמורה להמלצה ולאישור להציג את העבודה כאן.</p></div>
-        <a class="btn main" href="#contact">לשריון מקום <span class="arr">←</span></a>
-      </div>
+      <article class="plan on" data-plan="app" data-rv>
+        <div class="pl-top"><span class="num">02</span><span class="badge">הכי מבוקש</span><button class="psw" type="button" aria-pressed="true" aria-label="הוספת אפליקציית תורים להצעה"><i></i></button></div>
+        <h3>אפליקציית תורים</h3><p>הלקוח בוחר שירות, יום ושעה. אתם מקבלים התראה.</p>
+        <ul><li>שעות תפוסות נחסמות לכולם</li><li>דשבורד מנהל והתראות פוש</li><li>התקנה למסך הבית, בלי חנות</li></ul>
+        <p class="pr"><small>החל מ־</small>₪3,490</p>
+      </article>
+      <article class="plan" data-plan="brand" data-rv>
+        <div class="pl-top"><span class="num">03</span><button class="psw" type="button" aria-pressed="false" aria-label="הוספת מיתוג ואינסטגרם להצעה"><i></i></button></div>
+        <h3>מיתוג ואינסטגרם</h3><p>שהעסק ייראה אותו דבר בכל מקום.</p>
+        <ul><li>לוגו, צבעים ופונטים</li><li>ביו, תמונת פרופיל ו־6 כיסויים</li><li>6 פוסטים להשקה ו־2 רילסים</li></ul>
+        <p class="pr"><small>החל מ־</small>₪1,990</p>
+      </article>
+      <article class="plan care" data-plan="care" data-rv>
+        <div class="pl-top"><span class="num">+</span><button class="psw" type="button" aria-pressed="false" aria-label="הוספת ליווי חודשי להצעה"><i></i></button></div>
+        <h3>ליווי חודשי</h3><p>אחסון, גיבוי, תמיכה ועדכוני תוכן קטנים. בלי התחייבות.</p>
+        <p class="pr">₪149<small> / לחודש</small></p>
+      </article>
     </div>
-  </div></section>
+    <aside class="bill" id="bill" aria-labelledby="bill-h" data-rv>
+      <h3 id="bill-h">ההצעה שלכם</h3>
+      <ul class="lines" id="lines"></ul>
+      <div class="tot"><span>סה״כ חד־פעמי</span><b id="total">₪3,490</b></div>
+      <div class="promo"><span>מבצע השקה · 3 העסקים הראשונים · 30%</span><b id="promo">₪2,440</b></div>
+      <p class="vh" id="bill-live" aria-live="polite"></p>
+      <a class="btn main mag" href="#contact" id="quote">לקבל הצעה סגורה <span aria-hidden="true">←</span></a>
+      <p class="fine">המחיר הסופי נסגר אחרי שיחת אפיון של 20 דקות. בלי הפתעות אחר כך.</p>
+    </aside>
+  </div>
+</section>
 
-  <!-- ===== compare ===== -->
-  <section id="compare"><div class="in">
-    <div class="head" data-reveal><div><p class="tag"><span class="mono">10 / compare</span>בכנות</p><h2 class="gl">למה לא פשוט וואטסאפ, או מערכת במנוי?</h2></div><p class="sub">אפשר גם ככה. ככה זה נראה כשמשווים.</p></div>
-    <div class="cmp">
-      <div class="col" data-reveal style="--i:0"><h3>טלפון ווואטסאפ</h3><ul>
-        <li><span>מה זה עולה</span><b><i>₪</i>הזמן שלכם, כל יום</b></li>
-        <li><span>מיתוג</span><b><i>–</i>אין</b></li>
-        <li><span>תורים כפולים</span><b><i class="n">✕</i>קורה</b></li>
-        <li><span>מה הלקוח צריך לעשות</span><b><i>–</i>להתקשר ולחכות</b></li>
-        <li><span>הקוד והנתונים</span><b><i>–</i>בפתקים ובצ׳אטים</b></li>
-        <li><span>תמיכה</span><b><i>–</i>אתם</b></li>
-      </ul></div>
-      <div class="col" data-reveal style="--i:1"><h3>מערכת תורים במנוי</h3><ul>
-        <li><span>מה זה עולה</span><b><i>₪</i>מנוי חודשי, לתמיד</b></li>
-        <li><span>מיתוג</span><b><i>–</i>לרוב משותף עם הלוגו שלהם</b></li>
-        <li><span>תורים כפולים</span><b><i class="y">✓</i>לא</b></li>
-        <li><span>מה הלקוח צריך לעשות</span><b><i>–</i>להירשם או להוריד אפליקציה</b></li>
-        <li><span>הקוד והנתונים</span><b><i>–</i>שלהם</b></li>
-        <li><span>תמיכה</span><b><i>–</i>צ׳אט או טיקט</b></li>
-      </ul></div>
-      <div class="col hot" data-reveal style="--i:2"><span class="chip">EDON</span><h3>אפליקציה משלכם</h3><ul>
-        <li><span>מה זה עולה</span><b><i class="y">✓</i>תשלום חד־פעמי. ליווי לבחירה.</b></li>
-        <li><span>מיתוג</span><b><i class="y">✓</i>רק שלכם. לוגו, צבעים, שם.</b></li>
-        <li><span>תורים כפולים</span><b><i class="y">✓</i>לא</b></li>
-        <li><span>מה הלקוח צריך לעשות</span><b><i class="y">✓</i>ללחוץ על לינק</b></li>
-        <li><span>הקוד והנתונים</span><b><i class="y">✓</i>שלכם, 100%</b></li>
-        <li><span>תמיכה</span><b><i class="y">✓</i>בן אדם, בדיירקט</b></li>
-      </ul></div>
-    </div>
-  </div></section>
+<div class="pbar" id="pbar2" aria-hidden="true"><span><small>ההצעה שלכם</small><b id="total2">₪3,490</b></span><a href="#bill" tabindex="-1">לסיכום <span>↓</span></a></div>
 
-  <!-- ===== faq ===== -->
-  <section id="faq" style="padding-top:0"><div class="in faqw">
-    <div data-reveal><p class="tag"><span class="mono">11 / faq</span>לפני שמתחילים</p><h2 class="gl">שאלות שעסקים שואלים.</h2></div>
-    <div class="faq" id="faqs" data-reveal>
-      <div class="q"><button type="button" aria-expanded="false">צריך להוריד את האפליקציה מחנות?<i>+</i></button><div class="a"><div><p>לא. הלקוחות נכנסים מלינק ומוסיפים את האפליקציה למסך הבית בשתי לחיצות. אין צורך באישור של אפל או גוגל, והעדכונים מגיעים מיד.</p></div></div></div>
-      <div class="q"><button type="button" aria-expanded="false">כמה זמן זה לוקח?<i>+</i></button><div class="a"><div><p>עד 7 ימי עבודה מרגע אישור העיצוב, תלוי בחבילה. דף עסק עולה לאוויר מהר יותר, חבילה מלאה עם מיתוג לוקחת את כל השבוע.</p></div></div></div>
-      <div class="q"><button type="button" aria-expanded="false">כמה זה עולה לי כל חודש?<i>+</i></button><div class="a"><div><p>האחסון הבסיסי חינמי. ליווי חודשי של ₪149 כולל תמיכה, גיבוי ועדכוני תוכן. דומיין משלכם עולה בערך ₪50–130 לשנה, תלוי בסיומת.</p></div></div></div>
-      <div class="q"><button type="button" aria-expanded="false">מה אם אני רוצה לשנות משהו אחרי שעלינו לאוויר?<i>+</i></button><div class="a"><div><p>שינויים קטנים כמו מחירים, שעות או תמונות כלולים בליווי החודשי. תוספות גדולות מקבלות הצעת מחיר נפרדת מראש.</p></div></div></div>
-      <div class="q"><button type="button" aria-expanded="false">האתר שייך לי?<i>+</i></button><div class="a"><div><p>כן. הקוד, הדומיין והתוכן רשומים על שמכם, ואפשר לקבל את כל הקבצים בכל רגע.</p></div></div></div>
-      <div class="q"><button type="button" aria-expanded="false">איך משלמים?<i>+</i></button><div class="a"><div><p>50% מקדמה לפני תחילת העבודה ו־50% לפני העלאה לאוויר. מקבלים חשבונית על כל תשלום.</p></div></div></div>
-    </div>
-  </div></section>
+<!-- 9 · why + compare -->
+<section class="compare" id="compare" aria-labelledby="why-h">
+  <p class="tag" data-rv><span class="num">07</span>בכנות</p>
+  <h2 class="why-h" id="why-h" data-rv>למה לא פשוט <span class="strike">וואטסאפ<svg class="scrib" viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 26 C 60 10, 120 34, 180 18 S 270 14, 296 22"/></svg></span>?</h2>
+  <p class="why-a" data-rv>כי האפליקציה היא <em>העובד הכי טוב</em> בעסק. היא לא מפספסת אף לקוח, גם בשתיים בלילה.</p>
+  <dl class="stats">
+    <div data-rv><dt>הלקוחות קובעים לבד</dt><dd><b data-to="24">24</b><small>/7</small></dd></div>
+    <div data-rv><dt>לחיצות עד שנקבע תור</dt><dd><b data-to="3">3</b></dd></div>
+    <div data-rv><dt>תורים כפולים</dt><dd><b data-to="0">0</b></dd></div>
+    <div data-rv><dt>ימי עבודה עד שזה באוויר</dt><dd><b data-to="7">7</b></dd></div>
+  </dl>
+  <div class="cmp">
+    <article class="opt" data-rv>
+      <h3>טלפון ווואטסאפ</h3>
+      <dl><div><dt>מה זה עולה</dt><dd>הזמן שלכם, כל יום</dd></div><div><dt>מיתוג</dt><dd>אין</dd></div><div><dt>תורים כפולים</dt><dd class="bad">קורה</dd></div><div><dt>מה הלקוח צריך לעשות</dt><dd>להתקשר ולחכות</dd></div><div><dt>הקוד והנתונים</dt><dd>בפתקים ובצ׳אטים</dd></div><div><dt>תמיכה</dt><dd>אתם</dd></div></dl>
+    </article>
+    <article class="opt" data-rv>
+      <h3>מערכת תורים במנוי</h3>
+      <dl><div><dt>מה זה עולה</dt><dd>מנוי חודשי, לתמיד</dd></div><div><dt>מיתוג</dt><dd>לרוב משותף עם הלוגו שלהם</dd></div><div><dt>תורים כפולים</dt><dd class="good">לא</dd></div><div><dt>מה הלקוח צריך לעשות</dt><dd>להירשם או להוריד אפליקציה</dd></div><div><dt>הקוד והנתונים</dt><dd>שלהם</dd></div><div><dt>תמיכה</dt><dd>צ׳אט או טיקט</dd></div></dl>
+    </article>
+    <article class="opt edon" data-rv>
+      <h3>EDON <small>אפליקציה משלכם</small></h3>
+      <dl><div><dt>מה זה עולה</dt><dd class="good">תשלום חד־פעמי. ליווי לבחירה.</dd></div><div><dt>מיתוג</dt><dd class="good">רק שלכם. לוגו, צבעים, שם.</dd></div><div><dt>תורים כפולים</dt><dd class="good">לא</dd></div><div><dt>מה הלקוח צריך לעשות</dt><dd class="good">ללחוץ על לינק</dd></div><div><dt>הקוד והנתונים</dt><dd class="good">שלכם, 100%</dd></div><div><dt>תמיכה</dt><dd class="good">בן אדם, בדיירקט</dd></div></dl>
+    </article>
+  </div>
+</section>
 
-  <!-- ===== contact ===== -->
-  <section id="contact"><div class="in contact">
-    <div data-reveal>
-      <p class="tag"><span class="mono">12 / contact</span>בואו נדליק</p>
-      <h2 class="gl">נשמח לבנות לכם את זה.</h2>
-      <p class="sub">כל הפניות מתנהלות בדיירקט באינסטגרם. שני שלבים, ההודעה נכתבת לבד, אתם רק שולחים. חוזרים אליכם תוך יום עבודה עם הצעה סגורה.</p>
-      <div class="ways">
-        <div><span>אינסטגרם</span><a href="https://instagram.com/edon.studio_" target="_blank" rel="noopener"><b>@edon.studio_</b></a></div>
-        <div><span>זמני מענה</span><span>א׳–ה׳ · 09:00–19:00</span></div>
-        <div><span>זמן תגובה</span><span>עד יום עבודה</span></div>
-      </div>
+<!-- 10 · faq -->
+<section class="faq" id="faq" aria-labelledby="faq-h">
+  <div class="faq-head" data-rv>
+    <p class="tag"><span class="num">08</span>לפני שמתחילים</p>
+    <h2 class="h2" id="faq-h">שאלות שעסקים <em>שואלים.</em></h2>
+  </div>
+  <div class="qs">
+    <div class="q" data-rv><h3><button type="button" id="q1" aria-expanded="false" aria-controls="a1">צריך להוריד את האפליקציה מחנות?<span class="pm" aria-hidden="true"></span></button></h3><div class="a" id="a1" role="region" aria-labelledby="q1"><div><p>לא. הלקוחות נכנסים מלינק ומוסיפים את האפליקציה למסך הבית בשתי לחיצות. אין צורך באישור של אפל או גוגל, והעדכונים מגיעים מיד.</p></div></div></div>
+    <div class="q" data-rv><h3><button type="button" id="q2" aria-expanded="false" aria-controls="a2">כמה זמן זה לוקח?<span class="pm" aria-hidden="true"></span></button></h3><div class="a" id="a2" role="region" aria-labelledby="q2"><div><p>עד 7 ימי עבודה מרגע אישור העיצוב, תלוי בחבילה. דף עסק עולה לאוויר מהר יותר, חבילה מלאה עם מיתוג לוקחת את כל השבוע.</p></div></div></div>
+    <div class="q" data-rv><h3><button type="button" id="q3" aria-expanded="false" aria-controls="a3">כמה זה עולה לי כל חודש?<span class="pm" aria-hidden="true"></span></button></h3><div class="a" id="a3" role="region" aria-labelledby="q3"><div><p>האחסון הבסיסי חינמי. ליווי חודשי של ₪149 כולל תמיכה, גיבוי ועדכוני תוכן. דומיין משלכם עולה בערך ₪50–130 לשנה, תלוי בסיומת.</p></div></div></div>
+    <div class="q" data-rv><h3><button type="button" id="q4" aria-expanded="false" aria-controls="a4">מה אם אני רוצה לשנות משהו אחרי שעלינו לאוויר?<span class="pm" aria-hidden="true"></span></button></h3><div class="a" id="a4" role="region" aria-labelledby="q4"><div><p>שינויים קטנים כמו מחירים, שעות או תמונות כלולים בליווי החודשי. תוספות גדולות מקבלות הצעת מחיר נפרדת מראש.</p></div></div></div>
+    <div class="q" data-rv><h3><button type="button" id="q5" aria-expanded="false" aria-controls="a5">האתר שייך לי?<span class="pm" aria-hidden="true"></span></button></h3><div class="a" id="a5" role="region" aria-labelledby="q5"><div><p>כן. הקוד, הדומיין והתוכן רשומים על שמכם, ואפשר לקבל את כל הקבצים בכל רגע.</p></div></div></div>
+    <div class="q" data-rv><h3><button type="button" id="q6" aria-expanded="false" aria-controls="a6">איך משלמים?<span class="pm" aria-hidden="true"></span></button></h3><div class="a" id="a6" role="region" aria-labelledby="q6"><div><p>50% מקדמה לפני תחילת העבודה ו־50% לפני העלאה לאוויר. מקבלים חשבונית על כל תשלום.</p></div></div></div>
+  </div>
+</section>
+
+<!-- 11 · contact -->
+<section class="contact" id="contact" aria-labelledby="cta-h">
+  <div class="ct-grid">
+    <div class="ct-head">
+      <p class="tag" data-rv><span class="num">09</span>בואו נדליק</p>
+      <h2 class="cta-h" id="cta-h" data-rv><span>הגיע התור</span><span class="sf">שלכם להידלק.</span></h2>
+      <p class="lead" data-rv>כל הפניות מתנהלות בדיירקט באינסטגרם. שני שלבים, ההודעה נכתבת לבד ואתם רק שולחים. חוזרים אליכם תוך יום עבודה עם הצעה סגורה.</p>
+      <ul class="ways" data-rv>
+        <li><span>אינסטגרם</span><a href="https://instagram.com/edon.studio_" target="_blank" rel="noopener" dir="ltr">@edon.studio_</a></li>
+        <li><span>זמני מענה</span><b>א׳–ה׳ · 09:00–19:00</b></li>
+        <li><span>זמן תגובה</span><b>עד יום עבודה</b></li>
+      </ul>
     </div>
-    <form class="form" id="f" novalidate data-reveal style="--i:1">
-      <div class="prog"><span id="stepl">שלב 1 מתוך 2</span><i id="pbar" style="--p:50%"></i></div>
-      <div id="s1">
-        <h3>מה תרצו לבנות?</h3>
-        <div class="opts" role="radiogroup" aria-label="סוג השירות">
-          <div class="opt"><input type="radio" name="svc" id="o1" value="אפליקציית תורים" checked><label for="o1"><b>אפליקציית תורים</b><span>החל מ־₪3,490</span></label></div>
-          <div class="opt"><input type="radio" name="svc" id="o2" value="דף עסק"><label for="o2"><b>דף עסק</b><span>החל מ־₪1,490</span></label></div>
-          <div class="opt"><input type="radio" name="svc" id="o3" value="מיתוג ואינסטגרם"><label for="o3"><b>מיתוג ואינסטגרם</b><span>החל מ־₪1,990</span></label></div>
-          <div class="opt"><input type="radio" name="svc" id="o4" value="הכל ביחד"><label for="o4"><b>הכל ביחד</b><span>החל מ־₪4,990</span></label></div>
+    <form class="form" id="f" novalidate data-rv>
+      <div class="fprog"><span id="stepl">שלב 1 מתוך 2</span><i><b id="pbar"></b></i></div>
+      <fieldset id="s1">
+        <legend>מה תרצו לבנות?</legend>
+        <div class="opts">
+          <label class="opt2"><input type="radio" name="svc" value="אפליקציית תורים" checked><span><b>אפליקציית תורים</b><small>החל מ־₪3,490</small></span></label>
+          <label class="opt2"><input type="radio" name="svc" value="דף עסק"><span><b>דף עסק</b><small>החל מ־₪1,490</small></span></label>
+          <label class="opt2"><input type="radio" name="svc" value="מיתוג ואינסטגרם"><span><b>מיתוג ואינסטגרם</b><small>החל מ־₪1,990</small></span></label>
+          <label class="opt2"><input type="radio" name="svc" value="הכל ביחד"><span><b>הכל ביחד</b><small>החל מ־₪4,990</small></span></label>
         </div>
-        <div class="nav2"><button class="btn main" type="button" id="next">המשך <span class="arr">←</span></button></div>
-      </div>
+        <div class="nav2"><button class="btn main" type="button" id="next">המשך <span aria-hidden="true">←</span></button></div>
+      </fieldset>
       <div id="s2" hidden>
-        <h3>ספרו לנו על העסק</h3>
+        <h3 class="fh">ספרו לנו על העסק</h3>
         <div class="fields">
-          <label for="fn">שם מלא<input type="text" id="fn" autocomplete="name" placeholder="ישראל ישראלי"></label>
-          <label for="fb">שם העסק ותחום<input type="text" id="fb" placeholder="לדוגמה: מספרה בנתיבות"></label>
-          <label for="fm">עוד משהו שכדאי שנדע (לא חובה)<textarea id="fm" placeholder="ימי פעילות, שירותים, דוגמאות שאהבתם…"></textarea></label>
+          <label for="fn">שם מלא<input type="text" id="fn" name="name" autocomplete="name" placeholder="ישראל ישראלי"></label>
+          <label for="fb">שם העסק ותחום<input type="text" id="fb" name="biz" placeholder="לדוגמה: מספרה בנתיבות"></label>
+          <label for="fm">עוד משהו שכדאי שנדע (לא חובה)<textarea id="fm" name="note" placeholder="ימי פעילות, שירותים, דוגמאות שאהבתם…"></textarea></label>
         </div>
-        <div class="nav2"><button class="btn line" type="button" id="back">→ חזרה</button><button class="btn main" type="submit">הכנת הודעה <span class="arr">←</span></button></div>
+        <div class="nav2"><button class="btn line" type="button" id="back"><span aria-hidden="true">→</span> חזרה</button><button class="btn main" type="submit">הכנת הודעה <span aria-hidden="true">←</span></button></div>
         <p class="status" id="st" role="status"></p>
         <div id="done" hidden>
-          <div class="dm"><div class="who"><i></i>אל <b>@edon.studio_</b></div><pre id="out"></pre></div>
-          <div class="nav2"><button class="btn line" type="button" id="cp">העתקת ההודעה</button><a class="btn main" href="https://ig.me/m/edon.studio_" target="_blank" rel="noopener" id="openig">העתקה ופתיחת הדיירקט <svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></div>
+          <div class="dm"><p class="who"><i aria-hidden="true"></i>אל <b dir="ltr">@edon.studio_</b></p><pre id="out"></pre></div>
+          <div class="nav2"><button class="btn line" type="button" id="cp">העתקת ההודעה</button><a class="btn main" href="https://ig.me/m/edon.studio_" target="_blank" rel="noopener" id="openig">העתקה ופתיחת הדיירקט<span class="vh"> (נפתח בחלון חדש)</span></a></div>
         </div>
       </div>
     </form>
-  </div></section>
+  </div>
+  <p class="offer" data-rv>✦ 3 העסקים הראשונים מקבלים 30% הנחה</p>
+  <div class="marq" aria-hidden="true"><div class="mq">
+    <span class="f">EDON</span><i class="mo"></i><span>EDON</span><i class="mo"></i><span class="f">EDON</span><i class="mo"></i><span>EDON</span><i class="mo"></i>
+    <span class="f">EDON</span><i class="mo"></i><span>EDON</span><i class="mo"></i><span class="f">EDON</span><i class="mo"></i><span>EDON</span><i class="mo"></i>
+  </div></div>
+</section>
 </main>
 
-<footer><div class="in">
-  <div class="fcols">
-    <div><div class="logo" aria-label="EDON">ED<span class="o" style="display:inline-block;pointer-events:none" aria-hidden="true"></span>N</div><p>אתרים, אפליקציות לקביעת תורים, מיתוג ואינסטגרם לעסקים קטנים.</p></div>
-    <div><h4>שירותים</h4><ul><li><a href="#services">אפליקציית תורים</a></li><li><a href="#services">דף עסק</a></li><li><a href="#services">מיתוג ואינסטגרם</a></li><li><a href="#services">ליווי חודשי</a></li></ul></div>
-    <div><h4>EDON</h4><ul><li><a href="#process">תהליך</a></li><li><a href="#work">עבודות</a></li><li><a href="#faq">שאלות</a></li></ul></div>
-    <div><h4>יצירת קשר</h4><ul><li><a href="https://instagram.com/edon.studio_" target="_blank" rel="noopener" style="direction:ltr;display:inline-block">@edon.studio_</a></li><li>א׳–ה׳ · 09:00–19:00</li></ul></div>
-  </div>
-  <div class="legal"><span>© 2026 EDON · מדליקים לעסק את הדיגיטל.</span><span class="mono"><span class="dot"></span>system online · <span id="clock2"></span></span></div>
-</div></footer>
+<footer class="foot">
+  <div class="f-brand"><img class="logo" src="/brand/logo-dark.svg" alt="EDON" width="120" height="28"><p>אתרים, אפליקציות לקביעת תורים, מיתוג ואינסטגרם לעסקים קטנים.</p></div>
+  <nav aria-label="קישורים בתחתית העמוד"><a href="#services">מחירים</a><a href="#process">איך זה עובד</a><a href="#work">עבודות</a><a href="#faq">שאלות</a><a href="/privacy.html">מדיניות פרטיות</a><a href="/accessibility.html">הצהרת נגישות</a><button type="button" class="linkbtn" data-consent-open>הגדרות עוגיות</button></nav>
+  <p class="cp">© 2026 EDON · מדליקים לעסק את הדיגיטל.</p>
+</footer>
 
-<script src="app.js" defer></script>
+<div class="mnote" id="mnote" role="region" aria-label="הודעה על תנועה" hidden>
+  <p>יש באתר הרבה תנועה. אם זה לא נוח לכם, אפשר להרגיע אותה בכל רגע מהמתג "תנועה" למעלה.</p>
+  <div><button type="button" class="nb y" id="mn-on">מעולה, תודה</button><button type="button" class="nb" id="mn-off">להרגיע את התנועה</button></div>
+</div>
+
+<script src="/consent.js" defer></script>
+<script src="/edon.js" defer></script>
 </body></html>

@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://edon-studio.vercel.app/sitemap.xml
