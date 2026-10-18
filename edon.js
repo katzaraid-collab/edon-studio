@@ -288,6 +288,7 @@ function tweenNum(el, to) {
 }
 safe(() => {
   const lines = $('#lines'), total = $('#total'), promo = $('#promo'), live = $('#bill-live'), total2 = $('#total2');
+  const pay1 = $('#pay1'), pay2 = $('#pay2'), pay3 = $('#pay3');
   total.dataset.v = 2490; promo.dataset.v = 1740; total2.dataset.v = 2490;
   let lt;
   function calc(announce) {
@@ -301,7 +302,10 @@ safe(() => {
     lines.innerHTML = html;
     const pr = Math.round(tot * .7 / 10) * 10;
     tweenNum(total, tot); tweenNum(promo, pr); tweenNum(total2, tot);
-    if (announce) { clearTimeout(lt); lt = setTimeout(() => { live.textContent = 'סה״כ חד־פעמי ' + ils(tot) + ', במבצע השקה ' + ils(pr) + '.'; }, 400); }
+    // payment terms: 50% deposit before work starts, 50% before launch
+    const p1 = Math.round(tot / 2);
+    pay1.textContent = ils(p1); pay2.textContent = ils(tot - p1); pay3.textContent = ils(tot);
+    if (announce) { clearTimeout(lt); lt = setTimeout(() => { live.textContent = 'סה״כ חד־פעמי ' + ils(tot) + ' בשני תשלומים של ' + ils(p1) + ' ו־' + ils(tot - p1) + '. במבצע השקה ' + ils(pr) + '.'; }, 400); }
   }
   $$('.plan').forEach(card => {
     const k = card.dataset.plan, b = $('.psw', card);
@@ -356,6 +360,12 @@ safe(() => {
       const bad = $(name.length < 2 ? '#fn' : '#fb'); bad.focus(); bad.setAttribute('aria-invalid', 'true'); replay(bad, 'nudge'); return;
     }
     $('#fn').removeAttribute('aria-invalid'); $('#fb').removeAttribute('aria-invalid');
+    const agree = $('#fa');
+    if (!agree.checked) {
+      $('#st').textContent = 'כדי להמשיך, סמנו שאתם מאשרים את השימוש בפרטים.';
+      agree.focus(); agree.setAttribute('aria-invalid', 'true'); replay(agree.closest('label'), 'nudge'); return;
+    }
+    agree.removeAttribute('aria-invalid');
     const svc = $('input[name=svc]:checked').value, extra = $('#fm').value.trim();
     $('#out').textContent = 'היי EDON, אני ' + name + ' מ' + biz + '.\nמעניין אותי: ' + svc + '.' + (extra ? '\n' + extra : '');
     $('#done').hidden = false; replay($('#done'), 'swap');

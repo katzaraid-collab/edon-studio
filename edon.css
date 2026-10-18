@@ -430,6 +430,12 @@ html:not(.motion) .fl{transform:rotate(var(--r))!important;opacity:1!important}
 .bill .btn.main{background:var(--ink);color:var(--fg);box-shadow:none}
 .bill .btn.main::before{background:#24242c}
 .fine{margin:12px 0 0;font-size:13px;color:var(--ink-soft);line-height:1.5}
+.fine a{color:var(--ink);font-weight:700}
+.pay{list-style:none;margin:12px 0 0;padding:0;font-size:13.5px;color:var(--ink-soft)}
+.pay li{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-top:1px solid rgba(11,11,16,.12)}
+.pay li:last-child{color:var(--ink);font-weight:700}
+.pay b{direction:ltr;font-weight:800;color:var(--ink)}
+.todo{background:var(--clay);color:var(--ink);padding:0 6px;border-radius:6px;font-weight:700}
 
 /* ---------- 9 · compare ---------- */
 .compare{max-width:1280px;margin:0 auto;padding:clamp(70px,12vh,150px) 20px clamp(60px,10vh,110px)}
@@ -514,6 +520,10 @@ html:not(.js) .a{grid-template-rows:1fr}html:not(.js) .a>div{visibility:visible}
 .nav2{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
 .nav2 .btn{flex:1}
 .status{margin:12px 0 0;min-height:1.4em;font-size:14px;color:var(--olive)}
+.fields .agree{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.5;color:var(--soft);cursor:pointer}
+.fields .agree input{flex:0 0 auto;width:20px;height:20px;margin:1px 0 0;accent-color:var(--olive);cursor:pointer}
+.fields .agree a{color:var(--olive-hi)}
+.fine2{margin:10px 0 0;font-size:13px;line-height:1.5;color:var(--muted)}
 .dm{margin-top:14px;padding:16px;border-radius:18px;background:var(--bg-2);border:1px solid var(--line-2)}
 .who{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:13px;color:var(--muted)}
 .who i{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--olive-hi),var(--olive-lo))}
