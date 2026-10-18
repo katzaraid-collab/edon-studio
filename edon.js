@@ -9,7 +9,6 @@ const map = (v, a, b) => clamp((v - a) / (b - a));
 const lerp = (a, b, t) => a + (b - a) * t;
 const eio = t => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const eout = t => 1 - Math.pow(1 - t, 3);
-const ils = n => '₪' + Math.round(n).toLocaleString('en-US');
 const mqRM = matchMedia('(prefers-reduced-motion: reduce)');
 const mqDesk = matchMedia('(min-width: 900px)');
 const FINE = matchMedia('(hover:hover) and (pointer:fine)').matches;
@@ -274,38 +273,24 @@ safe(() => {
   });
 });
 
-/* ---------- pricing ---------- */
-const CFG = { page: { n: 'דף עסק', p: 990 }, app: { n: 'אפליקציית תורים', p: 2490 }, brand: { n: 'מיתוג ואינסטגרם', p: 1490 }, care: { n: 'ליווי חודשי', p: 99 } };
+/* ---------- packages ---------- */
+const CFG = { page: { n: 'דף עסק' }, app: { n: 'אפליקציית תורים' }, brand: { n: 'מיתוג ואינסטגרם' }, care: { n: 'ליווי חודשי' } };
 const sel = new Set(['app']);
-let cfgState = { items: ['app'], total: 2490, care: false };
-function tweenNum(el, to) {
-  const from = +(el.dataset.v || to); el.dataset.v = to;
-  if (!motion || from === to) { el.textContent = ils(to); return; }
-  const t0 = performance.now(), dur = 650;
-  cancelAnimationFrame(el._r);
-  const tick = now => { const t = clamp((now - t0) / dur); el.textContent = ils(lerp(from, to, eout(t))); if (t < 1) el._r = requestAnimationFrame(tick); };
-  el._r = requestAnimationFrame(tick);
-}
+let cfgState = { items: ['app'], care: false };
 safe(() => {
-  const lines = $('#lines'), total = $('#total'), promo = $('#promo'), live = $('#bill-live'), total2 = $('#total2');
-  const pay1 = $('#pay1'), pay2 = $('#pay2'), pay3 = $('#pay3');
-  total.dataset.v = 2490; promo.dataset.v = 1740; total2.dataset.v = 2490;
+  const lines = $('#lines'), live = $('#bill-live'), count = $('#pcount');
   let lt;
   function calc(announce) {
-    const items = ['page', 'app', 'brand'].filter(k => sel.has(k));
-    const sub = items.reduce((a, k) => a + CFG[k].p, 0), bundle = sel.has('app') && sel.has('brand') ? 490 : 0, tot = sub - bundle;
-    cfgState = { items, bundle, total: tot, care: sel.has('care') };
-    let html = items.map(k => '<li><span>' + CFG[k].n + '</span><b>' + ils(CFG[k].p) + '</b></li>').join('');
-    if (bundle) html += '<li class="sv"><span>חבילה מלאה · אפליקציה + מיתוג</span><b>−' + ils(bundle) + '</b></li>';
-    if (sel.has('care')) html += '<li><span>ליווי חודשי</span><b>' + ils(CFG.care.p) + ' / חודש</b></li>';
-    if (!items.length) html += '<li class="em"><span>הדליקו לפחות שירות אחד כדי לראות מחיר. ליווי חודשי מצטרף לכל חבילה.</span></li>';
+    const items = ['page', 'app', 'brand'].filter(k => sel.has(k)), care = sel.has('care');
+    cfgState = { items, care };
+    let html = items.map(k => '<li><span>' + CFG[k].n + '</span><b aria-hidden="true">✓</b></li>').join('');
+    if (sel.has('app') && sel.has('brand')) html += '<li class="sv"><span>אפליקציה + מיתוג ביחד</span><b>מחיר חבילה</b></li>';
+    if (care) html += '<li><span>ליווי חודשי</span><b aria-hidden="true">✓</b></li>';
+    if (!items.length) html += '<li class="em"><span>הדליקו לפחות שירות אחד. ליווי חודשי מצטרף לכל חבילה.</span></li>';
     lines.innerHTML = html;
-    const pr = Math.round(tot * .7 / 10) * 10;
-    tweenNum(total, tot); tweenNum(promo, pr); tweenNum(total2, tot);
-    // payment terms: 50% deposit before work starts, 50% before launch
-    const p1 = Math.round(tot / 2);
-    pay1.textContent = ils(p1); pay2.textContent = ils(tot - p1); pay3.textContent = ils(tot);
-    if (announce) { clearTimeout(lt); lt = setTimeout(() => { live.textContent = 'סה״כ חד־פעמי ' + ils(tot) + ' בשני תשלומים של ' + ils(p1) + ' ו־' + ils(tot - p1) + '. במבצע השקה ' + ils(pr) + '.'; }, 400); }
+    const n = items.length + (care ? 1 : 0);
+    count.textContent = n === 1 ? 'שירות אחד' : n + ' שירותים';
+    if (announce) { clearTimeout(lt); lt = setTimeout(() => { live.textContent = n ? 'בחרתם: ' + items.concat(care ? ['care'] : []).map(k => CFG[k].n).join(', ') + '.' : 'לא נבחר שירות.'; }, 400); }
   }
   $$('.plan').forEach(card => {
     const k = card.dataset.plan, b = $('.psw', card);
@@ -339,11 +324,11 @@ function goStep(n) {
 }
 function prefill(fromCfg) {
   safe(() => {
-    const { items = [], care, total } = cfgState;
+    const { items = [], care } = cfgState;
     const pick = items.includes('app') && items.includes('brand') ? 'הכל ביחד' : items.includes('app') ? 'אפליקציית תורים' : items.includes('brand') ? 'מיתוג ואינסטגרם' : items.includes('page') ? 'דף עסק' : null;
     if (pick) { const r = $$('input[name=svc]').find(i => i.value === pick); if (r) r.checked = true; }
     if (fromCfg && items.length) {
-      $('#fm').value = 'הרכבתי באתר: ' + items.map(k => CFG[k].n).join(' + ') + (care ? ' + ליווי חודשי' : '') + ' (בערך ' + ils(total) + ').';
+      $('#fm').value = 'הרכבתי באתר: ' + items.map(k => CFG[k].n).join(' + ') + (care ? ' + ליווי חודשי' : '') + '.';
       goStep(2);
     }
   });
