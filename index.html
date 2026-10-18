@@ -622,6 +622,178 @@ html.on .owner{opacity:1;translate:0;scale:1;transition:opacity var(--t-3) var(-
   @keyframes bgpar{to{translate:0 120px}}
 }
 
+
+/* ============ manifesto: words light up with scroll ============ */
+.mani{padding:0;height:230vh;position:relative}
+.mani .sticky{position:sticky;top:0;height:100vh;height:100svh;display:flex;align-items:center;overflow:hidden}
+.mani .in{position:relative;width:100%}
+.mtext{font:800 clamp(26px,4.3vw,58px)/1.22 var(--he);letter-spacing:-.03em;margin:16px 0 0;max-width:24ch;text-wrap:pretty}
+.mtext .w{display:inline-block;opacity:clamp(.13,calc(var(--k,0) - var(--i)),1)}
+.mtext em{font-style:normal;color:var(--volt)}
+.mtext em .w{opacity:clamp(.22,calc(var(--k,0) - var(--i)),1)}
+.msig{margin:26px 0 0;color:var(--muted);font-size:15px;display:flex;align-items:center;gap:12px}
+.msig::before{content:"";width:40px;height:1px;background:var(--volt)}
+.bigbg{position:absolute;left:-2vw;bottom:-14vw;font:900 34vw/1 var(--he);letter-spacing:-.06em;color:transparent;-webkit-text-stroke:1px var(--line-2);pointer-events:none;translate:0 calc(var(--mp,0) * -16vw);direction:ltr;user-select:none;z-index:-1}
+
+/* ============ showreel: six screens ============ */
+.reel{padding:0;height:360vh;position:relative}
+.reelsticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:clamp(18px,3vh,36px);padding-top:68px}
+.reelhead{width:100%}
+.reelhead h2{font-size:clamp(30px,4vw,56px)}
+.track{display:flex;gap:28px;align-items:flex-start;padding-inline:max(32px,calc((100vw - 1200px)/2 + 32px));will-change:transform;direction:rtl;width:max-content}
+.track figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:14px;width:272px;flex:0 0 auto;scroll-snap-align:center}
+.track figcaption{text-align:center;max-width:26ch}
+.track figcaption b{display:block;font-size:17px;font-weight:800}
+.track figcaption span{color:var(--muted);font-size:14px}
+.reeldots{display:flex;gap:6px;justify-content:center}
+.reeldots i{width:6px;height:6px;border-radius:3px;background:var(--line-2);transition:width var(--t-3) var(--e-out),background var(--t-2)}
+.reeldots i.on{background:var(--volt);width:24px}
+.frame{height:min(540px,56vh);aspect-ratio:9/19;border-radius:34px;background:#000;padding:8px;box-shadow:0 0 0 1px var(--line-2),0 40px 90px -30px #000,0 0 70px -30px rgba(200,255,46,.3);flex:0 0 auto}
+.ms{height:100%;border-radius:27px;background:#0B0B0F;overflow:hidden;padding:30px 12px 12px;display:flex;flex-direction:column;gap:8px;font-size:11px;line-height:1.35;color:var(--fg);position:relative}
+.ms::before{content:"";position:absolute;top:8px;left:50%;translate:-50% 0;width:60px;height:16px;border-radius:999px;background:#000}
+.ms h5{margin:0;font-size:14px;font-weight:900;letter-spacing:-.01em}
+.ms .mut{color:var(--muted)}
+.ms .card{background:#14141a;border:1px solid #22222a;border-radius:12px;padding:8px 10px}
+.ms .btn3{display:flex;gap:6px}
+.ms .btn3 span{flex:1;background:#14141a;border:1px solid #22222a;border-radius:10px;padding:8px 0;text-align:center;font-size:14px}
+.ms .cta{background:var(--volt);color:var(--volt-fg);border-radius:10px;padding:9px;text-align:center;font-weight:800;font-size:12px;margin-top:auto}
+.ms .cover{height:66px;border-radius:12px;background:linear-gradient(135deg,#2a3314,#0f1a0a 60%,#1b1b22);position:relative;margin-bottom:12px}
+.ms .cover b{position:absolute;bottom:-14px;inset-inline-start:10px;width:34px;height:34px;border-radius:10px;background:var(--volt);color:var(--volt-fg);display:grid;place-items:center;font-size:16px}
+.ms .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.ms .grid i{border:1px solid #22222a;background:#14141a;border-radius:6px;padding:6px 0;text-align:center;font:700 9px var(--mono);font-style:normal;direction:ltr}
+.ms .grid i.x{opacity:.3;text-decoration:line-through}
+.ms .grid i.m{background:var(--volt);color:var(--volt-fg);border-color:var(--volt)}
+.ms .days{display:flex;gap:4px}
+.ms .days i{flex:1;border:1px solid #22222a;background:#14141a;border-radius:8px;padding:5px 0;text-align:center;font-style:normal;font-size:10px}
+.ms .days i.on{background:var(--volt);color:var(--volt-fg);border-color:var(--volt)}
+.ms .kpi{display:flex;gap:6px}
+.ms .kpi div{flex:1;background:#14141a;border:1px solid #22222a;border-radius:10px;padding:8px}
+.ms .kpi b{display:block;font:900 16px/1 var(--he);direction:ltr}
+.ms .bars{display:flex;align-items:flex-end;gap:5px;height:64px;padding-top:6px}
+.ms .bars i{flex:1;background:#24242b;border-radius:3px 3px 0 0;height:var(--h);transform-origin:bottom;scale:1 0;transition:scale .9s var(--e-out);transition-delay:calc(var(--i,0)*60ms)}
+.ms .bars i.v{background:var(--volt)}
+.on .ms .bars i{scale:1 1}
+.ms .list div{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1d1d24}
+.ms .list div:last-child{border:0}
+.ms .list i{font:400 10px var(--mono);font-style:normal;direction:ltr;color:var(--muted)}
+.ms .ba2{position:relative;height:150px;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#3a3a40,#1b1b20)}
+.ms .ba2 i{position:absolute;inset:0 50% 0 0;background:linear-gradient(135deg,#8a7a5a,#4a4a52)}
+.ms .ba2 b{position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--volt)}
+.ms .ba2 b::after{content:"⇆";position:absolute;top:50%;left:50%;translate:-50% -50%;width:24px;height:24px;border-radius:50%;background:var(--volt);color:#000;display:grid;place-items:center;font-size:12px;font-weight:900}
+.ms .ba2 small{position:absolute;bottom:6px;font-size:9px;padding:2px 6px;border-radius:999px;background:#000;color:#fff}
+.ms .ba2 small.l{left:6px}.ms .ba2 small.r{right:6px;background:var(--volt);color:#000}
+.ms .chat{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.ms .chat span{max-width:90%;padding:7px 9px;border-radius:12px;background:#1a1a22;font-size:10.5px}
+.ms .chat span.me{align-self:flex-end;background:#1f3b1f}
+.ms .chat .act{display:flex;gap:5px}
+.ms .chat .act b{flex:1;border:1px solid var(--volt);color:var(--volt);border-radius:8px;text-align:center;padding:5px;font-size:10px}
+.ms .price div{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed #22222a;font-size:10.5px}
+.ms .price b{direction:ltr}
+.ms .gal{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:4px}
+.ms .gal i{aspect-ratio:1;border-radius:6px;background:linear-gradient(135deg,#3a3a44,#22222a)}
+.ms .gal i:nth-child(2){background:linear-gradient(135deg,#2a3a1a,#1a2a12)}
+.ms .gal i:nth-child(4){background:linear-gradient(135deg,#4a3a2a,#2a1f14)}
+.ms .gal i:nth-child(6){background:linear-gradient(135deg,#1f2a3a,#141a2a)}
+@media (max-width:899px){
+  .reel{height:auto;padding-block:clamp(72px,10vw,130px) 0}
+  .reelsticky{position:static;height:auto;overflow:visible;padding-top:0;gap:22px}
+  .track{overflow-x:auto;scroll-snap-type:x mandatory;padding-inline:18px;width:auto;gap:18px;scrollbar-width:none;transform:none!important;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+  .track::-webkit-scrollbar{display:none}
+  .track figure{width:min(250px,76vw)}
+  .frame{height:auto;width:100%}
+}
+
+/* ============ features: bento with living tiles ============ */
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;min-width:0;display:flex;flex-direction:column;gap:6px;overflow:hidden;position:relative;transition:border-color var(--t-3)}
+.tile:hover{border-color:var(--line-2)}
+.tile.big{grid-column:span 2}
+.tile h3{font-size:19px;font-weight:800;letter-spacing:-.01em;margin-top:auto}
+.tile p{margin:0;color:var(--muted);font-size:14.5px}
+.viz{height:160px;border-radius:18px;background:var(--bg);border:1px solid var(--line);margin-bottom:14px;position:relative;overflow:hidden}
+.viz.notif i{position:absolute;left:14px;right:14px;height:42px;border-radius:12px;background:#1b1b22;border:1px solid var(--line-2);opacity:0;translate:0 -30px}
+.viz.notif i::before{content:"";position:absolute;top:11px;inset-inline-start:12px;width:20px;height:20px;border-radius:6px;background:var(--volt)}
+.viz.notif i::after{content:"";position:absolute;top:13px;inset-inline-start:42px;width:46%;height:6px;border-radius:3px;background:#2e2e36;box-shadow:0 11px 0 -1px #26262d}
+.viz.notif i:nth-child(1){top:12px}.viz.notif i:nth-child(2){top:60px}.viz.notif i:nth-child(3){top:108px}
+.on .viz.notif i:nth-child(1){animation:nt 6s var(--e-out) infinite}
+.on .viz.notif i:nth-child(2){animation:nt 6s var(--e-out) .5s infinite}
+.on .viz.notif i:nth-child(3){animation:nt 6s var(--e-out) 1s infinite}
+@keyframes nt{0%{opacity:0;translate:0 -30px}10%,72%{opacity:1;translate:0}86%,100%{opacity:0;translate:0 10px}}
+.viz.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:16px}
+.viz.slots i{border-radius:8px;background:#16161c;border:1px solid var(--line-2)}
+.on .viz.slots i{animation:sl 6s steps(1) infinite;animation-delay:calc(var(--i,0)*.45s)}
+@keyframes sl{0%{background:#16161c;border-color:var(--line-2);opacity:1}14%{background:var(--volt);border-color:var(--volt)}22%,86%{background:#0d0d11;border-color:#26262d;opacity:.45}100%{background:#16161c;border-color:var(--line-2);opacity:1}}
+.viz.remind{display:grid;place-items:center}
+.viz.remind .cal{width:86px;height:86px;border-radius:20px;background:#16161c;border:1px solid var(--line-2);display:grid;place-content:center;text-align:center;gap:2px}
+.viz.remind .cal b{font:900 22px/1 var(--he);direction:ltr}
+.viz.remind .cal small{color:var(--muted);font-size:11px}
+.viz.remind .bell{position:absolute;top:24px;inset-inline-end:26%;width:32px;height:32px;border-radius:50%;background:var(--volt);display:grid;place-items:center;font-size:15px;transform-origin:top center}
+.on .viz.remind .bell{animation:ring 3s ease-in-out infinite}
+@keyframes ring{0%,60%,100%{rotate:0deg}65%{rotate:16deg}70%{rotate:-13deg}75%{rotate:9deg}80%{rotate:-6deg}85%{rotate:3deg}}
+.viz.chart{display:flex;align-items:flex-end;gap:10px;padding:44px 18px 14px}
+.viz.chart i{flex:1;background:#2a2a32;border-radius:4px 4px 0 0;height:var(--h);transform-origin:bottom;scale:1 0;transition:scale .9s var(--e-out);transition-delay:calc(var(--i,0)*70ms)}
+.viz.chart i.v{background:var(--volt);box-shadow:0 0 18px -4px var(--volt)}
+.on .viz.chart i{scale:1 1}
+.viz.chart::after{content:attr(data-l);position:absolute;top:12px;inset-inline-start:16px;font:700 13px var(--he);color:var(--muted)}
+.viz.home{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:18px 22px}
+.viz.home i{aspect-ratio:1;border-radius:12px;background:#1b1b22}
+.viz.home b{aspect-ratio:1;border-radius:12px;background:var(--volt);color:var(--volt-fg);display:grid;place-items:center;font:900 18px var(--he);scale:0}
+.on .viz.home b{animation:drop 6s var(--e-spring) infinite}
+@keyframes drop{0%{scale:0;translate:0 -30px;opacity:1}12%{scale:1;translate:0}80%{scale:1;opacity:1}90%,100%{scale:0;opacity:0}}
+.viz.wa{display:flex;flex-direction:column;justify-content:center;padding:18px;gap:6px}
+.viz.wa .bub{align-self:flex-start;background:#1f3b1f;border-radius:14px 14px 14px 4px;padding:10px 14px;font-size:13px;opacity:0}
+.viz.wa .ticks{font-size:12px;color:var(--muted);align-self:flex-start;margin-inline-start:6px}
+.on .viz.wa .bub{animation:wa 6s var(--e-out) infinite}
+.on .viz.wa .ticks{animation:tick 6s steps(1) infinite}
+@keyframes wa{0%{opacity:0;translate:0 10px}10%,85%{opacity:1;translate:0}95%,100%{opacity:0}}
+@keyframes tick{0%,25%{color:var(--muted)}30%,100%{color:#5EF2FF}}
+@media (max-width:900px){.bento{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.bento{grid-template-columns:1fr}.tile.big{grid-column:auto}}
+
+/* ============ journey ============ */
+.jwrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:start}
+.jhead{position:sticky;top:96px}
+.jstat{margin-top:28px;display:flex;align-items:baseline;gap:14px}
+.jstat b{font:900 clamp(60px,8vw,100px)/1 var(--he);color:var(--volt);direction:ltr;letter-spacing:-.04em}
+.jstat>span{color:var(--muted);font-size:15px;max-width:16ch}
+.jline{list-style:none;margin:0;padding:0;padding-inline-start:34px;position:relative;display:grid;gap:22px;--jp:0}
+.jline::before{content:"";position:absolute;top:0;bottom:0;inset-inline-start:7px;width:2px;background:var(--line)}
+.jline::after{content:"";position:absolute;top:0;inset-inline-start:7px;width:2px;height:100%;background:var(--volt);transform-origin:top;scale:1 var(--jp);box-shadow:0 0 14px var(--volt)}
+.jline li{position:relative}
+.jline li::before{content:"";position:absolute;top:4px;inset-inline-start:-34px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:2px solid var(--line-2);z-index:1;transition:background var(--t-3),border-color var(--t-3),box-shadow var(--t-3)}
+.jline li.on::before{background:var(--volt);border-color:var(--volt);box-shadow:0 0 14px var(--volt)}
+.jline time{display:block;font-size:12.5px;color:var(--muted);margin-bottom:8px;font-weight:700}
+.jc{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px 18px;font-size:15.5px;max-width:52ch}
+.jc small{display:block;font-size:12px;color:var(--volt);font-weight:800;margin-bottom:4px}
+.jc.you{border-color:rgba(200,255,46,.35);background:linear-gradient(180deg,rgba(200,255,46,.07),transparent 60%),var(--surface)}
+.jc .mini-toast{display:flex;align-items:center;gap:8px;background:#1b1b22;border:1px solid var(--line-2);border-radius:12px;padding:8px 12px;font-size:13px;margin:8px 0 10px;width:fit-content;max-width:100%}
+.jc.bub{border-radius:20px 20px 4px 20px;background:#14201a;border-color:#1f3a28}
+.jc .acts{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.jc .acts span{border:1px solid var(--volt);color:var(--volt);border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700}
+.jc .star{color:#FFB547}
+@media (max-width:900px){.jwrap{grid-template-columns:1fr;gap:28px}.jhead{position:static}}
+
+/* ============ compare ============ */
+.cmp{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.cmp .col{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px;position:relative;min-width:0}
+.cmp .col h3{font-size:22px;font-weight:900;letter-spacing:-.02em;margin-bottom:14px}
+.cmp ul{list-style:none;margin:0;padding:0;display:grid}
+.cmp li{display:grid;gap:3px;padding:12px 0;border-top:1px solid var(--line)}
+.cmp li span{font-size:12px;color:var(--muted)}
+.cmp li b{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
+.cmp li b i{font-style:normal;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;flex:0 0 auto;border:1px solid var(--line-2);color:var(--muted)}
+.cmp li b i.y{background:var(--volt);color:var(--volt-fg);border-color:var(--volt)}
+.cmp li b i.n{color:#FF6B6B;border-color:rgba(255,107,107,.5)}
+.cmp .col.hot{border-color:var(--volt);box-shadow:0 0 0 1px var(--volt),0 40px 90px -50px rgba(200,255,46,.5);background:linear-gradient(180deg,rgba(200,255,46,.08),transparent 40%),var(--surface)}
+.cmp .col .chip{position:absolute;top:-12px;inset-inline-start:22px;font-size:12px;font-weight:800;background:var(--volt);color:var(--volt-fg);border-radius:999px;padding:4px 12px}
+@media (max-width:860px){.cmp{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-inline:-18px;padding:14px 18px 8px;scrollbar-width:none}.cmp::-webkit-scrollbar{display:none}.cmp .col{flex:0 0 82%;scroll-snap-align:center}.cmp .col.hot{order:-1}}
+
+/* second ticker row */
+.tick .row.b{animation:mq 46s linear infinite reverse;margin-top:12px}
+.tick .row.b span{font-size:clamp(18px,2.6vw,30px);font-weight:700;color:var(--muted)}
+.tick .row.b span i{font-size:.7em}
+@media (prefers-reduced-motion:reduce){.mtext .w{opacity:1!important}.viz *{animation:none!important}.on .ms .bars i,.on .viz.chart i{scale:1 1}}
+
 main{position:relative;z-index:2}
 /* no-JS insurance: nothing stays hidden if scripts never run */
 html:not(.js) :is([data-reveal],.hero [data-in],.hero h1 .ln>span,.dev,.owner){opacity:1!important;translate:0!important;scale:1!important;filter:none!important}
@@ -656,7 +828,7 @@ html:not(.js) :is([data-reveal],.hero [data-in],.hero h1 .ln>span,.dev,.owner){o
 
 <header id="hdr"><div class="in bar">
   <div class="logo" aria-label="EDON">ED<button class="o" id="torch" type="button" role="switch" aria-checked="false" aria-label="מצב פנס" title="מצב פנס"></button>N</div>
-  <nav aria-label="ניווט ראשי"><a href="#services">שירותים</a><a href="#why">למה אפליקציה</a><a href="#process">תהליך</a><a href="#work">עבודות</a><a href="#faq">שאלות</a></nav>
+  <nav aria-label="ניווט ראשי"><a href="#reel">מה בפנים</a><a href="#services">שירותים</a><a href="#why">למה אפליקציה</a><a href="#process">תהליך</a><a href="#work">עבודות</a><a href="#faq">שאלות</a></nav>
   <div class="end">
     <a class="ig" href="https://instagram.com/edon.studio_" target="_blank" rel="noopener" aria-label="EDON באינסטגרם"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg></a>
     <a class="btn main sm" href="#contact">דברו איתנו</a>
@@ -664,12 +836,13 @@ html:not(.js) :is([data-reveal],.hero [data-in],.hero h1 .ln>span,.dev,.owner){o
   </div>
 </div></header>
 <div id="menu" aria-hidden="true">
-  <a href="#services" style="--i:0">שירותים<span class="mono">02</span></a>
-  <a href="#why" style="--i:1">למה אפליקציה<span class="mono">03</span></a>
-  <a href="#process" style="--i:2">תהליך<span class="mono">05</span></a>
-  <a href="#work" style="--i:3">עבודות<span class="mono">06</span></a>
-  <a href="#faq" style="--i:4">שאלות<span class="mono">07</span></a>
-  <a class="btn main" href="#contact" style="--i:5">דברו איתנו <span class="arr">←</span></a>
+  <a href="#reel" style="--i:0">מה בפנים<span class="mono">02</span></a>
+  <a href="#services" style="--i:1">שירותים<span class="mono">03</span></a>
+  <a href="#why" style="--i:2">למה אפליקציה<span class="mono">05</span></a>
+  <a href="#process" style="--i:3">תהליך<span class="mono">08</span></a>
+  <a href="#work" style="--i:4">עבודות<span class="mono">09</span></a>
+  <a href="#faq" style="--i:5">שאלות<span class="mono">11</span></a>
+  <a class="btn main" href="#contact" style="--i:6">דברו איתנו <span class="arr">←</span></a>
 </div>
 
 <main id="main">
@@ -725,11 +898,67 @@ html:not(.js) :is([data-reveal],.hero [data-in],.hero h1 .ln>span,.dev,.owner){o
       <span>אפליקציות תורים<i>✦</i></span><span class="e">דפי עסק<i>✦</i></span><span>מיתוג<i>✦</i></span><span class="e">אינסטגרם<i>✦</i></span><span>14 ימי עבודה<i>✦</i></span><span class="e">הקוד שלכם<i>✦</i></span>
       <span>אפליקציות תורים<i>✦</i></span><span class="e">דפי עסק<i>✦</i></span><span>מיתוג<i>✦</i></span><span class="e">אינסטגרם<i>✦</i></span><span>14 ימי עבודה<i>✦</i></span><span class="e">הקוד שלכם<i>✦</i></span>
     </div>
+    <div class="row b">
+      <span>מספרות<i>●</i></span><span>שטיפות רכב<i>●</i></span><span>קוסמטיקה וציפורניים<i>●</i></span><span>סטודיו ומאמנים<i>●</i></span><span>קליניקות<i>●</i></span><span>מכוני יופי<i>●</i></span><span>בתי קפה ומאפיות<i>●</i></span><span>כל עסק שעובד עם תורים<i>●</i></span>
+      <span>מספרות<i>●</i></span><span>שטיפות רכב<i>●</i></span><span>קוסמטיקה וציפורניים<i>●</i></span><span>סטודיו ומאמנים<i>●</i></span><span>קליניקות<i>●</i></span><span>מכוני יופי<i>●</i></span><span>בתי קפה ומאפיות<i>●</i></span><span>כל עסק שעובד עם תורים<i>●</i></span>
+    </div>
   </div>
+
+
+  <!-- ===== manifesto ===== -->
+  <section id="manifesto" class="mani"><div class="sticky"><div class="in">
+    <p class="tag"><span class="mono">01 / manifesto</span>למה אנחנו עושים את זה</p>
+    <p class="mtext" id="mtext">אנחנו לא בונים אתרים כדי שיהיו. אנחנו בונים אותם כדי ש<em>יעבדו</em>: שיביאו תורים גם כשאתם ישנים, שיחסכו לכם את הטלפונים באמצע היום, ושהעסק שלכם ייראה כמו עסק ש<em>סומכים עליו</em> מהשנייה הראשונה.</p>
+    <p class="msig">EDON · סטודיו לאתרים ואפליקציות לעסקים קטנים</p>
+    <span class="bigbg" aria-hidden="true">EDON</span>
+  </div></div></section>
+
+  <!-- ===== showreel ===== -->
+  <section id="reel" class="reel"><div class="reelsticky">
+    <div class="in reelhead"><p class="tag"><span class="mono">02 / screens</span>מה בפנים</p><h2 class="gl">כל מה שהלקוח רואה. כל מה שאתם רואים.</h2></div>
+    <div class="track" id="reeltrack">
+      <figure data-reveal style="--i:0"><div class="frame"><div class="ms">
+        <div class="cover"><b>א</b></div><h5>ברברשופ אלון</h5><span class="mut">פתוח עכשיו · סוגר ב־19:00 · נתיבות</span>
+        <div class="btn3"><span>📞</span><span>💬</span><span>🧭</span></div>
+        <div class="card"><div class="list"><div><span>א׳–ה׳</span><i>09:00–19:00</i></div><div><span>ו׳</span><i>08:00–14:00</i></div><div><span>שבת</span><i>סגור</i></div></div></div>
+        <div class="cta">לקביעת תור</div>
+      </div></div><figcaption><b>דף העסק</b><span>חיוג, וואטסאפ, ווייז ושעות פעילות, בלחיצה אחת מהנייד.</span></figcaption></figure>
+      <figure data-reveal style="--i:1"><div class="frame"><div class="ms">
+        <h5>בחרו יום ושעה</h5><span class="mut">תספורת + זקן · 50 דק׳</span>
+        <div class="days"><i class="on">היום</i><i>מחר</i><i>ג׳</i><i>ד׳</i><i>ה׳</i></div>
+        <div class="grid"><i class="x">09:00</i><i>09:40</i><i class="x">10:20</i><i>11:00</i><i>11:40</i><i class="x">13:00</i><i class="m">13:40</i><i class="x">14:20</i><i>15:00</i><i>15:40</i><i class="x">16:20</i><i>17:00</i></div>
+        <div class="card mut">שעה שנתפסה נעלמת לכולם. אין תורים כפולים.</div>
+        <div class="cta">המשך לאישור</div>
+      </div></div><figcaption><b>קביעת תור</b><span>שירות, יום ושעה. שלוש לחיצות, בלי הרשמה ובלי הורדה.</span></figcaption></figure>
+      <figure data-reveal style="--i:2"><div class="frame"><div class="ms">
+        <h5>היום · יום ג׳</h5><span class="mut">דשבורד מנהל</span>
+        <div class="kpi"><div><b>8</b><span class="mut">תורים</span></div><div><b>₪640</b><span class="mut">צפוי</span></div><div><b>1</b><span class="mut">ביטול</span></div></div>
+        <div class="bars"><i style="--h:40%;--i:0"></i><i style="--h:60%;--i:1"></i><i style="--h:35%;--i:2"></i><i class="v" style="--h:90%;--i:3"></i><i style="--h:55%;--i:4"></i><i style="--h:70%;--i:5"></i><i style="--h:20%;--i:6"></i></div>
+        <div class="card"><div class="list"><div><span>יוסי · תספורת + זקן</span><i>15:20</i></div><div><span>דני · תספורת</span><i>14:20</i></div><div><span>רועי · עיצוב זקן</span><i>13:40</i></div></div></div>
+      </div></div><figcaption><b>דשבורד מנהל</b><span>מי מגיע היום, כמה נכנס השבוע, ומי ביטל. מהטלפון שלכם.</span></figcaption></figure>
+      <figure data-reveal style="--i:3"><div class="frame"><div class="ms">
+        <h5>לפני ואחרי ✨</h5><span class="mut">גררו את הפס</span>
+        <div class="ba2"><i></i><b></b><small class="l">לפני</small><small class="r">אחרי</small></div>
+        <div class="card mut">ניקוי וחיטוי ריפודים · 60 דק׳ · ₪140</div>
+        <div class="cta">לקבוע את זה</div>
+      </div></div><figcaption><b>גלריה ולפני/אחרי</b><span>העבודה שלכם מוכרת את עצמה. הלקוח רואה וקובע מאותו מסך.</span></figcaption></figure>
+      <figure data-reveal style="--i:4"><div class="frame"><div class="ms">
+        <h5>תזכורות אוטומטיות</h5><span class="mut">נשלחות לבד, יום לפני</span>
+        <div class="chat"><span>היי יוסי 👋 מזכירים: מחר ב־15:20 אצל אלון, תספורת + זקן.</span><span class="act"><b>מגיע ✓</b><b>שינוי</b></span><span class="me">מגיע ✓</span><span>מעולה, נתראה מחר!</span></div>
+        <div class="card mut">כל אישור מתעדכן אצלכם בדשבורד.</div>
+      </div></div><figcaption><b>תזכורת ללקוח</b><span>פחות הברזות, בלי להרים טלפון. הלקוח מאשר או משנה בלחיצה.</span></figcaption></figure>
+      <figure data-reveal style="--i:5"><div class="frame"><div class="ms">
+        <h5>מחירון</h5><span class="mut">מתעדכן מהדשבורד, בלי מתכנת</span>
+        <div class="price"><div><span>תספורת</span><b>₪80</b></div><div><span>עיצוב זקן</span><b>₪40</b></div><div><span>תספורת + זקן</span><b>₪110</b></div><div><span>תספורת ילד</span><b>₪60</b></div></div>
+        <span class="mut">גלריה</span><div class="gal"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      </div></div><figcaption><b>מחירון וגלריה</b><span>משנים מחיר או מוסיפים תמונה בעצמכם. זה מופיע מיד.</span></figcaption></figure>
+    </div>
+    <div class="reeldots" id="reeldots" aria-hidden="true"></div>
+  </div></section>
 
   <!-- ===== services / configurator ===== -->
   <section id="services"><div class="in">
-    <div class="head" data-reveal><div><p class="tag"><span class="mono">02 / services</span>הכל תחת קורת גג אחת</p><h2 class="gl">בוחרים מה שצריך. רואים מחיר מיד.</h2></div>
+    <div class="head" data-reveal><div><p class="tag"><span class="mono">03 / services</span>הכל תחת קורת גג אחת</p><h2 class="gl">בוחרים מה שצריך. רואים מחיר מיד.</h2></div>
       <p class="sub">מחיר סגור מראש, עיצוב לאישור לפני שכותבים קוד ושני סבבי תיקונים בכל חבילה. הדליקו מה שרלוונטי לכם.</p></div>
     <div class="cfg">
       <div class="plans" id="plans">
@@ -770,9 +999,22 @@ html:not(.js) :is([data-reveal],.hero [data-in],.hero h1 .ln>span,.dev,.owner){o
   </div></section>
   <div class="cfgbar" id="cfgbar"><div><b id="total2">₪3,490</b><small id="sel2">אפליקציית תורים</small></div><a class="btn main" href="#bill">לפירוט ←</a></div>
 
+  <!-- ===== features ===== -->
+  <section id="features"><div class="in">
+    <div class="head" data-reveal><div><p class="tag"><span class="mono">04 / inside</span>מה נכנס באפליקציה</p><h2 class="gl">הדברים הקטנים שחוסכים לכם יום עבודה.</h2></div><p class="sub">כל אפליקציית תורים של EDON מגיעה עם זה מובנה. לא תוספות, לא "בגרסה הבאה".</p></div>
+    <div class="bento">
+      <article class="tile big" data-reveal style="--i:0"><div class="viz notif" aria-hidden="true"><i></i><i></i><i></i></div><h3>התראת פוש על כל תור וכל ביטול</h3><p>לטלפון שלכם, בשנייה שזה קורה. בלי לפתוח כלום.</p></article>
+      <article class="tile" data-reveal style="--i:1"><div class="viz slots" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i></div><h3>שעה שנתפסה נעלמת לכולם</h3><p>אפס תורים כפולים, גם כששלושה לקוחות מסתכלים באותו רגע.</p></article>
+      <article class="tile" data-reveal style="--i:2"><div class="viz remind" aria-hidden="true"><span class="cal"><b>15:20</b><small>מחר</small></span><span class="bell">🔔</span></div><h3>תזכורת אוטומטית יום לפני</h3><p>הלקוח מאשר או משנה בלחיצה. פחות הברזות.</p></article>
+      <article class="tile big" data-reveal style="--i:3"><div class="viz chart" data-l="השבוע · ₪4,320" aria-hidden="true"><i style="--h:40%;--i:0"></i><i style="--h:62%;--i:1"></i><i style="--h:38%;--i:2"></i><i class="v" style="--h:92%;--i:3"></i><i style="--h:58%;--i:4"></i><i style="--h:74%;--i:5"></i><i style="--h:24%;--i:6"></i></div><h3>דשבורד מנהל</h3><p>מי מגיע, כמה נכנס, מי ביטל. ועריכה של מחירים ושעות בעצמכם.</p></article>
+      <article class="tile" data-reveal style="--i:4"><div class="viz home" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><b>E</b><i></i><i></i></div><h3>התקנה למסך הבית, בלי חנות</h3><p>לינק אחד. בלי אישור של אפל או גוגל, והעדכונים מגיעים מיד.</p></article>
+      <article class="tile" data-reveal style="--i:5"><div class="viz wa" aria-hidden="true"><span class="bub">התור שלך אושר ליום ג׳ · 15:20 ✓</span><span class="ticks">✓✓</span></div><h3>אישור בוואטסאפ</h3><p>הלקוח מקבל אישור ברור, עם כפתור להוספה ליומן.</p></article>
+    </div>
+  </div></section>
+
   <!-- ===== why ===== -->
   <section class="why" id="why"><div class="in">
-    <p class="tag" data-reveal><span class="mono">03 / why</span>העובד הכי טוב שלכם</p>
+    <p class="tag" data-reveal><span class="mono">05 / why</span>העובד הכי טוב שלכם</p>
     <p class="big" data-reveal style="--i:1">האפליקציה שלכם היא <em>העובד הכי טוב</em> בעסק. היא לא מפספסת אף לקוח.</p>
     <div class="duties">
       <div class="duty" data-reveal style="--i:0"><div class="num"><span data-count="24">24</span>/7</div><b>עונה ב־2 בלילה</b><small>הלקוח קובע לבד, גם כשאתם ישנים.</small></div>
@@ -782,9 +1024,27 @@ html:not(.js) :is([data-reveal],.hero [data-in],.hero h1 .ln>span,.dev,.owner){o
     </div>
   </div></section>
 
+  <!-- ===== journey ===== -->
+  <section id="journey"><div class="in jwrap">
+    <div class="jhead" data-reveal>
+      <p class="tag"><span class="mono">06 / journey</span>מהצד של הלקוח</p>
+      <h2 class="gl">ככה זה נראה אצל הלקוח שלכם.</h2>
+      <p class="sub">מהלינק בביו ועד הביקורת בגוגל. עקבו אחרי הקו.</p>
+      <div class="jstat"><b><span data-count="0">0</span></b><span>שיחות טלפון בכל הדרך</span></div>
+    </div>
+    <ol class="jline" id="jline">
+      <li data-reveal><time>יום א׳ · 21:40</time><div class="jc cust"><small>הלקוח</small>לוחץ על הלינק בביו של האינסטגרם. בוחר "תספורת + זקן", יום ג׳, 15:20. שלוש לחיצות.</div></li>
+      <li data-reveal><time>21:40</time><div class="jc you"><small>אתם</small><span class="mini-toast">🔔 תור חדש נקבע · יוסי · ג׳ 15:20</span>בלי שיחה, בלי לרשום בפתק. השעה כבר חסומה לכל השאר.</div></li>
+      <li data-reveal><time>21:41</time><div class="jc cust bub"><small>הלקוח</small>"התור שלך נקבע ליום ג׳ ב־15:20 אצל אלון."<div class="acts"><span>＋ הוספה ליומן</span><span>ניווט בוויז</span></div></div></li>
+      <li data-reveal><time>יום ב׳ · 15:20</time><div class="jc cust bub"><small>תזכורת אוטומטית</small>"היי יוסי, מזכירים: מחר ב־15:20. מגיע?"<div class="acts"><span>מגיע ✓</span><span>שינוי</span></div></div></li>
+      <li data-reveal><time>יום ג׳ · 15:20</time><div class="jc you"><small>אתם</small>יוסי מגיע בזמן. אף אחד לא מחכה בחוץ כי השעה הייתה חסומה. בסוף התספורת, האפליקציה כבר מציעה לו את התור הבא.</div></li>
+      <li data-reveal><time>17:00</time><div class="jc cust bub"><small>הלקוח</small>"איך היה? <span class="star">★★★★★</span> נשמח לביקורת בגוגל" — בלחיצה אחת.</div></li>
+    </ol>
+  </div></section>
+
   <!-- ===== before / after ===== -->
   <section id="ba"><div class="in">
-    <div class="head" data-reveal><div><p class="tag"><span class="mono">04 / before – after</span>לפני ואחרי</p><h2 class="gl">ככה זה נראה היום. ככה זה ייראה מחר.</h2></div><p class="sub">הדליקו את המתג או גררו את הפס. משמאל: ניהול תורים בטלפון ובפתקים. מימין: אותו עסק עם אפליקציה של EDON.</p></div>
+    <div class="head" data-reveal><div><p class="tag"><span class="mono">07 / before – after</span>לפני ואחרי</p><h2 class="gl">ככה זה נראה היום. ככה זה ייראה מחר.</h2></div><p class="sub">הדליקו את המתג או גררו את הפס. משמאל: ניהול תורים בטלפון ובפתקים. מימין: אותו עסק עם אפליקציה של EDON.</p></div>
     <div class="ba" id="baw" data-reveal>
       <div class="pane after">
         <div class="card">
@@ -811,7 +1071,7 @@ html:not(.js) :is([data-reveal],.hero [data-in],.hero h1 .ln>span,.dev,.owner){o
 
   <!-- ===== process ===== -->
   <section id="process" class="proc"><div class="in">
-    <div class="head" data-reveal><div><p class="tag"><span class="mono">05 / process</span>איך זה עובד</p><h2 class="gl">מרעיון לאוויר בארבעה שלבים.</h2></div><p class="sub">14 ימי עבודה. רואים עיצוב מלא לפני שנכתבת שורת קוד אחת.</p></div>
+    <div class="head" data-reveal><div><p class="tag"><span class="mono">08 / process</span>איך זה עובד</p><h2 class="gl">מרעיון לאוויר בארבעה שלבים.</h2></div><p class="sub">14 ימי עבודה. רואים עיצוב מלא לפני שנכתבת שורת קוד אחת.</p></div>
     <ol class="steps" id="steps">
       <li data-reveal style="--i:0"><div class="n">01</div><h3>אפיון</h3><p>20 דקות על העסק, הלקוחות והמטרה. יוצאים עם הצעת מחיר סגורה.</p><small>DAY 01</small></li>
       <li data-reveal style="--i:1"><div class="n">02</div><h3>עיצוב</h3><p>רואים את העיצוב המלא ומאשרים לפני שכותבים שורת קוד.</p><small>DAYS 02–05</small></li>
@@ -822,7 +1082,7 @@ html:not(.js) :is([data-reveal],.hero [data-in],.hero h1 .ln>span,.dev,.owner){o
 
   <!-- ===== work ===== -->
   <section id="work" style="padding-top:0"><div class="in">
-    <div class="head" data-reveal><div><p class="tag"><span class="mono">06 / work</span>מהעבודות שלנו</p><h2 class="gl">עבודות אחרונות.</h2></div></div>
+    <div class="head" data-reveal><div><p class="tag"><span class="mono">09 / work</span>מהעבודות שלנו</p><h2 class="gl">עבודות אחרונות.</h2></div></div>
     <div class="work">
       <article class="case" data-reveal style="--i:0">
         <div class="txt">
@@ -857,9 +1117,40 @@ html:not(.js) :is([data-reveal],.hero [data-in],.hero h1 .ln>span,.dev,.owner){o
     </div>
   </div></section>
 
+  <!-- ===== compare ===== -->
+  <section id="compare"><div class="in">
+    <div class="head" data-reveal><div><p class="tag"><span class="mono">10 / compare</span>בכנות</p><h2 class="gl">למה לא פשוט וואטסאפ, או מערכת במנוי?</h2></div><p class="sub">אפשר גם ככה. ככה זה נראה כשמשווים.</p></div>
+    <div class="cmp">
+      <div class="col" data-reveal style="--i:0"><h3>טלפון ווואטסאפ</h3><ul>
+        <li><span>מה זה עולה</span><b><i>₪</i>הזמן שלכם, כל יום</b></li>
+        <li><span>מיתוג</span><b><i>–</i>אין</b></li>
+        <li><span>תורים כפולים</span><b><i class="n">✕</i>קורה</b></li>
+        <li><span>מה הלקוח צריך לעשות</span><b><i>–</i>להתקשר ולחכות</b></li>
+        <li><span>הקוד והנתונים</span><b><i>–</i>בפתקים ובצ׳אטים</b></li>
+        <li><span>תמיכה</span><b><i>–</i>אתם</b></li>
+      </ul></div>
+      <div class="col" data-reveal style="--i:1"><h3>מערכת תורים במנוי</h3><ul>
+        <li><span>מה זה עולה</span><b><i>₪</i>מנוי חודשי, לתמיד</b></li>
+        <li><span>מיתוג</span><b><i>–</i>לרוב משותף עם הלוגו שלהם</b></li>
+        <li><span>תורים כפולים</span><b><i class="y">✓</i>לא</b></li>
+        <li><span>מה הלקוח צריך לעשות</span><b><i>–</i>להירשם או להוריד אפליקציה</b></li>
+        <li><span>הקוד והנתונים</span><b><i>–</i>שלהם</b></li>
+        <li><span>תמיכה</span><b><i>–</i>צ׳אט או טיקט</b></li>
+      </ul></div>
+      <div class="col hot" data-reveal style="--i:2"><span class="chip">EDON</span><h3>אפליקציה משלכם</h3><ul>
+        <li><span>מה זה עולה</span><b><i class="y">✓</i>תשלום חד־פעמי. ליווי לבחירה.</b></li>
+        <li><span>מיתוג</span><b><i class="y">✓</i>רק שלכם. לוגו, צבעים, שם.</b></li>
+        <li><span>תורים כפולים</span><b><i class="y">✓</i>לא</b></li>
+        <li><span>מה הלקוח צריך לעשות</span><b><i class="y">✓</i>ללחוץ על לינק</b></li>
+        <li><span>הקוד והנתונים</span><b><i class="y">✓</i>שלכם, 100%</b></li>
+        <li><span>תמיכה</span><b><i class="y">✓</i>בן אדם, בדיירקט</b></li>
+      </ul></div>
+    </div>
+  </div></section>
+
   <!-- ===== faq ===== -->
   <section id="faq" style="padding-top:0"><div class="in faqw">
-    <div data-reveal><p class="tag"><span class="mono">07 / faq</span>לפני שמתחילים</p><h2 class="gl">שאלות שעסקים שואלים.</h2></div>
+    <div data-reveal><p class="tag"><span class="mono">11 / faq</span>לפני שמתחילים</p><h2 class="gl">שאלות שעסקים שואלים.</h2></div>
     <div class="faq" id="faqs" data-reveal>
       <div class="q"><button type="button" aria-expanded="false">צריך להוריד את האפליקציה מחנות?<i>+</i></button><div class="a"><div><p>לא. הלקוחות נכנסים מלינק ומוסיפים את האפליקציה למסך הבית בשתי לחיצות. אין צורך באישור של אפל או גוגל, והעדכונים מגיעים מיד.</p></div></div></div>
       <div class="q"><button type="button" aria-expanded="false">כמה זמן זה לוקח?<i>+</i></button><div class="a"><div><p>7–14 ימי עבודה מרגע אישור העיצוב, תלוי בחבילה. דף עסק עולה לאוויר מהר יותר, חבילה מלאה עם מיתוג לוקחת את כל השבועיים.</p></div></div></div>
@@ -873,7 +1164,7 @@ html:not(.js) :is([data-reveal],.hero [data-in],.hero h1 .ln>span,.dev,.owner){o
   <!-- ===== contact ===== -->
   <section id="contact"><div class="in contact">
     <div data-reveal>
-      <p class="tag"><span class="mono">08 / contact</span>בואו נדליק</p>
+      <p class="tag"><span class="mono">12 / contact</span>בואו נדליק</p>
       <h2 class="gl">נשמח לבנות לכם את זה.</h2>
       <p class="sub">כל הפניות מתנהלות בדיירקט באינסטגרם. שני שלבים, ההודעה נכתבת לבד, אתם רק שולחים. חוזרים אליכם תוך יום עבודה עם הצעה סגורה.</p>
       <div class="ways">
@@ -1343,6 +1634,49 @@ safe(() => {
     }, { passive: true });
     hero.addEventListener('pointerleave', () => { dev.style.transform = ''; });
   }
+});
+
+/* ---------- manifesto: words light up as you scroll ---------- */
+safe(() => {
+  const sec = $('manifesto'), t = $('mtext'); if (!sec || !t) return;
+  let n = 0;
+  const wrap = node => Array.from(node.childNodes).forEach(c => {
+    if (c.nodeType !== 3) { wrap(c); return; }
+    const frag = document.createDocumentFragment();
+    c.textContent.split(/(\s+)/).forEach(part => {
+      if (!part) return;
+      if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+      const s = document.createElement('span'); s.className = 'w'; s.style.setProperty('--i', n++); s.textContent = part; frag.appendChild(s);
+    });
+    node.replaceChild(frag, c);
+  });
+  wrap(t);
+  let raf = 0;
+  const upd = () => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; const r = sec.getBoundingClientRect(); const p = clamp(-r.top / (r.height - innerHeight), 0, 1); t.style.setProperty('--k', (p * (n + 1)).toFixed(2)); sec.style.setProperty('--mp', p.toFixed(3)); }); };
+  addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
+});
+
+/* ---------- showreel: vertical scroll drives the horizontal track on desktop, native snap on mobile ---------- */
+safe(() => {
+  const sec = $('reel'), track = $('reeltrack'), dots = $('reeldots'); if (!sec || !track) return;
+  const figs = $$('figure', track);
+  dots.innerHTML = figs.map((_, i) => '<i' + (i ? '' : ' class="on"') + '></i>').join('');
+  const ds = $$('i', dots);
+  const setDot = i => ds.forEach((d, j) => d.classList.toggle('on', j === i));
+  const desk = matchMedia('(min-width: 900px)');
+  let raf = 0;
+  const upd = () => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; if (!desk.matches) { track.style.transform = ''; return; } const r = sec.getBoundingClientRect(); const p = clamp(-r.top / (r.height - innerHeight), 0, 1); const max = Math.max(0, track.scrollWidth - innerWidth); track.style.transform = 'translate3d(' + (p * max).toFixed(1) + 'px,0,0)'; setDot(Math.round(p * (figs.length - 1))); }); };
+  addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && !desk.matches) setDot(figs.indexOf(e.target)); }), { root: track, threshold: .6 });
+  figs.forEach(f => io.observe(f));
+});
+
+/* ---------- journey: the line draws as the story unfolds ---------- */
+safe(() => {
+  const line = $('jline'); if (!line) return;
+  const items = $$('li', line); let raf = 0;
+  const upd = () => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; const r = line.getBoundingClientRect(); const p = clamp((innerHeight * .78 - r.top) / r.height, 0, 1); line.style.setProperty('--jp', p.toFixed(3)); items.forEach((li, i) => { const lr = li.getBoundingClientRect(); li.classList.toggle('on', lr.top < innerHeight * .78); }); }); };
+  addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
 });
 
 /* ---------- configurator ---------- */
