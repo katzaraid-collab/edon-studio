@@ -186,31 +186,31 @@ html.menu #menu a{opacity:1;translate:0;clip-path:inset(-10% 0 -10% 0);transitio
 html.on .hero [data-in]{opacity:1;translate:0;filter:blur(0);transition:opacity var(--t-5) var(--ease),translate var(--t-5) var(--ease),filter var(--t-5) var(--ease);transition-delay:calc(var(--i,0)*.09s + .15s)}
 
 /* stage: demo phone */
-.stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:22px}
+.stage{--acc:var(--volt);--acc-fg:#0B0B10;--acc-rgb:200,255,46;position:relative;display:flex;flex-direction:column;align-items:center;gap:18px}
 .devwrap{position:relative;display:grid;place-items:center;width:100%}
 .stage .ring{position:absolute;left:50%;top:50%;translate:-50% -50%;width:min(560px,120vw);aspect-ratio:1;border-radius:50%;border:1px dashed var(--line-2);animation:spin 60s linear infinite;pointer-events:none}
 .stage .ring::before{content:"";position:absolute;top:-5px;left:50%;width:9px;height:9px;border-radius:50%;background:var(--volt);box-shadow:0 0 14px var(--volt)}
 @keyframes spin{to{rotate:360deg}}
-.dev{position:relative;width:300px;max-width:84vw;aspect-ratio:9/19;border-radius:46px;background:#000;padding:10px;box-shadow:0 0 0 1px var(--line-2),0 50px 120px -30px rgba(0,0,0,.9),0 0 90px -30px rgba(200,255,46,.35);z-index:1}
+.dev{position:relative;width:300px;max-width:84vw;aspect-ratio:9/19;border-radius:46px;background:#000;padding:10px;box-shadow:0 0 0 1px var(--line-2),0 50px 120px -30px rgba(0,0,0,.9),0 0 90px -30px rgba(var(--acc-rgb),.38);z-index:1}
 .dev .notch{position:absolute;top:18px;left:50%;translate:-50% 0;width:92px;height:26px;border-radius:999px;background:#000;z-index:3}
 .dev .scr{width:100%;height:100%;border-radius:37px;overflow:hidden;background:#0B0B0F;position:relative}
 .app{height:100%;display:flex;flex-direction:column;font-size:14px;line-height:1.4;color:var(--fg)}
 .app .sb{display:flex;justify-content:space-between;padding:14px 22px 0;font:700 12px var(--mono);direction:ltr;color:var(--fg)}
 .app .sb .r{display:flex;gap:4px;align-items:center}
 .app .top{display:flex;align-items:center;gap:10px;padding:26px 18px 10px}
-.app .av{width:38px;height:38px;border-radius:12px;background:var(--volt);color:var(--volt-fg);display:grid;place-items:center;font:900 20px var(--he)}
+.app .av{width:38px;height:38px;border-radius:12px;background:var(--acc);color:var(--acc-fg);display:grid;place-items:center;font:900 20px var(--he);transition:background var(--t-3)}
 .app .top b{display:block;font-size:15px}.app .top small{color:var(--muted);font-size:12px}
-.app .live{margin-inline-start:auto;font:700 10px var(--mono);color:var(--volt);border:1px solid rgba(200,255,46,.4);padding:3px 8px;border-radius:999px;display:flex;align-items:center;gap:6px;direction:ltr}
-.app .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--volt);animation:blink 1.2s steps(1) infinite}
+.app .live{margin-inline-start:auto;font:700 10px var(--mono);color:var(--acc);border:1px solid rgba(var(--acc-rgb),.4);padding:3px 8px;border-radius:999px;display:flex;align-items:center;gap:6px;direction:ltr}
+.app .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--acc);animation:blink 1.2s steps(1) infinite}
 .app .body{flex:1;overflow:auto;padding:4px 14px 16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .app .body::-webkit-scrollbar{display:none}
 .app .crumbs{display:flex;gap:6px;margin:4px 2px 12px}
 .app .crumbs i{flex:1;height:3px;border-radius:3px;background:#24242b}
-.app .crumbs i.on{background:var(--volt)}
+.app .crumbs i.on{background:var(--acc)}
 .app h4{font-size:17px;font-weight:800;margin:0 2px 10px;letter-spacing:-.01em}
 .app .row{width:100%;display:flex;align-items:center;gap:12px;background:#14141a;border:1px solid #22222a;border-radius:16px;padding:12px 14px;margin-bottom:8px;text-align:right;cursor:pointer;transition:border-color var(--t-2),transform var(--t-1);-webkit-tap-highlight-color:transparent}
 .app .row:active{transform:scale(.98)}
-.app .row:hover{border-color:var(--volt)}
+.app .row:hover{border-color:var(--acc)}
 .app .row .ic{width:36px;height:36px;border-radius:10px;background:#1d1d25;display:grid;place-items:center;font-size:18px}
 .app .row b{display:block;font-size:14px}.app .row small{color:var(--muted);font-size:12px}
 .app .row .pr{margin-inline-start:auto;font:800 14px var(--he);direction:ltr}
@@ -218,35 +218,35 @@ html.on .hero [data-in]{opacity:1;translate:0;filter:blur(0);transition:opacity 
 .app .days::-webkit-scrollbar{display:none}
 .app .day{flex:0 0 46px;display:grid;justify-items:center;gap:2px;padding:8px 0;border-radius:14px;border:1px solid #22222a;background:#14141a;cursor:pointer;font-size:11px;color:var(--muted);-webkit-tap-highlight-color:transparent}
 .app .day b{font:800 16px var(--he);color:var(--fg);direction:ltr}
-.app .day.on{background:var(--volt);border-color:var(--volt);color:rgba(11,11,16,.7)}.app .day.on b{color:var(--volt-fg)}
+.app .day.on{background:var(--acc);border-color:var(--acc);color:var(--acc-fg)}.app .day.on b{color:var(--acc-fg)}
 .app .day.x{opacity:.35;cursor:not-allowed}
 .app .slots{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .app .slot{border:1px solid #22222a;background:#14141a;border-radius:10px;padding:9px 0;font:700 13px var(--mono);direction:ltr;cursor:pointer;transition:background var(--t-1),border-color var(--t-1);-webkit-tap-highlight-color:transparent}
-.app .slot:hover{border-color:var(--volt)}
+.app .slot:hover{border-color:var(--acc)}
 .app .slot.x{opacity:.3;text-decoration:line-through;cursor:not-allowed}
-.app .slot.mine{background:var(--volt);color:var(--volt-fg);border-color:var(--volt)}
+.app .slot.mine{background:var(--acc);color:var(--acc-fg);border-color:var(--acc)}
 .app .back{background:none;border:0;color:var(--muted);font-size:13px;padding:6px 2px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
 .app .sum{background:#14141a;border:1px solid #22222a;border-radius:18px;padding:14px;display:grid;gap:8px;margin-bottom:10px}
 .app .sum div{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
 .app .sum div b{color:var(--fg);font-weight:700}
-.app .cta{width:100%;border:0;border-radius:14px;background:var(--volt);color:var(--volt-fg);font:800 15px var(--he);padding:14px;cursor:pointer;transition:transform var(--t-1)}
+.app .cta{width:100%;border:0;border-radius:14px;background:var(--acc);color:var(--acc-fg);font:800 15px var(--he);padding:14px;cursor:pointer;transition:transform var(--t-1)}
 .app .cta:active{transform:scale(.98)}
 .app .ok{display:grid;justify-items:center;text-align:center;gap:8px;padding:18px 6px}
 .app .ok svg{width:74px;height:74px}
-.app .ok circle{fill:none;stroke:var(--volt);stroke-width:3;stroke-dasharray:220;stroke-dashoffset:220;animation:draw .6s var(--ease) forwards}
-.app .ok path{fill:none;stroke:var(--volt);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60;animation:draw .45s .35s var(--ease) forwards}
+.app .ok circle{fill:none;stroke:var(--acc);stroke-width:3;stroke-dasharray:220;stroke-dashoffset:220;animation:draw .6s var(--ease) forwards}
+.app .ok path{fill:none;stroke:var(--acc);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60;animation:draw .45s .35s var(--ease) forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
 .app .ok b{font-size:20px;font-weight:900}
 .app .ok p{margin:0;color:var(--muted);font-size:13px}
-.app .ok .chip{font-size:12px;color:var(--volt);border:1px solid rgba(200,255,46,.4);border-radius:999px;padding:4px 10px}
+.app .ok .chip{font-size:12px;color:var(--acc);border:1px solid rgba(var(--acc-rgb),.4);border-radius:999px;padding:4px 10px}
 .toast{position:absolute;top:-14px;left:50%;translate:-50% -140%;width:calc(100% - 28px);background:rgba(28,28,34,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line-2);border-radius:22px;padding:12px 14px;display:flex;gap:12px;align-items:center;font-size:13px;box-shadow:0 20px 60px -10px #000;z-index:5;transition:translate var(--t-4) var(--e-in),opacity var(--t-3) var(--e-std);opacity:0}
 .toast.show{translate:-50% 0;opacity:1;transition:translate var(--t-5) var(--e-spring),opacity var(--t-2) var(--e-std)}
-.toast .ic{width:38px;height:38px;border-radius:11px;background:var(--volt);display:grid;place-items:center;flex:0 0 auto}
+.toast .ic{width:38px;height:38px;border-radius:11px;background:var(--acc);color:var(--acc-fg);display:grid;place-items:center;flex:0 0 auto}
 .toast .ic svg{width:20px;height:20px}
 .toast b{display:block;font-size:13px}.toast small{color:var(--muted);font-size:12px}
 .toast .t{margin-inline-start:auto;font:400 11px var(--mono);color:var(--muted);align-self:flex-start}
-.owner{position:absolute;bottom:44px;inset-inline-end:-6px;width:230px;background:var(--surface-2);border:1px solid var(--line-2);border-radius:20px;padding:14px 16px;font-size:13px;z-index:2;box-shadow:0 30px 60px -20px #000;transition:transform var(--t-3) var(--spring),border-color var(--t-3)}
-.owner.flash{transform:scale(1.04);border-color:var(--volt)}
+.owner{position:static;width:100%;max-width:300px;margin-top:14px;background:var(--surface-2);border:1px solid var(--line-2);border-radius:20px;padding:14px 16px;font-size:13px;z-index:2;box-shadow:0 30px 60px -20px #000;transition:transform var(--t-3) var(--spring),border-color var(--t-3)}
+.owner.flash{transform:scale(1.04);border-color:var(--acc)}
 .owner .mono{color:var(--muted);font-size:10px}
 .owner .n{display:flex;align-items:baseline;gap:8px;margin-top:6px}
 .owner .n b{font:900 34px/1 var(--he);direction:ltr;font-variant-numeric:tabular-nums}
@@ -254,10 +254,68 @@ html.on .hero [data-in]{opacity:1;translate:0;filter:blur(0);transition:opacity 
 .owner ul{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:6px;border-top:1px solid var(--line);padding-top:10px}
 .owner li{display:flex;justify-content:space-between;gap:8px;color:var(--muted)}
 .owner li.new{color:var(--fg)}
-.owner li.new::before{content:"●";color:var(--volt);margin-inline-end:6px;font-size:10px}
+.owner li.new::before{content:"●";color:var(--acc);margin-inline-end:6px;font-size:10px}
 .owner li i{font:400 12px var(--mono);font-style:normal;direction:ltr}
 .stage .cap{margin:0;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:10px;z-index:2;align-self:flex-start;text-wrap:balance}
 .stage .cap .mono{color:var(--volt);flex:0 0 auto}
+/* ============ demo: switcher + themed app ============ */
+.stage .cap b{color:var(--fg);font-weight:800}
+.dsw{display:flex;gap:8px;max-width:100%;overflow-x:auto;padding:4px 2px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.dsw::-webkit-scrollbar{display:none}
+.dchip{--acc:var(--volt);--acc-fg:#0B0B10;flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;border-radius:999px;border:1px solid var(--line-2);background:var(--surface);color:var(--fg);padding:9px 14px;font:700 14px var(--he);cursor:pointer;transition:background var(--t-2),color var(--t-2),border-color var(--t-2),box-shadow var(--t-3),scale var(--t-2) var(--e-spring);-webkit-tap-highlight-color:transparent}
+.dchip:hover{border-color:var(--fg)}
+.dchip:active{scale:.96}
+.dchip[aria-selected="true"]{background:var(--acc);color:var(--acc-fg);border-color:var(--acc);box-shadow:0 0 26px -6px var(--acc)}
+.scr.swap .app{animation:appswap var(--t-4) var(--e-out)}
+@keyframes appswap{from{opacity:0;translate:0 12px;scale:.98}}
+.app .row.x{opacity:.45;cursor:not-allowed}
+.app .row .av2{border-radius:50%;background:var(--acc);color:var(--acc-fg);font:900 16px var(--he)}
+.app .row .tm{font:700 13px var(--mono);direction:ltr;width:auto;min-width:38px;padding:0 10px;background:#1d1d25}
+.app .capc{margin-inline-start:auto;font:800 12px var(--mono);direction:ltr;border:1px solid #2a2a33;color:var(--muted);border-radius:999px;padding:3px 9px;flex:0 0 auto}
+.app .capc.low{color:#FFB547;border-color:rgba(255,181,71,.5)}
+.app .capc.full{color:#FF6B6B;border-color:rgba(255,107,107,.5)}
+.app .hint{font-size:11.5px;color:var(--muted);margin:0 2px 10px;line-height:1.45}
+.app .note2{font-size:11.5px;color:var(--muted);margin:10px 2px 0;text-align:center;line-height:1.45}
+.app .sw{display:flex;gap:10px;flex-wrap:wrap;margin:4px 2px 12px}
+.app .swb{width:34px;height:34px;border-radius:50%;background:var(--c);border:2px solid transparent;cursor:pointer;box-shadow:inset 0 0 0 2px #0B0B0F;transition:scale var(--t-2) var(--e-spring),border-color var(--t-2)}
+.app .swb[aria-pressed="true"]{border-color:#fff;scale:1.12}
+.app .styles{display:flex;gap:6px;flex-wrap:wrap}
+.app .stl{border:1px solid #22222a;background:#14141a;color:var(--fg);border-radius:999px;padding:7px 12px;font:700 12.5px var(--he);cursor:pointer;transition:background var(--t-2),color var(--t-2),border-color var(--t-2)}
+.app .stl[aria-pressed="true"]{background:var(--acc);color:var(--acc-fg);border-color:var(--acc)}
+.app .nails{display:flex;gap:7px;justify-content:center;align-items:flex-end;margin:18px 0}
+.app .nails i{width:24px;height:36px;border-radius:12px 12px 9px 9px;background:var(--c);display:block;box-shadow:inset 0 -3px 6px rgba(0,0,0,.28),0 4px 10px -4px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.14);transition:background var(--t-3)}
+.app .nails i:nth-child(1){height:30px}.app .nails i:nth-child(2){height:36px}.app .nails i:nth-child(3){height:38px}.app .nails i:nth-child(4){height:35px}.app .nails i:nth-child(5){height:27px}
+.app .nails.fr i{background:linear-gradient(#fff 0 32%,var(--c) 32%)}
+.app .nails.om i{background:linear-gradient(180deg,var(--c) 10%,#F4E4D6 95%)}
+.app .dotc{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--c);margin-inline-end:6px;vertical-align:-1px;box-shadow:0 0 0 1px rgba(255,255,255,.25)}
+.app input.nm{width:100%;background:#0f0f14;border:1px solid #22222a;border-radius:12px;padding:11px 12px;color:var(--fg);font:500 14px var(--he);margin:0 0 10px;transition:border-color var(--t-2),box-shadow var(--t-2)}
+.app input.nm:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(var(--acc-rgb),.18)}
+.app .cta.busy{pointer-events:none;opacity:.85}
+.app .spin{width:14px;height:14px;border:2px solid rgba(0,0,0,.2);border-top-color:var(--acc-fg);border-radius:50%;display:inline-block;animation:spin .7s linear infinite;margin-inline-end:8px;vertical-align:-2px}
+.app .ok .acts{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:8px;align-items:center}
+.app .ok .acts button{flex:1;background:#14141a;border:1px solid #22222a;color:var(--fg);border-radius:12px;padding:10px 8px;font:700 13px var(--he);cursor:pointer;transition:border-color var(--t-2),background var(--t-2)}
+.app .ok .acts button:hover{border-color:var(--acc)}
+.app .ok .acts button:disabled{color:var(--acc);border-color:rgba(var(--acc-rgb),.4);cursor:default}
+.app .ok .acts button.danger{color:#FF6B6B;border-color:rgba(255,107,107,.4)}
+.app .ok .acts .q{flex:1 1 100%;font-size:13px;color:var(--muted)}
+.app .ok.cancel .big{width:74px;height:74px;border-radius:50%;border:2px solid #FF6B6B;color:#FF6B6B;display:grid;place-items:center}
+.app .ok.cancel .big svg{width:34px;height:34px}
+.owner .oname{display:block;font-size:14px;font-weight:800;margin-top:6px}
+.owner .n b{display:inline-block}
+.owner .n b.bump{animation:bump var(--t-3) var(--e-spring)}
+@keyframes bump{50%{scale:1.25}}
+.owner .rev{display:flex;justify-content:space-between;align-items:baseline;margin-top:4px;font-size:12px;color:var(--muted)}
+.owner .rev b{color:var(--fg);font:800 15px/1 var(--he);direction:ltr}
+.owner .occ{height:6px;border-radius:6px;background:#24242b;margin-top:10px;overflow:hidden}
+.owner .occ i{display:block;height:100%;width:var(--w,0%);background:var(--acc);border-radius:6px;transition:width var(--t-5) var(--e-out),background var(--t-3)}
+.owner .occt{display:block;font-size:11px;color:var(--muted);margin-top:5px}
+.owner li.x span{text-decoration:line-through;opacity:.55}
+.owner li.x::before{content:"●";color:#FF6B6B;margin-inline-end:6px;font-size:10px}
+.stage .demo-cta{margin-top:-2px}
+@media (min-width:1400px){.owner{position:absolute;bottom:40px;right:calc(50% + 126px);width:212px;max-width:none;margin:0}}
+@media (min-width:1001px) and (max-width:1399px){.hero .in{align-items:start}.hero .in>div:first-child{padding-top:28px}}
+@media (max-width:1000px){.dsw{align-self:stretch;justify-content:flex-start}}
+
 @media (max-width:1000px){.hero .in{grid-template-columns:1fr;min-height:0}.stage{margin-top:14px}.owner{position:static;width:100%;max-width:300px;margin-top:18px}.stats{grid-template-columns:repeat(3,1fr);gap:16px 12px}#clock{display:none}}
 @media (max-width:420px){.dev{width:280px}.stats{gap:14px 8px}.stats small{font-size:12.5px}}
 
@@ -504,7 +562,7 @@ html.on .hero h1 .ln+.ln>span{transition-delay:.24s}
 .hero h1 #rot{white-space:nowrap}
 /* device rises and settles, owner card springs in after it */
 .dev{opacity:0;translate:0 44px;scale:.96;transition:transform var(--t-3) var(--e-std)}
-html.on .dev{opacity:1;translate:0;scale:1;transition:opacity var(--t-4) var(--e-std) var(--t-3),translate var(--t-5) var(--e-spring) var(--t-3),scale var(--t-5) var(--e-spring) var(--t-3),transform var(--t-3) var(--e-std)}
+html.on .dev{opacity:1;translate:0;scale:1;transition:opacity var(--t-4) var(--e-std) var(--t-3),translate var(--t-5) var(--e-spring) var(--t-3),scale var(--t-5) var(--e-spring) var(--t-3),transform var(--t-3) var(--e-std),box-shadow var(--t-5) var(--e-std)}
 .owner{opacity:0;translate:0 16px;scale:.96}
 html.on .owner{opacity:1;translate:0;scale:1;transition:opacity var(--t-3) var(--e-std) .95s,translate var(--t-5) var(--e-spring) .95s,scale var(--t-5) var(--e-spring) .95s,transform var(--t-3) var(--e-spring),border-color var(--t-3)}
 /* demo app: directional screen changes (forward moves left in RTL), slot pop, particles */
@@ -634,24 +692,29 @@ html:not(.js) :is([data-reveal],.hero [data-in],.hero h1 .ln>span,.dev,.owner){o
         </div>
       </div>
       <div class="stage" id="demo" data-in style="--i:2">
-        <p class="cap"><span class="mono">live demo</span>ככה נראית אפליקציית תורים של EDON. נסו לקבוע תור.</p>
+        <p class="cap"><span class="mono">live demo</span><span>ככה נראית אפליקציית תורים של EDON ל<b id="capBiz">ברברשופ</b>. נסו לקבוע תור.</span></p>
+        <div class="dsw" id="dsw" role="tablist" aria-label="בחירת סוג העסק בדמו"></div>
         <div class="devwrap">
         <div class="ring" aria-hidden="true"></div>
         <div class="dev">
           <div class="notch"></div>
           <div class="scr"><div class="app" aria-label="דמו של אפליקציית תורים">
             <div class="sb"><span id="sbt">09:41</span><span class="r">●●● <span style="opacity:.7">5G</span> ▮</span></div>
-            <div class="top"><span class="av">B</span><div><b>ברבר דמו</b><small>תורים אונליין · פתוח עכשיו</small></div><span class="live">LIVE</span></div>
+            <div class="top"><span class="av" id="aav">א</span><div><b id="aname">ברברשופ אלון</b><small id="asub">פתוח עכשיו · סוגר ב־19:00</small></div><span class="live">LIVE</span></div>
             <div class="body" id="appBody"></div>
           </div></div>
           <div class="toast" id="toast" role="status" aria-live="polite"></div>
         </div>
         <aside class="owner" id="owner" aria-label="המסך של בעל העסק">
           <span class="mono">owner view · צד בעל העסק</span>
-          <div class="n"><b id="cnt">7</b><span>תורים היום</span></div>
-          <ul id="olist"><li><span>דני · תספורת</span><i>14:20</i></li><li><span>רועי · זקן</span><i>13:40</i></li></ul>
+          <b class="oname" id="oname">ברברשופ אלון</b>
+          <div class="n"><b id="cnt">0</b><span id="olabel">תורים · היום</span></div>
+          <div class="rev"><span>הכנסה צפויה</span><b id="rev">₪0</b></div>
+          <div class="occ" aria-hidden="true"><i id="occ"></i></div><span class="occt" id="occt"></span>
+          <ul id="olist"></ul>
         </aside>
         </div>
+        <a class="btn line sm demo-cta" href="#contact" id="demoCta"><span>רוצים כזאת ל<b id="ctaBiz">ברברשופ</b>?</span><span class="arr">←</span></a>
       </div>
     </div>
   </div>
@@ -869,6 +932,7 @@ const FINE = matchMedia('(hover:hover) and (pointer:fine)').matches;
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const safe = fn => { try { fn(); } catch (e) { console.error(e); } };
 const GLYPHS = 'אבגדהוזחטיכלמנסעפצקרשת0123456789';
+const ils = n => '₪' + n.toLocaleString('en-US');
 const easeOut = k => 1 - Math.pow(1 - k, 3);
 const easeBack = k => { const c = .7, c3 = c + 1; return 1 + c3 * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); };
 const replay = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
@@ -1083,53 +1147,123 @@ safe(() => {
   })();
 });
 
-/* ---------- live demo app ---------- */
+/* ---------- live demo: four business types, one booking engine ---------- */
 safe(() => {
-  const body = $('appBody'), toast = $('toast'), owner = $('owner'), cnt = $('cnt'), olist = $('olist'), stage = $('demo');
-  const SV = [{ n: 'תספורת', d: 35, p: 80, i: '✂️' }, { n: 'עיצוב זקן', d: 20, p: 40, i: '🪒' }, { n: 'תספורת + זקן', d: 50, p: 110, i: '🔥' }];
-  const SL = ['09:00', '09:40', '10:20', '11:00', '11:40', '13:00', '13:40', '14:20', '15:00', '15:40', '16:20', '17:00', '17:40', '18:20'];
+  const body = $('appBody'), toast = $('toast'), owner = $('owner'), cnt = $('cnt'), olist = $('olist'), stage = $('demo'), dsw = $('dsw'), scr = document.querySelector('.dev .scr');
   const DN = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'];
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const today = new Date(); const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(today); d.setDate(today.getDate() + i); return d; });
-  const taken = new Set(); days.forEach((d, di) => SL.forEach((s, si) => { if ((di * 7 + si) % 5 === 0 || (di + si) % 7 === 3) taken.add(di + '-' + s); }));
   const nowMin = today.getHours() * 60 + today.getMinutes();
-  const past = (di, s) => di === 0 && (+s.slice(0, 2) * 60 + +s.slice(3)) <= nowMin + 30;
+  const toMin = t => +t.slice(0, 2) * 60 + +t.slice(3);
+  const toT = m => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+  const past = (di, t) => di === 0 && toMin(t) <= nowMin + 30;
   const openDay = di => days[di].getDay() !== 6;
-  let st = { step: 0, sv: null, di: days.findIndex((d, i) => openDay(i) && SL.some(s => !taken.has(i + '-' + s) && !past(i, s))), slot: null };
-  if (st.di < 0) st.di = 1;
-  const crumbs = n => '<div class="crumbs">' + [0, 1, 2].map(i => '<i class="' + (i <= n ? 'on' : '') + '"></i>').join('') + '</div>';
+  const dayName = di => di === 0 ? 'היום' : di === 1 ? 'מחר' : 'יום ' + DN[days[di].getDay()];
+  const grid = (a, b, step) => { const out = []; for (let m = toMin(a); m + step <= toMin(b) + 1; m += step) out.push(toT(m)); return out; };
+  const hash = s => { let h = 7; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
+  const BELL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>';
+  const OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M6.5 6.5l11 11"/></svg>';
+
+  // one config per business type; the engine below is shared
+  const DEMOS = [
+    { key: 'barber', chip: '✂️ ברברשופ', biz: 'ברברשופ', bizForm: 'מספרה / ברברשופ', name: 'ברברשופ אלון', sub: 'פתוח עכשיו · סוגר ב־19:00', letter: 'א', acc: '#C8FF2E', accFg: '#0B0B10', rgb: '200,255,46',
+      services: [{ n: 'תספורת', d: 35, p: 80, i: '✂️' }, { n: 'עיצוב זקן', d: 20, p: 40, i: '🪒' }, { n: 'תספורת + זקן', d: 50, p: 110, i: '🔥' }, { n: 'תספורת ילד', d: 25, p: 60, i: '🧒' }],
+      extra: { kind: 'staff', title: 'אצל מי?', opts: [{ n: 'אלון', s: 'ספר ראשי · 12 שנה', i: 'א' }, { n: 'דניאל', s: 'ספר · מתמחה בפייד', i: 'ד' }] },
+      slots: grid('09:00', '19:00', 40), seats: [{ n: 'דני', s: 'תספורת אצל אלון', t: '14:20' }, { n: 'רועי', s: 'עיצוב זקן אצל דניאל', t: '13:40' }] },
+    { key: 'wash', chip: '🚗 שטיפת רכב', biz: 'שטיפת רכב', bizForm: 'שטיפת רכב / דיטיילינג', name: 'שטיפה ודיטיילינג רועי', sub: 'פתוח עכשיו · סוגר ב־17:30', letter: 'ר', acc: '#F2C14E', accFg: '#141008', rgb: '242,193,78',
+      services: [{ n: 'שטיפה חיצונית', d: 30, p: 60, i: '🫧' }, { n: 'פנים + חוץ', d: 60, p: 140, i: '✨' }, { n: 'פוליש והגנה', d: 120, p: 450, i: '💎' }],
+      extra: { kind: 'vehicle', title: 'איזה רכב?', opts: [{ n: 'פרטי', s: 'עד 5 מקומות', add: 0, addMin: 0, i: '🚗' }, { n: 'ג׳יפ / SUV', s: '+10 דק׳ לטיפול', add: 20, addMin: 10, i: '🚙' }, { n: 'מסחרי', s: '+15 דק׳ לטיפול', add: 40, addMin: 15, i: '🚐' }] },
+      slots: grid('08:00', '17:30', 30), seats: [{ n: 'מיכל', s: 'פנים + חוץ', t: '12:30' }, { n: 'יוסי', s: 'שטיפה חיצונית', t: '12:00' }] },
+    { key: 'nails', chip: '💅 ציפורניים', biz: 'סטודיו ציפורניים', bizForm: 'קוסמטיקה / ציפורניים', name: 'סטודיו מאיה', sub: 'פתוח עכשיו · סוגר ב־20:00', letter: 'מ', acc: '#FF7AB6', accFg: '#1A0812', rgb: '255,122,182',
+      services: [{ n: 'לק ג׳ל', d: 45, p: 120, i: '💅' }, { n: 'בניית ציפורניים', d: 90, p: 220, i: '✨' }, { n: 'פדיקור', d: 60, p: 150, i: '🦶' }],
+      extra: { kind: 'design', title: 'בוחרים צבע וסגנון', colors: ['#FF7AB6', '#C8102E', '#F4E4D6', '#2B2B2B', '#7FB7FF', '#B8F28B'], styles: ['קלאסי', 'צרפתי', 'אומברה'] },
+      slots: grid('10:00', '20:00', 45), seats: [{ n: 'נועה', s: 'לק ג׳ל', t: '13:30' }, { n: 'שיר', s: 'פדיקור', t: '12:15' }] },
+    { key: 'fit', chip: '🏋️ סטודיו כושר', biz: 'סטודיו כושר', bizForm: 'מאמן / סטודיו לכושר', name: 'סטודיו FIT', sub: 'שיעורים קבוצתיים · מקומות מוגבלים', letter: 'F', acc: '#5EF2FF', accFg: '#06161A', rgb: '94,242,255',
+      services: [{ n: 'יוגה', d: 60, p: 45, i: '🧘', times: ['07:00', '19:00'], cap: 8 }, { n: 'פילאטיס מכשירים', d: 55, p: 70, i: '🤸', times: ['09:00', '17:00'], cap: 6 }, { n: 'HIIT', d: 45, p: 50, i: '🔥', times: ['18:00', '20:00'], cap: 12 }],
+      classes: true, seats: [{ n: 'עדי', s: 'HIIT 18:00', t: '18:00' }, { n: 'תום', s: 'יוגה 07:00', t: '07:00' }] },
+  ];
+
+  // runtime state per business: seeded availability, bookings, where the customer is in the flow
+  const S = {};
+  DEMOS.forEach(D => {
+    const s = S[D.key] = { seeded: new Set(), taken: new Set(), caps: new Map(), userRev: {}, userBk: {}, list: D.seats.map(x => ({ ...x, cls: '' })), step: 0, sv: null, ex: null, slot: null, name: '', color: 0, style: 0, booking: null };
+    days.forEach((d, di) => {
+      if (D.classes) D.services.forEach((v, vi) => v.times.forEach(t => { const h = hash(D.key + di + vi + t); s.caps.set(di + '-' + vi + '-' + t, h % 7 === 0 ? 0 : 1 + h % (v.cap - 1)); }));
+      else D.slots.forEach(t => { if (hash(D.key + di + t) % 100 < 34) { s.seeded.add(di + '-' + t); s.taken.add(di + '-' + t); } });
+    });
+    s.di = days.findIndex((d, i) => openDay(i) && (i > 0 || nowMin < 16 * 60)); if (s.di < 0) s.di = 1;
+  });
+  let cur = DEMOS[0], s = S[cur.key], setRev = null;
+  const stepsOf = D => ['svc'].concat(D.extra ? ['extra'] : []).concat(['when', 'confirm', 'done', 'cancelled']);
+  const idx = name => stepsOf(cur).indexOf(name);
+  const stepOf = D => toMin(D.slots[1]) - toMin(D.slots[0]);
+  const exOpt = () => (cur.extra && cur.extra.opts && s.ex != null) ? cur.extra.opts[s.ex] : null;
+  const curSvc = () => cur.services[s.sv];
+  const curDur = () => curSvc().d + ((exOpt() || {}).addMin || 0);
+  const curPrice = () => curSvc().p + ((exOpt() || {}).add || 0);
+  const covered = (D, i, dur) => { const n = Math.max(1, Math.ceil(dur / stepOf(D))); return i + n > D.slots.length ? null : D.slots.slice(i, i + n); };
+  const freeAt = (di, i) => { const c = covered(cur, i, curDur()); return !!c && !past(di, cur.slots[i]) && c.every(t => !s.taken.has(di + '-' + t)); };
+  const crumbs = () => { const st = stepsOf(cur), n = st.indexOf('confirm') + 1; return '<div class="crumbs">' + Array.from({ length: n }, (_, i) => '<i class="' + (i <= s.step ? 'on' : '') + '"></i>').join('') + '</div>'; };
+  const dayStrip = () => '<div class="days">' + days.map((d, i) => '<button class="day ' + (i === s.di ? 'on' : '') + (openDay(i) ? '' : ' x') + '" type="button" data-di="' + i + '" ' + (openDay(i) ? '' : 'disabled') + '><span>' + (i < 2 ? dayName(i) : DN[d.getDay()]) + '</span><b>' + d.getDate() + '</b></button>').join('') + '</div>';
+  const BACK = '<button class="back" type="button">→ חזרה</button>';
+
   // native-feeling navigation: current screen slides out along the reading direction, next one slides in
   let navT = 0, pend = '';
   function nav(step, dir) {
-    st.step = step;
+    s.step = step;
     if (RM) { render(); return; }
     clearTimeout(navT); body.classList.remove('out-f', 'out-b'); body.classList.add(dir > 0 ? 'out-f' : 'out-b');
     navT = setTimeout(() => { body.classList.remove('out-f', 'out-b'); pend = dir > 0 ? ' in-f' : ' in-b'; render(); }, 150);
   }
   function render() {
-    const s = st; let html;
-    if (s.step === 0) {
-      html = crumbs(0) + '<h4>בחרו שירות</h4>' + SV.map((v, i) => '<button class="row" type="button" data-sv="' + i + '"><span class="ic">' + v.i + '</span><div><b>' + v.n + '</b><small>' + v.d + ' דק׳</small></div><span class="pr">₪' + v.p + '</span></button>').join('');
-    } else if (s.step === 1) {
-      html = crumbs(1) + '<button class="back" type="button">→ חזרה</button><h4>בחרו יום ושעה</h4><div class="days">' + days.map((d, i) => '<button class="day ' + (i === s.di ? 'on' : '') + (openDay(i) ? '' : ' x') + '" type="button" data-di="' + i + '" ' + (openDay(i) ? '' : 'disabled') + '><span>' + DN[d.getDay()] + '</span><b>' + d.getDate() + '</b></button>').join('') + '</div><div class="slots">' + SL.map(t => { const x = taken.has(s.di + '-' + t) || past(s.di, t); return '<button class="slot ' + (x ? 'x' : '') + '" type="button" data-t="' + t + '" ' + (x ? 'disabled' : '') + '>' + t + '</button>'; }).join('') + '</div>';
-    } else if (s.step === 2) {
-      const v = SV[s.sv], d = days[s.di];
-      html = crumbs(2) + '<button class="back" type="button">→ חזרה</button><h4>אישור התור</h4><div class="sum"><div><span>שירות</span><b>' + v.n + '</b></div><div><span>מתי</span><b>יום ' + DN[d.getDay()] + ' · ' + d.getDate() + '.' + (d.getMonth() + 1) + ' · ' + s.slot + '</b></div><div><span>משך</span><b>' + v.d + ' דק׳</b></div><div><span>מחיר</span><b>₪' + v.p + '</b></div></div><button class="cta" type="button" id="confirm">אישור התור</button><p style="margin:10px 2px 0;color:var(--muted);font-size:12px;text-align:center">בלי הרשמה, בלי הורדה. התור נשמר ונשלחת התראה לעסק.</p>';
+    const D = cur, kind = stepsOf(D)[s.step]; let html = '';
+    if (kind === 'svc') {
+      html = crumbs() + '<h4>' + (D.classes ? 'בחרו שיעור' : 'בחרו שירות') + '</h4>' + D.services.map((v, i) => '<button class="row" type="button" data-sv="' + i + '"><span class="ic">' + v.i + '</span><div><b>' + v.n + '</b><small>' + v.d + ' דק׳' + (D.classes ? ' · ' + v.times.join(' / ') : '') + '</small></div><span class="pr">₪' + v.p + '</span></button>').join('');
+    } else if (kind === 'extra') {
+      const X = D.extra;
+      if (X.kind === 'design') {
+        html = crumbs() + BACK + '<h4>' + X.title + '</h4><div class="sw">' + X.colors.map((c, i) => '<button type="button" class="swb" data-c="' + i + '" style="--c:' + c + '" aria-pressed="' + (i === s.color) + '" aria-label="צבע ' + (i + 1) + '"></button>').join('') + '</div><div class="styles">' + X.styles.map((n, i) => '<button type="button" class="stl" data-s="' + i + '" aria-pressed="' + (i === s.style) + '">' + n + '</button>').join('') + '</div><div class="nails ' + ['', 'fr', 'om'][s.style] + '" style="--c:' + X.colors[s.color] + '" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><button class="cta" type="button" id="exgo">המשך לבחירת מועד</button>';
+      } else {
+        html = crumbs() + BACK + '<h4>' + X.title + '</h4>' + X.opts.map((o, i) => '<button class="row" type="button" data-ex="' + i + '"><span class="ic' + (X.kind === 'staff' ? ' av2' : '') + '">' + o.i + '</span><div><b>' + o.n + '</b><small>' + o.s + '</small></div>' + (o.add ? '<span class="pr">+₪' + o.add + '</span>' : '') + '</button>').join('');
+      }
+    } else if (kind === 'when') {
+      if (D.classes) {
+        const v = curSvc();
+        html = crumbs() + BACK + '<h4>מתי מתאים לכם?</h4>' + dayStrip() + '<div class="cls">' + v.times.map(t => { const rem = s.caps.get(s.di + '-' + s.sv + '-' + t), x = rem === 0 || past(s.di, t); return '<button class="row' + (x ? ' x' : '') + '" type="button" data-t="' + t + '" ' + (x ? 'disabled' : '') + '><span class="ic tm">' + t + '</span><div><b>' + v.n + '</b><small>' + v.d + ' דק׳ · ' + (rem === 0 ? 'אין מקום' : 'נשארו ' + rem + ' מקומות') + '</small></div><span class="capc' + (rem === 0 ? ' full' : rem <= 3 ? ' low' : '') + '">' + (rem === 0 ? 'מלא' : rem) + '</span></button>'; }).join('') + '</div><p class="hint">שיעור מלא נסגר לבד. אף אחד לא נרשם מעבר למקומות.</p>';
+      } else {
+        const n = Math.ceil(curDur() / stepOf(D));
+        html = crumbs() + BACK + '<h4>בחרו יום ושעה</h4>' + dayStrip() + (n > 1 ? '<p class="hint">' + curSvc().n + ' לוקח ' + curDur() + ' דק׳, אז הוא תופס ' + n + ' חלונות ברצף. שעות שלא מספיקות כבר אפורות.</p>' : '') + '<div class="slots">' + D.slots.map((t, i) => { const ok = freeAt(s.di, i); return '<button class="slot' + (ok ? '' : ' x') + '" type="button" data-t="' + t + '" ' + (ok ? '' : 'disabled') + '>' + t + '</button>'; }).join('') + '</div>';
+      }
+    } else if (kind === 'confirm') {
+      const v = curSvc(), d = days[s.di], ex = exOpt(), X = D.extra;
+      let rows = '<div><span>' + (D.classes ? 'שיעור' : 'שירות') + '</span><b>' + v.n + '</b></div>';
+      if (X && X.kind === 'staff') rows += '<div><span>אצל</span><b>' + ex.n + '</b></div>';
+      if (X && X.kind === 'vehicle') rows += '<div><span>רכב</span><b>' + ex.n + '</b></div>';
+      if (X && X.kind === 'design') rows += '<div><span>עיצוב</span><b><i class="dotc" style="--c:' + X.colors[s.color] + '"></i>' + X.styles[s.style] + '</b></div>';
+      rows += '<div><span>מתי</span><b>' + dayName(s.di) + ' · ' + d.getDate() + '.' + (d.getMonth() + 1) + ' · ' + s.slot + '</b></div><div><span>משך</span><b>' + curDur() + ' דק׳</b></div><div><span>מחיר</span><b>₪' + curPrice() + '</b></div>';
+      html = crumbs() + BACK + '<h4>' + (D.classes ? 'אישור ההרשמה' : 'אישור התור') + '</h4><div class="sum">' + rows + '</div><input class="nm" type="text" id="nm" maxlength="24" autocomplete="off" placeholder="השם שלכם (לא חובה)" value="' + esc(s.name) + '"><button class="cta" type="button" id="confirm">' + (D.classes ? 'הרשמה לשיעור' : 'אישור התור') + '</button><p class="note2">בלי הרשמה, בלי הורדה. ביטול חינם עד 3 שעות לפני.</p>';
+    } else if (kind === 'done') {
+      const b = s.booking;
+      html = '<div class="ok"><svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="35"/><path d="M24 41l11 11 21-23"/></svg><b>' + (D.classes ? 'נרשמתם לשיעור!' : 'התור נקבע!') + '</b><p>' + b.when + ' · ' + b.v.n + '</p><span class="chip">' + (D.classes ? 'נשארו ' + s.caps.get(b.key) + ' מקומות בשיעור' : (b.cov.length > 1 ? b.cov.length + ' חלונות נחסמו לשאר הלקוחות' : 'השעה נחסמה לשאר הלקוחות')) + '</span><p class="note2">העסק קיבל התראה. תזכורת תישלח אליכם יום לפני.</p><div class="acts"><button type="button" id="cal">＋ הוספה ליומן</button><button type="button" id="cancel">ביטול</button></div></div><button class="cta" type="button" id="again">' + (D.classes ? 'להירשם לשיעור נוסף' : 'לקבוע תור נוסף') + '</button>';
     } else {
-      const v = SV[s.sv], d = days[s.di];
-      html = '<div class="ok"><svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="35"/><path d="M24 41l11 11 21-23"/></svg><b>התור נקבע!</b><p>יום ' + DN[d.getDay()] + ' · ' + s.slot + ' · ' + v.n + '</p><span class="chip">השעה נחסמה לשאר הלקוחות</span><p style="margin-top:8px">נשלחה אליכם תזכורת ליומן, והעסק כבר קיבל התראה.</p></div><button class="cta" type="button" id="again">לקבוע תור נוסף</button>';
+      html = '<div class="ok cancel"><span class="big" aria-hidden="true">' + OFF + '</span><b>' + (D.classes ? 'ההרשמה בוטלה' : 'התור בוטל') + '</b><p>' + (D.classes ? 'המקום חזר להיות פנוי למי שמחכה.' : 'השעה חזרה להיות פנויה לשאר הלקוחות.') + ' העסק קיבל עדכון, בלי שיחת טלפון.</p></div><button class="cta" type="button" id="again">' + (D.classes ? 'להירשם לשיעור אחר' : 'לקבוע תור חדש') + '</button>';
     }
-    body.innerHTML = '<div class="scn' + pend + '">' + html + '</div>'; pend = '';
-    body.scrollTop = 0;
-    if (s.step === 0) $$('[data-sv]', body).forEach(b => b.addEventListener('click', () => { s.sv = +b.dataset.sv; click(260); nav(1, 1); }));
-    if (s.step === 1) {
-      body.querySelector('.back').addEventListener('click', () => nav(0, -1));
-      $$('[data-di]', body).forEach(b => b.addEventListener('click', () => { s.di = +b.dataset.di; render(); }));
-      $$('[data-t]', body).forEach(b => b.addEventListener('click', () => { s.slot = b.dataset.t; b.classList.add('pick'); click(260); nav(2, 1); }));
-    }
-    if (s.step === 2) { body.querySelector('.back').addEventListener('click', () => nav(1, -1)); $('confirm').addEventListener('click', confirm); }
-    if (s.step === 3) $('again').addEventListener('click', () => { s.slot = null; nav(0, 1); });
+    body.innerHTML = '<div class="scn' + pend + '">' + html + '</div>'; pend = ''; body.scrollTop = 0;
+    const bk = body.querySelector('.back'); if (bk) bk.addEventListener('click', () => nav(s.step - 1, -1));
+    $$('[data-sv]', body).forEach(b => b.addEventListener('click', () => { s.sv = +b.dataset.sv; s.ex = null; click(260); nav(s.step + 1, 1); }));
+    $$('[data-ex]', body).forEach(b => b.addEventListener('click', () => { s.ex = +b.dataset.ex; click(260); nav(s.step + 1, 1); }));
+    $$('[data-c]', body).forEach(b => b.addEventListener('click', () => { s.color = +b.dataset.c; click(300); render(); }));
+    $$('[data-s]', body).forEach(b => b.addEventListener('click', () => { s.style = +b.dataset.s; click(300); render(); }));
+    const exgo = $('exgo'); if (exgo) exgo.addEventListener('click', () => { click(260); nav(s.step + 1, 1); });
+    $$('[data-di]', body).forEach(b => b.addEventListener('click', () => { s.di = +b.dataset.di; render(); ownerPaint(false); }));
+    $$('[data-t]', body).forEach(b => b.addEventListener('click', () => { s.slot = b.dataset.t; b.classList.add('pick'); click(260); nav(s.step + 1, 1); }));
+    const nm = $('nm'); if (nm) nm.addEventListener('input', () => { s.name = nm.value; });
+    const cf = $('confirm'); if (cf) cf.addEventListener('click', () => { cf.classList.add('busy'); cf.innerHTML = '<span class="spin"></span>' + (D.classes ? 'שומרים לכם מקום…' : 'שומרים את התור…'); setTimeout(() => { commit(); click(330); nav(s.step + 1, 1); setTimeout(burst, 560); }, RM ? 0 : 700); });
+    const cal = $('cal'); if (cal) cal.addEventListener('click', () => { cal.textContent = '✓ נוסף ליומן'; cal.disabled = true; click(300); });
+    const cn = $('cancel'); if (cn) cn.addEventListener('click', () => { const acts = cn.parentElement; acts.innerHTML = '<span class="q">לבטל את ' + (D.classes ? 'ההרשמה' : 'התור') + '?</span><button type="button" id="cy" class="danger">כן, לבטל</button><button type="button" id="cno">לא</button>'; $('cy').addEventListener('click', cancelBooking); $('cno').addEventListener('click', () => render()); });
+    const ag = $('again'); if (ag) ag.addEventListener('click', () => { s.slot = null; s.booking = null; nav(0, 1); });
   }
-  // ≤12 volt particles from the check mark; transform/opacity only, removed when done
+  // ≤12 accent particles from the check mark; transform/opacity only, removed when done
   function burst() {
     if (RM) return; const svg = body.querySelector('.ok svg'); if (!svg) return;
     const r = svg.getBoundingClientRect(), hr = stage.getBoundingClientRect();
@@ -1141,17 +1275,64 @@ safe(() => {
       stage.appendChild(d); d.addEventListener('animationend', () => d.remove());
     }
   }
-  function confirm() {
-    const s = st, v = SV[s.sv], d = days[s.di];
-    taken.add(s.di + '-' + s.slot); click(330); nav(3, 1);
-    setTimeout(burst, RM ? 0 : 560);
-    toast.innerHTML = '<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#0B0B10" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></span><div><b>תור חדש נקבע</b><small>יום ' + DN[d.getDay()] + ' · ' + s.slot + ' · ' + v.n + ' · ₪' + v.p + '</small></div><span class="t">עכשיו</span>';
-    setTimeout(() => { toast.classList.add('show'); }, RM ? 0 : 350);
-    clearTimeout(confirm.t); confirm.t = setTimeout(() => toast.classList.remove('show'), 4600);
-    cnt.textContent = +cnt.textContent + 1; replay(owner, 'flash'); setTimeout(() => owner.classList.remove('flash'), 700);
-    const li = document.createElement('li'); li.className = 'new'; li.innerHTML = '<span>לקוח חדש · ' + v.n + '</span><i>' + s.slot + '</i>'; olist.prepend(li); if (olist.children.length > 3) olist.lastElementChild.remove();
+  function commit() {
+    const D = cur, v = curSvc(), ex = exOpt(), d = days[s.di], name = (s.name || '').trim() || 'לקוח חדש', price = curPrice(), dur = curDur();
+    const b = { di: s.di, t: s.slot, v, price, dur, name, when: dayName(s.di) + ' · ' + s.slot };
+    if (D.classes) { b.key = s.di + '-' + s.sv + '-' + s.slot; s.caps.set(b.key, s.caps.get(b.key) - 1); }
+    else { b.cov = covered(D, D.slots.indexOf(s.slot), dur) || [s.slot]; b.cov.forEach(t => s.taken.add(s.di + '-' + t)); s.userRev[s.di] = (s.userRev[s.di] || 0) + price; s.userBk[s.di] = (s.userBk[s.di] || 0) + 1; }
+    s.booking = b;
+    s.list.unshift({ n: name, s: v.n + (ex && D.extra.kind === 'staff' ? ' אצל ' + ex.n : ''), t: (s.di > 0 ? DN[d.getDay()] + ' ' : '') + s.slot, cls: 'new' });
+    s.list = s.list.slice(0, 3); b.li = s.list[0];
+    ownerPaint(true);
+    notify(D.classes ? 'הרשמה חדשה לשיעור' : 'תור חדש נקבע', name + ' · ' + b.when + ' · ' + v.n + ' · ₪' + price);
   }
-  render();
+  function cancelBooking() {
+    const D = cur, b = s.booking; if (!b) return;
+    if (D.classes) s.caps.set(b.key, s.caps.get(b.key) + 1);
+    else { b.cov.forEach(t => s.taken.delete(b.di + '-' + t)); s.userRev[b.di] = (s.userRev[b.di] || 0) - b.price; s.userBk[b.di] = (s.userBk[b.di] || 0) - 1; }
+    if (b.li) b.li.cls = 'x';
+    s.booking = null; click(180); ownerPaint(true);
+    notify(D.classes ? 'ביטול הרשמה' : 'תור בוטל', b.name + ' · ' + b.when + ' · ' + (D.classes ? 'המקום התפנה' : 'השעה התפנתה'), 'cancel');
+    nav(idx('cancelled'), 1);
+  }
+  let toastT = 0;
+  function notify(title, sub, kind) {
+    toast.innerHTML = '<span class="ic">' + (kind === 'cancel' ? OFF : BELL) + '</span><div><b>' + esc(title) + '</b><small>' + esc(sub) + '</small></div><span class="t">עכשיו</span>';
+    toast.classList.remove('show');
+    setTimeout(() => toast.classList.add('show'), RM ? 0 : 350);
+    clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove('show'), 4600);
+  }
+  // the owner's dashboard follows the day the customer is looking at
+  function ownerPaint(flash) {
+    const D = cur, di = s.di; let booked = 0, used = 0, total = 0, rev = 0;
+    if (D.classes) { D.services.forEach((v, vi) => v.times.forEach(t => { const rem = s.caps.get(di + '-' + vi + '-' + t); booked += v.cap - rem; total += v.cap; rev += (v.cap - rem) * v.p; })); used = booked; }
+    else { total = D.slots.length; D.slots.forEach(t => { const k = di + '-' + t; if (s.taken.has(k)) used++; if (s.seeded.has(k)) { booked++; rev += D.services[hash(D.key + k + 'p') % D.services.length].p; } }); booked += s.userBk[di] || 0; rev += s.userRev[di] || 0; }
+    $('oname').textContent = D.name; $('olabel').textContent = (D.classes ? 'נרשמים' : 'תורים') + ' · ' + dayName(di);
+    if (cnt.textContent !== String(booked)) { cnt.textContent = booked; replay(cnt, 'bump'); }
+    if (!setRev) setRev = odometer($('rev')); setRev(rev);
+    $('occ').style.setProperty('--w', Math.round(used / total * 100) + '%'); $('occt').textContent = used + ' מתוך ' + total + (D.classes ? ' מקומות' : ' חלונות') + ' תפוסים';
+    olist.innerHTML = s.list.map(x => '<li class="' + (x.cls || '') + '"><span>' + esc(x.n) + ' · ' + esc(x.s) + '</span><i>' + x.t + '</i></li>').join('');
+    if (flash) { replay(owner, 'flash'); setTimeout(() => owner.classList.remove('flash'), 700); }
+  }
+  function select(key, first) {
+    const D = DEMOS.find(x => x.key === key); if (!D || (D === cur && !first)) return;
+    cur = D; s = S[D.key];
+    stage.style.setProperty('--acc', D.acc); stage.style.setProperty('--acc-fg', D.accFg); stage.style.setProperty('--acc-rgb', D.rgb);
+    $$('.dchip', dsw).forEach((b, i) => b.setAttribute('aria-selected', DEMOS[i] === D));
+    $('aav').textContent = D.letter; $('aname').textContent = D.name; $('asub').textContent = D.sub; $('ctaBiz').textContent = D.biz;
+    if (first) $('capBiz').textContent = D.biz; else scramble($('capBiz'), D.biz, 450);
+    toast.classList.remove('show');
+    if (!first && !RM) replay(scr, 'swap');
+    pend = ''; render(); ownerPaint(false);
+    if (!first) click(260);
+  }
+  DEMOS.forEach(D => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'dchip'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', 'false');
+    b.style.setProperty('--acc', D.acc); b.style.setProperty('--acc-fg', D.accFg); b.textContent = D.chip; b.dataset.demo = D.key;
+    b.addEventListener('click', () => select(D.key)); dsw.appendChild(b);
+  });
+  select(DEMOS[0].key, true);
+  $('demoCta').addEventListener('click', () => { const fb = $('fb'); if (fb && !fb.value) fb.value = cur.bizForm; const r = $$('input[name=svc]').find(i => i.value === 'אפליקציית תורים'); if (r) r.checked = true; });
   $('tryDemo').addEventListener('click', e => { if (innerWidth > 1000) { e.preventDefault(); stage.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' }); } });
   // desktop: the device leans toward the pointer (max 4°)
   if (FINE && !RM) {
@@ -1167,7 +1348,6 @@ safe(() => {
 /* ---------- configurator ---------- */
 const CFG = { page: { n: 'דף עסק', p: 1490 }, app: { n: 'אפליקציית תורים', p: 3490 }, brand: { n: 'מיתוג ואינסטגרם', p: 1990 }, care: { n: 'ליווי חודשי', p: 149 } };
 const sel = new Set(['app']);
-const ils = n => '₪' + n.toLocaleString('en-US');
 let cfgState = { total: 3490 };
 // odometer: one rolling strip per digit, static glyphs for the currency sign and commas
 function odometer(el) {
