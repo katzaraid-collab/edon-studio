@@ -107,14 +107,15 @@ safe(() => {
     requestAnimationFrame(() => requestAnimationFrame(() => { pre.classList.add('fade'); setTimeout(() => pre.remove(), 320); }));
     return;
   }
-  const lay = '<div class="lay"><div class="cells">' + '<i></i>'.repeat(84) + '</div><span class="lbl s mono">EDON X</span><span class="lbl e mono st">STATUS · CLOSED</span><div class="clock">19:00</div><i class="hair"></i><span class="he">העסק סגר ב־19:00</span></div>';
+  const PC = Math.max(1, Math.floor((innerWidth + 6) / 50)), PN = Math.min(300, PC * Math.max(3, Math.floor((innerHeight + 6) / 50))), PR = Math.ceil(PN / PC);
+  const lay = '<div class="lay"><div class="cells">' + '<i></i>'.repeat(PN) + '</div><span class="lbl s mono">EDON X</span><span class="lbl e mono st">STATUS · CLOSED</span><div class="clock">19:00</div><i class="hair"></i><span class="he">העסק סגר ב־19:00</span></div>';
   pre.innerHTML = '<div class="half t">' + lay + '</div><div class="half b">' + lay + '</div><i class="fl"></i>';
   document.body.appendChild(pre);
   const clocks = $$('.clock', pre), hairs = $$('.hair', pre), sts = $$('.st', pre), hes = $$('.he', pre), cells = $$('.cells', pre).map(c => $$('i', c)), fl = pre.querySelector('.fl');
   const t0 = performance.now();
   requestAnimationFrame(() => { clocks.forEach(c => c.classList.add('go')); hairs.forEach(h => h.classList.add('go')); });
   const blink = (i, at) => setTimeout(() => { cells.forEach(cs => cs[i] && cs[i].classList.add('on')); setTimeout(() => cells.forEach(cs => cs[i] && cs[i].classList.remove('on')), 160); }, at);
-  blink(29, 260); blink(66, 470);
+  blink(PC + 2, 260); blink(Math.max(0, (PR - 2) * PC + PC - 3), 470);
   const fmt = m => String(Math.floor(m / 60) % 24).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
   let done = false;
   const snap = () => {
@@ -122,7 +123,7 @@ safe(() => {
     clocks.forEach(c => c.textContent = '02:00'); sts.forEach(s => s.textContent = 'STATUS · OPEN'); hes.forEach(h => h.textContent = 'האפליקציה פתוחה');
     H.classList.add('ready'); fl.classList.add('go');
     setTimeout(() => { pre.classList.add('split'); startHero(); }, 20);
-    setTimeout(() => pre.remove(), 520);
+    setTimeout(() => pre.remove(), 480);
   };
   const tick = now => {
     const t = now - t0;
@@ -130,7 +131,7 @@ safe(() => {
     if (t < 680) requestAnimationFrame(tick); else snap();
   };
   requestAnimationFrame(tick);
-  setTimeout(snap, 760); // hard ceiling, whatever the frame rate
+  setTimeout(snap, 700); // hard ceiling, whatever the frame rate
 });
 
 /* ---------- hero: masks → decode, rotating word, counters, recede on scroll ---------- */
@@ -225,7 +226,9 @@ safe(() => {
     if (!e.isIntersecting) return;
     e.target.classList.add('on'); rio.unobserve(e.target);
     $$('[data-count]', e.target).forEach(countUp);
+    if (e.target.id === 'hours') { const n = document.querySelector('.nums'); if (n && !n.classList.contains('on')) { rio.unobserve(n); setTimeout(() => { n.classList.add('on'); $$('[data-count]', n).forEach(countUp); }, RM ? 0 : 1100); } }
   }), { threshold: .12, rootMargin: '0px 0px -8% 0px' });
+  $$('.hours .hrow').forEach(t => $$('i', t).forEach((c, i) => c.style.setProperty('--i', i)));
   $$('[data-reveal]').forEach(el => rio.observe(el));
   const proc = $('process'), steps = $$('#steps li');
   let raf = 0;
@@ -455,6 +458,7 @@ safe(() => {
     pend = ''; render(); ownerPaint(false);
     if (!first) click(260);
     requestAnimationFrame(setBar);
+    if (!first) { const c = dsw.querySelector('.dchip[aria-selected="true"]'); if (c) dsw.scrollTo({ left: c.offsetLeft - (dsw.clientWidth - c.offsetWidth) / 2, behavior: RM ? 'auto' : 'smooth' }); }
   }
   DEMOS.forEach(D => {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'dchip'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', 'false');
@@ -462,7 +466,9 @@ safe(() => {
     b.addEventListener('click', () => select(D.key)); dsw.appendChild(b);
   });
   select(DEMOS[0].key, true);
-  addEventListener('resize', setBar); if (document.fonts && document.fonts.ready) document.fonts.ready.then(setBar);
+  const more = () => { const max = dsw.scrollWidth - dsw.clientWidth; dsw.classList.toggle('more', max > 4 && Math.abs(dsw.scrollLeft) < max - 4); };
+  dsw.addEventListener('scroll', more, { passive: true }); more();
+  addEventListener('resize', () => { setBar(); more(); }); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { setBar(); more(); });
   $('demoCta').addEventListener('click', () => { const fb = $('fb'); if (fb && !fb.value) fb.value = cur.bizForm; const r = $$('input[name=svc]').find(i => i.value === 'אפליקציית תורים'); if (r) r.checked = true; });
   $('tryDemo').addEventListener('click', e => { if (innerWidth > 1000) { e.preventDefault(); stage.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' }); } });
   // desktop: the device leans toward the pointer (max 4°); the wrapper is posed by scroll, .dev by the pointer
@@ -493,6 +499,7 @@ safe(() => {
   const lines = $('lines'), promo = $('promo'), sel2 = $('sel2');
   const setA = odometer($('total')), setB = odometer($('total2'));
   $$('.plan .strip').forEach(st => $$('i', st).forEach((c, i) => c.style.setProperty('--i', i)));
+  const lat = $('lat'); if (lat) lat.innerHTML = '<i></i>'.repeat(112); const latI = lat ? $$('i', lat) : []; latI.forEach((c, i) => c.style.setProperty('--i', i));
   function calc() {
     const items = ['page', 'app', 'brand'].filter(k => sel.has(k));
     let sub = items.reduce((a, k) => a + CFG[k].p, 0), bundle = sel.has('app') && sel.has('brand') ? 490 : 0, tot = sub - bundle;
@@ -502,6 +509,7 @@ safe(() => {
     if (sel.has('care')) html += '<li><span>ליווי חודשי</span><b>' + ils(149) + ' / חודש</b></li>';
     if (!items.length) html += '<li class="em"><span>הדליקו לפחות שירות אחד כדי לראות מחיר. ליווי חודשי מצטרף לכל חבילה.</span></li>';
     lines.innerHTML = html; setA(tot); setB(tot);
+    const nl = Math.min(latI.length, Math.round(tot / 64)); latI.forEach((c, i) => c.classList.toggle('on', i < nl));
     promo.textContent = ils(Math.round(tot * .7 / 10) * 10);
     sel2.textContent = items.length ? items.map(k => CFG[k].n).join(' + ') + (sel.has('care') ? ' + ליווי' : '') : 'בחרו שירות';
   }
@@ -615,6 +623,12 @@ safe(() => {
   gsap.to(track, { x: () => dist(), ease: 'none', scrollTrigger: { trigger: rail, pin: true, start: 'top top', end: () => '+=' + dist(), scrub: SCRUB, invalidateOnRefresh: true, anticipatePin: 1 } });
 });
 safe(() => {
+  const rail = $('rail'), pg = $('pager'); if (!rail || !pg) return;
+  const cases = $$('.case', rail); if (!cases.length) return; pg.innerHTML = '<i></i>'.repeat(cases.length); const dots = $$('i', pg);
+  let t = 0; const upd = () => { const w = cases[0].offsetWidth + 16, i = Math.min(cases.length - 1, Math.round(Math.abs(rail.scrollLeft) / w)); dots.forEach((d, k) => d.classList.toggle('on', k === i)); };
+  rail.addEventListener('scroll', () => { clearTimeout(t); t = setTimeout(upd, 120); }, { passive: true }); upd();
+});
+safe(() => {
   if (!ST) return;
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
   addEventListener('orientationchange', () => setTimeout(() => ScrollTrigger.refresh(), 300));
@@ -651,19 +665,19 @@ safe(() => {
     const CAM = PH ? { z0: 12.5, y0: 1.4 } : { z0: 10, y0: 1.6 };
     const COLS = 7, ROWS = 16, LAYERS = PH ? 6 : 10, N = COLS * ROWS * LAYERS;
     const tint = new THREE.Color('#C8FF2E'), tintFrom = tint.clone(), tintTo = tint.clone(); let tintT0 = -1;
-    const U = { uTime: { value: 0 }, uTint: { value: tint }, uMoon: { value: new THREE.Color('#8EA2FF') }, uBase: { value: new THREE.Color('#141722') }, uFade: { value: 1 }, uDPR: { value: DPR } };
+    const U = { uTime: { value: 0 }, uTint: { value: tint }, uMoon: { value: new THREE.Color('#8EA2FF') }, uBase: { value: new THREE.Color('#141722') }, uFade: { value: 1 }, uDPR: { value: DPR }, uMax: { value: PH ? 48 : 130 } };
     // lattice
     const lit = new Float32Array(N), base = new Float32Array(N), flash = new Float32Array(N), seed = new Float32Array(N), dist = new Float32Array(N), centers = new Float32Array(N * 3);
     const cell = (c, r, k) => ((LAYERS - 1 - k) * ROWS + r) * COLS + c; // far layers first: back-to-front blending
     const SX = PH ? .56 : .68;
-    const ORIGIN = { c: 3, r: 8, k: 2 };
+    const ORIGIN = { c: 3, r: 0, k: 0 };
     const hsh = i => { let h = (i * 2654435761) >>> 0; h ^= h >>> 15; h = Math.imul(h, 2246822519) >>> 0; h ^= h >>> 13; return (h >>> 0) / 4294967296; };
     const geo = new THREE.BoxGeometry(.2, .2, .06);
     // the cell material: a hairline-framed chip (the CSS .cell, in GLSL). Unlit = moon-tinted frame over a near-empty
     // interior; lit = the frame brightens and the interior fills with the tint. Premultiplied output, fog dissolves alpha.
     const mat = new THREE.ShaderMaterial({ uniforms: U, transparent: true, depthWrite: false, extensions: { derivatives: true },
       vertexShader: 'attribute float aLit;attribute float aSeed;varying float vLit;varying float vSeed;varying vec3 vN;varying vec3 vW;varying vec2 vUv;varying float vNear;void main(){vec4 wp=modelMatrix*instanceMatrix*vec4(position,1.0);vN=normalize(mat3(modelMatrix)*mat3(instanceMatrix)*normal);vW=wp.xyz;vUv=uv;vLit=aLit;vSeed=aSeed;vNear=smoothstep(.6,2.6,cameraPosition.z-wp.z);gl_Position=projectionMatrix*viewMatrix*wp;}',
-      fragmentShader: 'precision highp float;uniform vec3 uTint;uniform vec3 uMoon;uniform vec3 uBase;uniform float uFade;varying float vLit;varying float vSeed;varying vec3 vN;varying vec3 vW;varying vec2 vUv;varying float vNear;void main(){vec3 n=normalize(vN);vec3 v=normalize(cameraPosition-vW);float d=length(cameraPosition-vW);float side=1.0-step(.5,abs(n.z));float e=min(min(vUv.x,1.0-vUv.x),min(vUv.y,1.0-vUv.y));float aa=fwidth(e)*1.4;float w=.075;float frame=1.0-smoothstep(w,w+aa,e);float lit=smoothstep(.02,.6,vLit);vec3 moon=mix(uMoon,uTint,.25);vec3 lineCol=mix(moon*.55+uBase,uTint*1.35,lit);vec3 fillCol=mix(uBase*(.6+vSeed*.5),uTint*(.55+vLit*1.4),lit)*(1.0-e*.7*lit);float rim=pow(1.0-max(dot(n,v),0.0),3.0);vec3 col=mix(fillCol,lineCol,frame)+moon*rim*.2;col=mix(col,uBase*.9+uTint*vLit*.9,side);float a=mix(.05+.07*vSeed,.92,lit)*(1.0-frame)+frame*mix(.36,1.0,lit);a=mix(a,.3+lit*.6,side);float fog=smoothstep(7.,24.,d);col=mix(col,vec3(.02,.02,.03),fog*.85);a*=(1.0-smoothstep(13.,25.,d))*vNear*uFade;gl_FragColor=vec4(col*a,a);}' });
+      fragmentShader: 'precision highp float;uniform vec3 uTint;uniform vec3 uMoon;uniform vec3 uBase;uniform float uFade;varying float vLit;varying float vSeed;varying vec3 vN;varying vec3 vW;varying vec2 vUv;varying float vNear;void main(){vec3 n=normalize(vN);vec3 v=normalize(cameraPosition-vW);float d=length(cameraPosition-vW);float side=1.0-step(.5,abs(n.z));float e=min(min(vUv.x,1.0-vUv.x),min(vUv.y,1.0-vUv.y));float aa=fwidth(e)*1.4;float w=min(fwidth(e)*1.2,.12);float frame=1.0-smoothstep(w,w+aa,e);float lit=smoothstep(.02,.6,vLit);vec3 moon=mix(uMoon,uTint,.25);vec3 lineCol=mix(moon*.55+uBase,uTint*1.35,lit);vec3 fillCol=mix(uBase*(.6+vSeed*.5),uTint*(.55+vLit*1.4),lit)*(1.0-e*.7*lit);float rim=pow(1.0-max(dot(n,v),0.0),3.0);vec3 col=mix(fillCol,lineCol,frame)+moon*rim*.2;col=mix(col,uBase*.9+uTint*vLit*.9,side);float fog=smoothstep(5.,18.,d);float nearF=1.0-smoothstep(1.5,5.5,d);float dim=1.0-nearF*.45;float a=mix((.05+.07*vSeed)*dim,.92,lit)*(1.0-frame)+frame*mix(.55*(1.0-fog)*dim,1.0,lit);a=mix(a,(.3+lit*.6)*dim,side);col=mix(col,vec3(.02,.02,.03),fog*.85);a*=(1.0-smoothstep(13.,25.,d))*vNear*uFade;gl_FragColor=vec4(col*a,a);}' });
     const mesh = new THREE.InstancedMesh(geo, mat, N);
     const M = new THREE.Matrix4();
     for (let k = 0; k < LAYERS; k++) for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
@@ -671,7 +685,7 @@ safe(() => {
       M.makeTranslation(x, y, z); mesh.setMatrixAt(i, M);
       centers[i * 3] = x; centers[i * 3 + 1] = y; centers[i * 3 + 2] = z;
       seed[i] = hsh(i + 11); dist[i] = Math.abs(c - ORIGIN.c) + Math.abs(r - ORIGIN.r) + 2 * Math.abs(k - ORIGIN.k);
-      base[i] = hsh(i + 977) < .06 ? .35 : 0;
+      base[i] = ((k === 0 && r <= 1) || k >= 5) && hsh(i + 977) < (PH ? .04 : .06) ? .35 : 0; // standing light only low and near, or far in the fog: the copy stays dark
     }
     base[cell(ORIGIN.c, ORIGIN.r, ORIGIN.k)] = 1;
     const litAttr = new THREE.InstancedBufferAttribute(lit, 1); litAttr.setUsage(THREE.DynamicDrawUsage);
@@ -682,7 +696,7 @@ safe(() => {
     pgeo.setAttribute('position', new THREE.BufferAttribute(centers, 3));
     const plit = new THREE.BufferAttribute(lit, 1); plit.setUsage(THREE.DynamicDrawUsage); pgeo.setAttribute('aLit', plit);
     const pmat = new THREE.ShaderMaterial({ uniforms: U, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-      vertexShader: 'attribute float aLit;uniform float uDPR;varying float vA;varying float vNear;void main(){vec4 mv=modelViewMatrix*vec4(position,1.0);gl_Position=projectionMatrix*mv;gl_PointSize=clamp(smoothstep(.05,1.0,aLit)*26.0*uDPR*(60.0/max(-mv.z,1.0)),0.0,130.0);vA=aLit;vNear=smoothstep(.6,2.6,-mv.z)*(1.0-smoothstep(13.,25.,-mv.z));}',
+      vertexShader: 'attribute float aLit;uniform float uDPR;uniform float uMax;varying float vA;varying float vNear;void main(){vec4 mv=modelViewMatrix*vec4(position,1.0);gl_Position=projectionMatrix*mv;gl_PointSize=clamp(smoothstep(.05,1.0,aLit)*26.0*uDPR*(60.0/max(-mv.z,1.0)),0.0,uMax);vA=aLit;vNear=smoothstep(.6,2.6,-mv.z)*(1.0-smoothstep(13.,25.,-mv.z));}',
       fragmentShader: 'precision highp float;uniform vec3 uTint;uniform float uFade;varying float vA;varying float vNear;void main(){float d=length(gl_PointCoord-.5)*2.0;float a=smoothstep(1.0,0.0,d);a=a*a*a;float s=smoothstep(.05,.5,vA);float al=a*s*.5*uFade*vNear;gl_FragColor=vec4(uTint*al,al);}' });
     const pts = new THREE.Points(pgeo, pmat); pts.frustumCulled = false; scene.add(pts);
     // dust: GPU-animated motes in a 14×8×16 box around the camera path
@@ -696,6 +710,7 @@ safe(() => {
 
     // state: pulses (the night breathes), bursts (a booking lights the room), ripples (a day column)
     const pulses = [], bursts = [], ripples = []; let lastPulse = 0, dirty = true, lastP = -1, prog = 0, progT = 0, yaw = 0, pitch = 0, yawT = 0, pitchT = 0, first = true, fadeDip = 0;
+    const safeCell = () => { const far = LAYERS > 5 && Math.random() < .5; return cell(Math.random() * COLS | 0, far ? Math.random() * ROWS | 0 : Math.random() * 2 | 0, far ? 5 + (Math.random() * (LAYERS - 5) | 0) : 0); };
     const neigh = i => { const k = Math.floor(i / (ROWS * COLS)), r = Math.floor((i % (ROWS * COLS)) / COLS), c = i % COLS, out = []; if (c > 0) out.push(i - 1); if (c < COLS - 1) out.push(i + 1); if (r > 0) out.push(i - COLS); if (r < ROWS - 1) out.push(i + COLS); return out; };
     const top = $('top');
     const sizes = () => { const h = canvas.clientHeight || innerHeight, w = innerWidth; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
@@ -715,7 +730,7 @@ safe(() => {
       // tint tween (600 ms, power2.out)
       if (tintT0 >= 0) { const k = clamp((now - tintT0) / 600, 0, 1), e = 1 - (1 - k) * (1 - k); tint.copy(tintFrom).lerp(tintTo, e); if (k >= 1) tintT0 = -1; }
       // night pulses
-      if (now - lastPulse > 2600) { lastPulse = now; pulses.push({ i: Math.random() * N | 0, t0: now }); }
+      if (now - lastPulse > 2600) { lastPulse = now; pulses.push({ i: prog < .3 ? safeCell() : Math.random() * N | 0, t0: now }); }
       let any = false;
       for (let i = 0; i < N; i++) if (flash[i] !== 0) { flash[i] *= .962; if (Math.abs(flash[i]) < .004) flash[i] = 0; any = true; }
       for (let q = pulses.length - 1; q >= 0; q--) { const p = pulses[q], tt = now - p.t0; const v = tt < 300 ? tt / 300 : tt < 1500 ? 1 - .65 * (tt - 300) / 1200 : tt < 2500 ? .35 * (1 - (tt - 1500) / 1000) : 0; if (v <= 0) { pulses.splice(q, 1); continue; } flash[p.i] = Math.max(flash[p.i], v); for (const j of neigh(p.i)) flash[j] = Math.max(flash[j], v * .4); any = true; }

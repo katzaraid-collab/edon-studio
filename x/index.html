@@ -47,9 +47,9 @@
     <a href="#demo"><span class="ln"><span class="lin"><i class="mono">01</i>הדמו</span></span></a>
     <a href="#services"><span class="ln"><span class="lin"><i class="mono">02</i>שירותים</span></span></a>
     <a href="#why"><span class="ln"><span class="lin"><i class="mono">03</i>למה אפליקציה</span></span></a>
-    <a href="#process"><span class="ln"><span class="lin"><i class="mono">05</i>תהליך</span></span></a>
-    <a href="#work"><span class="ln"><span class="lin"><i class="mono">06</i>עבודות</span></span></a>
-    <a href="#faq"><span class="ln"><span class="lin"><i class="mono">08</i>שאלות</span></span></a>
+    <a href="#process"><span class="ln"><span class="lin"><i class="mono">04</i>תהליך</span></span></a>
+    <a href="#work"><span class="ln"><span class="lin"><i class="mono">05</i>עבודות</span></span></a>
+    <a href="#faq"><span class="ln"><span class="lin"><i class="mono">06</i>שאלות</span></span></a>
   </nav>
   <div class="mfoot">
     <a class="btn main" href="#contact">דברו איתנו</a>
@@ -163,6 +163,7 @@
       </div>
       <aside class="bill" id="bill" aria-live="polite" data-x>
         <h3>ההצעה שלכם <span class="mono">QUOTE</span></h3>
+        <div class="lat" id="lat" aria-hidden="true"></div>
         <ul id="lines"></ul>
         <div class="tot"><span>סה״כ חד־פעמי</span><b id="total">₪3,490</b></div>
         <div class="promo"><span>מבצע השקה · 3 העסקים הראשונים · 30%</span><b id="promo">₪2,440</b></div>
@@ -186,8 +187,8 @@
     <div class="hours" id="hours" data-x data-reveal>
       <div class="ticks mono" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
       <div class="hrs mono" aria-hidden="true"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div>
-      <div class="lane"><span class="lbl">דוגמה: עסק שפתוח 09:00–19:00</span><div class="track"><i class="seg biz"></i></div></div>
-      <div class="lane"><span class="lbl volt">האפליקציה · 00:00–24:00</span><div class="track"><i class="seg app"></i></div></div>
+      <div class="lane"><span class="lbl">דוגמה: עסק שפתוח 09:00–19:00</span><div class="hrow biz"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="lane"><span class="lbl volt">האפליקציה · 00:00–24:00</span><div class="hrow app"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="tag">02:00</span></div></div>
     </div>
     <div class="nums" data-reveal data-x>
       <div><b><span data-count="24">24</span>/7</b><small>עונה גם ב־2 בלילה</small></div>
@@ -245,13 +246,13 @@
     </div>
     <div class="pgrid">
       <div class="cols" aria-hidden="true">
-        <div class="col" style="--k:0"><span class="mono">יום 1</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="col" style="--k:1"><span class="mono">יום 2</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="col" style="--k:2"><span class="mono">יום 3</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="col" style="--k:3"><span class="mono">יום 4</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="col" style="--k:4"><span class="mono">יום 5</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="col" style="--k:5"><span class="mono">יום 6</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="col" style="--k:6"><span class="mono">יום 7</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="col" style="--k:0"><span class="mono">יום 1</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="col" style="--k:1"><span class="mono">יום 2</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="col" style="--k:2"><span class="mono">יום 3</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="col" style="--k:3"><span class="mono">יום 4</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="col" style="--k:4"><span class="mono">יום 5</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="col" style="--k:5"><span class="mono">יום 6</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="col" style="--k:6"><span class="mono">יום 7</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
       </div>
       <ol class="steps" id="steps">
         <li data-x><div class="n">01</div><h3>אפיון</h3><p>20 דקות על העסק, הלקוחות והמטרה. יוצאים עם הצעת מחיר סגורה.</p><small class="mono">DAY 01</small></li>
@@ -370,6 +371,7 @@
       </div>
     </div>
   </div>
+  <div class="pager" id="pager" aria-hidden="true"></div>
 </section>
 
 <!-- ===== compare ===== -->
@@ -381,6 +383,18 @@
       <p class="sub">אפשר גם ככה. ככה זה נראה כשמשווים.</p>
     </div>
     <div class="cmp">
+      <div class="col hot" data-x>
+        <span class="chip">EDON</span>
+        <h3>EDON · אפליקציה משלכם</h3>
+        <ul>
+          <li><span>מה זה עולה</span><b><svg class="mk y" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>תשלום חד־פעמי. ליווי לבחירה.</b></li>
+          <li><span>מיתוג</span><b><svg class="mk y" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>רק שלכם. לוגו, צבעים, שם.</b></li>
+          <li><span>תורים כפולים</span><b><svg class="mk y" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>לא</b></li>
+          <li><span>מה הלקוח צריך לעשות</span><b><svg class="mk y" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>ללחוץ על לינק</b></li>
+          <li><span>הקוד והנתונים</span><b><svg class="mk y" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>שלכם, 100%</b></li>
+          <li><span>תמיכה</span><b><svg class="mk y" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>בן אדם, בדיירקט</b></li>
+        </ul>
+      </div>
       <div class="col" data-x>
         <h3>טלפון ווואטסאפ</h3>
         <ul>
@@ -401,18 +415,6 @@
           <li><span>מה הלקוח צריך לעשות</span><b><svg class="mk d" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg>להירשם או להוריד אפליקציה</b></li>
           <li><span>הקוד והנתונים</span><b><svg class="mk n" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>שלהם</b></li>
           <li><span>תמיכה</span><b><svg class="mk d" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg>צ׳אט או טיקט</b></li>
-        </ul>
-      </div>
-      <div class="col hot" data-x>
-        <span class="chip">EDON</span>
-        <h3>EDON · אפליקציה משלכם</h3>
-        <ul>
-          <li><span>מה זה עולה</span><b><svg class="mk y" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>תשלום חד־פעמי. ליווי לבחירה.</b></li>
-          <li><span>מיתוג</span><b><svg class="mk y" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>רק שלכם. לוגו, צבעים, שם.</b></li>
-          <li><span>תורים כפולים</span><b><svg class="mk y" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>לא</b></li>
-          <li><span>מה הלקוח צריך לעשות</span><b><svg class="mk y" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>ללחוץ על לינק</b></li>
-          <li><span>הקוד והנתונים</span><b><svg class="mk y" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>שלכם, 100%</b></li>
-          <li><span>תמיכה</span><b><svg class="mk y" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>בן אדם, בדיירקט</b></li>
         </ul>
       </div>
     </div>
