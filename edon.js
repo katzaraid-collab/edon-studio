@@ -275,9 +275,9 @@ safe(() => {
 });
 
 /* ---------- pricing ---------- */
-const CFG = { page: { n: 'דף עסק', p: 1490 }, app: { n: 'אפליקציית תורים', p: 3490 }, brand: { n: 'מיתוג ואינסטגרם', p: 1990 }, care: { n: 'ליווי חודשי', p: 149 } };
+const CFG = { page: { n: 'דף עסק', p: 990 }, app: { n: 'אפליקציית תורים', p: 2490 }, brand: { n: 'מיתוג ואינסטגרם', p: 1490 }, care: { n: 'ליווי חודשי', p: 99 } };
 const sel = new Set(['app']);
-let cfgState = { items: ['app'], total: 3490, care: false };
+let cfgState = { items: ['app'], total: 2490, care: false };
 function tweenNum(el, to) {
   const from = +(el.dataset.v || to); el.dataset.v = to;
   if (!motion || from === to) { el.textContent = ils(to); return; }
@@ -288,7 +288,7 @@ function tweenNum(el, to) {
 }
 safe(() => {
   const lines = $('#lines'), total = $('#total'), promo = $('#promo'), live = $('#bill-live'), total2 = $('#total2');
-  total.dataset.v = 3490; promo.dataset.v = 2440; total2.dataset.v = 3490;
+  total.dataset.v = 2490; promo.dataset.v = 1740; total2.dataset.v = 2490;
   let lt;
   function calc(announce) {
     const items = ['page', 'app', 'brand'].filter(k => sel.has(k));
@@ -296,7 +296,7 @@ safe(() => {
     cfgState = { items, bundle, total: tot, care: sel.has('care') };
     let html = items.map(k => '<li><span>' + CFG[k].n + '</span><b>' + ils(CFG[k].p) + '</b></li>').join('');
     if (bundle) html += '<li class="sv"><span>חבילה מלאה · אפליקציה + מיתוג</span><b>−' + ils(bundle) + '</b></li>';
-    if (sel.has('care')) html += '<li><span>ליווי חודשי</span><b>' + ils(149) + ' / חודש</b></li>';
+    if (sel.has('care')) html += '<li><span>ליווי חודשי</span><b>' + ils(CFG.care.p) + ' / חודש</b></li>';
     if (!items.length) html += '<li class="em"><span>הדליקו לפחות שירות אחד כדי לראות מחיר. ליווי חודשי מצטרף לכל חבילה.</span></li>';
     lines.innerHTML = html;
     const pr = Math.round(tot * .7 / 10) * 10;
