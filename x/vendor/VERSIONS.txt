@@ -1,0 +1,10 @@
+EDON X vendor libraries (unmodified, downloaded from cdnjs.cloudflare.com on 2026-10-18)
+
+three.module.min.js   three.js r160 (0.160.0)      670681 B   https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js
+gsap.min.js           GSAP 3.12.5                   72214 B   https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js
+ScrollTrigger.min.js  GSAP ScrollTrigger 3.12.5     43380 B   https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js
+
+sha256:
+3e690ac7d180b0aadf0891bea39eec643e29e2d3e75c99b18689518665f69ba6  three.module.min.js
+28033e449a31ebcc396e5be8b13b63152bf03094288fb5867034321927bce087  gsap.min.js
+ad33c2df9ada8a663c2147357828f980d0b7ca731ef33eb3c6e4f327c3b2cda5  ScrollTrigger.min.js
