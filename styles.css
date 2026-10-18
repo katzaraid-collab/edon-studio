@@ -776,6 +776,16 @@ html.on .owner{opacity:1;translate:0;scale:1;transition:opacity var(--t-3) var(-
 .tick .row.b span{font-size:clamp(18px,2.6vw,30px);font-weight:700;color:var(--muted)}
 .tick .row.b span i{font-size:.7em}
 @media (prefers-reduced-motion:reduce){.mtext .w{opacity:1!important}.viz *{animation:none!important}.on .ms .bars i,.on .viz.chart i{scale:1 1}}
+/* Reduce Motion: the bento visuals only appear through their animations, so give each a static final frame */
+@media (prefers-reduced-motion:reduce){
+  .viz.notif i{opacity:1;translate:0}
+  .viz.notif i:nth-child(2){opacity:.7}.viz.notif i:nth-child(3){opacity:.45}
+  .viz.slots i:nth-child(3){background:var(--volt);border-color:var(--volt)}
+  .viz.slots i:is(:nth-child(2),:nth-child(5),:nth-child(8)){background:#0d0d11;border-color:#26262d;opacity:.45}
+  .viz.home b{scale:1}
+  .viz.wa .bub{opacity:1;translate:0}
+  .viz.wa .ticks{color:#5EF2FF}
+}
 
 
 /* ============ stories: swipe intro ============ */
