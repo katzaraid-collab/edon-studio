@@ -661,3 +661,7 @@ html:not(.motion) .mq{animation:none}
 .doc .box{padding:18px 20px;border-radius:20px;background:var(--surface);border:1px solid var(--line);margin:18px 0}
 .doc .btn{margin-top:8px}
 .back{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 16px}
+/* cases: status tags instead of outbound links */
+.case .go.kc{border:0;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.02em;background:rgba(11,11,16,.08);color:rgba(11,11,16,.72)}
+.case .go.kc.on{background:var(--ink);color:var(--olive)}
+.case .go.kc.on::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--olive);display:inline-block}
