@@ -320,7 +320,7 @@ html.on .hero [data-in]{opacity:1;translate:0;filter:blur(0);transition:opacity 
 @media (max-width:420px){.dev{width:280px}.stats{gap:14px 8px}.stats small{font-size:12.5px}}
 
 /* ============ ticker ============ */
-.tick{overflow:hidden;border-block:1px solid var(--line);padding-block:18px;background:var(--bg2);position:relative;z-index:2}
+.tick{overflow:hidden;border-block:1px solid var(--line);padding-block:18px;background:var(--bg2);position:relative;z-index:2;direction:ltr}
 .tick .row{display:flex;width:max-content;direction:ltr;animation:mq 34s linear infinite}
 .tick span{font:900 clamp(26px,4vw,48px)/1 var(--he);letter-spacing:-.03em;white-space:nowrap;padding-inline:22px;direction:rtl;display:inline-flex;align-items:center;gap:22px}
 .tick span.e{color:transparent;-webkit-text-stroke:1.3px var(--muted)}
@@ -794,6 +794,69 @@ html.on .owner{opacity:1;translate:0;scale:1;transition:opacity var(--t-3) var(-
 .tick .row.b span i{font-size:.7em}
 @media (prefers-reduced-motion:reduce){.mtext .w{opacity:1!important}.viz *{animation:none!important}.on .ms .bars i,.on .viz.chart i{scale:1 1}}
 
+
+/* ============ stories: swipe intro ============ */
+#stories{position:fixed;inset:0;z-index:95;background:var(--bg);display:none;overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
+#stories.show{display:block}
+#stories.hold{cursor:grabbing}
+#stories.out{opacity:0;scale:1.04;transition:opacity var(--t-4) var(--e-in),scale var(--t-4) var(--e-in);pointer-events:none}
+#stories::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:72px 72px;mask-image:radial-gradient(ellipse at 50% 40%,#000 10%,transparent 72%);-webkit-mask-image:radial-gradient(ellipse at 50% 40%,#000 10%,transparent 72%);opacity:.45;pointer-events:none}
+#stories::after{content:"";position:absolute;left:50%;top:40%;width:90vmin;height:90vmin;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,rgba(200,255,46,.14),transparent 65%);pointer-events:none;filter:blur(10px)}
+.sbars{position:absolute;top:max(14px,env(safe-area-inset-top,0px));left:16px;right:16px;display:flex;gap:6px;z-index:3;direction:rtl}
+.sbars i{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.16);overflow:hidden;position:relative}
+.sbars i::after{content:"";position:absolute;inset:0;background:var(--volt);transform-origin:right;scale:0 1}
+.sbars i.done::after{scale:1 1}
+.sbars i.act::after{animation:sfill var(--sdur,5s) linear forwards}
+#stories.hold .sbars i.act::after{animation-play-state:paused}
+@keyframes sfill{to{scale:1 1}}
+.sskip{position:absolute;top:calc(max(14px,env(safe-area-inset-top,0px)) + 18px);left:16px;z-index:4;background:rgba(255,255,255,.07);border:1px solid var(--line-2);color:var(--fg);font:700 13px var(--he);padding:9px 14px;border-radius:999px;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:background var(--t-2),border-color var(--t-2)}
+.sskip:hover{border-color:var(--fg);background:rgba(255,255,255,.12)}
+.sdeck{position:absolute;inset:0}
+.st{position:absolute;inset:0;display:grid;grid-template-rows:1fr auto;gap:18px;padding:calc(env(safe-area-inset-top,0px) + 76px) 24px calc(env(safe-area-inset-bottom,0px) + 96px);opacity:0;pointer-events:none;will-change:transform;max-width:1120px;margin:0 auto;transform-origin:50% 100%}
+.st.cur{opacity:1;pointer-events:auto;z-index:2}
+.st.nxt{opacity:0;z-index:1;scale:.94;filter:brightness(.6)}
+.st.prv{opacity:0;z-index:0}
+.svis{display:grid;place-items:center;min-height:0;transform:translateX(calc(var(--dx,0px) * .12))}
+.stxt{max-width:34ch;transform:translateX(calc(var(--dx,0px) * .3))}
+.stxt .mono{color:var(--volt);margin:0 0 12px;display:block;opacity:0;transition:opacity var(--t-3) var(--e-std) .05s}
+.st.cur .stxt .mono{opacity:1}
+.stxt h2{font-size:clamp(38px,7.5vw,84px);font-weight:900;letter-spacing:-.045em;line-height:.98;overflow:hidden;padding-bottom:.08em}
+.stxt h2 span{display:inline-block;translate:0 110%;transition:translate var(--t-5) var(--e-out) .08s}
+.st.cur .stxt h2 span{translate:0}
+.stxt p:not(.mono){color:var(--muted);font-size:clamp(16px,1.6vw,21px);margin:14px 0 0;max-width:40ch;opacity:0;translate:0 14px;transition:opacity var(--t-4) var(--e-std) .3s,translate var(--t-4) var(--e-out) .3s}
+.st.cur .stxt p:not(.mono){opacity:1;translate:0}
+.stxt .btn{margin-top:24px;opacity:0;translate:0 14px;transition:opacity var(--t-4) var(--e-std) .5s,translate var(--t-4) var(--e-out) .5s,transform var(--t-2) var(--e-spring)}
+.st.cur .stxt .btn{opacity:1;translate:0}
+.svis>*{opacity:0;scale:.9;transition:opacity var(--t-4) var(--e-std) .15s,scale var(--t-5) var(--e-spring) .15s}
+.st.cur .svis>*{opacity:1;scale:1}
+.shint{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);left:50%;translate:-50% 0;z-index:3;display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px;font-weight:700;transition:opacity var(--t-3);white-space:nowrap}
+.shint.off{opacity:0}
+.shint i{font-style:normal;color:var(--volt);font-size:22px;animation:nudgeL 1.3s ease-in-out infinite;line-height:1}
+@keyframes nudgeL{50%{translate:-10px 0}}
+.bigsw{width:min(300px,58vw);aspect-ratio:172/100;border-radius:999px;background:var(--volt);position:relative;box-shadow:0 0 120px 20px rgba(200,255,46,.32);animation:swpulse 2.6s ease-in-out infinite}
+.bigsw i{position:absolute;top:7%;bottom:7%;right:4%;aspect-ratio:1;border-radius:50%;background:var(--volt-fg);display:grid;place-items:center}
+.bigsw i::after{content:"";width:36%;aspect-ratio:1;border-radius:50%;background:var(--volt);box-shadow:0 0 24px 4px rgba(200,255,46,.6)}
+@keyframes swpulse{50%{box-shadow:0 0 170px 34px rgba(200,255,46,.48)}}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:min(340px,72vw)}
+.sgrid i{aspect-ratio:1.5;border-radius:14px;background:#16161c;border:1px solid var(--line-2);animation:sl 6s steps(1) infinite;animation-delay:calc(var(--i,0)*.5s)}
+.stoast{margin-top:18px;background:#1b1b22;border:1px solid var(--line-2);border-radius:16px;padding:12px 18px;font-weight:700;display:flex;align-items:center;gap:10px;animation:nt 6s var(--e-out) 1.2s infinite;box-shadow:0 20px 50px -20px #000}
+.stoast b{width:30px;height:30px;border-radius:9px;background:var(--volt);display:grid;place-items:center;font-size:15px}
+.svis.v1{grid-auto-rows:min-content;align-content:center}
+.fan{position:relative;width:min(340px,70vw);aspect-ratio:1}
+.fan i{position:absolute;inset:14% 20%;border-radius:24px;display:grid;place-items:center;font:900 20px var(--mono);font-style:normal;letter-spacing:.12em;border:1px solid var(--line-2);transform-origin:50% 130%;box-shadow:0 30px 60px -30px #000}
+.fan .c1{background:linear-gradient(135deg,#f9ce34,#ee2a7b 50%,#6228d7);color:#fff;animation:fan1 5s ease-in-out infinite}
+.fan .c2{background:var(--volt);color:var(--volt-fg);animation:fan2 5s ease-in-out infinite}
+.fan .c3{background:#15151a;color:var(--fg);animation:fan3 5s ease-in-out infinite}
+@keyframes fan1{0%,100%{rotate:-14deg}50%{rotate:-6deg}}
+@keyframes fan2{0%,100%{translate:0 -12px;rotate:0deg}50%{translate:0 -24px}}
+@keyframes fan3{0%,100%{rotate:14deg}50%{rotate:6deg}}
+.fan i small{position:absolute;bottom:14px;font:700 11px var(--he);letter-spacing:0;opacity:.8}
+.scount{display:grid;justify-items:center;font:900 clamp(110px,24vw,220px)/1 var(--he);color:var(--volt);direction:ltr;letter-spacing:-.07em;font-variant-numeric:tabular-nums;text-shadow:0 0 60px rgba(200,255,46,.35)}
+.scount small{font:700 13px var(--mono);letter-spacing:.3em;color:var(--muted);margin-top:10px;text-transform:uppercase}
+@media (min-width:900px){.st{grid-template-rows:none;grid-template-columns:1fr 1fr;align-items:center;gap:40px;padding-inline:56px}.stxt{max-width:none;order:-1}}
+@media (max-height:640px){.st{padding-top:calc(env(safe-area-inset-top,0px) + 60px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 70px);gap:10px}.stxt h2{font-size:clamp(30px,6.5vw,60px)}.bigsw{width:min(220px,50vw)}.scount{font-size:clamp(80px,18vw,160px)}}
+@media (prefers-reduced-motion:reduce){#stories{display:none!important}}
+
 main{position:relative;z-index:2}
 /* no-JS insurance: nothing stays hidden if scripts never run */
 html:not(.js) :is([data-reveal],.hero [data-in],.hero h1 .ln>span,.dev,.owner){opacity:1!important;translate:0!important;scale:1!important;filter:none!important}
@@ -824,6 +887,32 @@ html:not(.js) :is([data-reveal],.hero [data-in],.hero h1 .ln>span,.dev,.owner){o
   <div class="surge" id="surge" aria-hidden="true"></div>
   <div class="bloom" id="bloom" aria-hidden="true"></div>
   <div class="scan" aria-hidden="true"></div>
+</div>
+
+
+<!-- ===== stories: swipe intro ===== -->
+<div id="stories" aria-label="הקדמה קצרה" hidden>
+  <div class="sbars" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <button class="sskip" id="sskip" type="button">דילוג ←</button>
+  <div class="sdeck" id="sdeck">
+    <section class="st" data-i="0">
+      <div class="svis v0" aria-hidden="true"><span class="bigsw"><i></i></span></div>
+      <div class="stxt"><span class="mono">01 / 04 · swipe</span><h2><span>היי. אנחנו EDON.</span></h2><p>סטודיו שבונה אתרים ואפליקציות לעסקים קטנים, ומדליק להם את הדיגיטל.</p></div>
+    </section>
+    <section class="st" data-i="1">
+      <div class="svis v1" aria-hidden="true"><div class="sgrid"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i></div><div class="stoast"><b>🔔</b>תור חדש נקבע · יום ג׳ · 15:20</div></div>
+      <div class="stxt"><span class="mono">02 / 04</span><h2><span>תורים שנקבעים לבד.</span></h2><p>הלקוח בוחר שירות, יום ושעה. אתם מקבלים התראה. בלי טלפון באמצע תספורת.</p></div>
+    </section>
+    <section class="st" data-i="2">
+      <div class="svis v2" aria-hidden="true"><div class="fan"><i class="c1">IG<small>פוסטים · רילסים · ביו</small></i><i class="c2">LOGO<small>לוגו · צבעים · פונטים</small></i><i class="c3">WEB<small>אתר · אפליקציה</small></i></div></div>
+      <div class="stxt"><span class="mono">03 / 04</span><h2><span>נראים כמו הליגה הגדולה.</span></h2><p>מיתוג, אינסטגרם ואתר שמדברים באותה שפה. מהלוגו ועד הכפתור האחרון.</p></div>
+    </section>
+    <section class="st" data-i="3">
+      <div class="svis v3" aria-hidden="true"><b class="scount"><span id="scount">01</span><small>days to launch</small></b></div>
+      <div class="stxt"><span class="mono">04 / 04</span><h2><span>מרעיון לאוויר ב־14 יום.</span></h2><p>מחיר סגור מראש, עיצוב לאישור לפני שורת קוד אחת, וליווי גם אחרי.</p><button class="btn main" id="senter" type="button">להיכנס לאתר <span class="arr">←</span></button></div>
+    </section>
+  </div>
+  <div class="shint" id="shint"><i>←</i>החליקו שמאלה, או הקישו</div>
 </div>
 
 <header id="hdr"><div class="in bar">
@@ -1272,15 +1361,14 @@ function click(freq = 180) {
 
 /* ---------- intro: power switch ---------- */
 let site = false;
-function powerOn() {
+function powerOn(fast) {
   if (site) return; site = true;
   try { sessionStorage.setItem('edon-on', '1'); } catch (e) {}
-  H.classList.remove('lock'); H.classList.add('on');
-  startHero();
   const intro = $('intro');
-  if (!intro) return;
-  intro.classList.add('out');
-  setTimeout(() => intro.remove(), 900);
+  if (intro) { intro.classList.add('out'); setTimeout(() => intro.remove(), 900); }
+  const enter = () => { H.classList.remove('lock'); H.classList.add('on'); startHero(); };
+  if (!fast && !RM && $('stories')) { try { startStories(enter); return; } catch (e) { console.error(e); } }
+  enter();
 }
 safe(() => {
   const intro = $('intro');
@@ -1317,12 +1405,12 @@ safe(() => {
     const r = knob.getBoundingClientRect(), s = $('surge'), bl = $('bloom');
     const x = short ? innerWidth / 2 : r.left + r.width / 2, y = short ? innerHeight / 2 : r.top + r.height / 2;
     [s, bl].forEach(el => { el.style.setProperty('--x', x + 'px'); el.style.setProperty('--y', y + 'px'); });
-    if (RM) { powerOn(); return; }
+    if (RM) { powerOn(true); return; }
     const T = short ? .5 : 1;
     if (!short) bl.classList.add('go');
     setTimeout(() => intro.classList.add('flash'), 160 * T);
     setTimeout(() => s.classList.add('go'), 340 * T);
-    setTimeout(powerOn, 700 * T);
+    setTimeout(() => powerOn(short), 700 * T);
   };
   const on = () => seqOn(false);
   pw.addEventListener('pointerdown', e => { if (pw.classList.contains('on')) return; dragging = true; moved = false; det = false; sx = e.clientX; sp = p; pw.classList.add('drag', 'press'); pw.setPointerCapture(e.pointerId); measure(); });
@@ -1678,6 +1766,66 @@ safe(() => {
   const upd = () => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; const r = line.getBoundingClientRect(); const p = clamp((innerHeight * .78 - r.top) / r.height, 0, 1); line.style.setProperty('--jp', p.toFixed(3)); items.forEach((li, i) => { const lr = li.getBoundingClientRect(); li.classList.toggle('on', lr.top < innerHeight * .78); }); }); };
   addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
 });
+
+/* ---------- stories: a swipeable intro that runs after the switch ---------- */
+function startStories(onDone) {
+  const root = $('stories'); if (!root) { onDone(); return; }
+  const cards = $$('.st', root), bars = $$('.sbars i', root), hint = $('shint'), N = cards.length;
+  const DUR = [4200, 5200, 5200, 6500];
+  let i = 0, done = false, dx = 0, drag = false, axis = null, sx = 0, sy = 0, t0 = 0, counted = false, wheelT = 0;
+  const next = () => cards[i + 1];
+  const setClasses = () => cards.forEach((c, k) => { c.classList.toggle('cur', k === i); c.classList.toggle('nxt', k === i + 1); c.classList.toggle('prv', k < i); c.style.transform = ''; c.style.scale = ''; c.style.filter = ''; c.style.opacity = ''; c.style.transition = ''; c.style.setProperty('--dx', '0px'); });
+  const paintBars = () => bars.forEach((b, k) => { b.classList.toggle('done', k < i); b.classList.remove('act'); if (k === i) { void b.offsetWidth; b.style.setProperty('--sdur', DUR[i] + 'ms'); b.classList.add('act'); } });
+  const countdown = () => {
+    if (counted) return; counted = true; const el = $('scount'); if (!el) return;
+    if (RM) { el.textContent = '14'; return; }
+    const t = performance.now(); const tick = now => { const k = clamp((now - t) / 1500, 0, 1); el.textContent = String(1 + Math.round(13 * easeOut(k))).padStart(2, '0'); if (k < 1) requestAnimationFrame(tick); };
+    setTimeout(() => requestAnimationFrame(tick), 350);
+  };
+  const show = k => { i = clamp(k, 0, N - 1); setClasses(); paintBars(); root.dataset.i = i; if (i === N - 1) countdown(); };
+  const finish = () => {
+    if (done) return; done = true; click(330);
+    root.classList.add('out'); setTimeout(() => root.remove(), 700);
+    onDone();
+  };
+  const go = dir => { if (done) return; hint.classList.add('off'); if (dir > 0 && i === N - 1) { finish(); return; } if (dir < 0 && i === 0) { snap(cards[0]); return; } show(i + dir); click(dir > 0 ? 260 : 200); };
+  const snap = c => { c.style.transition = 'transform var(--t-4) var(--e-spring)'; c.style.transform = ''; c.style.setProperty('--dx', '0px'); const n = next(); if (n) { n.style.transition = 'opacity var(--t-3)'; n.style.opacity = ''; n.style.scale = ''; n.style.filter = ''; setTimeout(() => { n.style.transition = ''; }, 400); } setTimeout(() => { c.style.transition = ''; }, 600); };
+  const fling = (c, dir) => { c.style.transition = 'transform .32s var(--e-in)'; c.style.transform = 'translateX(' + (dir > 0 ? -120 : 120) + '%) rotate(' + (dir > 0 ? -8 : 8) + 'deg)'; setTimeout(() => go(dir), 230); };
+  // the active bar finishing is the auto-advance
+  bars.forEach(b => b.addEventListener('animationend', () => { if (!done && b.classList.contains('act') && !drag) go(1); }));
+  // drag: the card follows the finger, the next card wakes up underneath (RTL: forward is left)
+  root.addEventListener('pointerdown', e => { if (done || e.target.closest('button')) return; drag = true; axis = null; dx = 0; sx = e.clientX; sy = e.clientY; t0 = performance.now(); root.classList.add('hold'); try { root.setPointerCapture(e.pointerId); } catch (err) {} });
+  root.addEventListener('pointermove', e => {
+    if (!drag) return;
+    const mx = e.clientX - sx, my = e.clientY - sy;
+    if (!axis) { if (Math.abs(mx) < 6 && Math.abs(my) < 6) return; axis = Math.abs(mx) > Math.abs(my) ? 'x' : 'y'; }
+    if (axis !== 'x') return;
+    dx = mx;
+    const edge = (dx > 0 && i === 0) || (dx < 0 && i === N - 1) ? .3 : 1, v = dx * edge, c = cards[i];
+    c.style.transition = 'none'; c.style.transform = 'translateX(' + v.toFixed(1) + 'px) rotate(' + (v / innerWidth * 6).toFixed(2) + 'deg)'; c.style.setProperty('--dx', v.toFixed(1) + 'px');
+    const n = next(); if (n && dx < 0) { const k = clamp(-dx / innerWidth, 0, 1); n.style.opacity = Math.min(1, k * 2.2).toFixed(2); n.style.scale = (.94 + .06 * k).toFixed(3); n.style.filter = 'brightness(' + (.6 + .4 * k).toFixed(2) + ')'; }
+  });
+  const end = e => {
+    if (!drag) return; drag = false; root.classList.remove('hold');
+    const dt = performance.now() - t0, c = cards[i], vel = Math.abs(dx) / Math.max(1, dt);
+    if (axis === 'x') {
+      const far = Math.abs(dx) > innerWidth * .22 || (vel > .55 && Math.abs(dx) > 28);
+      if (far && dx < 0) fling(c, 1);
+      else if (far && dx > 0 && i > 0) fling(c, -1);
+      else snap(c);
+    } else if (!axis && dt < 320) {
+      const x = e.clientX / innerWidth; if (x < .35) go(1); else if (x > .65) go(-1);
+    } else snap(c);
+    dx = 0;
+  };
+  root.addEventListener('pointerup', end); root.addEventListener('pointercancel', end);
+  addEventListener('keydown', e => { if (done || !root.isConnected) return; if (e.key === 'ArrowLeft' || e.key === ' ' || e.key === 'Enter') { if (e.target.closest && e.target.closest('button')) return; e.preventDefault(); go(1); } else if (e.key === 'ArrowRight') { e.preventDefault(); go(-1); } else if (e.key === 'Escape') finish(); });
+  root.addEventListener('wheel', e => { if (done) return; const now = performance.now(); if (now - wheelT < 900) return; const d = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : -e.deltaX; if (d > 18) { wheelT = now; go(1); } else if (d < -18) { wheelT = now; go(-1); } }, { passive: true });
+  $('sskip').addEventListener('click', finish);
+  $('senter').addEventListener('click', finish);
+  root.hidden = false; root.classList.add('show');
+  requestAnimationFrame(() => show(0));
+}
 
 /* ---------- configurator ---------- */
 const CFG = { page: { n: 'דף עסק', p: 1490 }, app: { n: 'אפליקציית תורים', p: 3490 }, brand: { n: 'מיתוג ואינסטגרם', p: 1990 }, care: { n: 'ליווי חודשי', p: 149 } };
