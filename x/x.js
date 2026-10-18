@@ -24,19 +24,18 @@ function setMotion(on, save) {
   motion = on;
   root.classList.toggle('motion', on);
   msw.setAttribute('aria-pressed', String(on));
-  if (save) store.set('edonx-motion', on ? 'full' : 'calm');
+  if (save) store.set('edonx-m', on ? 'full' : 'calm');
   for (const s of S) s.fresh = true;
   layout(); kick();
 }
 msw.addEventListener('click', () => { setMotion(!motion, true); hideNote(); });
-mqRM.addEventListener && mqRM.addEventListener('change', e => { if (!store.get('edonx-motion')) setMotion(!e.matches, false); });
 
 const note = $('#mnote');
 function hideNote() { note.hidden = true; store.set('edonx-note', '1', sessionStorage); }
-if (mqRM.matches && !store.get('edonx-motion') && !store.get('edonx-note', sessionStorage)) {
-  setTimeout(() => { note.hidden = false; }, 1400);
+if (mqRM.matches && !store.get('edonx-m') && !store.get('edonx-note', sessionStorage)) {
+  setTimeout(() => { note.hidden = false; }, 2600);
 }
-$('#mn-on').addEventListener('click', () => { setMotion(true, true); hideNote(); });
+$('#mn-on').addEventListener('click', hideNote);
 $('#mn-off').addEventListener('click', () => { setMotion(false, true); hideNote(); });
 
 /* ---------- scenes ---------- */
