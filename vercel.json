@@ -1,0 +1,6 @@
+{
+  "redirects": [
+    { "source": "/day", "destination": "/", "permanent": false },
+    { "source": "/day/(.*)", "destination": "/", "permanent": false }
+  ]
+}
