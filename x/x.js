@@ -492,9 +492,9 @@ safe(() => {
 });
 
 /* ---------- configurator (ported) + cell strips + the wire ---------- */
-const CFG = { page: { n: 'דף עסק', p: 1490 }, app: { n: 'אפליקציית תורים', p: 3490 }, brand: { n: 'מיתוג ואינסטגרם', p: 1990 }, care: { n: 'ליווי חודשי', p: 149 } };
+const CFG = { page: { n: 'דף עסק', p: 990 }, app: { n: 'אפליקציית תורים', p: 2490 }, brand: { n: 'מיתוג ואינסטגרם', p: 1490 }, care: { n: 'ליווי חודשי', p: 99 } };
 const sel = new Set(['app']);
-let cfgState = { total: 3490 };
+let cfgState = { total: 2490 };
 safe(() => {
   const lines = $('lines'), promo = $('promo'), sel2 = $('sel2');
   const setA = odometer($('total')), setB = odometer($('total2'));
@@ -506,7 +506,7 @@ safe(() => {
     cfgState = { items, bundle, total: tot, care: sel.has('care') };
     let html = items.map(k => '<li><span>' + CFG[k].n + '</span><b>' + ils(CFG[k].p) + '</b></li>').join('');
     if (bundle) html += '<li class="sv"><span>חבילה מלאה · אפליקציה + מיתוג</span><b>−' + ils(bundle) + '</b></li>';
-    if (sel.has('care')) html += '<li><span>ליווי חודשי</span><b>' + ils(149) + ' / חודש</b></li>';
+    if (sel.has('care')) html += '<li><span>ליווי חודשי</span><b>' + ils(CFG.care.p) + ' / חודש</b></li>';
     if (!items.length) html += '<li class="em"><span>הדליקו לפחות שירות אחד כדי לראות מחיר. ליווי חודשי מצטרף לכל חבילה.</span></li>';
     lines.innerHTML = html; setA(tot); setB(tot);
     const nl = Math.min(latI.length, Math.round(tot / 64)); latI.forEach((c, i) => c.classList.toggle('on', i < nl));
