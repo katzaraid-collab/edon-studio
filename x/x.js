@@ -468,7 +468,7 @@ safe(() => {
     stage.style.setProperty('--acc', D.acc); stage.style.setProperty('--acc-fg', D.accFg); stage.style.setProperty('--acc-rgb', D.rgb);
     const top = $('top'); if (top) { top.style.setProperty('--acc', D.acc); top.style.setProperty('--acc-rgb', D.rgb); }
     $$('.dchip', dsw).forEach((b, i) => b.setAttribute('aria-selected', DEMOS[i] === D));
-    $('aav').textContent = D.letter; $('aname').textContent = D.name; $('asub').textContent = D.sub; $('ctaBiz').textContent = D.biz;
+    $('aav').textContent = D.letter; $('aname').textContent = D.name; $('asub').textContent = innerWidth <= 420 ? D.sub.replace('פתוח עכשיו · ', '') : D.sub; $('ctaBiz').textContent = D.biz;
     if (first) $('capBiz').textContent = D.biz; else scramble($('capBiz'), D.biz, 450);
     toast.classList.remove('show');
     if (!first && !RM) replay(scr, 'swap');
@@ -646,9 +646,11 @@ safe(() => {
   rail.setAttribute('data-reveal', ''); // the ported observer lights the concept capacity bars
   if (!ST || RM || innerWidth < 1100) return;
   const dist = () => Math.max(0, track.scrollWidth - innerWidth);
-  let pts = [0, 1]; // progress values at which one case sits centred: the rail rests on these
-  const calcPts = () => { const d = dist(); if (!d) { pts = [0, 1]; return; } const x0 = +gsap.getProperty(track, 'x') || 0, set = new Set([0, 1]); $$('.case', track).forEach(c => { const r = c.getBoundingClientRect(); set.add(+clamp((innerWidth / 2 - (r.left + r.width / 2 - x0)) / d, 0, 1).toFixed(4)); }); pts = Array.from(set).sort((a, b) => a - b); };
-  gsap.to(track, { x: () => dist(), ease: 'none', scrollTrigger: { trigger: show, pin: true, start: 'top top', end: () => '+=' + dist(), scrub: SCRUB, invalidateOnRefresh: true, anticipatePin: 1, onRefresh: calcPts, snap: { snapTo: v => pts.reduce((a, b) => Math.abs(b - v) < Math.abs(a - v) ? b : a, pts[0]), inertia: false, duration: { min: .3, max: .6 }, delay: .15, ease: 'power2.out' } } });
+  let pts = [0, 1], cps = []; const cases = $$('.case', track); // progress values at which one case sits centred: the rail rests on these
+  const calcPts = () => { const d = dist(); if (!d) { pts = [0, 1]; cps = []; return; } const x0 = +gsap.getProperty(track, 'x') || 0, set = new Set([0, 1]); cps = cases.map(c => { const r = c.getBoundingClientRect(); const v = +clamp((innerWidth / 2 - (r.left + r.width / 2 - x0)) / d, 0, 1).toFixed(4); set.add(v); return v; }); pts = Array.from(set).sort((a, b) => a - b); };
+  // --d: how far each case is from the centre of the stage, in case widths; the CSS dims and shrinks the neighbours from it
+  const ghost = v => { const step = cps.length > 1 ? Math.max(.05, cps[1] - cps[0]) : .25; cases.forEach((c, i) => c.style.setProperty('--d', (cps[i] == null ? 0 : Math.min(1, Math.abs(v - cps[i]) / step)).toFixed(3))); };
+  gsap.to(track, { x: () => dist(), ease: 'none', scrollTrigger: { trigger: show, pin: true, start: 'top top', end: () => '+=' + dist(), scrub: SCRUB, invalidateOnRefresh: true, anticipatePin: 1, onRefresh: self => { calcPts(); ghost(self.progress); }, onUpdate: self => ghost(self.progress), snap: { snapTo: v => pts.reduce((a, b) => Math.abs(b - v) < Math.abs(a - v) ? b : a, pts[0]), inertia: false, duration: { min: .3, max: .6 }, delay: .15, ease: 'power2.out' } } });
 });
 safe(() => {
   const rail = $('rail'), pg = $('pager'); if (!rail || !pg) return;
