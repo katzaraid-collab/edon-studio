@@ -232,7 +232,7 @@ safe(() => {
   $$('[data-reveal]').forEach(el => rio.observe(el));
   const proc = $('process'), steps = $$('#steps li');
   let raf = 0;
-  const upd = () => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; const r = proc.getBoundingClientRect(); const p = clamp((innerHeight * .8 - r.top - 120) / (r.height - 120), 0, 1); proc.style.setProperty('--prog', p.toFixed(3)); steps.forEach((li, i) => li.classList.toggle('lit', p >= (i + .5) / steps.length - .12)); }); };
+  const upd = () => { if (RM || raf) return; raf = requestAnimationFrame(() => { raf = 0; const r = proc.getBoundingClientRect(); const p = clamp((innerHeight * .8 - r.top - 120) / (r.height - 120), 0, 1); proc.style.setProperty('--prog', p.toFixed(3)); const END = [0, 2, 5, 6]; steps.forEach((li, i) => li.classList.toggle('lit', p * 7 >= (END[i] == null ? i : END[i]) + .85)); }); };
   addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
   if (RM) { proc.style.setProperty('--prog', '1'); steps.forEach(li => li.classList.add('lit')); }
 });
@@ -293,6 +293,7 @@ safe(() => {
   const body = $('appBody'), toast = $('toast'), owner = $('owner'), cnt = $('cnt'), olist = $('olist'), stage = $('demo'), dsw = $('dsw'), scr = document.querySelector('.dev .scr');
   const DN = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'];
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const ico = k => /^[a-z]+$/.test(k) ? '<svg class="ico" aria-hidden="true"><use href="#i-' + k + '"/></svg>' : esc(k);
   const today = new Date(); const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(today); d.setDate(today.getDate() + i); return d; });
   const nowMin = today.getHours() * 60 + today.getMinutes();
   const toMin = t => +t.slice(0, 2) * 60 + +t.slice(3);
@@ -307,20 +308,20 @@ safe(() => {
 
   // one config per business type; the engine below is shared
   const DEMOS = [
-    { key: 'barber', chip: '✂️ ברברשופ', biz: 'ברברשופ', bizForm: 'מספרה / ברברשופ', name: 'ברברשופ אלון', sub: 'פתוח עכשיו · סוגר ב־19:00', letter: 'א', acc: '#C8FF2E', accFg: '#0B0B10', rgb: '200,255,46',
-      services: [{ n: 'תספורת', d: 35, p: 80, i: '✂️' }, { n: 'עיצוב זקן', d: 20, p: 40, i: '🪒' }, { n: 'תספורת + זקן', d: 50, p: 110, i: '🔥' }, { n: 'תספורת ילד', d: 25, p: 60, i: '🧒' }],
+    { key: 'barber', chip: 'ברברשופ', biz: 'ברברשופ', bizForm: 'מספרה / ברברשופ', name: 'ברברשופ אלון', sub: 'פתוח עכשיו · סוגר ב־19:00', letter: 'א', acc: '#C8FF2E', accFg: '#0B0B10', rgb: '200,255,46',
+      services: [{ n: 'תספורת', d: 35, p: 80, i: 'scissors' }, { n: 'עיצוב זקן', d: 20, p: 40, i: 'razor' }, { n: 'תספורת + זקן', d: 50, p: 110, i: 'flame' }, { n: 'תספורת ילד', d: 25, p: 60, i: 'child' }],
       extra: { kind: 'staff', title: 'אצל מי?', opts: [{ n: 'אלון', s: 'ספר ראשי · 12 שנה', i: 'א' }, { n: 'דניאל', s: 'ספר · מתמחה בפייד', i: 'ד' }] },
       slots: grid('09:00', '19:00', 40), seats: [{ n: 'דני', s: 'תספורת אצל אלון', t: '14:20' }, { n: 'רועי', s: 'עיצוב זקן אצל דניאל', t: '13:40' }] },
-    { key: 'wash', chip: '🚗 שטיפת רכב', biz: 'שטיפת רכב', bizForm: 'שטיפת רכב / דיטיילינג', name: 'שטיפה ודיטיילינג רועי', sub: 'פתוח עכשיו · סוגר ב־17:30', letter: 'ר', acc: '#F2C14E', accFg: '#141008', rgb: '242,193,78',
-      services: [{ n: 'שטיפה חיצונית', d: 30, p: 60, i: '🫧' }, { n: 'פנים + חוץ', d: 60, p: 140, i: '✨' }, { n: 'פוליש והגנה', d: 120, p: 450, i: '💎' }],
-      extra: { kind: 'vehicle', title: 'איזה רכב?', opts: [{ n: 'פרטי', s: 'עד 5 מקומות', add: 0, addMin: 0, i: '🚗' }, { n: 'ג׳יפ / SUV', s: '+10 דק׳ לטיפול', add: 20, addMin: 10, i: '🚙' }, { n: 'מסחרי', s: '+15 דק׳ לטיפול', add: 40, addMin: 15, i: '🚐' }] },
+    { key: 'wash', chip: 'שטיפת רכב', biz: 'שטיפת רכב', bizForm: 'שטיפת רכב / דיטיילינג', name: 'שטיפה ודיטיילינג רועי', sub: 'פתוח עכשיו · סוגר ב־17:30', letter: 'ר', acc: '#F2C14E', accFg: '#141008', rgb: '242,193,78',
+      services: [{ n: 'שטיפה חיצונית', d: 30, p: 60, i: 'drop' }, { n: 'פנים + חוץ', d: 60, p: 140, i: 'sparkles' }, { n: 'פוליש והגנה', d: 120, p: 450, i: 'gem' }],
+      extra: { kind: 'vehicle', title: 'איזה רכב?', opts: [{ n: 'פרטי', s: 'עד 5 מקומות', add: 0, addMin: 0, i: 'car' }, { n: 'ג׳יפ / SUV', s: '+10 דק׳ לטיפול', add: 20, addMin: 10, i: 'suv' }, { n: 'מסחרי', s: '+15 דק׳ לטיפול', add: 40, addMin: 15, i: 'van' }] },
       slots: grid('08:00', '17:30', 30), seats: [{ n: 'מיכל', s: 'פנים + חוץ', t: '12:30' }, { n: 'יוסי', s: 'שטיפה חיצונית', t: '12:00' }] },
-    { key: 'nails', chip: '💅 ציפורניים', biz: 'סטודיו ציפורניים', bizForm: 'קוסמטיקה / ציפורניים', name: 'סטודיו מאיה', sub: 'פתוח עכשיו · סוגר ב־20:00', letter: 'מ', acc: '#FF7AB6', accFg: '#1A0812', rgb: '255,122,182',
-      services: [{ n: 'לק ג׳ל', d: 45, p: 120, i: '💅' }, { n: 'בניית ציפורניים', d: 90, p: 220, i: '✨' }, { n: 'פדיקור', d: 60, p: 150, i: '🦶' }],
+    { key: 'nails', chip: 'ציפורניים', biz: 'סטודיו ציפורניים', bizForm: 'קוסמטיקה / ציפורניים', name: 'סטודיו מאיה', sub: 'פתוח עכשיו · סוגר ב־20:00', letter: 'מ', acc: '#FF7AB6', accFg: '#1A0812', rgb: '255,122,182',
+      services: [{ n: 'לק ג׳ל', d: 45, p: 120, i: 'polish' }, { n: 'בניית ציפורניים', d: 90, p: 220, i: 'sparkles' }, { n: 'פדיקור', d: 60, p: 150, i: 'foot' }],
       extra: { kind: 'design', title: 'בוחרים צבע וסגנון', colors: ['#FF7AB6', '#C8102E', '#F4E4D6', '#2B2B2B', '#7FB7FF', '#B8F28B'], styles: ['קלאסי', 'צרפתי', 'אומברה'] },
       slots: grid('10:00', '20:00', 45), seats: [{ n: 'נועה', s: 'לק ג׳ל', t: '13:30' }, { n: 'שיר', s: 'פדיקור', t: '12:15' }] },
-    { key: 'fit', chip: '🏋️ סטודיו כושר', biz: 'סטודיו כושר', bizForm: 'מאמן / סטודיו לכושר', name: 'סטודיו FIT', sub: 'שיעורים קבוצתיים · מקומות מוגבלים', letter: 'F', acc: '#5EF2FF', accFg: '#06161A', rgb: '94,242,255',
-      services: [{ n: 'יוגה', d: 60, p: 45, i: '🧘', times: ['07:00', '19:00'], cap: 8 }, { n: 'פילאטיס מכשירים', d: 55, p: 70, i: '🤸', times: ['09:00', '17:00'], cap: 6 }, { n: 'HIIT', d: 45, p: 50, i: '🔥', times: ['18:00', '20:00'], cap: 12 }],
+    { key: 'fit', chip: 'סטודיו כושר', biz: 'סטודיו כושר', bizForm: 'מאמן / סטודיו לכושר', name: 'סטודיו FIT', sub: 'שיעורים קבוצתיים · מקומות מוגבלים', letter: 'F', acc: '#5EF2FF', accFg: '#06161A', rgb: '94,242,255',
+      services: [{ n: 'יוגה', d: 60, p: 45, i: 'yoga', times: ['07:00', '19:00'], cap: 8 }, { n: 'פילאטיס מכשירים', d: 55, p: 70, i: 'stretch', times: ['09:00', '17:00'], cap: 6 }, { n: 'HIIT', d: 45, p: 50, i: 'dumbbell', times: ['18:00', '20:00'], cap: 12 }],
       classes: true, seats: [{ n: 'עדי', s: 'HIIT 18:00', t: '18:00' }, { n: 'תום', s: 'יוגה 07:00', t: '07:00' }] },
   ];
 
@@ -357,13 +358,13 @@ safe(() => {
   function render() {
     const D = cur, kind = stepsOf(D)[s.step]; let html = '';
     if (kind === 'svc') {
-      html = crumbs() + '<h4>' + (D.classes ? 'בחרו שיעור' : 'בחרו שירות') + '</h4>' + D.services.map((v, i) => '<button class="row" type="button" data-sv="' + i + '"><span class="ic">' + v.i + '</span><div><b>' + v.n + '</b><small>' + v.d + ' דק׳' + (D.classes ? ' · ' + v.times.join(' / ') : '') + '</small></div><span class="pr">₪' + v.p + '</span></button>').join('');
+      html = crumbs() + '<h4>' + (D.classes ? 'בחרו שיעור' : 'בחרו שירות') + '</h4>' + D.services.map((v, i) => '<button class="row" type="button" data-sv="' + i + '"><span class="ic">' + ico(v.i) + '</span><div><b>' + v.n + '</b><small>' + v.d + ' דק׳' + (D.classes ? ' · ' + v.times.join(' / ') : '') + '</small></div><span class="pr">₪' + v.p + '</span></button>').join('');
     } else if (kind === 'extra') {
       const Xx = D.extra;
       if (Xx.kind === 'design') {
         html = crumbs() + BACK + '<h4>' + Xx.title + '</h4><div class="sw">' + Xx.colors.map((c, i) => '<button type="button" class="swb" data-c="' + i + '" style="--c:' + c + '" aria-pressed="' + (i === s.color) + '" aria-label="צבע ' + (i + 1) + '"></button>').join('') + '</div><div class="styles">' + Xx.styles.map((n, i) => '<button type="button" class="stl" data-s="' + i + '" aria-pressed="' + (i === s.style) + '">' + n + '</button>').join('') + '</div><div class="nails ' + ['', 'fr', 'om'][s.style] + '" style="--c:' + Xx.colors[s.color] + '" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><button class="cta" type="button" id="exgo">המשך לבחירת מועד</button>';
       } else {
-        html = crumbs() + BACK + '<h4>' + Xx.title + '</h4>' + Xx.opts.map((o, i) => '<button class="row" type="button" data-ex="' + i + '"><span class="ic' + (Xx.kind === 'staff' ? ' av2' : '') + '">' + o.i + '</span><div><b>' + o.n + '</b><small>' + o.s + '</small></div>' + (o.add ? '<span class="pr">+₪' + o.add + '</span>' : '') + '</button>').join('');
+        html = crumbs() + BACK + '<h4>' + Xx.title + '</h4>' + Xx.opts.map((o, i) => '<button class="row" type="button" data-ex="' + i + '"><span class="ic' + (Xx.kind === 'staff' ? ' av2' : '') + '">' + ico(o.i) + '</span><div><b>' + o.n + '</b><small>' + o.s + '</small></div>' + (o.add ? '<span class="pr">+₪' + o.add + '</span>' : '') + '</button>').join('');
       }
     } else if (kind === 'when') {
       if (D.classes) {
@@ -470,7 +471,7 @@ safe(() => {
   }
   DEMOS.forEach(D => {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'dchip'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', 'false');
-    b.style.setProperty('--acc', D.acc); b.style.setProperty('--acc-fg', D.accFg); b.textContent = D.chip; b.dataset.demo = D.key;
+    b.style.setProperty('--acc', D.acc); b.style.setProperty('--acc-fg', D.accFg); b.innerHTML = '<i class="cell" aria-hidden="true"></i><span>' + esc(D.chip) + '</span>'; b.dataset.demo = D.key;
     b.addEventListener('click', () => select(D.key)); dsw.appendChild(b);
   });
   select(DEMOS[0].key, true);
@@ -517,7 +518,9 @@ safe(() => {
     if (sel.has('care')) html += '<li><span>ליווי חודשי</span><b>' + ils(CFG.care.p) + ' / חודש</b></li>';
     if (!items.length) html += '<li class="em"><span>הדליקו לפחות שירות אחד כדי לראות מחיר. ליווי חודשי מצטרף לכל חבילה.</span></li>';
     lines.innerHTML = html; setA(tot); setB(tot);
-    const nl = Math.min(latI.length, Math.round(tot / 64)); latI.forEach((c, i) => c.classList.toggle('on', i < nl));
+    const DAYS = { page: 2, app: 7, brand: 4 }, days = items.reduce((m, k) => Math.max(m, DAYS[k] || 0), 0), nl = days * 16;
+    latI.forEach((c, i) => c.classList.toggle('on', i < nl));
+    const ld = $('latd'); if (ld) ld.textContent = days ? days + ' ימי עבודה' : '—';
     promo.textContent = ils(Math.round(tot * .7 / 10) * 10);
     sel2.textContent = items.length ? items.map(k => CFG[k].n).join(' + ') + (sel.has('care') ? ' + ליווי' : '') : 'בחרו שירות';
   }
@@ -545,11 +548,14 @@ function prefill(fromCfg) {
     }
   });
 }
-function goStep(n) { $('s1').hidden = n !== 1; $('s2').hidden = n !== 2; $('stepl').textContent = 'שלב ' + n + ' מתוך 2'; $('pbar').style.setProperty('--p', n === 1 ? '50%' : '100%'); const f = $('f'); f.dataset.step = n; if (!RM) replay(f, 'swap'); if (n === 2) setTimeout(() => $('fn').focus({ preventScroll: true }), 350); }
+function goStep(n) { $('s1').hidden = n !== 1; $('s2').hidden = n !== 2; $('stepl').textContent = 'שלב ' + n + ' מתוך 2'; $('pbar').style.setProperty('--p', n === 1 ? '50%' : '100%'); const f = $('f'); f.dataset.step = n; if (!RM) replay(f, 'swap'); if (n === 2) { setTimeout(() => $('fn').focus({ preventScroll: true }), 350); const fm = $('fm'); if (fm) fm.dispatchEvent(new Event('input')); } }
 safe(() => {
   $('next').addEventListener('click', () => goStep(2));
   $('back').addEventListener('click', () => goStep(1));
   const msg = () => $('out').textContent;
+  const dml = $('dml'), outl = $('outl'), escH = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const live = () => { if (!outl) return; const name = $('fn').value.trim(), biz = $('fb').value.trim(), note = $('fm').value.trim(), sv = document.querySelector('input[name=svc]:checked'); const ph = (v, t) => v ? '<b class="v">' + escH(v) + '</b>' : '<span class="ph">' + t + '</span>'; outl.innerHTML = 'היי EDON, אני ' + ph(name, 'השם שלכם') + ' מ' + ph(biz, 'העסק') + '.\nמעניין אותי: ' + escH(sv ? sv.value : '') + '.' + (note ? '\n' + escH(note) : ''); };
+  ['fn', 'fb', 'fm'].forEach(id => $(id).addEventListener('input', live)); $$('input[name=svc]').forEach(r => r.addEventListener('change', live)); live();
   $('f').addEventListener('submit', e => {
     e.preventDefault();
     const name = $('fn').value.trim(), biz = $('fb').value.trim();
@@ -557,7 +563,7 @@ safe(() => {
     const svc = document.querySelector('input[name=svc]:checked').value, note = $('fm').value.trim();
     $('out').textContent = 'היי EDON, אני ' + name + ' מ' + biz + '.\nמעניין אותי: ' + svc + '.' + (note ? '\n' + note : '');
     const dmt = $('dmt'); if (dmt) dmt.textContent = new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
-    $('done').hidden = false; $('st').textContent = 'ההודעה מוכנה. העתיקו, פתחו את הדיירקט והדביקו.'; click(330);
+    $('done').hidden = false; if (dml) dml.hidden = true; $('st').textContent = 'ההודעה מוכנה. העתיקו, פתחו את הדיירקט והדביקו.'; click(330);
     if (!RM) replay($('done'), 'swap');
     $('done').scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'nearest' });
   });
@@ -580,11 +586,15 @@ safe(() => {
   sw.addEventListener('click', () => { touched = true; const on = p >= 50; click(on ? 300 : 180); to(on ? 0 : 100); });
   r.addEventListener('input', () => { touched = true; cancelAnimationFrame(raf); p = +r.value; paint(); });
   paint();
+  new IntersectionObserver((es, io) => es.forEach(e => { if (!e.isIntersecting) return; io.disconnect(); w.classList.add('on'); }), { threshold: .2 }).observe(w);
   if (!RM) new IntersectionObserver((es, io) => es.forEach(e => { if (!e.isIntersecting) return; io.disconnect(); setTimeout(() => { if (!touched) { click(300); to(0, 1200); } }, 1400); }), { threshold: .45 }).observe(w);
 });
 
 /* ---------- faq ---------- */
-safe(() => $$('#faqs .q').forEach(q => { const b = q.querySelector('button'); b.addEventListener('click', () => { const o = q.dataset.open !== 'true'; $$('#faqs .q').forEach(x => { x.dataset.open = 'false'; x.querySelector('button').setAttribute('aria-expanded', 'false'); }); q.dataset.open = o; b.setAttribute('aria-expanded', o); click(o ? 260 : 180); }); }));
+safe(() => $$('#faqs .q').forEach(q => { const b = q.querySelector('button'); b.addEventListener('click', () => { if (q.dataset.open === 'true') return; $$('#faqs .q').forEach(x => { x.dataset.open = 'false'; x.querySelector('button').setAttribute('aria-expanded', 'false'); }); q.dataset.open = 'true'; b.setAttribute('aria-expanded', 'true'); click(260); }); }));
+
+/* ---------- compare: the EDON column's checks light in sequence on reveal ---------- */
+safe(() => { const c = document.querySelector('#compare .cmp'); if (!c) return; if (RM) { c.classList.add('on'); return; } onEnter(c, () => c.classList.add('on'), { threshold: .2 }); });
 
 /* ---------- press ripple on primary buttons ---------- */
 safe(() => {
@@ -624,11 +634,13 @@ safe(() => {
 
 /* ---------- work: the showroom rail (pinned horizontal travel on desktop) ---------- */
 safe(() => {
-  const rail = $('rail'), track = $('track'); if (!rail || !track) return;
+  const rail = $('rail'), track = $('track'), show = $('show') || rail; if (!rail || !track) return;
   rail.setAttribute('data-reveal', ''); // the ported observer lights the concept capacity bars
   if (!ST || RM || innerWidth < 1100) return;
   const dist = () => Math.max(0, track.scrollWidth - innerWidth);
-  gsap.to(track, { x: () => dist(), ease: 'none', scrollTrigger: { trigger: rail, pin: true, start: 'top top', end: () => '+=' + dist(), scrub: SCRUB, invalidateOnRefresh: true, anticipatePin: 1 } });
+  let pts = [0, 1]; // progress values at which one case sits centred: the rail rests on these
+  const calcPts = () => { const d = dist(); if (!d) { pts = [0, 1]; return; } const x0 = +gsap.getProperty(track, 'x') || 0, set = new Set([0, 1]); $$('.case', track).forEach(c => { const r = c.getBoundingClientRect(); set.add(+clamp((innerWidth / 2 - (r.left + r.width / 2 - x0)) / d, 0, 1).toFixed(4)); }); pts = Array.from(set).sort((a, b) => a - b); };
+  gsap.to(track, { x: () => dist(), ease: 'none', scrollTrigger: { trigger: show, pin: true, start: 'top top', end: () => '+=' + dist(), scrub: SCRUB, invalidateOnRefresh: true, anticipatePin: 1, onRefresh: calcPts, snap: { snapTo: v => pts.reduce((a, b) => Math.abs(b - v) < Math.abs(a - v) ? b : a, pts[0]), inertia: false, duration: { min: .3, max: .6 }, delay: .15, ease: 'power2.out' } } });
 });
 safe(() => {
   const rail = $('rail'), pg = $('pager'); if (!rail || !pg) return;
