@@ -1,4 +1,4 @@
-/* EDON X — "משמרת לילה". One IIFE, one safe() per feature. Never throws without THREE, WebGL or gsap. */
+/* EDON — "משמרת לילה" (the homepage). One IIFE, one safe() per feature. Never throws without THREE, WebGL or gsap. */
 (() => {
 'use strict';
 const $ = id => document.getElementById(id), $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
@@ -110,7 +110,7 @@ safe(() => {
     return;
   }
   const PC = Math.max(1, Math.floor((innerWidth + 6) / 50)), PN = Math.min(300, PC * Math.max(3, Math.floor((innerHeight + 6) / 50))), PR = Math.ceil(PN / PC);
-  const lay = '<div class="lay"><div class="cells">' + '<i></i>'.repeat(PN) + '</div><span class="lbl s mono">EDON X</span><span class="lbl e mono st">STATUS · CLOSED</span><div class="clock">19:00</div><i class="hair"></i><span class="he">העסק סגר ב־19:00</span></div>';
+  const lay = '<div class="lay"><div class="cells">' + '<i></i>'.repeat(PN) + '</div><span class="lbl s mono">EDON</span><span class="lbl e mono st">STATUS · CLOSED</span><div class="clock">19:00</div><i class="hair"></i><span class="he">העסק סגר ב־19:00</span></div>';
   pre.innerHTML = '<div class="half t">' + lay + '</div><div class="half b">' + lay + '</div><i class="fl"></i>';
   document.body.appendChild(pre);
   const clocks = $$('.clock', pre), hairs = $$('.hair', pre), sts = $$('.st', pre), hes = $$('.he', pre), cells = $$('.cells', pre).map(c => $$('i', c)), fl = pre.querySelector('.fl');
@@ -573,7 +573,12 @@ safe(() => {
   $('f').addEventListener('submit', e => {
     e.preventDefault();
     const name = $('fn').value.trim(), biz = $('fb').value.trim();
-    if (name.length < 2 || biz.length < 2) { $('st').textContent = 'נא למלא שם ושם עסק כדי שנוכל לחזור אליכם.'; const bad = $(name.length < 2 ? 'fn' : 'fb'); bad.focus(); if (!RM) replay(bad, 'nudge'); return; }
+    if (name.length < 2 || biz.length < 2) { $('st').textContent = 'נא למלא שם ושם עסק כדי שנוכל לחזור אליכם.'; const bad = $(name.length < 2 ? 'fn' : 'fb'); bad.setAttribute('aria-invalid', 'true'); bad.focus(); if (!RM) replay(bad, 'nudge'); return; }
+    $('fn').removeAttribute('aria-invalid'); $('fb').removeAttribute('aria-invalid');
+    // consent to use the details (privacy policy) is required before the message is composed
+    const agree = $('fa');
+    if (agree && !agree.checked) { $('st').textContent = 'כדי להמשיך, סמנו שאתם מאשרים את השימוש בפרטים.'; agree.setAttribute('aria-invalid', 'true'); agree.focus(); if (!RM) replay(agree.closest('label'), 'nudge'); return; }
+    if (agree) agree.removeAttribute('aria-invalid');
     const svc = document.querySelector('input[name=svc]:checked').value, note = $('fm').value.trim();
     $('out').textContent = 'היי EDON, אני ' + name + ' מ' + biz + '.\nמעניין אותי: ' + svc + '.' + (note ? '\n' + note : '');
     const dmt = $('dmt'); if (dmt) dmt.textContent = new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
@@ -605,7 +610,17 @@ safe(() => {
 });
 
 /* ---------- faq ---------- */
-safe(() => $$('#faqs .q').forEach(q => { const b = q.querySelector('button'); b.addEventListener('click', () => { if (q.dataset.open === 'true') return; $$('#faqs .q').forEach(x => { x.dataset.open = 'false'; x.querySelector('button').setAttribute('aria-expanded', 'false'); }); q.dataset.open = 'true'; b.setAttribute('aria-expanded', 'true'); click(260); }); }));
+// one open at a time; a question closes again on a second press or with Esc; closed answers leave the accessibility tree
+safe(() => {
+  const qs = $$('#faqs .q');
+  const set = (q, open) => { q.dataset.open = String(open); q.querySelector('button').setAttribute('aria-expanded', String(open)); };
+  qs.forEach((q, i) => {
+    const b = q.querySelector('button'), a = q.querySelector('.a'); if (!b || !a) return;
+    b.id = 'qb' + i; a.id = 'qa' + i; b.setAttribute('aria-controls', a.id); a.setAttribute('role', 'region'); a.setAttribute('aria-labelledby', b.id);
+    b.addEventListener('click', () => { const open = q.dataset.open !== 'true'; qs.forEach(x => set(x, false)); if (open) set(q, true); click(open ? 260 : 180); });
+    b.addEventListener('keydown', e => { if (e.key === 'Escape' && q.dataset.open === 'true') { e.preventDefault(); set(q, false); } });
+  });
+});
 
 /* ---------- compare: the EDON column's checks light in sequence on reveal ---------- */
 safe(() => { const c = document.querySelector('#compare .cmp'); if (!c) return; if (RM) { c.classList.add('on'); return; } onEnter(c, () => c.classList.add('on'), { threshold: .2 }); });

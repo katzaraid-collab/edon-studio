@@ -1,9 +1,10 @@
-/* EDON X boot: sets the html classes the stylesheet and x.js branch on, before first paint. */
+/* EDON boot: sets the html classes the stylesheet and x.js branch on, before first paint. */
 (function () {
   var h = document.documentElement, c = 'js on', q = location.search;
   function ls(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function ss(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
-  try { if (matchMedia('(prefers-reduced-motion: reduce)').matches || ls('edon-x-calm') === '1') c += ' rm'; } catch (e) {}
+  // calm motion: the visitor's own choice wins; without one, follow the system's reduced-motion setting
+  try { var pref = ls('edon-x-calm'); if (pref === '1' || (pref !== '0' && matchMedia('(prefers-reduced-motion: reduce)').matches)) c += ' rm'; } catch (e) {}
   try {
     var n = navigator, low = (n.deviceMemory && n.deviceMemory <= 2) || (n.hardwareConcurrency && n.hardwareConcurrency <= 3);
     if (/[?&]nogl=1/.test(q) || (low && !/[?&]gl=1/.test(q))) c += ' nogl';

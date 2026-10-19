@@ -805,8 +805,8 @@ html.rm .hours .app i{animation:none}
 .q[data-open="true"] .pl{rotate:45deg;background:var(--volt);color:var(--volt-ink);border-color:var(--volt)}
 .q .a{display:grid;grid-template-rows:0fr;transition:grid-template-rows 360ms var(--e-out)}
 .q[data-open="true"] .a{grid-template-rows:1fr}
-.q .a>div{overflow:hidden;opacity:0;translate:0 -6px;transition:opacity var(--t-3) var(--e-std),translate var(--t-3) var(--e-out)}
-.q[data-open="true"] .a>div{opacity:1;translate:0;transition-delay:90ms}
+.q .a>div{overflow:hidden;opacity:0;translate:0 -6px;visibility:hidden;transition:opacity var(--t-3) var(--e-std),translate var(--t-3) var(--e-out),visibility 0s linear var(--t-3)}
+.q[data-open="true"] .a>div{opacity:1;translate:0;visibility:visible;transition-delay:90ms,90ms,0s}
 .q p{color:var(--x-fg-2);margin:0 0 22px;max-width:62ch;font-size:16px;background:var(--glass);border:1px solid var(--glass-line);border-radius:14px;padding:16px 18px}
 
 /* ---------- contact ---------- */
@@ -910,3 +910,64 @@ html.rm .h2w h2{transform:none!important}
 }
 /* phones: the copy on the first screen always sits on a dark pool, whatever the scene lights behind it */
 @media (max-width:700px){.screen1::before{background:radial-gradient(92% 78% at 50% 46%,rgba(5,5,7,.86),rgba(5,5,7,.45) 62%,transparent 94%)}}
+
+/* ===================== the homepage's compliance layer ===================== */
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;margin:-1px;padding:0;border:0}
+.linkbtn{background:none;border:0;padding:8px 0;cursor:pointer;color:inherit;font:inherit;text-decoration:none;display:inline-block}
+.linkbtn:hover{color:var(--x-fg)}
+/* header motion switch (the accessibility statement promises it at the top of every page) */
+.bar .msw{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 14px 0 12px;border-radius:999px;border:1px solid var(--x-line-2);background:transparent;color:var(--x-fg-2);font:700 14px var(--he);cursor:pointer;transition:border-color var(--t-2),color var(--t-2)}
+.bar .msw:hover{border-color:var(--x-fg);color:var(--x-fg)}
+.msw .tk{position:relative;flex:0 0 auto;width:30px;height:18px;border-radius:999px;background:var(--volt);box-shadow:0 0 12px -2px rgba(var(--volt-rgb),.7);transition:background var(--t-3),box-shadow var(--t-3);direction:ltr}
+.msw .tk::after{content:"";position:absolute;top:3px;right:3px;width:12px;height:12px;border-radius:50%;background:var(--volt-ink);transition:right var(--t-3) var(--e-spring),background var(--t-3)}
+html.rm .msw .tk{background:var(--x-ink-2);box-shadow:inset 0 0 0 1px var(--x-line-2)}
+html.rm .msw .tk::after{right:15px;background:var(--x-muted)}
+@media (max-width:700px){.bar .msw{width:44px;padding:0;justify-content:center}.msw .ml{display:none}}
+/* cookie banner + preferences dialog (markup and logic in /consent.js, shared with the legal pages) */
+.cbar{position:fixed;z-index:75;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:760px;margin:0 auto;padding:16px;border-radius:20px;background:rgba(12,14,20,.97);border:1px solid var(--x-line-2);border-top-color:rgba(var(--volt-rgb),.55);box-shadow:0 24px 70px -10px rgba(0,0,0,.8);color:var(--x-fg)}
+.cbar[hidden]{display:none}
+.cb-t{margin:0;font-size:14px;line-height:1.55;color:var(--x-fg-2)}
+.cb-t b{color:var(--x-fg)}
+.cb-t a{color:var(--volt);text-decoration:underline;text-underline-offset:3px}
+.cb-b{display:flex;gap:8px;margin-top:12px;align-items:center}
+.cb-b .cbtn{flex:1 1 0;padding:0 10px}
+.cb-b .cbtn.ghost{flex:0 0 auto}
+.cbtn{flex:1 1 auto;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--x-line-2);background:transparent;color:var(--x-fg);font:800 14.5px var(--he);cursor:pointer;transition:background var(--t-2),border-color var(--t-2),color var(--t-2)}
+.cbtn.y{background:var(--volt);border-color:var(--volt);color:var(--volt-ink)}
+.cbtn.ghost{border-color:transparent;text-decoration:underline;text-underline-offset:3px;color:var(--x-fg-2)}
+@media (hover:hover){.cbtn:hover{border-color:var(--x-fg)}.cbtn.y:hover{background:var(--volt-2);border-color:var(--volt-2)}.cbtn.ghost:hover{border-color:transparent;color:var(--x-fg)}}
+.cbtn:focus-visible,.cd-x:focus-visible,.linkbtn:focus-visible,.bar .msw:focus-visible{outline:2px solid var(--volt);outline-offset:3px}
+html:not(.rm) .cbar:not([hidden]){animation:cbin var(--t-4) var(--e-out) both}
+@keyframes cbin{from{opacity:0;translate:0 24px}}
+.cdlg{width:min(560px,calc(100% - 24px));max-height:calc(100% - 40px);padding:0;border:1px solid var(--x-line-2);border-top-color:rgba(var(--volt-rgb),.55);border-radius:24px;background:var(--x-ink);color:var(--x-fg);box-shadow:0 30px 90px rgba(0,0,0,.75);overflow:auto}
+.cdlg::backdrop{background:rgba(3,3,5,.72)}
+.cdlg[open]{display:block}
+.cd-in{padding:22px}
+.cd-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.cd-top h2{margin:0;font:900 30px/1.1 var(--disp);font-stretch:75%;font-variation-settings:"wdth" 75,"wght" 900;letter-spacing:-.01em}
+.cd-x{flex:0 0 auto;width:44px;height:44px;border-radius:50%;border:1px solid var(--x-line-2);background:transparent;color:var(--x-fg);cursor:pointer;font-size:16px}
+.cd-lead{margin:10px 0 6px;color:var(--x-fg-2);font-size:15px;line-height:1.55}
+.cd-row{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;padding:14px 0;border-top:1px solid var(--x-line)}
+.cd-row h3{margin:0;font:800 16px/1.35 var(--he)}
+.cd-row p{margin:4px 0 0;color:var(--x-muted);font-size:14px;line-height:1.5}
+.cd-sw{position:relative;flex:0 0 52px;height:30px;margin-top:2px;cursor:pointer}
+.cd-sw input{position:absolute;inset:0;z-index:1;opacity:0;margin:0;cursor:pointer}
+.cd-sw span[aria-hidden]{position:absolute;inset:0;border-radius:99px;background:var(--x-ink-2);border:1px solid var(--x-line-2);transition:background var(--t-3),border-color var(--t-3);direction:ltr}
+.cd-sw span[aria-hidden]::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--x-muted);transition:transform var(--t-4) var(--e-spring),background var(--t-3)}
+.cd-sw input:checked+span{background:var(--volt);border-color:var(--volt)}
+.cd-sw input:checked+span::after{transform:translateX(22px);background:var(--volt-ink)}
+.cd-sw input:disabled+span{opacity:.6}
+.cd-sw input:focus-visible+span{outline:2px solid var(--volt);outline-offset:3px}
+.cd-b{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.cd-f{margin:14px 0 0;font-size:14px}
+.cd-f a{color:var(--volt)}
+/* the site hides the system cursor for its own, which sits below the consent UI: give the consent UI the system cursor back */
+html.cur .cbar,html.cur .cbar *,html.cur .cdlg,html.cur .cdlg *{cursor:auto}
+html.cur .cbar :is(a,button),html.cur .cdlg :is(a,button,label,input){cursor:pointer}
+html:has(.cdlg[open]) #cur{opacity:0!important}
+/* contact form: consent to use the details, and the note that nothing is sent from the site */
+.fields .agree{display:flex;align-items:flex-start;gap:10px;font-size:14px;font-weight:400;line-height:1.5;color:var(--x-fg-2);cursor:pointer}
+.fields .agree input{flex:0 0 auto;width:20px;height:20px;margin:1px 0 0;accent-color:var(--volt);cursor:pointer}
+.fields .agree a{color:var(--volt);text-decoration:underline;text-underline-offset:3px}
+.fields .agree input[aria-invalid="true"]{outline:2px solid var(--danger);outline-offset:2px}
+.fine2{margin:12px 0 0;font-size:13px;line-height:1.5;color:var(--x-muted)}
