@@ -474,6 +474,8 @@ html.nogl .lamphint,html.rm .lamphint{display:none}
 @media (max-width:420px){.bill .promo{flex-direction:column;align-items:flex-start;gap:4px;border-radius:16px;padding:10px 14px}.bill .promo b{font-size:18px}}
 .bill .btn{width:100%;margin-top:18px}
 .bill .fine{color:var(--x-muted);font-size:13px;margin:12px 0 0}
+.bill .fine a{color:inherit;font-weight:700;text-decoration:underline}
+.todo{background:#FF6B5E;color:#0B0B10;padding:0 6px;border-radius:6px;font-weight:700}
 /* odometer */
 .od{display:inline-flex;direction:ltr;line-height:1;vertical-align:baseline}
 .od .strips{display:inline-flex}
