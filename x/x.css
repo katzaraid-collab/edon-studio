@@ -202,6 +202,15 @@ html.ready #xpre .hair{background:var(--volt);box-shadow:0 0 14px rgba(var(--vol
 
 /* ---------- hero: the grid of hours ---------- */
 #gl{position:fixed;inset:0 0 auto 0;width:100%;height:100vh;height:100lvh;z-index:0;pointer-events:none;opacity:0;display:block}
+/* the lamp's tag: the preloader clock's 02:00 lives on in the scene (wide screens, hero only) */
+.olab{position:fixed;left:0;top:0;z-index:1;pointer-events:none;display:flex;align-items:center;gap:8px;translate:-100% -50%;opacity:0;white-space:nowrap;direction:rtl;font-size:12px;color:var(--x-fg-2);text-shadow:0 0 12px #050507}
+.olab::before{content:"";width:22px;height:1px;background:var(--volt);opacity:.75}
+.olab b{color:var(--volt);font-weight:500;letter-spacing:.06em}
+/* glass over a per-frame canvas is the costliest thing on the page: while the scene runs, the bars and cards are solid */
+html.gl #hdr.sc{background:rgba(8,9,12,.96);backdrop-filter:none;-webkit-backdrop-filter:none}
+html.gl .owner,html.gl .toast{background:rgba(12,14,20,.95);backdrop-filter:none;-webkit-backdrop-filter:none}
+/* short desktop screens: the phone, its caption and the dock fit under the header together */
+@media (min-width:1100px) and (max-height:960px){.dev{width:280px}.stage{gap:14px}}
 .hero{position:relative;z-index:1;overflow:clip;background:transparent;padding-top:calc(72px + env(safe-area-inset-top,0px))}
 .hero .gridcss{position:absolute;inset:0;z-index:0;pointer-events:none;perspective:900px;overflow:hidden;transition:opacity .7s var(--e-std)}
 .hero .gridcss .gp{position:absolute;inset:-20%;transform-style:preserve-3d}
@@ -735,9 +744,9 @@ html.rm .hours .app i{animation:none}
 @media (max-width:1099px){
   .rail{overflow-x:auto;scroll-snap-type:x mandatory;touch-action:pan-x;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   .rail::-webkit-scrollbar{display:none}
-  .case .shot{order:-1;max-height:min(56vw,280px);overflow:hidden;align-items:flex-start;margin:0 -8px;-webkit-mask-image:linear-gradient(#000 64%,transparent 100%);mask-image:linear-gradient(#000 64%,transparent 100%)}
+  .case .shot{order:-1;max-height:min(100vw,390px);overflow:hidden;align-items:flex-start;margin:0 -8px;-webkit-mask-image:linear-gradient(#000 80%,transparent 100%);mask-image:linear-gradient(#000 80%,transparent 100%)}
   .case .shot::before{display:none}
-  .case::before{content:"";position:absolute;left:0;right:0;top:calc(min(56vw,280px) - 70px);height:70px;background:radial-gradient(55% 100% at 50% 100%,rgba(var(--f-rgb,var(--c-rgb)),.32),transparent 72%);border-bottom:1px solid rgba(var(--f-rgb,var(--c-rgb)),.28);pointer-events:none}
+  .case::before{content:"";position:absolute;left:0;right:0;top:calc(min(100vw,390px) - 70px);height:70px;background:radial-gradient(55% 100% at 50% 100%,rgba(var(--f-rgb,var(--c-rgb)),.32),transparent 72%);border-bottom:1px solid rgba(var(--f-rgb,var(--c-rgb)),.28);pointer-events:none}
   .case .kind{flex-wrap:nowrap;overflow:hidden}
   .case .kind span{white-space:nowrap;flex:0 0 auto}
   .track::before{display:none}
@@ -899,3 +908,5 @@ html.rm .h2w h2{transform:none!important}
   [data-x],[data-h]{opacity:1!important}
   .hero h1 .ln>span{translate:0!important}
 }
+/* phones: the copy on the first screen always sits on a dark pool, whatever the scene lights behind it */
+@media (max-width:700px){.screen1::before{background:radial-gradient(92% 78% at 50% 46%,rgba(5,5,7,.86),rgba(5,5,7,.45) 62%,transparent 94%)}}

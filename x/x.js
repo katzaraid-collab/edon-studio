@@ -24,7 +24,7 @@ const SCRUB = TOUCH ? true : .6;
 const ARR_BACK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;vertical-align:-2px;margin-inline-end:6px"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 // tiny bus between features (menu ↔ scene loop, demo ↔ scene)
-const X = { hold: {}, onHold: null, setHold(k, v) { X.hold[k] = !!v; if (X.onHold) X.onHold(); }, held() { return Object.values(X.hold).some(Boolean); } };
+const X = { hold: {}, onHold: null, setHold(k, v) { X.hold[k] = !!v; if (X.onHold) X.onHold(); }, held() { return Object.values(X.hold).some(Boolean); }, bookFns: [], onBook(f) { X.bookFns.push(f); }, book(d) { X.bookFns.forEach(f => { try { f(d); } catch (e) {} }); } };
 // enter-once observer (IO: reliable for elements already passed, hash loads, back-scroll)
 function onEnter(target, cb, opts = {}) {
   const els = typeof target === 'string' ? $$(target) : [].concat(target).filter(Boolean);
@@ -160,7 +160,7 @@ function startHero() {
     let i = 0;
     if (innerWidth < 700) { const fit = () => safe(() => { const h1 = rot.closest('h1'), lin = rot.closest('.lin'); if (!h1 || !lin) return; const keep = rot.textContent, disp = lin.style.display; lin.style.display = 'inline-block'; let mw = 0; for (const w of words) { rot.textContent = w; mw = Math.max(mw, lin.getBoundingClientRect().width); } rot.textContent = keep; lin.style.display = disp; const fs = parseFloat(getComputedStyle(h1).fontSize), avail = h1.clientWidth - 2; if (mw > avail) h1.style.fontSize = Math.floor(fs * avail / mw) + 'px'; }); fit(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit); }
     setTimeout(() => scramble(rot, words[0], 700, Array.from(new Set(Array.from(words[0].replace(/[\s־.]/g, '')))).join('')), 560);
-    if (!RM) setInterval(() => { if (document.hidden) return; i = (i + 1) % words.length; swapWord(rot, words[i], 420); }, 2800);
+    if (!RM) setInterval(() => { if (document.hidden) return; i = (i + 1) % words.length; swapWord(rot, words[i], 420); if (X.onRot) X.onRot(); }, 2800);
   });
   safe(() => setTimeout(() => $$('.hero [data-count]').forEach(countUp), 500));
 }
@@ -240,7 +240,7 @@ safe(() => {
   $$('[data-reveal]').forEach(el => rio.observe(el));
   const proc = $('process'), steps = $$('#steps li');
   let raf = 0;
-  const upd = () => { if (RM || raf) return; raf = requestAnimationFrame(() => { raf = 0; const r = proc.getBoundingClientRect(); const p = clamp((innerHeight * .8 - r.top - 120) / (r.height - 120), 0, 1); proc.style.setProperty('--prog', p.toFixed(3)); const END = [0, 2, 5, 6]; steps.forEach((li, i) => li.classList.toggle('lit', p * 7 >= (END[i] == null ? i : END[i]) + .85)); }); };
+  const upd = () => { if (RM || raf) return; raf = requestAnimationFrame(() => { raf = 0; const r = proc.getBoundingClientRect(), lst = steps[steps.length - 1], lb = lst ? lst.getBoundingClientRect().bottom : r.bottom; const d0 = innerHeight * .8 - 120 - r.top, rem = Math.max(0, lb - innerHeight * .92); const p = d0 <= 0 ? 0 : clamp(d0 / (d0 + rem), 0, 1); /* day 7 completes as the last step comes fully into view */ proc.style.setProperty('--prog', p.toFixed(3)); const END = [0, 2, 5, 6]; steps.forEach((li, i) => li.classList.toggle('lit', p * 7 >= (END[i] == null ? i : END[i]) + .85)); }); };
   addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
   if (RM) { proc.style.setProperty('--prog', '1'); steps.forEach(li => li.classList.add('lit')); }
 });
@@ -276,10 +276,10 @@ safe(() => {
 
 /* ---------- rail: the hour grid; a cell lights for every booking made in the demo ---------- */
 safe(() => {
-  const cells = $$('.tick i'), c = $('cnt'); if (!cells.length || !c) return;
+  const cells = $$('.tick i'); if (!cells.length) return;
   const half = cells.length / 2, order = []; for (let i = 0; i < half; i++) if (!cells[i].classList.contains('on')) order.push(i);
-  let n = 0, last = parseInt(c.textContent, 10) || 0;
-  new MutationObserver(() => { const v = parseInt(c.textContent, 10) || 0; if (v > last && order.length) { const i = order[n++ % order.length]; cells[i].classList.add('on'); if (cells[i + half]) cells[i + half].classList.add('on'); } last = v; }).observe(c, { childList: true, characterData: true, subtree: true });
+  let n = 0;
+  X.onBook(d => { if (d > 0 && order.length) { const i = order[n++ % order.length]; cells[i].classList.add('on'); if (cells[i + half]) cells[i + half].classList.add('on'); } });
 });
 
 /* ---------- rail: velocity-aware marquee (ported) ---------- */
@@ -406,11 +406,13 @@ safe(() => {
     $$('[data-di]', body).forEach(b => b.addEventListener('click', () => { s.di = +b.dataset.di; render(); ownerPaint(false); if (X.onDay) X.onDay(s.di); }));
     $$('[data-t]', body).forEach(b => b.addEventListener('click', () => { s.slot = b.dataset.t; b.classList.add('pick'); click(260); nav(s.step + 1, 1); }));
     const nm = $('nm'); if (nm) nm.addEventListener('input', () => { s.name = nm.value; });
-    const cf = $('confirm'); if (cf) cf.addEventListener('click', () => { cf.classList.add('busy'); cf.innerHTML = '<span class="spin"></span>' + (D.classes ? 'שומרים לכם מקום…' : 'שומרים את התור…'); setTimeout(() => { commit(); click(330); nav(s.step + 1, 1); setTimeout(burst, 560); }, RM ? 0 : 700); });
+    const cf = $('confirm'); if (cf) cf.addEventListener('click', () => { cf.classList.add('busy'); cf.innerHTML = '<span class="spin"></span>' + (D.classes ? 'שומרים לכם מקום…' : 'שומרים את התור…'); setTimeout(() => { commit(); click(330); nav(s.step + 1, 1); reframe(); setTimeout(burst, 560); }, RM ? 0 : 700); });
     const cal = $('cal'); if (cal) cal.addEventListener('click', () => { cal.innerHTML = CHECK + 'נוסף ליומן'; cal.disabled = true; click(300); });
     const cn = $('cancel'); if (cn) cn.addEventListener('click', () => { const acts = cn.parentElement; acts.innerHTML = '<span class="q">לבטל את ' + (D.classes ? 'ההרשמה' : 'התור') + '?</span><button type="button" id="cy" class="danger">כן, לבטל</button><button type="button" id="cno">לא</button>'; $('cy').addEventListener('click', cancelBooking); $('cno').addEventListener('click', () => render()); });
     const ag = $('again'); if (ag) ag.addEventListener('click', () => { s.slot = null; s.booking = null; nav(0, 1); });
   }
+  // the climax must be seen whole: if the phone's top sits under the header (or its screen runs far past the fold), bring it to 96 px
+  function reframe() { if (innerWidth < 1000) return; const d = stage.querySelector('.dev'); if (!d) return; const r = d.getBoundingClientRect(); if (r.top < 84 || r.top > innerHeight * .45) scrollBy({ top: r.top - 96, behavior: RM ? 'auto' : 'smooth' }); }
   function burst() {
     if (RM) return; const svg = body.querySelector('.ok svg'); if (!svg) return;
     const r = svg.getBoundingClientRect(), hr = stage.getBoundingClientRect();
@@ -432,6 +434,7 @@ safe(() => {
     s.list = s.list.slice(0, 3); b.li = s.list[0];
     ownerPaint(true);
     notify(D.classes ? 'הרשמה חדשה לשיעור' : 'תור חדש נקבע', name + ' · ' + b.when + ' · ' + v.n + ' · ₪' + price);
+    X.book(1);
   }
   function cancelBooking() {
     const D = cur, b = s.booking; if (!b) return;
@@ -440,6 +443,7 @@ safe(() => {
     if (b.li) b.li.cls = 'x';
     s.booking = null; click(180); ownerPaint(true);
     notify(D.classes ? 'ביטול הרשמה' : 'תור בוטל', b.name + ' · ' + b.when + ' · ' + (D.classes ? 'המקום התפנה' : 'השעה התפנתה'), 'cancel');
+    X.book(-1);
     nav(idx('cancelled'), 1);
   }
   let toastT = 0;
@@ -519,7 +523,7 @@ safe(() => {
   // the bill lattice is a package meter: 16 columns x 7 rows, four columns light per chosen service
   const lat = $('lat'); if (lat) lat.innerHTML = '<i></i>'.repeat(112);
   const latI = lat ? $$('i', lat) : [];
-  latI.forEach((c, i) => { const col = i % 16; c.dataset.c = col; c.style.setProperty('--i', col * 7 + (i / 16 | 0)); });
+  const latCol = latI.map((c, i) => i % 16); latI.forEach((c, i) => c.style.setProperty('--i', latCol[i] * 7 + (i / 16 | 0)));
   function calc() {
     const items = ['page', 'app', 'brand'].filter(k => sel.has(k)), care = sel.has('care'), n = items.length + (care ? 1 : 0);
     cfgState = { items, care };
@@ -529,7 +533,7 @@ safe(() => {
     if (!items.length) html += '<li class="em"><span>הדליקו לפחות שירות אחד. ליווי חודשי מצטרף לכל חבילה.</span></li>';
     lines.innerHTML = html;
     const label = n ? (n === 1 ? 'שירות אחד' : n + ' שירותים') : 'עוד לא נבחר';
-    latI.forEach(c => c.classList.toggle('on', +c.dataset.c < n * 4));
+    latI.forEach((c, i) => c.classList.toggle('on', latCol[i] < n * 4));
     if (ld) ld.textContent = label;
     if (pcount) pcount.textContent = label;
     sel2.textContent = items.length ? items.map(k => CFG[k].n).join(' + ') + (care ? ' + ליווי' : '') : 'בחרו שירות';
@@ -670,7 +674,7 @@ safe(() => {
 /* ---------- the grid of hours: three.js scene, dynamic import after idle, CSS lattice fallback ---------- */
 safe(() => {
   const grid = document.querySelector('.hero .gridcss');
-  const watchCount = cb => { const c = $('cnt'); if (!c) return; let last = parseInt(c.textContent, 10) || 0; new MutationObserver(() => { const v = parseInt(c.textContent, 10) || 0; if (v !== last) { cb(v > last ? 1 : -1); last = v; } }).observe(c, { childList: true, characterData: true, subtree: true }); };
+  const watchCount = cb => X.onBook(cb);
   const fallback = () => {
     H.classList.add('nogl'); H.classList.remove('gl');
     if (!grid || grid.dataset.wired) return; grid.dataset.wired = 1;
@@ -702,34 +706,36 @@ safe(() => {
     // the GL tint is a brightened accent (#F2C14E -> #FFC95A); the UI keeps the real --acc
     const bright = c => { c.r = Math.min(1, c.r * 1.06); c.g = Math.min(1, c.g * 1.06); c.b = Math.min(1, c.b * 1.06); return c; };
     const tint = bright(new THREE.Color('#C8FF2E')), tintFrom = tint.clone(), tintTo = tint.clone(); let tintT0 = -1;
-    const U = { uTime: { value: 0 }, uTint: { value: tint }, uMoon: { value: new THREE.Color('#8EA2FF') }, uBase: { value: new THREE.Color('#232B44') }, uFade: { value: 1 }, uDPR: { value: DPR }, uMax: { value: PH ? 70 : 200 }, uShaft: { value: 1 }, uBoost: { value: 1 } };
+    const U = { uTime: { value: 0 }, uTint: { value: tint }, uMoon: { value: new THREE.Color('#8EA2FF') }, uBase: { value: new THREE.Color('#232B44') }, uFade: { value: 1 }, uDPR: { value: DPR }, uMax: { value: PH ? 48 : 120 }, uHS: { value: PH ? 16 : 20 }, uShaft: { value: 1 }, uBoost: { value: 1 } };
     // lattice
-    const lit = new Float32Array(N), base = new Float32Array(N), flash = new Float32Array(N), seed = new Float32Array(N), dist = new Float32Array(N), centers = new Float32Array(N * 3);
+    const ringW = new Float32Array(N), lit = new Float32Array(N), base = new Float32Array(N), flash = new Float32Array(N), seed = new Float32Array(N), dist = new Float32Array(N), centers = new Float32Array(N * 3);
     const cell = (c, r, k) => ((LAYERS - 1 - k) * ROWS + r) * COLS + c; // far layers first: back-to-front blending
     const SX = PH ? .62 : 1.0, FAN = PH ? .04 : .07; // farther layers fan out in x so the volume fills the frame edge to edge at every depth
-    // the standing lamp: upper right third of the near-mid layer, on screen both behind the headline band and above the phone at the demo scroll
-    const ORIGIN = { c: 6, r: 13, k: 2 };
+    // the standing lamp: in the aligned near week, beside the sub-line and the CTAs (clear of the copy), above the owner card at the demo scroll
+    const ORIGIN = { c: 6, r: 5, k: 1 };
     const hsh = i => { let h = (i * 2654435761) >>> 0; h ^= h >>> 15; h = Math.imul(h, 2246822519) >>> 0; h ^= h >>> 13; return (h >>> 0) / 4294967296; };
     const CS = PH ? .27 : .28, geo = new THREE.BoxGeometry(CS, CS, .07);
     // the cell material: a solid chip of dark glass (soft top light, a faint specular, a hairline bevel, darker sides) in
     // exp fog with a cold tint that carries a breath of the accent. Lit = a lamp face clamped so it never clips; the halo
     // sprites and the shaft do the glowing. Premultiplied output (ONE, ONE_MINUS_SRC_ALPHA) so the glass has real body.
     const mat = new THREE.ShaderMaterial({ uniforms: U, transparent: true, depthWrite: false, premultipliedAlpha: true, extensions: { derivatives: true },
-      vertexShader: 'attribute float aLit;attribute float aSeed;varying float vLit;varying float vSeed;varying vec3 vN;varying vec3 vW;varying vec2 vUv;varying float vNear;varying float vSide;void main(){vec4 wp=modelMatrix*instanceMatrix*vec4(position,1.0);vN=normalize(mat3(modelMatrix)*mat3(instanceMatrix)*normal);vW=wp.xyz;vUv=uv;vLit=aLit;vSeed=aSeed;vSide=1.0-step(.5,abs(normal.z));vNear=smoothstep(.6,2.6,cameraPosition.z-wp.z);gl_Position=projectionMatrix*viewMatrix*wp;}',
+      vertexShader: 'attribute float aLit;attribute float aSeed;varying float vLit;varying float vSeed;varying vec3 vN;varying vec3 vW;varying vec2 vUv;varying float vNear;varying float vSide;void main(){vec4 wp=modelMatrix*instanceMatrix*vec4(position,1.0);vN=normalize(mat3(modelMatrix)*mat3(instanceMatrix)*normal);vW=wp.xyz;vUv=uv;vLit=aLit;vSeed=aSeed;vSide=1.0-step(.5,abs(normal.z));vNear=smoothstep(.6,2.6,cameraPosition.z-wp.z);gl_Position=projectionMatrix*viewMatrix*wp;vLit*=1.0-.6*smoothstep(.6,.92,abs(gl_Position.y/gl_Position.w));}',
       fragmentShader: 'precision highp float;uniform vec3 uTint;uniform vec3 uMoon;uniform vec3 uBase;uniform float uFade;uniform float uBoost;varying float vLit;varying float vSeed;varying vec3 vN;varying vec3 vW;varying vec2 vUv;varying float vNear;varying float vSide;void main(){vec3 n=normalize(vN);vec3 v=normalize(cameraPosition-vW);float d=length(cameraPosition-vW);float e=min(min(vUv.x,1.0-vUv.x),min(vUv.y,1.0-vUv.y));float aa=max(fwidth(e)*1.4,.002);float w=clamp(fwidth(e)*.9,.006,.05);float frame=1.0-smoothstep(w,w+aa,e);float lit=smoothstep(.02,.6,vLit);float rad=length(vUv-.5)*2.0;float grad=.66+.6*(vUv.y*.7+(1.0-vUv.x)*.3);float spec=pow(max(1.0-length(vUv-vec2(.32,.82))*1.25,0.0),2.0);vec3 glass=uBase*(1.0+vSeed*.6)*grad+uMoon*spec*.09;vec3 moon=mix(uMoon,uTint,.25);float core=smoothstep(1.1,.15,rad);vec3 lamp=min(uTint*(.8+.5*core)*uBoost+vec3(.25)*core,vec3(1.0));vec3 fill=mix(glass,lamp,lit);vec3 line=mix(moon*.55+uBase*.9,min(uTint*1.2,vec3(1.0)),lit);float rim=pow(1.0-max(dot(n,v),0.0),3.0);vec3 col=mix(fill,line,frame*(1.0-lit*.7))+moon*rim*.1;col=mix(col,mix(uBase*.42,uTint*.7,lit),vSide);float fog=1.0-exp(-d*d*.0021);float nearF=1.0-smoothstep(1.5,5.5,d);float dim=1.0-nearF*.3;float a=mix((.4+.14*vSeed)*dim,.96,lit)+frame*mix(.12*dim,.04,lit);a=mix(a,mix(.42*dim,.85,lit),vSide);vec3 fogc=uTint*.04+vec3(.03,.038,.07);col=mix(col,fogc,fog*.9*(1.0-lit*.5));a*=(1.0-fog*mix(.86,.6,lit))*vNear*uFade;gl_FragColor=vec4(col*a,a);}' });
     const mesh = new THREE.InstancedMesh(geo, mat, N);
     const M = new THREE.Matrix4();
     for (let k = 0; k < LAYERS; k++) for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
-      const i = cell(c, r, k), sx = SX * (1 + k * FAN), x = (c - 3) * sx + (k % 2 ? sx / 2 : 0) + (hsh(k + 41) - .5) * sx * .5, y = (r - 7.5) * .38 + .2 + (hsh(k + 73) - .5) * .19, z = 2 - 2.2 * k; // a per-layer offset so the columns never line up into stripes
+      const nearK = k <= 2, i = cell(c, r, k), sx = nearK ? SX : SX * (1 + k * FAN), x = (c - 3) * sx + (nearK ? 0 : (k % 2 ? sx / 2 : 0) + (hsh(k + 41) - .5) * sx * .5), y = (r - 7.5) * .38 + .2 + (nearK ? 0 : (hsh(k + 73) - .5) * .19), z = 2 - 2.2 * k; // a per-layer offset so the columns never line up into stripes
       M.makeTranslation(x, y, z); mesh.setMatrixAt(i, M);
       centers[i * 3] = x; centers[i * 3 + 1] = y; centers[i * 3 + 2] = z;
+      ringW[i] = k === 0 ? .4 : k === 1 ? .75 : 1;
       seed[i] = hsh(i + 11); dist[i] = Math.abs(c - ORIGIN.c) + Math.abs(r - ORIGIN.r) + 2 * Math.abs(k - ORIGIN.k);
       // standing lights: low and near, or far in the fog (the copy stays dark); phones light 9% so the grid reads without pulses
-      base[i] = PH ? (hsh(i + 977) < .07 ? .4 : 0) : (((k === 0 && r <= 1) || k >= 5) && hsh(i + 977) < .06 ? .4 : 0);
+      base[i] = PH ? (hsh(i + 977) < .04 ? .4 : 0) : (((k === 0 && r <= 1) || k >= 5) && hsh(i + 977) < .06 ? .4 : 0);
     }
     // two standing lamps per mid layer at the outer columns, rows 3-12: the room is lit edge to edge, the headline band is clear
     if (!PH) for (let k = 1; k < LAYERS; k++) for (let n = 0; n < 2; n++) { const c = [0, 1, 5, 6, 0, 6][(hsh(k * 7 + n * 3 + 2) * 6) | 0], r = 3 + (hsh(k * 13 + n * 5 + 1) * 10 | 0); base[cell(c, r, k)] = Math.max(base[cell(c, r, k)], .45); }
     base[cell(ORIGIN.c, ORIGIN.r, ORIGIN.k)] = 1;
+    { const oi0 = cell(ORIGIN.c, ORIGIN.r, ORIGIN.k); M.makeScale(1.5, 1.5, 1.5).setPosition(centers[oi0 * 3], centers[oi0 * 3 + 1], centers[oi0 * 3 + 2]); mesh.setMatrixAt(oi0, M); }
     const litAttr = new THREE.InstancedBufferAttribute(lit, 1); litAttr.setUsage(THREE.DynamicDrawUsage);
     geo.setAttribute('aLit', litAttr); geo.setAttribute('aSeed', new THREE.InstancedBufferAttribute(seed, 1));
     mesh.instanceMatrix.needsUpdate = true; mesh.frustumCulled = false; world.add(mesh);
@@ -739,8 +745,8 @@ safe(() => {
     pgeo.setAttribute('position', new THREE.BufferAttribute(centers, 3));
     const plit = new THREE.BufferAttribute(lit, 1); plit.setUsage(THREE.DynamicDrawUsage); pgeo.setAttribute('aLit', plit);
     const pmat = new THREE.ShaderMaterial({ uniforms: U, transparent: true, depthWrite: false, premultipliedAlpha: true, blending: THREE.AdditiveBlending,
-      vertexShader: 'attribute float aLit;uniform float uDPR;uniform float uMax;uniform float uBoost;varying float vA;varying float vNear;varying float vSoft;void main(){vec4 mv=modelViewMatrix*vec4(position,1.0);gl_Position=projectionMatrix*mv;float dz=max(-mv.z,1.0);vSoft=smoothstep(6.0,2.2,dz);gl_PointSize=clamp(smoothstep(.05,1.0,aLit)*24.0*uDPR*(60.0/dz)*(1.0+vSoft*.3)*(1.0+(uBoost-1.0)*1.5),0.0,uMax*(1.0+vSoft*.3));vA=aLit;vNear=smoothstep(.6,2.6,dz)*(1.0-smoothstep(13.,26.,dz));}',
-      fragmentShader: 'precision highp float;uniform vec3 uTint;uniform float uFade;uniform float uBoost;varying float vA;varying float vNear;varying float vSoft;void main(){float d=length(gl_PointCoord-.5)*2.0;float q=max(1.0-d,0.0);float core=q*q*q*(1.0-vSoft*.5);float corona=pow(q,1.4)*.16;float s=smoothstep(.05,.5,vA);float al=(core+corona)*s*.5*uFade*vNear*uBoost;gl_FragColor=vec4(mix(uTint,vec3(1.0),.14*core*s)*al,al);}' });
+      vertexShader: 'attribute float aLit;uniform float uDPR;uniform float uMax;uniform float uHS;uniform float uBoost;varying float vA;varying float vNear;varying float vSoft;void main(){vec4 mv=modelViewMatrix*vec4(position,1.0);gl_Position=projectionMatrix*mv;float dz=max(-mv.z,1.0);vSoft=smoothstep(6.0,2.2,dz);gl_PointSize=clamp(smoothstep(.05,1.0,aLit)*uHS*uDPR*(60.0/dz)*(1.0+vSoft*.3)*(1.0+(uBoost-1.0)*1.5),0.0,uMax*(1.0+vSoft*.3));float ny=abs(gl_Position.y/gl_Position.w);vA=aLit*(1.0-.75*smoothstep(.6,.92,ny));vNear=smoothstep(.6,2.6,dz)*(1.0-smoothstep(13.,26.,dz));}',
+      fragmentShader: 'precision highp float;uniform vec3 uTint;uniform float uFade;uniform float uBoost;varying float vA;varying float vNear;varying float vSoft;void main(){float d=length(gl_PointCoord-.5)*2.0;float q=max(1.0-d,0.0);float core=q*q*q*(1.0-vSoft*.5);float corona=pow(q,1.4)*.16;float s=smoothstep(.05,.5,vA);float al=(core+corona)*s*.38*uFade*vNear*uBoost;gl_FragColor=vec4(mix(uTint,vec3(1.0),.14*core*s)*al,al);}' });
     const pts = new THREE.Points(pgeo, pmat); pts.frustumCulled = false; world.add(pts);
     // dust: GPU-animated motes in a 14×8×16 box around the camera path, doubled in size and alpha within 4 m of the lens.
     // The last 48 points of the same draw are the shaft: a column of large, faint, additive discs rising from the origin
@@ -770,6 +776,9 @@ safe(() => {
     let rw = innerWidth, rh = innerHeight, rt = 0;
     addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { const dw = innerWidth !== rw, dh = Math.abs(innerHeight - rh); if (!dw && dh < 140) return; rw = innerWidth; rh = innerHeight; sizes(); }, 150); });
     const look = new THREE.Vector3(), pv = new THREE.Vector3();
+    let olab = null, olabV = -1;
+    if (innerWidth >= 1100) { olab = document.createElement('span'); olab.className = 'olab'; olab.setAttribute('aria-hidden', 'true'); olab.innerHTML = '<b class="mono">02:00</b><span>תור חדש</span>'; document.body.appendChild(olab); }
+    X.cellPx = (c, r, k) => { const j = cell(c, r, k); pv.set(centers[j * 3], centers[j * 3 + 1], centers[j * 3 + 2]).applyMatrix4(world.matrixWorld); pv.project(camera); return { x: (pv.x * .5 + .5) * innerWidth, y: (-pv.y * .5 + .5) * (canvas.clientHeight || innerHeight) }; };
     // the origin cell on screen (for the preloader hand-over): centre in CSS px and its edge in px
     X.originPx = () => { if (first) return null; pv.set(ox, oy, oz).applyMatrix4(world.matrixWorld); const dd = pv.distanceTo(camera.position); pv.project(camera); const h = canvas.clientHeight || innerHeight; return { x: (pv.x * .5 + .5) * innerWidth, y: (-pv.y * .5 + .5) * h, s: CS / (2 * dd * Math.tan(camera.fov * Math.PI / 360)) * h }; };
     function frame(tms) {
@@ -795,20 +804,22 @@ safe(() => {
       if (tintT0 >= 0) { const k = clamp((now - tintT0) / 600, 0, 1), e = 1 - (1 - k) * (1 - k); tint.copy(tintFrom).lerp(tintTo, e); if (k >= 1) tintT0 = -1; }
       // night pulses: two cells every 1.4 s
       if (now - lastPulse > 1400) { lastPulse = now; for (let n = 0; n < 2; n++) pulses.push({ i: prog < .3 ? safeCell() : Math.random() * N | 0, t0: now - n * 220 }); }
-      let any = false;
-      for (let i = 0; i < N; i++) if (flash[i] !== 0) { flash[i] *= .962; if (Math.abs(flash[i]) < .004) flash[i] = 0; any = true; }
+      let any = false; const dec = Math.pow(.955, Math.min(6, (now - (frame.lt || now)) / 16.7)); frame.lt = now;
+      for (let i = 0; i < N; i++) if (flash[i] !== 0) { flash[i] *= dec; if (Math.abs(flash[i]) < .004) flash[i] = 0; any = true; }
       for (let q = pulses.length - 1; q >= 0; q--) { const p = pulses[q], tt = now - p.t0; const v = tt < 300 ? tt / 300 : tt < 1500 ? 1 - .65 * (tt - 300) / 1200 : tt < 2500 ? .35 * (1 - (tt - 1500) / 1000) : 0; if (v <= 0) { pulses.splice(q, 1); continue; } flash[p.i] = Math.max(flash[p.i], v); for (const j of neigh(p.i)) flash[j] = Math.max(flash[j], v * .4); any = true; }
       // the shockwave: a ring in grid distance 0 -> 9 over 1.4 s (power2.out) with a 1.5-wide leading band at full light and a
       // softer body behind it; a cancel runs the same ring as a shadow
-      for (let q = bursts.length - 1; q >= 0; q--) { const b = bursts[q], tt = now - b.t0, kk = clamp(tt / 1400, 0, 1), R = 9 * (1 - (1 - kk) * (1 - kk)); for (let i = 0; i < N; i++) { const dd = R - dist[i]; if (dd < 0) continue; const bandK = clamp(dd / 1.3, 0, 1), tg = Math.max(1 - bandK * bandK, (1 - dist[i] / 9) * .2); if (b.dir > 0) { if (flash[i] < tg) flash[i] = tg; } else if (flash[i] > -tg) flash[i] = -tg; } if (tt > 1400) bursts.splice(q, 1); any = true; }
-      for (let q = ripples.length - 1; q >= 0; q--) { const rp = ripples[q], tt = now - rp.t0, v = .55 * Math.sin(Math.PI * clamp(tt / 400, 0, 1)); for (let k = 0; k < LAYERS; k++) for (let r = 0; r < ROWS; r++) { const i = cell(rp.c, r, k); if (flash[i] < v) flash[i] = v; } if (tt > 400) ripples.splice(q, 1); any = true; }
+      for (let q = bursts.length - 1; q >= 0; q--) { const b = bursts[q], tt = now - b.t0, kk = clamp(tt / 1200, 0, 1), R = 8 * (1 - (1 - kk) * (1 - kk)); for (let i = 0; i < N; i++) { const dd = R - dist[i]; if (dd < 0) continue; const bandK = clamp(dd / .9, 0, 1), tg = Math.max(.85 * (1 - bandK * bandK), (1 - dist[i] / 8) * .1) * ringW[i]; if (b.dir > 0) { if (flash[i] < tg) flash[i] = tg; } else if (flash[i] > -tg) flash[i] = -tg; } if (tt > 1200) bursts.splice(q, 1); any = true; }
+      for (let q = ripples.length - 1; q >= 0; q--) { const rp = ripples[q], tt = now - rp.t0; if (rp.row !== undefined) { for (let k = 0; k <= 2; k++) for (let c = 0; c < COLS; c++) { const dl = Math.abs(c - ORIGIN.c) * 70, v = .5 * Math.sin(Math.PI * clamp((tt - dl) / 420, 0, 1)), i = cell(c, rp.row, k); if (v > 0 && flash[i] < v) flash[i] = v; } if (tt > 420 + COLS * 70) ripples.splice(q, 1); } else { const v = .55 * Math.sin(Math.PI * clamp(tt / 400, 0, 1)); for (let k = 0; k < LAYERS; k++) for (let r = 0; r < ROWS; r++) { const i = cell(rp.c, r, k); if (flash[i] < v) flash[i] = v; } if (tt > 400) ripples.splice(q, 1); } any = true; }
+      base[oi] = .8 + .2 * Math.cos(t * Math.PI / 2); any = true;
       if (any || dirty) { for (let i = 0; i < N; i++) lit[i] = clamp(base[i] + flash[i], 0, 1); litAttr.needsUpdate = true; plit.needsUpdate = true; dirty = false; }
       renderer.render(scene, camera);
+      if (olab) { const o = first ? null : X.originPx(), vis2 = o ? clamp(lastP, 0, 1) * (1 - clamp(prog / .25, 0, 1)) : 0; if (o && vis2 > .01) olab.style.transform = 'translate3d(' + (o.x - o.s * .75 - 8).toFixed(1) + 'px,' + o.y.toFixed(1) + 'px,0)'; if (Math.abs(vis2 - olabV) > .02) { olabV = vis2; olab.style.opacity = vis2.toFixed(2); } }
       if (first) { first = false; H.classList.add('gl'); X.glFirst = now; canvas.style.transition = 'opacity .7s'; requestAnimationFrame(() => { canvas.style.opacity = lastP < 0 ? 1 : Math.max(0, lastP).toFixed(3); setTimeout(() => { canvas.style.transition = 'none'; }, 800); }); }
     }
     // loop only while the hero is on screen, the tab visible and the menu closed
     let vis = true;
-    const upd = () => renderer.setAnimationLoop((vis && !document.hidden && !X.held() && !(first && X.preHold)) ? frame : null);
+    const upd = () => { const run = vis && !document.hidden && !X.held() && !(first && X.preHold); renderer.setAnimationLoop(run ? frame : null); if (!run && olab) { olab.style.opacity = '0'; olabV = 0; } };
     new IntersectionObserver(es => { vis = es[0].isIntersecting; upd(); }).observe(top);
     document.addEventListener('visibilitychange', upd); X.onHold = upd; upd();
     // reactions: the contract with the demo
@@ -818,14 +829,16 @@ safe(() => {
     watchCount(d => {
       bursts.push({ t0: performance.now(), dir: d });
       if (d > 0) {
-        // the night fills up: 24 cells across the volume stay lit at .85 for the rest of the session (capped at 72 so a seeded
-        // business switch cannot white out the room), the origin's neighbours at 1
-        if (filled < 72) { filled += 24; for (let n = 0; n < 24; n++) { const i = Math.random() * N | 0; if (base[i] < .85) base[i] = .85; } } for (let i = 0; i < N; i++) if (dist[i] <= 1 && base[i] < 1) base[i] = 1;
-        shaft = 2.8; shaftBase = 1.4; kickT0 = performance.now(); dirty = true;
+        // the night fills up a little with every booking: 8 cells stay lit at .55 (cap 24), picked from the far layers or the
+        // start-side columns so the light never piles up behind the copy or the owner card; the origin's ring stays at 1
+        if (filled < 24) { filled += 8; for (let n = 0, tries = 0; n < 8 && tries < 200; tries++) { const i = Math.random() * N | 0, k = LAYERS - 1 - Math.floor(i / (ROWS * COLS)), c = i % COLS; if ((k >= 3 || c <= 3) && base[i] < .55) { base[i] = .55; n++; } } }
+        for (let i = 0; i < N; i++) if (dist[i] <= 1 && base[i] < 1) base[i] = 1;
+        shaft = 1.6; shaftBase = 1.1; kickT0 = performance.now(); dirty = true;
         if (demo) { demo.classList.add('lamp'); clearTimeout(lampT); lampT = setTimeout(() => demo.classList.remove('lamp'), 700); }
       } else { fadeDip = .5; shaft = .5; }
     });
     X.onDay = di => ripples.push({ c: di % COLS, t0: performance.now() });
+    X.onRot = () => { if (prog < .3 && !document.hidden) ripples.push({ row: ORIGIN.r, t0: performance.now() }); };
     if (FINE) addEventListener('pointermove', e => { yawT = (e.clientX / innerWidth - .5) * 2 * .05; pitchT = (e.clientY / innerHeight - .5) * 2 * .03; }, { passive: true });
     X.scene = { renderer, N, ND, LAYERS, COLS, ROWS, world, camera, SX };
     try { Object.defineProperty(window, 'EDONX', { value: X, writable: false }); } catch (e) {}
