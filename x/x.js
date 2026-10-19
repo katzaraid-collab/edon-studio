@@ -544,31 +544,66 @@ function prefill(fromCfg) {
     }
   });
 }
-function goStep(n) { $('s1').hidden = n !== 1; $('s2').hidden = n !== 2; $('stepl').textContent = 'שלב ' + n + ' מתוך 2'; $('pbar').style.setProperty('--p', n === 1 ? '50%' : '100%'); const f = $('f'); f.dataset.step = n; if (!RM) replay(f, 'swap'); if (n === 2) { setTimeout(() => $('fn').focus({ preventScroll: true }), 350); const fm = $('fm'); if (fm) fm.dispatchEvent(new Event('input')); } }
+function goStep(n) { $('s1').hidden = n !== 1; $('s2').hidden = n !== 2; $('sent').hidden = true; $('stepl').textContent = 'שלב ' + n + ' מתוך 2'; $('pbar').style.setProperty('--p', n === 1 ? '50%' : '100%'); const f = $('f'); f.dataset.step = n; if (!RM) replay(f, 'swap'); if (n === 2) { setTimeout(() => $('fn').focus({ preventScroll: true }), 350); const fm = $('fm'); if (fm) fm.dispatchEvent(new Event('input')); } }
 safe(() => {
   $('next').addEventListener('click', () => goStep(2));
   $('back').addEventListener('click', () => goStep(1));
-  const msg = () => $('out').textContent;
-  const dml = $('dml'), outl = $('outl'), escH = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const live = () => { if (!outl) return; const name = $('fn').value.trim(), biz = $('fb').value.trim(), note = $('fm').value.trim(), sv = document.querySelector('input[name=svc]:checked'); const ph = (v, t) => v ? '<b class="v">' + escH(v) + '</b>' : '<span class="ph">' + t + '</span>'; outl.innerHTML = 'היי EDON, אני ' + ph(name, 'השם שלכם') + ' מ' + ph(biz, 'העסק') + '.\nמעניין אותי: ' + escH(sv ? sv.value : '') + '.' + (note ? '\n' + escH(note) : ''); };
-  ['fn', 'fb', 'fm'].forEach(id => $(id).addEventListener('input', live)); $$('input[name=svc]').forEach(r => r.addEventListener('change', live)); live();
-  $('f').addEventListener('submit', e => {
-    e.preventDefault();
-    const name = $('fn').value.trim(), biz = $('fb').value.trim();
-    if (name.length < 2 || biz.length < 2) { $('st').textContent = 'נא למלא שם ושם עסק כדי שנוכל לחזור אליכם.'; const bad = $(name.length < 2 ? 'fn' : 'fb'); bad.setAttribute('aria-invalid', 'true'); bad.focus(); if (!RM) replay(bad, 'nudge'); return; }
-    $('fn').removeAttribute('aria-invalid'); $('fb').removeAttribute('aria-invalid');
-    // consent to use the details (privacy policy) is required before the message is composed
-    const agree = $('fa');
-    if (agree && !agree.checked) { $('st').textContent = 'כדי להמשיך, סמנו שאתם מאשרים את השימוש בפרטים.'; agree.setAttribute('aria-invalid', 'true'); agree.focus(); if (!RM) replay(agree.closest('label'), 'nudge'); return; }
-    if (agree) agree.removeAttribute('aria-invalid');
-    const svc = document.querySelector('input[name=svc]:checked').value, note = $('fm').value.trim();
-    $('out').textContent = 'היי EDON, אני ' + name + ' מ' + biz + '.\nמעניין אותי: ' + svc + '.' + (note ? '\n' + note : '');
+  const box = $('contact'), f = $('f'), sendBtn = $('send'), dml = $('dml'), outl = $('outl'), escH = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  // "send" once the studio's mailbox is connected (api/contact.js); until then, and whenever a send fails, the form composes an Instagram message instead
+  const sending = () => box.dataset.mode === 'send';
+  const read = () => ({ name: $('fn').value.trim(), biz: $('fb').value.trim(), phone: $('fp').value.trim(), svc: (document.querySelector('input[name=svc]:checked') || {}).value || '', note: $('fm').value.trim() });
+  const message = v => 'היי EDON, אני ' + v.name + ' מ' + v.biz + '.\nמעניין אותי: ' + v.svc + '.' + (v.phone ? '\nטלפון לחזרה: ' + v.phone : '') + (v.note ? '\n' + v.note : '');
+  const live = () => { if (!outl) return; const v = read(); const ph = (x, t) => x ? '<b class="v">' + escH(x) + '</b>' : '<span class="ph">' + t + '</span>'; outl.innerHTML = 'היי EDON, אני ' + ph(v.name, 'השם שלכם') + ' מ' + ph(v.biz, 'העסק') + '.\nמעניין אותי: ' + escH(v.svc) + '.' + (sending() ? '\nטלפון לחזרה: ' + ph(v.phone, 'הטלפון שלכם') : '') + (v.note ? '\n' + escH(v.note) : ''); };
+  ['fn', 'fb', 'fp', 'fm'].forEach(id => $(id).addEventListener('input', live)); $$('input[name=svc]').forEach(r => r.addEventListener('change', live)); live();
+  fetch('/api/contact', { headers: { Accept: 'application/json' } }).then(r => r.ok ? r.json() : null).then(j => { if (j && j.ready === true) { box.dataset.mode = 'send'; live(); } }).catch(() => {});
+  // the same details keep the same id, so the server can tell a retry from a second inquiry
+  const newId = () => { try { return crypto.randomUUID().replace(/-/g, ''); } catch (err) { return Date.now().toString(36) + Math.random().toString(36).slice(2, 12); } };
+  let sid = newId(), busy = false;
+  ['input', 'change'].forEach(t => f.addEventListener(t, () => { sid = newId(); }));
+  const phoneOk = p => /^\+?[0-9()\-. ]+$/.test(p) && p.length <= 24 && p.replace(/\D/g, '').length >= 9 && p.replace(/\D/g, '').length <= 15;
+  const MSG = { fn: 'נא למלא שם ושם עסק כדי שנוכל לחזור אליכם.', fb: 'נא למלא שם ושם עסק כדי שנוכל לחזור אליכם.', fp: 'נא למלא מספר טלפון מלא, כדי שנוכל לחזור אליכם.', fa: 'כדי להמשיך, סמנו שאתם מאשרים את השימוש בפרטים.' };
+  const flag = id => { const el = $(id); $('st').textContent = MSG[id]; el.setAttribute('aria-invalid', 'true'); el.focus(); if (!RM) replay(id === 'fa' ? el.closest('label') : el, 'nudge'); };
+  const composed = note => {
     const dmt = $('dmt'); if (dmt) dmt.textContent = new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
-    $('done').hidden = false; if (dml) dml.hidden = true; $('st').textContent = 'ההודעה מוכנה. העתיקו, פתחו את הדיירקט והדביקו.'; click(330);
+    $('done').hidden = false; if (dml) dml.hidden = true; $('st').textContent = note; click(330);
     if (!RM) replay($('done'), 'swap');
     $('done').scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'nearest' });
+  };
+  const sent = v => {
+    $('sentp').textContent = v.phone; $('s1').hidden = true; $('s2').hidden = true; $('done').hidden = true; if (dml) dml.hidden = false; $('st').textContent = '';
+    $('sent').hidden = false; $('stepl').textContent = 'נשלח'; $('pbar').style.setProperty('--p', '100%'); f.dataset.step = 'sent'; click(330);
+    if (!RM) replay($('sent'), 'swap');
+    $('senth').focus({ preventScroll: true }); $('sent').scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'nearest' });
+    sid = newId();
+  };
+  f.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (busy) return;
+    const v = read();
+    ['fn', 'fb', 'fp', 'fa'].forEach(id => $(id).removeAttribute('aria-invalid'));
+    if (v.name.length < 2) return flag('fn');
+    if (v.biz.length < 2) return flag('fb');
+    if (sending() && !phoneOk(v.phone)) return flag('fp');
+    // consent to use the details (privacy policy) comes before anything is sent or composed
+    if (!$('fa').checked) return flag('fa');
+    $('out').textContent = message(v);
+    if (!sending()) return composed('ההודעה מוכנה. העתיקו, פתחו את הדיירקט והדביקו.');
+    busy = true; sendBtn.setAttribute('aria-disabled', 'true'); f.setAttribute('aria-busy', 'true'); $('st').textContent = 'שולחים…';
+    let r = { status: 0 };
+    const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 15000);
+    try {
+      const res = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ name: v.name, biz: v.biz, phone: v.phone, svc: v.svc, note: v.note, consent: true, hp: $('fw').value, id: sid }), signal: ctl.signal });
+      r = Object.assign(await res.json().catch(() => ({})), { status: res.status });
+    } catch (err) {}
+    clearTimeout(tm); busy = false; sendBtn.removeAttribute('aria-disabled'); f.removeAttribute('aria-busy');
+    if (r.ok === true) return sent(v);
+    const bad = { name: 'fn', biz: 'fb', phone: 'fp', consent: 'fa' }[r.field];
+    if (r.status === 400 && bad) return flag(bad);
+    // nothing reached the studio: hand the visitor the same message for the Instagram route, and keep "send" for another try
+    composed(r.status === 429 ? 'נשלחו מכאן הרבה פניות בזמן קצר. ההודעה מוכנה: אפשר לשלוח אותה בדיירקט, או לנסות שוב בעוד כמה דקות.' : 'לא הצלחנו לשלוח מהאתר כרגע. ההודעה מוכנה: אפשר לשלוח אותה בדיירקט, או ללחוץ שוב על שליחה.');
   });
-  const copy = async () => { try { await navigator.clipboard.writeText(msg()); $('st').textContent = 'הועתק. אפשר להדביק ולשלוח.'; return true; } catch (err) { const r = document.createRange(); r.selectNodeContents($('out')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); $('st').textContent = 'סימנו את ההודעה. העתיקו ידנית (לחיצה ארוכה).'; return false; } };
+  $('fnew').addEventListener('click', () => { f.reset(); $('done').hidden = true; if (dml) dml.hidden = false; live(); goStep(1); const r = document.querySelector('input[name=svc]:checked'); if (r) r.focus({ preventScroll: true }); f.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'nearest' }); });
+  const copy = async () => { try { await navigator.clipboard.writeText($('out').textContent); $('st').textContent = 'הועתק. אפשר להדביק ולשלוח.'; return true; } catch (err) { const r = document.createRange(); r.selectNodeContents($('out')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); $('st').textContent = 'סימנו את ההודעה. העתיקו ידנית (לחיצה ארוכה).'; return false; } };
   $('cp').addEventListener('click', copy);
   $('openig').addEventListener('click', () => { copy(); });
 });

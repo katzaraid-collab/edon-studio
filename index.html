@@ -466,12 +466,13 @@
 </section>
 
 <!-- ===== contact ===== -->
-<section id="contact" class="sec">
+<section id="contact" class="sec" data-mode="dm">
   <div class="in contact">
     <div class="ctext" data-x>
       <p class="tag"><span class="mono" lang="en">09 / CONTACT</span></p>
       <h2 class="gl split">נשמח לבנות לכם את זה.</h2>
-      <p class="sub">כל הפניות מתנהלות בדיירקט באינסטגרם. שני שלבים, ההודעה נכתבת לבד, אתם רק שולחים. חוזרים אליכם תוך יום עבודה עם הצעה סגורה.</p>
+      <p class="sub" data-only="send">שני שלבים קצרים, לוחצים שליחה והפנייה מגיעה ישר אלינו. חוזרים אליכם תוך יום עבודה עם הצעה סגורה.</p>
+      <p class="sub" data-only="dm">כל הפניות מתנהלות בדיירקט באינסטגרם. שני שלבים, ההודעה נכתבת לבד, אתם רק שולחים. חוזרים אליכם תוך יום עבודה עם הצעה סגורה.</p>
       <div class="ways">
         <div><span>אינסטגרם</span><a href="https://ig.me/m/edon.group" target="_blank" rel="noopener"><b>@edon.group</b><span class="vh"> (נפתח בחלון חדש)</span></a></div>
         <div><span>זמני מענה</span><span>א׳–ה׳ · 09:00–19:00</span></div>
@@ -493,19 +494,27 @@
       <div id="s2" hidden>
         <h3>ספרו לנו על העסק</h3>
         <div class="fields">
-          <label for="fn">שם מלא<input type="text" id="fn" autocomplete="name" placeholder="ישראל ישראלי"></label>
-          <label for="fb">שם העסק ותחום<input type="text" id="fb" placeholder="לדוגמה: מספרה בנתיבות"></label>
-          <label for="fm">עוד משהו שכדאי שנדע (לא חובה)<textarea id="fm" placeholder="ימי פעילות, שירותים, דוגמאות שאהבתם…"></textarea></label>
+          <label for="fn">שם מלא<input type="text" id="fn" autocomplete="name" placeholder="ישראל ישראלי" maxlength="80"></label>
+          <label for="fb">שם העסק ותחום<input type="text" id="fb" placeholder="לדוגמה: מספרה בנתיבות" maxlength="120"></label>
+          <label for="fp" data-only="send">טלפון לחזרה<input type="tel" id="fp" autocomplete="tel" inputmode="tel" dir="ltr" placeholder="050-0000000" maxlength="24"></label>
+          <label for="fm">עוד משהו שכדאי שנדע (לא חובה)<textarea id="fm" placeholder="ימי פעילות, שירותים, דוגמאות שאהבתם…" maxlength="1500"></textarea></label>
+          <label class="hp" aria-hidden="true">אתר<input type="text" id="fw" name="website" tabindex="-1" autocomplete="off"></label>
           <label class="agree" for="fa"><input type="checkbox" id="fa" name="agree" aria-describedby="fnote"><span>אני מאשר/ת ש־EDON תשתמש בפרטים כדי לחזור אליי ולהכין הצעת מחיר, לפי <a href="/privacy.html" target="_blank" rel="noopener">מדיניות הפרטיות<span class="vh"> (נפתח בחלון חדש)</span></a>.</span></label>
         </div>
-        <p class="fine2" id="fnote">הפרטים לא נשלחים מהאתר. הם רק מרכיבים הודעה שתשלחו לנו בעצמכם באינסטגרם. מסירת הפרטים אינה חובה לפי חוק והיא תלויה ברצונכם, אבל בלי שם ופרטי עסק לא נוכל להכין הצעה מותאמת. EDON תשתמש בהם רק כדי לחזור אליכם ולהכין הצעת מחיר. ההודעה עוברת ונשמרת באינסטגרם של Meta, ואפשר לבקש מאיתנו לעיין בפרטים, לתקן אותם או למחוק אותם. <a href="/privacy.html" target="_blank" rel="noopener">פרטי EDON והמדיניות המלאה<span class="vh"> (נפתח בחלון חדש)</span></a>.</p>
-        <div class="dm live" id="dml" aria-hidden="true"><div class="who"><i></i>אל <b>@edon.group</b><span class="mono" lang="en">DRAFT</span></div><pre id="outl"></pre></div>
-        <div class="nav2"><button class="btn line" type="button" id="back"><svg class="arr rev" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> חזרה</button><button class="btn main" type="submit">הכנת הודעה <svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        <p class="fine2" id="fnote"><span data-only="send">בלחיצה על שליחה הפרטים נשלחים מהאתר ישירות לתיבת הדואר של EDON. מסירת הפרטים אינה חובה לפי חוק והיא תלויה ברצונכם, אבל בלי שם, פרטי עסק וטלפון לא נוכל לחזור אליכם. EDON תשתמש בהם רק כדי לחזור אליכם ולהכין הצעת מחיר. הם עוברים דרך ספקי האחסון והדואר שלנו (Vercel ו־Resend), ואפשר לבקש מאיתנו לעיין בפרטים, לתקן אותם או למחוק אותם.</span><span data-only="dm">הפרטים לא נשלחים מהאתר. הם רק מרכיבים הודעה שתשלחו לנו בעצמכם באינסטגרם. מסירת הפרטים אינה חובה לפי חוק והיא תלויה ברצונכם, אבל בלי שם ופרטי עסק לא נוכל להכין הצעה מותאמת. EDON תשתמש בהם רק כדי לחזור אליכם ולהכין הצעת מחיר. ההודעה עוברת ונשמרת באינסטגרם של Meta, ואפשר לבקש מאיתנו לעיין בפרטים, לתקן אותם או למחוק אותם.</span> <a href="/privacy.html" target="_blank" rel="noopener">פרטי EDON והמדיניות המלאה<span class="vh"> (נפתח בחלון חדש)</span></a>.</p>
+        <div class="dm live" id="dml" aria-hidden="true"><div class="who"><i></i>אל <b data-only="send">EDON</b><b data-only="dm">@edon.group</b><span class="mono" lang="en">DRAFT</span></div><pre id="outl"></pre></div>
+        <div class="nav2"><button class="btn line" type="button" id="back"><svg class="arr rev" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> חזרה</button><button class="btn main" type="submit" id="send"><span data-only="send">שליחה</span><span data-only="dm">הכנת הודעה</span> <svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
         <p class="status" id="st" role="status"></p>
         <div id="done" hidden>
           <div class="dm"><div class="who"><i></i>אל <b>@edon.group</b><span class="mono" id="dmt">02:00</span></div><pre id="out"></pre></div>
-          <div class="nav2"><button class="btn line" type="button" id="cp">העתקת ההודעה</button><a class="btn main" href="https://ig.me/m/edon.group" target="_blank" rel="noopener" id="openig">העתקה ופתיחת הדיירקט<span class="vh"> (נפתח בחלון חדש)</span> <svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></div>
+          <div class="nav2"><a class="btn main" href="https://ig.me/m/edon.group" target="_blank" rel="noopener" id="openig">העתקה ופתיחת הדיירקט<span class="vh"> (נפתח בחלון חדש)</span> <svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a><button class="btn line" type="button" id="cp">העתקת ההודעה בלבד</button></div>
         </div>
+      </div>
+      <div id="sent" hidden>
+        <span class="okm" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span>
+        <h3 id="senth" tabindex="-1">קיבלנו. הפנייה אצלנו.</h3>
+        <p>נחזור אליכם לטלפון <b id="sentp" dir="ltr"></b> תוך יום עבודה (א׳–ה׳, 09:00–19:00), עם הצעה סגורה.</p>
+        <div class="nav2"><button class="btn line" type="button" id="fnew">שליחת פנייה נוספת</button></div>
       </div>
     </form>
   </div>
