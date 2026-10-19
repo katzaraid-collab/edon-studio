@@ -427,7 +427,7 @@ html.nogl .lamphint,html.rm .lamphint{display:none}
 #services .wire{position:absolute;top:-1px;left:0;right:0;height:1px;background:var(--volt);box-shadow:0 0 12px rgba(var(--volt-rgb),.6);transform:scaleX(0);transform-origin:right;pointer-events:none}
 .cfg{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;align-items:start}
 .plans{grid-column:1/-1;display:grid}
-.plan{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:24px 28px;align-items:center;padding:34px 0;border-top:1px solid var(--x-line);text-align:right;width:100%;position:relative;transition:background var(--t-3)}
+.plan{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:24px 28px;align-items:center;padding:34px 0;border-top:1px solid var(--x-line);text-align:right;width:100%;position:relative;transition:background var(--t-3)}
 .plan:last-child{border-bottom:1px solid var(--x-line)}
 .plan:hover{background:linear-gradient(90deg,transparent,rgba(255,255,255,.02) 50%,transparent)}
 .strip{display:grid;grid-template-columns:repeat(3,8px);grid-auto-rows:8px;gap:3px;align-self:center}
@@ -441,9 +441,6 @@ html.nogl .lamphint,html.rm .lamphint{display:none}
 .plan ul{display:flex;flex-wrap:wrap;gap:6px 18px;margin:14px 0 0;font-size:14px;color:var(--x-fg-2)}
 .plan li{display:flex;gap:8px;align-items:center}
 .plan li::before{content:"";width:4px;height:4px;background:var(--volt);flex:0 0 auto}
-.plan .pf{display:flex;align-items:baseline;gap:8px;white-space:nowrap}
-.plan .pf span,.plan .pf small{color:var(--x-muted);font-size:14px;font-weight:500}
-.plan .pf b{font:900 calc(var(--fs-num)/1.6)/1 var(--disp);font-stretch:75%;font-variation-settings:"wdth" 75,"wght" 900;letter-spacing:-.03em;direction:ltr;font-variant-numeric:tabular-nums}
 .tog{flex:0 0 auto;width:46px;height:26px;border-radius:999px;background:var(--x-ink-2);border:1px solid var(--x-line-2);position:relative;transition:background var(--t-3),border-color var(--t-3),box-shadow var(--t-3)}
 .tog::after{content:"";position:absolute;top:2px;inset-inline-start:2px;width:20px;height:20px;border-radius:50%;background:var(--chrome);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 2px 6px -1px #000;transition:translate var(--t-3) var(--e-spring)}
 .plan:hover .tog{border-color:rgba(var(--volt-rgb),.55)}
@@ -466,9 +463,12 @@ html.nogl .lamphint,html.rm .lamphint{display:none}
 .bill li.sv{color:var(--volt)}
 .bill li.sv b{color:var(--volt)}
 .bill li.em{color:var(--x-muted);border:0;font-size:14px}
-.bill .tot{display:flex;justify-content:space-between;align-items:baseline;margin-top:18px;gap:12px}
-.bill .tot>span{color:var(--x-muted);font-size:14px}
-.bill .tot b{font:900 clamp(40px,3.6vw,56px)/1 var(--disp);font-stretch:75%;font-variation-settings:"wdth" 75,"wght" 900;direction:ltr;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.bill #lines li{align-items:center}
+.bill #lines li b{display:inline-flex;align-items:center;direction:rtl}
+.bill #lines li b .mk{width:16px;height:16px}
+.bill .perks{margin:16px 0 0;gap:8px;font-size:14px}
+.bill .perks li{display:block;position:relative;padding:0;padding-inline-start:22px;border:0;line-height:1.45}
+.bill .perks li::before{content:"";position:absolute;inset-inline-start:0;top:.45em;width:9px;height:9px;background:var(--volt);box-shadow:0 0 8px -1px rgba(var(--volt-rgb),.8)}
 .bill .promo{margin-top:14px;border:1px solid rgba(var(--volt-rgb),.5);border-radius:999px;padding:9px 16px;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center;color:var(--x-fg-2)}
 .bill .promo b{direction:ltr;font-weight:800;color:var(--volt)}
 @media (max-width:420px){.bill .promo{flex-direction:column;align-items:flex-start;gap:4px;border-radius:16px;padding:10px 14px}.bill .promo b{font-size:18px}}
@@ -484,12 +484,12 @@ html.nogl .lamphint,html.rm .lamphint{display:none}
 .od .dg span{display:block;height:1em;translate:0 calc(var(--d,0) * -1em);transition:translate var(--t-5) var(--e-out);transition-delay:calc(var(--i,0) * 35ms)}
 .cfgbar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:30;background:var(--glass);backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);border:1px solid var(--glass-line);border-radius:20px;padding:10px 10px 10px 16px;display:none;align-items:center;gap:12px;translate:0 130%;transition:translate var(--t-4) var(--e-spring);box-shadow:0 30px 80px -30px #000}
 .cfgbar.show{translate:0}
-.cfgbar b{font:900 24px/1 var(--disp);font-stretch:75%;font-variation-settings:"wdth" 75,"wght" 900;direction:ltr;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.cfgbar b{font:800 18px/1.15 var(--he);display:block}
 .cfgbar small{display:block;color:var(--x-muted);font-size:12px;margin-top:3px}
 .cfgbar .btn{margin-inline-start:auto}
 @media (min-width:1100px){.plans{grid-column:1/8}.bill{grid-column:9/-1;position:sticky;top:96px}}
 @media (max-width:900px){.cfgbar{display:flex}}
-@media (max-width:700px){.plan{grid-template-columns:auto minmax(0,1fr) auto;gap:16px 18px;padding:26px 0}.plan .pf{grid-column:2/-1;grid-row:2}.plan ul{display:grid;gap:6px}}
+@media (max-width:700px){.plan{grid-template-columns:auto minmax(0,1fr) auto;gap:16px 18px;padding:26px 0}.plan ul{display:grid;gap:6px}}
 
 /* ---------- why: the 24-hour bar ---------- */
 .why .horizon{position:absolute;left:0;right:0;top:46%;height:1px;background:linear-gradient(90deg,transparent,var(--chrome-mid) 30%,var(--chrome-hi) 50%,var(--chrome-mid) 70%,transparent);opacity:.18;pointer-events:none}

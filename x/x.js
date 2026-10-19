@@ -509,28 +509,30 @@ safe(() => {
 });
 
 /* ---------- configurator (ported) + cell strips + the wire ---------- */
-const CFG = { page: { n: 'דף עסק', p: 990 }, app: { n: 'אפליקציית תורים', p: 2490 }, brand: { n: 'מיתוג ואינסטגרם', p: 1490 }, care: { n: 'ליווי חודשי', p: 99 } };
+const CFG = { page: { n: 'דף עסק' }, app: { n: 'אפליקציית תורים' }, brand: { n: 'מיתוג ואינסטגרם' }, care: { n: 'ליווי חודשי' } };
 const sel = new Set(['app']);
-let cfgState = { total: 2490 };
+let cfgState = { items: ['app'], care: false };
 safe(() => {
-  const lines = $('lines'), promo = $('promo'), sel2 = $('sel2');
-  const setA = odometer($('total')), setB = odometer($('total2'));
+  const lines = $('lines'), sel2 = $('sel2'), pcount = $('pcount'), ld = $('latd');
+  const CK = '<svg class="mk y" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
   $$('.plan .strip').forEach(st => $$('i', st).forEach((c, i) => c.style.setProperty('--i', i)));
-  const lat = $('lat'); if (lat) lat.innerHTML = '<i></i>'.repeat(112); const latI = lat ? $$('i', lat) : []; latI.forEach((c, i) => c.style.setProperty('--i', i));
+  // the bill lattice is a package meter: 16 columns x 7 rows, four columns light per chosen service
+  const lat = $('lat'); if (lat) lat.innerHTML = '<i></i>'.repeat(112);
+  const latI = lat ? $$('i', lat) : [];
+  latI.forEach((c, i) => { const col = i % 16; c.dataset.c = col; c.style.setProperty('--i', col * 7 + (i / 16 | 0)); });
   function calc() {
-    const items = ['page', 'app', 'brand'].filter(k => sel.has(k));
-    let sub = items.reduce((a, k) => a + CFG[k].p, 0), bundle = sel.has('app') && sel.has('brand') ? 490 : 0, tot = sub - bundle;
-    cfgState = { items, bundle, total: tot, care: sel.has('care') };
-    let html = items.map(k => '<li><span>' + CFG[k].n + '</span><b>' + ils(CFG[k].p) + '</b></li>').join('');
-    if (bundle) html += '<li class="sv"><span>חבילה מלאה · אפליקציה + מיתוג</span><b>−' + ils(bundle) + '</b></li>';
-    if (sel.has('care')) html += '<li><span>ליווי חודשי</span><b>' + ils(CFG.care.p) + ' / חודש</b></li>';
-    if (!items.length) html += '<li class="em"><span>הדליקו לפחות שירות אחד כדי לראות מחיר. ליווי חודשי מצטרף לכל חבילה.</span></li>';
-    lines.innerHTML = html; setA(tot); setB(tot);
-    const DAYS = { page: 2, app: 7, brand: 4 }, days = items.reduce((m, k) => Math.max(m, DAYS[k] || 0), 0), nl = days * 16;
-    latI.forEach((c, i) => c.classList.toggle('on', i < nl));
-    const ld = $('latd'); if (ld) ld.textContent = days ? days + ' ימי עבודה' : '—';
-    promo.textContent = ils(Math.round(tot * .7 / 10) * 10);
-    sel2.textContent = items.length ? items.map(k => CFG[k].n).join(' + ') + (sel.has('care') ? ' + ליווי' : '') : 'בחרו שירות';
+    const items = ['page', 'app', 'brand'].filter(k => sel.has(k)), care = sel.has('care'), n = items.length + (care ? 1 : 0);
+    cfgState = { items, care };
+    let html = items.map(k => '<li><span>' + CFG[k].n + '</span><b>' + CK + '</b></li>').join('');
+    if (sel.has('app') && sel.has('brand')) html += '<li class="sv"><span>אפליקציה + מיתוג ביחד</span><b>מחיר חבילה</b></li>';
+    if (care) html += '<li><span>ליווי חודשי</span><b>' + CK + '</b></li>';
+    if (!items.length) html += '<li class="em"><span>הדליקו לפחות שירות אחד. ליווי חודשי מצטרף לכל חבילה.</span></li>';
+    lines.innerHTML = html;
+    const label = n ? (n === 1 ? 'שירות אחד' : n + ' שירותים') : 'עוד לא נבחר';
+    latI.forEach(c => c.classList.toggle('on', +c.dataset.c < n * 4));
+    if (ld) ld.textContent = label;
+    if (pcount) pcount.textContent = label;
+    sel2.textContent = items.length ? items.map(k => CFG[k].n).join(' + ') + (care ? ' + ליווי' : '') : 'בחרו שירות';
   }
   $$('.plan').forEach(b => b.addEventListener('click', () => { const k = b.dataset.plan; sel.has(k) ? sel.delete(k) : sel.add(k); b.setAttribute('aria-pressed', sel.has(k)); replay(b, 'pop'); click(sel.has(k) ? 300 : 180); calc(); }));
   calc();
@@ -547,11 +549,11 @@ safe(() => {
 /* ---------- contact form (ported) ---------- */
 function prefill(fromCfg) {
   safe(() => {
-    const { items = [], care, total } = cfgState;
+    const { items = [], care } = cfgState;
     const pick = items.includes('app') && items.includes('brand') ? 'הכל ביחד' : items.includes('app') ? 'אפליקציית תורים' : items.includes('brand') ? 'מיתוג ואינסטגרם' : items.includes('page') ? 'דף עסק' : null;
     if (pick) { const r = $$('input[name=svc]').find(i => i.value === pick); if (r) r.checked = true; }
     if (fromCfg && items.length) {
-      $('fm').value = 'הרכבתי באתר: ' + items.map(k => CFG[k].n).join(' + ') + (care ? ' + ליווי חודשי' : '') + ' (בערך ' + ils(total) + ').';
+      $('fm').value = 'הרכבתי באתר: ' + items.map(k => CFG[k].n).join(' + ') + (care ? ' + ליווי חודשי' : '') + '.';
       goStep(2);
     }
   });
