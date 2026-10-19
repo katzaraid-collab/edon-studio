@@ -395,8 +395,6 @@ html.nogl .lamphint,html.rm .lamphint{display:none}
 .owner .n b.bump{animation:bump var(--t-3) var(--e-spring)}
 @keyframes bump{50%{scale:1.25}}
 .owner .n span{color:var(--x-muted)}
-.owner .rev{display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;font-size:12px;color:var(--x-muted)}
-.owner .rev b{color:var(--x-fg);font:800 15px/1 var(--he);direction:ltr}
 .owner .occ{height:6px;border-radius:6px;background:var(--x-ink-2);margin-top:12px;overflow:hidden}
 .owner .occ i{display:block;height:100%;width:var(--w,0%);background:var(--acc);border-radius:6px;transition:width var(--t-5) var(--e-out),background var(--t-3)}
 .owner .occt{display:block;font-size:12px;color:var(--x-fg-2);margin-top:6px}

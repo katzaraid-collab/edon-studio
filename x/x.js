@@ -15,7 +15,6 @@ const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, k) => a + (b - a) * k;
 const safe = fn => { try { fn(); } catch (e) { console.warn('[edon-x]', e); } };
 const GLYPHS = 'אבגדהוזחטיכלמנסעפצקרשת0123456789';
-const ils = n => '₪' + n.toLocaleString('en-US');
 const easeOut = k => 1 - Math.pow(1 - k, 3);
 const easeBack = k => { const c = .7, c3 = c + 1; return 1 + c3 * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); };
 const expoOut = k => k >= 1 ? 1 : 1 - Math.pow(2, -10 * k);
@@ -81,21 +80,6 @@ function countUp(el) {
   const t0 = performance.now(), dur = 1000 + to * 4;
   const tick = now => { const k = clamp((now - t0) / dur, 0, 1); el.textContent = Math.max(0, Math.round(to * easeBack(k))); if (k < 1) requestAnimationFrame(tick); };
   requestAnimationFrame(tick);
-}
-// odometer: one rolling strip per digit; assistive tech reads the plain value in .sr
-function odometer(el) {
-  let last = null;
-  const shape = s => s.replace(/\d/g, '0');
-  const build = s => { el.classList.add('od'); el.innerHTML = '<span class="sr"></span><span class="strips" aria-hidden="true">' + Array.from(s).map((ch, i) => /\d/.test(ch) ? '<span class="dg" style="--i:' + i + ';--d:' + ch + '"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></span>' : '<span class="ch">' + ch + '</span>').join('') + '</span>'; };
-  return v => {
-    const s = ils(v); if (RM) { el.textContent = s; return; }
-    const digits = s.replace(/\D/g, '');
-    if (last === null) { build(s); el.querySelector('.sr').textContent = s; last = s; return; }
-    if (shape(last) !== shape(s)) { build(s); el.querySelectorAll('.dg').forEach(d => d.style.setProperty('--d', 0)); void el.offsetWidth; }
-    el.querySelectorAll('.dg').forEach((d, i) => d.style.setProperty('--d', digits[i]));
-    el.querySelector('.sr').textContent = s;
-    last = s;
-  };
 }
 
 /* ---------- preloader: 19:00 → 02:00, then the shutters split ---------- */
@@ -317,39 +301,38 @@ safe(() => {
   // one config per business type; the engine below is shared
   const DEMOS = [
     { key: 'barber', chip: 'ברברשופ', biz: 'ברברשופ', bizForm: 'מספרה / ברברשופ', name: 'ברברשופ אלון', sub: 'פתוח עכשיו · סוגר ב־19:00', letter: 'א', acc: '#C8FF2E', accFg: '#0B0B10', rgb: '200,255,46',
-      services: [{ n: 'תספורת', d: 35, p: 80, i: 'scissors' }, { n: 'עיצוב זקן', d: 20, p: 40, i: 'razor' }, { n: 'תספורת + זקן', d: 50, p: 110, i: 'flame' }, { n: 'תספורת ילד', d: 25, p: 60, i: 'child' }],
+      services: [{ n: 'תספורת', d: 35, i: 'scissors' }, { n: 'עיצוב זקן', d: 20, i: 'razor' }, { n: 'תספורת + זקן', d: 50, i: 'flame' }, { n: 'תספורת ילד', d: 25, i: 'child' }],
       extra: { kind: 'staff', title: 'אצל מי?', opts: [{ n: 'אלון', s: 'ספר ראשי · 12 שנה', i: 'א' }, { n: 'דניאל', s: 'ספר · מתמחה בפייד', i: 'ד' }] },
       slots: grid('09:00', '19:00', 40), seats: [{ n: 'דני', s: 'תספורת אצל אלון', t: '14:20' }, { n: 'רועי', s: 'עיצוב זקן אצל דניאל', t: '13:40' }] },
     { key: 'wash', chip: 'שטיפת רכב', biz: 'שטיפת רכב', bizForm: 'שטיפת רכב / דיטיילינג', name: 'שטיפה ודיטיילינג רועי', sub: 'פתוח עכשיו · סוגר ב־17:30', letter: 'ר', acc: '#F2C14E', accFg: '#141008', rgb: '242,193,78',
-      services: [{ n: 'שטיפה חיצונית', d: 30, p: 60, i: 'drop' }, { n: 'פנים + חוץ', d: 60, p: 140, i: 'sparkles' }, { n: 'פוליש והגנה', d: 120, p: 450, i: 'gem' }],
-      extra: { kind: 'vehicle', title: 'איזה רכב?', opts: [{ n: 'פרטי', s: 'עד 5 מקומות', add: 0, addMin: 0, i: 'car' }, { n: 'ג׳יפ / SUV', s: '+10 דק׳ לטיפול', add: 20, addMin: 10, i: 'suv' }, { n: 'מסחרי', s: '+15 דק׳ לטיפול', add: 40, addMin: 15, i: 'van' }] },
+      services: [{ n: 'שטיפה חיצונית', d: 30, i: 'drop' }, { n: 'פנים + חוץ', d: 60, i: 'sparkles' }, { n: 'פוליש והגנה', d: 120, i: 'gem' }],
+      extra: { kind: 'vehicle', title: 'איזה רכב?', opts: [{ n: 'פרטי', s: 'עד 5 מקומות', addMin: 0, i: 'car' }, { n: 'ג׳יפ / SUV', s: '+10 דק׳ לטיפול', addMin: 10, i: 'suv' }, { n: 'מסחרי', s: '+15 דק׳ לטיפול', addMin: 15, i: 'van' }] },
       slots: grid('08:00', '17:30', 30), seats: [{ n: 'מיכל', s: 'פנים + חוץ', t: '12:30' }, { n: 'יוסי', s: 'שטיפה חיצונית', t: '12:00' }] },
     { key: 'nails', chip: 'ציפורניים', biz: 'סטודיו ציפורניים', bizForm: 'קוסמטיקה / ציפורניים', name: 'סטודיו מאיה', sub: 'פתוח עכשיו · סוגר ב־20:00', letter: 'מ', acc: '#FF7AB6', accFg: '#1A0812', rgb: '255,122,182',
-      services: [{ n: 'לק ג׳ל', d: 45, p: 120, i: 'polish' }, { n: 'בניית ציפורניים', d: 90, p: 220, i: 'sparkles' }, { n: 'פדיקור', d: 60, p: 150, i: 'foot' }],
+      services: [{ n: 'לק ג׳ל', d: 45, i: 'polish' }, { n: 'בניית ציפורניים', d: 90, i: 'sparkles' }, { n: 'פדיקור', d: 60, i: 'foot' }],
       extra: { kind: 'design', title: 'בוחרים צבע וסגנון', colors: ['#FF7AB6', '#C8102E', '#F4E4D6', '#2B2B2B', '#7FB7FF', '#B8F28B'], styles: ['קלאסי', 'צרפתי', 'אומברה'] },
       slots: grid('10:00', '20:00', 45), seats: [{ n: 'נועה', s: 'לק ג׳ל', t: '13:30' }, { n: 'שיר', s: 'פדיקור', t: '12:15' }] },
     { key: 'fit', chip: 'סטודיו כושר', biz: 'סטודיו כושר', bizForm: 'מאמן / סטודיו לכושר', name: 'סטודיו FIT', sub: 'שיעורים קבוצתיים · מקומות מוגבלים', letter: 'F', acc: '#5EF2FF', accFg: '#06161A', rgb: '94,242,255',
-      services: [{ n: 'יוגה', d: 60, p: 45, i: 'yoga', times: ['07:00', '19:00'], cap: 8 }, { n: 'פילאטיס מכשירים', d: 55, p: 70, i: 'stretch', times: ['09:00', '17:00'], cap: 6 }, { n: 'HIIT', d: 45, p: 50, i: 'dumbbell', times: ['18:00', '20:00'], cap: 12 }],
+      services: [{ n: 'יוגה', d: 60, i: 'yoga', times: ['07:00', '19:00'], cap: 8 }, { n: 'פילאטיס מכשירים', d: 55, i: 'stretch', times: ['09:00', '17:00'], cap: 6 }, { n: 'HIIT', d: 45, i: 'dumbbell', times: ['18:00', '20:00'], cap: 12 }],
       classes: true, seats: [{ n: 'עדי', s: 'HIIT 18:00', t: '18:00' }, { n: 'תום', s: 'יוגה 07:00', t: '07:00' }] },
   ];
 
   const S = {};
   DEMOS.forEach(D => {
-    const s = S[D.key] = { seeded: new Set(), taken: new Set(), caps: new Map(), userRev: {}, userBk: {}, list: D.seats.map(x => ({ ...x, cls: '' })), step: 0, sv: null, ex: null, slot: null, name: '', color: 0, style: 0, booking: null };
+    const s = S[D.key] = { seeded: new Set(), taken: new Set(), caps: new Map(), userBk: {}, list: D.seats.map(x => ({ ...x, cls: '' })), step: 0, sv: null, ex: null, slot: null, name: '', color: 0, style: 0, booking: null };
     days.forEach((d, di) => {
       if (D.classes) D.services.forEach((v, vi) => v.times.forEach(t => { const h = hash(D.key + di + vi + t); s.caps.set(di + '-' + vi + '-' + t, h % 7 === 0 ? 0 : 1 + h % (v.cap - 1)); }));
       else D.slots.forEach(t => { if (hash(D.key + di + t) % 100 < 34) { s.seeded.add(di + '-' + t); s.taken.add(di + '-' + t); } });
     });
     s.di = days.findIndex((d, i) => openDay(i) && (i > 0 || nowMin < 16 * 60)); if (s.di < 0) s.di = 1;
   });
-  let cur = DEMOS[0], s = S[cur.key], setRev = null;
+  let cur = DEMOS[0], s = S[cur.key];
   const stepsOf = D => ['svc'].concat(D.extra ? ['extra'] : []).concat(['when', 'confirm', 'done', 'cancelled']);
   const idx = name => stepsOf(cur).indexOf(name);
   const stepOf = D => toMin(D.slots[1]) - toMin(D.slots[0]);
   const exOpt = () => (cur.extra && cur.extra.opts && s.ex != null) ? cur.extra.opts[s.ex] : null;
   const curSvc = () => cur.services[s.sv];
   const curDur = () => curSvc().d + ((exOpt() || {}).addMin || 0);
-  const curPrice = () => curSvc().p + ((exOpt() || {}).add || 0);
   const covered = (D, i, dur) => { const n = Math.max(1, Math.ceil(dur / stepOf(D))); return i + n > D.slots.length ? null : D.slots.slice(i, i + n); };
   const freeAt = (di, i) => { const c = covered(cur, i, curDur()); return !!c && !past(di, cur.slots[i]) && c.every(t => !s.taken.has(di + '-' + t)); };
   const crumbs = () => { const st = stepsOf(cur), n = st.indexOf('confirm') + 1; return '<div class="crumbs">' + Array.from({ length: n }, (_, i) => '<i class="' + (i <= s.step ? 'on' : '') + '"></i>').join('') + '</div>'; };
@@ -366,13 +349,13 @@ safe(() => {
   function render() {
     const D = cur, kind = stepsOf(D)[s.step]; let html = '';
     if (kind === 'svc') {
-      html = crumbs() + '<h2>' + (D.classes ? 'בחרו שיעור' : 'בחרו שירות') + '</h2>' + D.services.map((v, i) => '<button class="row" type="button" data-sv="' + i + '"><span class="ic">' + ico(v.i) + '</span><div><b>' + v.n + '</b><small>' + v.d + ' דק׳' + (D.classes ? ' · ' + v.times.join(' / ') : '') + '</small></div><span class="pr">₪' + v.p + '</span></button>').join('');
+      html = crumbs() + '<h2>' + (D.classes ? 'בחרו שיעור' : 'בחרו שירות') + '</h2>' + D.services.map((v, i) => '<button class="row" type="button" data-sv="' + i + '"><span class="ic">' + ico(v.i) + '</span><div><b>' + v.n + '</b><small>' + v.d + ' דק׳' + (D.classes ? ' · ' + v.times.join(' / ') : '') + '</small></div></button>').join('');
     } else if (kind === 'extra') {
       const Xx = D.extra;
       if (Xx.kind === 'design') {
         html = crumbs() + BACK + '<h2>' + Xx.title + '</h2><div class="sw">' + Xx.colors.map((c, i) => '<button type="button" class="swb" data-c="' + i + '" style="--c:' + c + '" aria-pressed="' + (i === s.color) + '" aria-label="צבע ' + (i + 1) + '"></button>').join('') + '</div><div class="styles">' + Xx.styles.map((n, i) => '<button type="button" class="stl" data-s="' + i + '" aria-pressed="' + (i === s.style) + '">' + n + '</button>').join('') + '</div><div class="nails ' + ['', 'fr', 'om'][s.style] + '" style="--c:' + Xx.colors[s.color] + '" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><button class="cta" type="button" id="exgo">המשך לבחירת מועד</button>';
       } else {
-        html = crumbs() + BACK + '<h2>' + Xx.title + '</h2>' + Xx.opts.map((o, i) => '<button class="row" type="button" data-ex="' + i + '"><span class="ic' + (Xx.kind === 'staff' ? ' av2' : '') + '">' + ico(o.i) + '</span><div><b>' + o.n + '</b><small>' + o.s + '</small></div>' + (o.add ? '<span class="pr">+₪' + o.add + '</span>' : '') + '</button>').join('');
+        html = crumbs() + BACK + '<h2>' + Xx.title + '</h2>' + Xx.opts.map((o, i) => '<button class="row" type="button" data-ex="' + i + '"><span class="ic' + (Xx.kind === 'staff' ? ' av2' : '') + '">' + ico(o.i) + '</span><div><b>' + o.n + '</b><small>' + o.s + '</small></div>' + '</button>').join('');
       }
     } else if (kind === 'when') {
       if (D.classes) {
@@ -388,7 +371,7 @@ safe(() => {
       if (Xx && Xx.kind === 'staff') rows += '<div><span>אצל</span><b>' + ex.n + '</b></div>';
       if (Xx && Xx.kind === 'vehicle') rows += '<div><span>רכב</span><b>' + ex.n + '</b></div>';
       if (Xx && Xx.kind === 'design') rows += '<div><span>עיצוב</span><b><i class="dotc" style="--c:' + Xx.colors[s.color] + '"></i>' + Xx.styles[s.style] + '</b></div>';
-      rows += '<div><span>מתי</span><b>' + dayName(s.di) + ' · ' + d.getDate() + '.' + (d.getMonth() + 1) + ' · ' + s.slot + '</b></div><div><span>משך</span><b>' + curDur() + ' דק׳</b></div><div><span>מחיר</span><b>₪' + curPrice() + '</b></div>';
+      rows += '<div><span>מתי</span><b>' + dayName(s.di) + ' · ' + d.getDate() + '.' + (d.getMonth() + 1) + ' · ' + s.slot + '</b></div><div><span>משך</span><b>' + curDur() + ' דק׳</b></div>';
       html = crumbs() + BACK + '<h2>' + (D.classes ? 'אישור ההרשמה' : 'אישור התור') + '</h2><div class="sum">' + rows + '</div><input class="nm" type="text" id="nm" maxlength="24" autocomplete="off" placeholder="השם שלכם (לא חובה)" value="' + esc(s.name) + '"><button class="cta" type="button" id="confirm">' + (D.classes ? 'הרשמה לשיעור' : 'אישור התור') + '</button><p class="note2">בלי הרשמה, בלי הורדה. ביטול חינם עד 3 שעות לפני.</p>';
     } else if (kind === 'done') {
       const b = s.booking;
@@ -425,21 +408,21 @@ safe(() => {
     }
   }
   function commit() {
-    const D = cur, v = curSvc(), ex = exOpt(), d = days[s.di], name = (s.name || '').trim() || 'לקוח חדש', price = curPrice(), dur = curDur();
-    const b = { di: s.di, t: s.slot, v, price, dur, name, when: dayName(s.di) + ' · ' + s.slot };
+    const D = cur, v = curSvc(), ex = exOpt(), d = days[s.di], name = (s.name || '').trim() || 'לקוח חדש', dur = curDur();
+    const b = { di: s.di, t: s.slot, v, dur, name, when: dayName(s.di) + ' · ' + s.slot };
     if (D.classes) { b.key = s.di + '-' + s.sv + '-' + s.slot; s.caps.set(b.key, s.caps.get(b.key) - 1); }
-    else { b.cov = covered(D, D.slots.indexOf(s.slot), dur) || [s.slot]; b.cov.forEach(t => s.taken.add(s.di + '-' + t)); s.userRev[s.di] = (s.userRev[s.di] || 0) + price; s.userBk[s.di] = (s.userBk[s.di] || 0) + 1; }
+    else { b.cov = covered(D, D.slots.indexOf(s.slot), dur) || [s.slot]; b.cov.forEach(t => s.taken.add(s.di + '-' + t)); s.userBk[s.di] = (s.userBk[s.di] || 0) + 1; }
     s.booking = b;
     s.list.unshift({ n: name, s: v.n + (ex && D.extra.kind === 'staff' ? ' אצל ' + ex.n : ''), t: (s.di > 0 ? DN[d.getDay()] + ' ' : '') + s.slot, cls: 'new' });
     s.list = s.list.slice(0, 3); b.li = s.list[0];
     ownerPaint(true);
-    notify(D.classes ? 'הרשמה חדשה לשיעור' : 'תור חדש נקבע', name + ' · ' + b.when + ' · ' + v.n + ' · ₪' + price);
+    notify(D.classes ? 'הרשמה חדשה לשיעור' : 'תור חדש נקבע', name + ' · ' + b.when + ' · ' + v.n);
     X.book(1);
   }
   function cancelBooking() {
     const D = cur, b = s.booking; if (!b) return;
     if (D.classes) s.caps.set(b.key, s.caps.get(b.key) + 1);
-    else { b.cov.forEach(t => s.taken.delete(b.di + '-' + t)); s.userRev[b.di] = (s.userRev[b.di] || 0) - b.price; s.userBk[b.di] = (s.userBk[b.di] || 0) - 1; }
+    else { b.cov.forEach(t => s.taken.delete(b.di + '-' + t)); s.userBk[b.di] = (s.userBk[b.di] || 0) - 1; }
     if (b.li) b.li.cls = 'x';
     s.booking = null; click(180); ownerPaint(true);
     notify(D.classes ? 'ביטול הרשמה' : 'תור בוטל', b.name + ' · ' + b.when + ' · ' + (D.classes ? 'המקום התפנה' : 'השעה התפנתה'), 'cancel');
@@ -454,12 +437,11 @@ safe(() => {
     clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove('show'), 4600);
   }
   function ownerPaint(flash) {
-    const D = cur, di = s.di; let booked = 0, used = 0, total = 0, rev = 0;
-    if (D.classes) { D.services.forEach((v, vi) => v.times.forEach(t => { const rem = s.caps.get(di + '-' + vi + '-' + t); booked += v.cap - rem; total += v.cap; rev += (v.cap - rem) * v.p; })); used = booked; }
-    else { total = D.slots.length; D.slots.forEach(t => { const k = di + '-' + t; if (s.taken.has(k)) used++; if (s.seeded.has(k)) { booked++; rev += D.services[hash(D.key + k + 'p') % D.services.length].p; } }); booked += s.userBk[di] || 0; rev += s.userRev[di] || 0; }
+    const D = cur, di = s.di; let booked = 0, used = 0, total = 0;
+    if (D.classes) { D.services.forEach((v, vi) => v.times.forEach(t => { const rem = s.caps.get(di + '-' + vi + '-' + t); booked += v.cap - rem; total += v.cap; })); used = booked; }
+    else { total = D.slots.length; D.slots.forEach(t => { const k = di + '-' + t; if (s.taken.has(k)) used++; if (s.seeded.has(k)) booked++; }); booked += s.userBk[di] || 0; }
     $('oname').textContent = D.name; $('olabel').textContent = (D.classes ? 'נרשמים' : 'תורים') + ' · ' + dayName(di);
     if (cnt.textContent !== String(booked)) { cnt.textContent = booked; replay(cnt, 'bump'); }
-    if (!setRev) setRev = odometer($('rev')); setRev(rev);
     $('occ').style.setProperty('--w', Math.round(used / total * 100) + '%'); $('occt').textContent = used + ' מתוך ' + total + (D.classes ? ' מקומות' : ' חלונות') + ' תפוסים';
     olist.innerHTML = s.list.map(x => '<li class="' + (x.cls || '') + '"><span>' + esc(x.n) + ' · ' + esc(x.s) + '</span><i>' + x.t + '</i></li>').join('');
     if (flash) { replay(owner, 'flash'); setTimeout(() => owner.classList.remove('flash'), 700); }
