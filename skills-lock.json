@@ -265,6 +265,12 @@
       "skillPath": "skills/schema/SKILL.md",
       "computedHash": "6809d198493d08931ea1c35ab40d2fca27c6ae63a07a4bc183b75df51243a374"
     },
+    "scroll-craft": {
+      "source": "nateherkai/scroll-craft",
+      "sourceType": "github",
+      "skillPath": "plugins/nateherk-design/skills/scroll-craft/SKILL.md",
+      "computedHash": "b78387f42dd6ecc70b28c4623919bf3037e4e2dda1f021bdac7346d7b9b83bca"
+    },
     "seo-audit": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
