@@ -229,6 +229,14 @@
     scrollTo({ top: to, behavior: A.reduced ? 'auto' : 'smooth' });
     if (a.getAttribute('href') === '#top' && history.replaceState) history.replaceState(null, '', location.pathname + location.search);
   });
+  // keyboard focus inside the close would land on copy that has not faded in yet: take it to the resolved frame
+  document.addEventListener('focusin', function (e) {
+    var g = geo.close, el = acts.close;
+    if (!g || !el || !el.contains(e.target)) return;
+    var to = g.top + Math.max(g.h - vh, 0);
+    // after the browser's own focus scroll has run; 'instant' so a CSS smooth scroll cannot leave it halfway
+    setTimeout(function () { if (Math.abs(scrollY - to) > 2) scrollTo({ top: to, behavior: 'instant' }); }, 0);
+  });
 
   // ---- setup ---------------------------------------------------------------------
   function onMedia() { syncClasses(); measure(); split = null; }

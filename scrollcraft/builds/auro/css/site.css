@@ -141,6 +141,8 @@ body { font-family: var(--sc-font-text); font-weight: 400; }
 }
 .au-3d-ready .poster { opacity: 0; }
 .no-webgl .poster, .reduced .poster { opacity: 1; }
+/* without the live crossing, the land poster already shows the completed A; a second bar would be a duplicate */
+.anchor--bar-close .poster { display: none; }
 
 /* =============================================================== HERO == */
 .hero-row {

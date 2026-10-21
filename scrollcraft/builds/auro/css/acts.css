@@ -60,7 +60,8 @@
   position: absolute;
   top: 50%;
   inset-inline-start: var(--split-x, 50vw);
-  translate: 50% -50%;
+  /* the row is laid out on the act's fixed split, the pill rides the live divider (transform only) */
+  translate: calc(50% + var(--split-x, 50vw) - var(--split-x-live, var(--split-x, 50vw))) -50%;
   z-index: calc(var(--sc-z-chrome, 60) + 1);
   margin: 0;
   padding: 0.6em 1.15em;
@@ -289,7 +290,7 @@
 /* ------------------------------------------------------------------ act 4 */
 /* The quiet act before the peak. Nothing pins, nothing wipes. Text arrives. */
 
-.act4 { padding-block: clamp(3rem, 8vw, 7rem) clamp(5rem, 11vw, 10rem); }
+.act4 { position: relative; padding-block: clamp(3rem, 8vw, 7rem) clamp(5rem, 11vw, 10rem); }
 .act4__row { align-items: stretch; }
 
 .act4__alone { display: flex; align-items: flex-end; justify-content: flex-end; }

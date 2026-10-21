@@ -15,7 +15,12 @@ function start() {
     position: 'fixed', inset: '0', width: '100vw', height: '100vh',
     pointerEvents: 'none', zIndex: 'var(--au-3d-z, 0)', opacity: '0', transition: 'opacity 900ms cubic-bezier(0.23, 1, 0.32, 1)'
   });
-  document.body.prepend(canvas); // first in the 3D slot, so the live mark always renders above the rain
+  document.body.prepend(canvas);
+  // Same stacking slot as the live mark; stay right before its canvas so the mark always renders above the rain.
+  const keepBelowMark = () => {
+    const mk = document.querySelector('canvas.au-3d');
+    if (mk && mk.previousElementSibling !== canvas) mk.before(canvas);
+  };
 
   let renderer;
   try {
@@ -68,7 +73,7 @@ function start() {
   const halfH = z => Math.tan(THREE.MathUtils.degToRad(15)) * (10 - z);
   const bars = Array.from({ length: COUNT }, (_, i) => {
     const z = -3 - rnd() * 13;                       // depth: -3 (near) .. -16 (far)
-    const s = 0.26 + rnd() * 0.2;                     // scale
+    const s = (0.26 + rnd() * 0.2) * (small ? 0.68 : 1); // scale; smaller on phones
     return {
       z, s,
       lane: (i + 0.5) / COUNT * 2 - 1 + (rnd() - 0.5) * 0.12,  // spread across the width, a little jitter
@@ -108,9 +113,10 @@ function start() {
     return Math.max(0, Math.min(1, (1 - 0.55 * q4) * fadeClose * tail));
   }
 
-  let last = performance.now(), lastScroll = scrollY, level = 0, running = true;
+  let last = performance.now(), lastScroll = scrollY, level = 0, running = true, order = 0;
   function frame(now) {
     if (!running) return;
+    if (now - order > 1000) { order = now; keepBelowMark(); }
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     const dScroll = scrollY - lastScroll; lastScroll = scrollY;
     const target = intensity();
@@ -141,11 +147,12 @@ function start() {
   }
 
   if (reduced) {
-    // Motion off: one still frame of the scattered bars, then stop.
-    level = 1; mat.opacity = 0.85; canvas.style.opacity = '1';
+    // Motion off: one still frame, only the bars near the edges and dimmer, so nothing sits on the copy.
+    level = 1; mat.opacity = 0.55; canvas.style.opacity = '1';
     for (let i = 0; i < COUNT; i++) {
       const b = bars[i], H = halfH(b.z), W = H * camera.aspect;
-      p3.set(b.lane * W * 0.92, b.y * H, b.z); e.set(b.rx, b.ry, b.rz); q.setFromEuler(e); s3.setScalar(b.s);
+      const edge = Math.abs(b.lane) > 0.72;
+      p3.set(b.lane * W * 0.96, b.y * H, b.z); e.set(b.rx, b.ry, b.rz); q.setFromEuler(e); s3.setScalar(edge ? b.s : 0);
       m4.compose(p3, q, s3); mesh.setMatrixAt(i, m4);
     }
     mesh.instanceMatrix.needsUpdate = true;

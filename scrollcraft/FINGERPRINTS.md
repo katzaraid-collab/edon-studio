@@ -28,6 +28,7 @@ changes only grammar and world will fail it.
 
 | Build | Grammar | Nav treatment | Hero device | Act-sequence shape | Close pattern | Signature move | World | Port |
 |---|---|---|---|---|---|---|---|---|
+| auro | Split stage (לבד / ביחד) | No bar; the vertical price-level divider is the chrome (side labels, progress fill, act ticks), wordmark + one text link in the together column | 50/50 split with the tagline as one h1 across both columns, live 3D gold bar alone vs peak base | pin hero 1.6 · flow/in comparison · pin+reveal signal card · flow kinetic rules (authored quiet) · pin close 2.6 (peak); 5 acts, ~7.6vh | Divider sweeps to the edge, together column takes full width, CTA beside the completed A, disclaimer holds | A lone 3D gold bar crosses the level line and locks onto the peak, completing the logo; ambient falling bars thin out and vanish before it | Rendered 3D gold (three.js), onyx ground, Heebo light/bold | Static site + claude.ai artifact |
 
 *(empty: your first build has nothing to clear, so build whatever the interview
 points at. From the second onwards, this table is the constraint.)*
