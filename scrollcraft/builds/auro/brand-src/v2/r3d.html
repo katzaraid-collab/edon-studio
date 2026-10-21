@@ -1,0 +1,75 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:transparent;overflow:hidden}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script></head>
+<body><script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
+import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
+RectAreaLightUniformsLib.init();
+const q = new URLSearchParams(location.search);
+const W = +q.get('w') || 1200, H = +q.get('h') || 1200, scene_ = q.get('scene') || 'mark';
+const rx = +(q.get('rx') ?? -0.18), ry = +(q.get('ry') ?? 0.42), rz = +(q.get('rz') ?? 0), fov = +(q.get('fov') ?? 26), dist = +(q.get('dist') ?? 7.2);
+const rough = +(q.get('rough') ?? 0.2), seed = +(q.get('seed') ?? 3);
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H);
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = +(q.get('exp') ?? 1.05);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+// studio environment: black room lit only by softbox strips -> deep gold with long, sharp highlights
+const envMode = q.get('env') || 'strips';
+let envScene;
+if (envMode === 'room') { envScene = new RoomEnvironment(); }
+else {
+  envScene = new THREE.Scene(); envScene.background = new THREE.Color(0x020202);
+  // studio sweep: a sphere painted with a vertical gradient so flat gold faces pick up a falloff instead of one flat tone
+  const cv = document.createElement('canvas'); cv.width = 8; cv.height = 512; const cx = cv.getContext('2d');
+  const gr = cx.createLinearGradient(0, 0, 0, 512);
+  gr.addColorStop(0, '#6a6a6a'); gr.addColorStop(.36, '#ffffff'); gr.addColorStop(.47, '#fff2d8'); gr.addColorStop(.52, '#2a241a'); gr.addColorStop(.75, '#050505'); gr.addColorStop(1, '#000000');
+  cx.fillStyle = gr; cx.fillRect(0, 0, 8, 512);
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+  const sweep = new THREE.Mesh(new THREE.SphereGeometry(20, 64, 32), new THREE.MeshBasicMaterial({ map: tex, side: THREE.BackSide, color: new THREE.Color(+(q.get('sweep') ?? 1.6), +(q.get('sweep') ?? 1.6) * .96, +(q.get('sweep') ?? 1.6) * .9) }));
+  sweep.rotation.x = +(q.get('sweepx') ?? 0.25); envScene.add(sweep);
+  const box = (w, h, x, y, z, i, col = [1, 1, 1]) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(col[0] * i, col[1] * i, col[2] * i), side: THREE.DoubleSide })); m.position.set(x, y, z); m.lookAt(0, 0, 0); envScene.add(m); };
+  box(14, 3.2, 0, 9, 2, 5.5);                 // overhead softbox
+  box(1.4, 16, -8, 1, 5, 9);                  // key strip left-front
+  box(1.0, 16, 8, 0, 3, 5, [1, .92, .8]);     // warm strip right
+  box(10, 1.2, 0, -7, 6, 1.6, [1, .85, .6]);  // low warm bounce
+  box(4, 4, 0, 2, -9, 2.5);                   // back light
+  box(1.2, 12, 3, 4, 9, 3);                   // front edge strip
+}
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(envScene, 0.015).texture;
+scene.environmentRotation = new THREE.Euler(0, +(q.get('envr') ?? 0.6), 0);
+const gold = new THREE.MeshPhysicalMaterial({ color: new THREE.Color().setRGB(+(q.get('cr') ?? 1.0), +(q.get('cg') ?? 0.66), +(q.get('cb') ?? 0.22), THREE.LinearSRGBColorSpace), metalness: 1, roughness: rough, clearcoat: 0.35, clearcoatRoughness: 0.12 });
+const key = new THREE.DirectionalLight(0xfff1d6, +(q.get('key') ?? 0.6)); key.position.set(-3, 4, 5); scene.add(key);
+const rim = new THREE.DirectionalLight(0xffe0a0, +(q.get('rim') ?? 1.2)); rim.position.set(4, 2, -3); scene.add(rim);
+const group = new THREE.Group(); scene.add(group);
+const area = (w, h, x, y, z, i) => { const l = new THREE.RectAreaLight(0xfff3dc, i, w, h); l.position.set(x, y, z); l.lookAt(0, 0, 0); scene.add(l); };
+area(3, 0.6, -2.5, 3.2, 4, +(q.get('a1') ?? 6)); area(0.5, 4, 3.5, 0.5, 3, +(q.get('a2') ?? 4));
+if (scene_ === 'mark' || scene_ === 'bar' || scene_ === 'base') {
+  const m = await (await fetch('./mark.json')).json();
+  const k = 2.2 / m.H;
+  const shape = pts => { const s = new THREE.Shape(); pts.forEach(([x, y], i) => { const X = (x - m.B / 2) * k, Y = (m.H / 2 - y) * k; i ? s.lineTo(X, Y) : s.moveTo(X, Y); }); s.closePath(); return s; };
+  const shapes = scene_ === 'mark' ? [shape(m.bar), shape(m.base)] : [shape(m[scene_])];
+  const geo = new THREE.ExtrudeGeometry(shapes, { depth: +(q.get('depth') ?? 0.42), bevelEnabled: true, bevelThickness: +(q.get('bt') ?? 0.07), bevelSize: +(q.get('bs') ?? 0.05), bevelSegments: 10, curveSegments: 4 });
+  geo.center();
+  group.add(new THREE.Mesh(geo, gold));
+} else if (scene_ === 'blob') {
+  const g = new THREE.IcosahedronGeometry(1, 96); const p = g.attributes.position; const n = new SimplexNoise({ random: (() => { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; })() });
+  const v = new THREE.Vector3(), amp = +(q.get('amp') ?? 0.28), fr = +(q.get('fr') ?? 1.1);
+  for (let i = 0; i < p.count; i++) { v.fromBufferAttribute(p, i); const d = 1 + amp * n.noise3d(v.x * fr, v.y * fr, v.z * fr) + amp * .35 * n.noise3d(v.x * fr * 2.3, v.y * fr * 2.3, v.z * fr * 2.3); v.multiplyScalar(d); p.setXYZ(i, v.x, v.y, v.z); }
+  g.computeVertexNormals(); group.add(new THREE.Mesh(g, gold));
+} else if (scene_ === 'ingot') {
+  // a single gold bar: a frustum with bevelled edges
+  const s = new THREE.Shape(); const bw = 2.4, tw = 1.9, hh = 0.55;
+  s.moveTo(-bw / 2, -hh / 2); s.lineTo(bw / 2, -hh / 2); s.lineTo(tw / 2, hh / 2); s.lineTo(-tw / 2, hh / 2); s.closePath();
+  const geo = new THREE.ExtrudeGeometry(s, { depth: 1.0, bevelEnabled: true, bevelThickness: 0.04, bevelSize: 0.04, bevelSegments: 6 }); geo.center();
+  group.add(new THREE.Mesh(geo, gold));
+}
+group.rotation.set(rx, ry, rz);
+const cam = new THREE.PerspectiveCamera(fov, W / H, 0.1, 100); cam.position.set(0, 0, dist); cam.lookAt(0, 0, 0);
+cam.setViewOffset(W, H, +(q.get('ox') ?? 0), +(q.get('oy') ?? 0), W, H);
+renderer.render(scene, cam);
+window.__done = true;
+</script></body></html>
