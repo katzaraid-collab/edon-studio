@@ -401,7 +401,7 @@ void main(){ vec2 auv = (vec2(mod(vG, 8.), floor(vG / 8.)) + vec2(vUv.x, 1. - vU
   const knobGlow = new THREE.PointLight(0xC8FF2E, 0, 2600, 1.6); knobGlow.position.set(0, -728, 900); knob.add(knobGlow);
   const KNOB_OFF = 3049, KNOB_ON = 4185;
   logoIn.position.set(-3097, 728, -180);
-  const LOGO_W = 2.5, LK = LOGO_W / 6194, LKM = 2.05 / 6194;
+  const LOGO_W = 2.5, LK = LOGO_W / 6194, LKM = 1.95 / 6194;
   logo.visible = false;
   // its shadow, the shaft it falls through, the floor pool, the shock ring, the dust burst
   const shadow = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.ShaderMaterial({ transparent: true, depthWrite: false, uniforms: { uOp: { value: 0 } },
@@ -435,7 +435,7 @@ void main(){ vec2 auv = (vec2(mod(vG, 8.), floor(vG / 8.)) + vec2(vUv.x, 1. - vU
   /* ---------- camera keys: [cam xyz, look xyz] relative to the path anchor; one set per leg ---------- */
   const KEYS = {
     d: { open: [-.25, 1.5, 3.05, .8, 1.28, -.2], color: [-.3, 1.95, 4.7, 1.05, 1.15, 0], name: [-.5, 1.52, 3.45, .82, 1.27, 0], btns: [-.15, 1.4, 3.35, .8, 1.22, 0], text: [-.6, 1.62, 3.9, .88, 1.24, -.6], hush: [-.4, 1.3, 4.4, 1.0, .95, -.3], drop: [-.6, 2.0, 7.6, 2.0, 1.55, -1.0], live: [-.5, 1.4, 6.3, 2.05, .9, -.7] },
-    m: { open: [0, 1.55, 4.3, 0, 1.72, 0], color: [0, 2.15, 5.9, 0, 1.78, 0], name: [.2, 1.62, 4.05, 0, 1.64, 0], btns: [0, 1.48, 3.75, 0, 1.6, 0], text: [-.3, 1.8, 4.6, 0, 1.58, -.6], hush: [0, 1.4, 5.0, -.15, 1.15, -.2], drop: [.05, 2.45, 9.2, .05, 2.5, -1.1], live: [0, 1.6, 7.0, -.08, 1.62, -.9] },
+    m: { open: [0, 1.55, 4.3, 0, 1.72, 0], color: [0, 2.15, 5.9, 0, 1.78, 0], name: [.2, 1.62, 4.05, 0, 1.64, 0], btns: [0, 1.48, 3.75, 0, 1.6, 0], text: [-.3, 1.8, 4.6, 0, 1.58, -.6], hush: [0, 1.4, 5.0, -.15, 1.15, -.2], drop: [0, 2.45, 9.4, -.06, 2.5, -1.1], live: [-.08, 1.6, 7.2, -.16, 1.62, -.9] },
   };
   const YAW = { open: -.4, color: 0, name: -.2, btns: 0, text: .22, hush: .06, drop: -.18, live: -.26 };
   const CEN = LEGS.map(([k]) => (L[k].a + L[k].b) / 2);
@@ -445,7 +445,7 @@ void main(){ vec2 auv = (vec2(mod(vG, 8.), floor(vG / 8.)) + vec2(vUv.x, 1. - vU
     for (let i = 0; i < CEN.length - 1; i++) if (u <= CEN[i + 1]) { const k = ss(0, 1, (u - CEN[i]) / (CEN[i + 1] - CEN[i])), a = table[names[i]], b = table[names[i + 1]]; return Array.isArray(a) ? a.map((v, j) => lerp(v, b[j], k)) : lerp(a, b, k); }
     return table[names[names.length - 1]];
   }
-  const LOGO_AT = { d: [1.42, -.9], m: [.52, -1.75] }, PHONE_X = { d: -.45, m: -.8 };
+  const LOGO_AT = { d: [1.42, -.9], m: [.4, -1.75] }, PHONE_X = { d: -.45, m: -.86 };
 
   /* ---------- copy windows, rail, HUD ---------- */
   const blocks = Array.from(copy.querySelectorAll('.iblk')).map(el => ({ el, k: el.dataset.win, o: -1, y: 0, foc: Array.from(el.querySelectorAll('a,button')) }));
