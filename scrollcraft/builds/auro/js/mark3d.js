@@ -44,9 +44,11 @@ function start() {
   canvas.className = 'au-3d';
   canvas.setAttribute('aria-hidden', 'true');
   const style = document.createElement('style');
-  style.textContent = '.au-3d{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:var(--au-3d-z,1);opacity:0;transition:opacity .4s cubic-bezier(.23,1,.32,1)}.au-3d-ready .au-3d{opacity:1}';
+  style.textContent = '.au-3d{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:var(--au-3d-z,0);opacity:0;transition:opacity .4s cubic-bezier(.23,1,.32,1)}.au-3d-ready .au-3d{opacity:1}';
   document.head.appendChild(style);
-  document.body.appendChild(canvas);
+  // First child of body at z-index 0: every positioned stage after it (sticky stages are stacking contexts)
+  // paints above it, so copy always sits over the gold. Stages must keep transparent backgrounds where the 3D shows.
+  document.body.insertBefore(canvas, document.body.firstChild);
 
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -79,7 +81,7 @@ function start() {
   box(4, 4, 0, 2, -9, 2.5);
   box(1.2, 12, 3, 4, 9, 3);
   box(3.0, 0.7, -4.2, 5.4, 6.7, 2.6, [1, 0.95, 0.86]);   // stands in for area light 1
-  box(0.6, 4.0, 6.9, 1.0, 5.8, 2.2, [1, 0.95, 0.86]);    // stands in for area light 2
+  box(0.6, 4.0, 6.9, 1.0, 5.8, 3.2, [1, 0.95, 0.86]);    // stands in for area light 2
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(env, 0.015).texture;
   scene.environmentRotation = new THREE.Euler(0, 0.9, 0);
@@ -178,7 +180,7 @@ function start() {
       const bob = Math.sin(clock * 1.1) * aBar.h * 0.035;
       heroBar.position.set(aBar.x, aBar.y + bob + heroP * aBar.h * 0.08, 0);
       heroBar.scale.setScalar(g);
-      heroBar.rotation.set(-0.18 + pty * 0.08 + Math.sin(clock * 0.7) * 0.03, 0.42 + ptx * 0.14 + Math.sin(clock * 0.5) * 0.06, 0.14 + Math.sin(clock * 0.9) * 0.025 + wob);
+      heroBar.rotation.set(-0.04 + pty * 0.08 + Math.sin(clock * 0.7) * 0.03, 0.3 + ptx * 0.14 + Math.sin(clock * 0.5) * 0.06, 0.14 + Math.sin(clock * 0.9) * 0.025 + wob);
     }
     if (aBase) {
       const g = fit(aBase, BASE_W, BASE_H, 0.9);
@@ -202,7 +204,8 @@ function start() {
 
       // Base rises into its seat while the bar crosses.
       const rise = easeInOut(smooth(0.2, 0.7, c));
-      rigBase.position.set(0, BASE_CY - (1 - rise) * M.H * K * 0.22, 0);
+      rigBase.position.set(0, BASE_CY - (1 - rise) * M.H * K * 0.1, 0);
+      rigBase.scale.setScalar(lerp(0.9, 1, rise));
 
       // Bar: from the alone side, over the level line on a shallow arc, onto the base.
       const seat = new THREE.Vector3(0, BAR_CY, 0);
