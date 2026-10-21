@@ -57,6 +57,13 @@
     });
     buildTicks();
     measureHeroText();
+    // Flow acts hold the split value of their midpoint: a live column width would
+    // rewrap their text as you scroll and change the document's height under the
+    // reader. The moving divider stays inside the column padding (max 3% of width).
+    [['a2', 0.47], ['a4', 0.37]].forEach(function (pair) {
+      var el = acts[pair[0]];
+      if (el) el.style.setProperty('--split-x', (A.mobile ? 0 : Math.round(pair[1] * vw)) + 'px');
+    });
     A.mobile = mqMobile.matches;
   }
 
@@ -137,29 +144,33 @@
   // ---- the loop ---------------------------------------------------------------
   var chrome = document.querySelector('.chrome');
   var shown = { split: -1, sx: -1, sy: -1, prog: -1, dvo: -1 };
-  var split = null, lastY = scrollY, raf = 0;
+  var split = null, lastY = scrollY, raf = 0, lastT = 0;
   var rest = false, chromeHidden = false;
 
-  function frame() {
+  function frame(now) {
     raf = 0;
     var y = scrollY;
+    // frame-rate independent smoothing: the same feel at 30, 60 or 120 fps
+    var dt = lastT ? Math.min(now - lastT, 100) : 16.7;
+    lastT = now;
+    var k = function (perFrame) { return 1 - Math.pow(1 - perFrame, dt / 16.7); };
 
     var target = splitTarget(y);
     if (split === null || A.reduced) split = target;
-    else split += (target - split) * 0.16;
+    else split += (target - split) * k(0.16);
     if (Math.abs(target - split) < 0.0004) split = target;
 
     A.split = split;
     A.hero = progress('hero', y);
     A.close = progress('close', y);
-    A.velocity += ((y - lastY) - A.velocity) * 0.2;
+    A.velocity += ((y - lastY) * (16.7 / dt) - A.velocity) * k(0.2);
     if (Math.abs(A.velocity) < 0.01) A.velocity = 0;
     lastY = y;
 
     if (A.reduced || !mqFine.matches) { A.pointer.x = 0; A.pointer.y = 0; }
     else {
-      A.pointer.x += (ptr.x - A.pointer.x) * 0.08;
-      A.pointer.y += (ptr.y - A.pointer.y) * 0.08;
+      A.pointer.x += (ptr.x - A.pointer.x) * k(0.08);
+      A.pointer.y += (ptr.y - A.pointer.y) * k(0.08);
     }
     if (A.webgl === false && !root.classList.contains('no-webgl')) root.classList.add('no-webgl');
 
@@ -168,7 +179,7 @@
     var sy = Math.round(split * vh * 10) / 10;
     var prog = Math.round(clamp01(y / maxY) * 1000) / 1000;
     if (split !== shown.split) { root.style.setProperty('--split', split.toFixed(4)); shown.split = split; }
-    if (sx !== shown.sx) { root.style.setProperty('--split-x', sx + 'px'); shown.sx = sx; }
+    if (sx !== shown.sx) { root.style.setProperty('--split-x', sx + 'px'); root.style.setProperty('--split-x-live', sx + 'px'); shown.sx = sx; }
     if (sy !== shown.sy) { root.style.setProperty('--split-y', sy + 'px'); shown.sy = sy; }
     if (prog !== shown.prog) {
       root.style.setProperty('--progress', prog);
@@ -179,7 +190,7 @@
       }
     }
     // the line leaves with the alone side: the last screen is one page
-    var dvo = Math.round(smooth(split / 0.06) * 100) / 100;
+    var dvo = Math.round(Math.min(smooth(split / 0.06), 1 - smooth((A.close - 0.64) / 0.08)) * 100) / 100;
     if (dvo !== shown.dvo) { root.style.setProperty('--divider-o', dvo); shown.dvo = dvo; }
 
     // phone: inside the flow acts the rows pair themselves, so the fixed level rests
@@ -199,7 +210,7 @@
   function stop() { if (raf) { cancelAnimationFrame(raf); raf = 0; } }
 
   document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'visible') { lastY = scrollY; start(); } else stop();
+    if (document.visibilityState === 'visible') { lastY = scrollY; lastT = 0; start(); } else stop();
   });
 
   // ---- join links --------------------------------------------------------------
@@ -225,13 +236,26 @@
     if (mq.addEventListener) mq.addEventListener('change', onMedia); else mq.addListener(onMedia);
   });
   var resizeT = 0;
+  function relayout() {
+    // the engine caches act tops at layout(); a font swap or a rewrap changes
+    // them without a resize event, so ask it to measure again, then measure here
+    var sc = window.ScrollCraft && window.ScrollCraft.instances;
+    if (sc) sc.forEach(function (i) { if (i && i.layout) i.layout(); });
+    measure();
+  }
   addEventListener('resize', function () { clearTimeout(resizeT); resizeT = setTimeout(measure, 80); });
   if ('ResizeObserver' in window) {
-    var ro = new ResizeObserver(function () { clearTimeout(resizeT); resizeT = setTimeout(measure, 60); });
+    var lastBodyH = 0;
+    var ro = new ResizeObserver(function (entries) {
+      var h = Math.round(entries[0].contentRect.height);
+      if (h === lastBodyH) return;
+      lastBodyH = h;
+      clearTimeout(resizeT); resizeT = setTimeout(relayout, 60);
+    });
     ro.observe(document.body);
   }
-  addEventListener('load', measure);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  addEventListener('load', relayout);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
 
   syncClasses();
   measure();

@@ -52,7 +52,7 @@ function start() {
 
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.86;
+  renderer.toneMappingExposure = 0.84;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   const scene = new THREE.Scene();
@@ -68,7 +68,7 @@ function start() {
   gr.addColorStop(0.52, '#2a241a'); gr.addColorStop(0.75, '#050505'); gr.addColorStop(1, '#000000');
   cx.fillStyle = gr; cx.fillRect(0, 0, 8, 512);
   const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
-  const sweep = new THREE.Mesh(new THREE.SphereGeometry(20, 64, 32), new THREE.MeshBasicMaterial({ map: tex, side: THREE.BackSide, color: new THREE.Color(1.0, 0.96, 0.9) }));
+  const sweep = new THREE.Mesh(new THREE.SphereGeometry(20, 64, 32), new THREE.MeshBasicMaterial({ map: tex, side: THREE.BackSide, color: new THREE.Color(0.82, 0.78, 0.7) }));
   sweep.rotation.x = 0.42; env.add(sweep);
   const box = (w, h, x, y, z, i, col = [1, 1, 1]) => {
     const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(col[0] * i, col[1] * i, col[2] * i), side: THREE.DoubleSide }));
@@ -82,6 +82,7 @@ function start() {
   box(1.2, 12, 3, 4, 9, 3);
   box(3.0, 0.7, -4.2, 5.4, 6.7, 2.6, [1, 0.95, 0.86]);   // stands in for area light 1
   box(0.6, 4.0, 6.9, 1.0, 5.8, 3.2, [1, 0.95, 0.86]);    // stands in for area light 2
+  box(1.6, 22, -2.6, 0, 12, 3.4, [1, 0.94, 0.82]);       // a long strip behind the viewer: a diagonal sheen across the flat faces
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(env, 0.015).texture;
   scene.environmentRotation = new THREE.Euler(0, 0.9, 0);
@@ -90,8 +91,8 @@ function start() {
   const key = new THREE.DirectionalLight(0xfff1d6, 0.6); key.position.set(-3, 4, 5); scene.add(key);
   const rim = new THREE.DirectionalLight(0xffe0a0, 1.2); rim.position.set(4, 2, -3); scene.add(rim);
 
-  const goldWarm = new THREE.MeshPhysicalMaterial({ color: new THREE.Color().setRGB(1.0, 0.68, 0.24, THREE.LinearSRGBColorSpace), metalness: 1, roughness: 0.2, clearcoat: 0.35, clearcoatRoughness: 0.12 });
-  const goldCool = new THREE.MeshPhysicalMaterial({ color: new THREE.Color().setRGB(0.96, 0.66, 0.26, THREE.LinearSRGBColorSpace), metalness: 1, roughness: 0.24, clearcoat: 0.25, clearcoatRoughness: 0.18 });
+  const goldWarm = new THREE.MeshPhysicalMaterial({ color: new THREE.Color().setRGB(1.0, 0.65, 0.21, THREE.LinearSRGBColorSpace), metalness: 1, roughness: 0.22, clearcoat: 0.35, clearcoatRoughness: 0.12 });
+  const goldCool = new THREE.MeshPhysicalMaterial({ color: new THREE.Color().setRGB(0.96, 0.6, 0.2, THREE.LinearSRGBColorSpace), metalness: 1, roughness: 0.24, clearcoat: 0.25, clearcoatRoughness: 0.18 });
 
   // Piece geometry in mark-centred coordinates, then shifted so each piece's own centre sits at its local origin.
   const shapeOf = pts => {

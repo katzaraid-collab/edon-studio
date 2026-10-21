@@ -35,6 +35,9 @@
   --track-display: -0.035em;
 }
 
+/* the split changes column widths while you scroll; never let the browser
+   "help" by shifting the scroll position when text above rewraps */
+html { overflow-anchor: none; }
 body { font-family: var(--sc-font-text); font-weight: 400; }
 ::selection { background: var(--sc-accent); color: var(--sc-accent-ink); }
 :focus-visible { outline: 2px solid var(--sc-accent); outline-offset: 4px; border-radius: 4px; }
@@ -296,7 +299,13 @@ body { font-family: var(--sc-font-text); font-weight: 400; }
   .split-rest .divider, .split-rest .ground--alone { opacity: 0; }
   .divider { transition: opacity 420ms var(--sc-ease-out); }
 
-  .chrome { padding: 16px var(--col-pad); gap: 16px; }
+  /* a solid band with a soft fade, so scrolling text never runs under the wordmark */
+  .chrome {
+    right: 0;
+    padding: 14px var(--col-pad) 26px;
+    gap: 16px;
+    background: linear-gradient(to bottom, var(--sc-canvas) 0 62%, color-mix(in oklab, var(--sc-canvas) 0%, transparent));
+  }
   .chrome__mark img { height: 17px; }
 
   /* hero: alone band on top, together band below; the band edge is exactly the divider */
