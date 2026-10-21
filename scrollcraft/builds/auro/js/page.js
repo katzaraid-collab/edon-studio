@@ -193,9 +193,9 @@
     var dvo = Math.round(Math.min(smooth(split / 0.06), 1 - smooth((A.close - 0.64) / 0.08)) * 100) / 100;
     if (dvo !== shown.dvo) { root.style.setProperty('--divider-o', dvo); shown.dvo = dvo; }
 
-    // phone: inside the flow acts the rows pair themselves, so the fixed level rests
+    // phone: inside the middle acts the rows stack themselves, so the fixed level rests
     var mid = y + vh * 0.5;
-    var inFlow = A.mobile && ['a2', 'a4'].some(function (k) {
+    var inFlow = A.mobile && ['a2', 'a3', 'a4'].some(function (k) {
       var g = geo[k]; return g && mid >= g.top && mid < g.top + g.h;
     });
     if (inFlow !== rest) { rest = inFlow; root.classList.toggle('split-rest', rest); }

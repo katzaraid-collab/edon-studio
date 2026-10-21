@@ -65,6 +65,14 @@ body { font-family: var(--sc-font-text); font-weight: 400; }
   padding: 22px var(--col-pad);
   transition: opacity 320ms var(--sc-ease-out), visibility 320ms;
 }
+/* desktop: a soft fade under the wordmark, stopping short of the divider labels, so scrolling text dims before it meets the mark */
+.chrome::before {
+  content: ""; position: absolute; top: 0; left: 0; z-index: -1; pointer-events: none;
+  width: calc(100vw - var(--split-x) - 120px); height: 92px;
+  background: linear-gradient(to bottom, var(--sc-canvas) 0 38%, color-mix(in oklab, var(--sc-canvas) 0%, transparent));
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 160px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 160px), transparent);
+}
 .chrome__mark { display: block; line-height: 0; }
 .chrome__mark img { height: 20px; width: auto; }
 .chrome__join {
@@ -307,6 +315,7 @@ body { font-family: var(--sc-font-text); font-weight: 400; }
     background: linear-gradient(to bottom, var(--sc-canvas) 0 62%, color-mix(in oklab, var(--sc-canvas) 0%, transparent));
   }
   .chrome__mark img { height: 17px; }
+  .chrome::before { display: none; }
 
   /* hero: alone band on top, together band below; the band edge is exactly the divider */
   .hero-row {
