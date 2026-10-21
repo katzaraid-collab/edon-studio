@@ -28,6 +28,9 @@
 <link rel="preload" href="/x/fonts/heebo-hebrew.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="modulepreload" href="/x/vendor/three.module.min.js">
 <link rel="stylesheet" href="/x/x.css">
+<link rel="stylesheet" href="/x/intro.css">
+<link rel="preload" href="/x/intro/open-d.webp" as="image" media="(min-width:700px)">
+<link rel="preload" href="/x/intro/open-m.webp" as="image" media="(max-width:699px)">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"EDON","url":"https://edon-studio.vercel.app/","description":"אתרים, אפליקציות לקביעת תורים, מיתוג ואינסטגרם לעסקים קטנים.","sameAs":["https://instagram.com/edon.group"],"areaServed":"IL"}</script>
 </head>
 <body>
@@ -83,6 +86,63 @@
 </div>
 
 <main id="main">
+
+<!-- ===== intro: one fixed world, the app assembles as you scroll, the logo lands and switches it on ===== -->
+<section class="intro" id="intro" aria-label="איך נבנית אפליקציה ב־EDON" data-sc-act="pin">
+  <div class="istage" id="istage" aria-hidden="true" data-sc-world>
+    <picture class="iposter open"><source media="(max-width:699px)" srcset="/x/intro/open-m.webp"><img src="/x/intro/open-d.webp" alt="" width="1440" height="900" decoding="async"></picture>
+    <picture class="iposter fin"><source media="(max-width:699px)" srcset="/x/intro/fin-m.webp"><img src="/x/intro/fin-d.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"></picture>
+    <canvas id="icv"></canvas>
+    <div class="ihud" id="ihud"><div class="ret" id="iret"><i></i><i></i><i></i><i></i><span class="mono" id="iretl">BUILD 0%</span></div><span class="tag mono" id="itag"></span></div>
+    <i class="iflash" id="iflash"></i>
+  </div>
+  <div class="icopy" id="icopy" data-sc-world-copy>
+    <div class="iscrim" aria-hidden="true"></div>
+    <div class="iblk iopen" data-sc-copy data-win="open">
+      <p class="ih"><span>האפליקציה שלכם.</span> <span class="ac">נבנית מול העיניים.</span></p>
+      <p class="ip">גוללים, וכל חלק נכנס למקום: העיצוב, הכיתוב וכל כפתור. הכל לפי הבחירה שלכם.</p>
+    </div>
+    <div class="iblk" data-sc-copy data-win="color">
+      <p class="ih">קודם, הצבע.</p>
+      <p class="ip">בוחרים עסק, והאפליקציה מתלבשת על הצבעים שלו.</p>
+      <div class="ichips" id="ichips" role="group" aria-label="בחירת סוג העסק">
+        <button type="button" class="ichip" data-k="barber" aria-pressed="true"><i style="--c:#C8FF2E"></i>ברברשופ</button>
+        <button type="button" class="ichip" data-k="wash" aria-pressed="false"><i style="--c:#F2C14E"></i>שטיפת רכב</button>
+        <button type="button" class="ichip" data-k="nails" aria-pressed="false"><i style="--c:#FF7AB6"></i>ציפורניים</button>
+        <button type="button" class="ichip" data-k="fit" aria-pressed="false"><i style="--c:#5EF2FF"></i>סטודיו כושר</button>
+      </div>
+    </div>
+    <div class="iblk" data-sc-copy data-win="name">
+      <p class="ih">השם שלכם. הלוגו שלכם.</p>
+      <p class="ip">בראש המסך, איפה שכל לקוח רואה.</p>
+    </div>
+    <div class="iblk" data-sc-copy data-win="btns">
+      <p class="ih">כל כפתור במקום שבחרתם.</p>
+      <p class="ip">השירותים, הזמנים והסדר. אתם מחליטים, אנחנו בונים.</p>
+    </div>
+    <div class="iblk" data-sc-copy data-win="text">
+      <p class="ih">המילים שלכם.</p>
+      <p class="ip">הכיתוב והטון של העסק, מילה במילה.</p>
+    </div>
+    <div class="iblk ifin" data-sc-copy data-win="fin">
+      <p class="ih">והיא <span class="ac">באוויר.</span></p>
+      <p class="ip">ככה נראית אפליקציה של EDON. מאישור העיצוב ועד באוויר, לרוב תוך 7 ימי עבודה.</p>
+      <a class="btn main" href="#demo" id="igo">לנסות את הדמו החי <svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+  </div>
+  <nav class="irail" id="irail" aria-label="שלבי הבנייה">
+    <ol>
+      <li><button type="button" data-leg="color">צבע</button></li>
+      <li><button type="button" data-leg="name">שם ולוגו</button></li>
+      <li><button type="button" data-leg="btns">כפתורים</button></li>
+      <li><button type="button" data-leg="text">כיתוב</button></li>
+      <li><button type="button" data-leg="drop">EDON</button></li>
+      <li><button type="button" data-leg="live">באוויר</button></li>
+    </ol>
+    <a class="iskip" href="#top" id="iskip">דלגו לאתר</a>
+  </nav>
+  <div class="itrack" id="itrack" aria-hidden="true"></div>
+</section>
 
 <!-- ===== hero: the grid of hours and the lamp ===== -->
 <section class="hero" id="top">
@@ -539,5 +599,6 @@
 <script src="/x/vendor/gsap.min.js" defer></script>
 <script src="/x/vendor/ScrollTrigger.min.js" defer></script>
 <script src="/x/x.js" defer></script>
+<script type="module" src="/x/intro.js"></script>
 </body>
 </html>

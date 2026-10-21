@@ -1,0 +1,101 @@
+/* EDON intro: one fixed world over a scroll track (html.idyn), or one still screen (no JS, reduced motion, no WebGL). */
+
+/* ---------- shared ---------- */
+.intro{position:relative;z-index:1}
+.intro .ih{font-family:var(--disp);font-weight:900;font-stretch:75%;font-variation-settings:"wdth" 75,"wght" 900;letter-spacing:-.03em;line-height:.95;font-size:clamp(36px,5vw,80px);color:var(--x-fg);text-wrap:balance}
+.intro .ih .ac{color:var(--volt)}
+.intro .iopen .ih{font-size:clamp(40px,4.4vw,68px)}
+.intro .iopen .ih span{display:block}
+.intro .ip{margin-top:18px;max-width:38ch;font:400 clamp(16px,1.2vw,19px)/1.65 var(--he);letter-spacing:.005em;color:var(--x-fg-2);text-wrap:pretty}
+.intro .ifin .btn{margin-top:28px}
+.ichips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.ichip{display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--x-line-2);background:rgba(10,11,15,.72);color:var(--x-fg-2);font:700 14px var(--he);white-space:nowrap;transition:background var(--t-2),color var(--t-2),border-color var(--t-2),scale var(--t-2) var(--e-spring)}
+.ichip i{width:10px;height:10px;border-radius:3px;background:var(--c);flex:0 0 auto;transition:box-shadow var(--t-2)}
+.ichip:active{scale:.97}
+.ichip[aria-pressed="true"]{color:var(--x-fg);border-color:rgba(255,255,255,.42);background:rgba(255,255,255,.1)}
+.ichip[aria-pressed="true"] i{box-shadow:0 0 0 3px rgba(255,255,255,.14),0 2px 10px -1px var(--c)}
+@media (hover:hover) and (pointer:fine){.ichip:hover{color:var(--x-fg);border-color:rgba(255,255,255,.3)}}
+.iposter img{width:100%;height:100%;object-fit:cover}
+.intro canvas,.ihud,.iflash,.iscrim,.itrack{display:none}
+
+/* ---------- still version: one screen, nothing pinned ---------- */
+.intro{padding:calc(88px + env(safe-area-inset-top,0px)) 0 32px}
+.intro .istage{position:relative;max-width:1280px;margin:0 auto;padding-inline:var(--gut)}
+.intro .iposter.open{display:none}
+.intro .iposter.fin{display:block;aspect-ratio:16/10;border-radius:28px;overflow:hidden;border:1px solid var(--x-line);background:var(--x-ink)}
+.intro .icopy{max-width:1280px;margin:28px auto 0;padding-inline:var(--gut);display:grid;gap:22px 48px;grid-template-columns:1fr}
+.intro .iblk + .iblk:not(.ifin) .ih{font-size:clamp(26px,3vw,40px)}
+.intro .iblk + .iblk:not(.ifin) .ip{margin-top:8px}
+.intro .irail{display:none}
+@media (min-width:900px){
+  .intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:56px;max-width:1280px;margin:0 auto;padding-inline:var(--gut);align-items:start}
+  .intro .istage{grid-column:2;grid-row:1;position:sticky;top:104px;padding:0;margin:0}
+  .intro .icopy{grid-column:1;grid-row:1;margin:0;padding:0}
+}
+@media (max-width:699px){.intro .iposter.fin{aspect-ratio:4/5;border-radius:22px}}
+
+/* ---------- the world (html.idyn): fixed stage, fixed copy layer, one spacer ---------- */
+html.idyn .intro{display:block;padding:0;max-width:none;margin:0}
+html.idyn .itrack{display:block;height:calc(var(--iw,7.55) * 100vh);height:calc(var(--iw,7.55) * 100lvh)}
+html.idyn .istage{position:fixed;inset:0 0 auto 0;height:100vh;height:100lvh;max-width:none;margin:0;padding:0;z-index:1;overflow:hidden;background:var(--x-bg);pointer-events:none}
+html.idyn .iposter.fin{display:none}
+html.idyn .iposter.open{display:block;position:absolute;inset:0;transition:opacity .6s var(--e-std)}
+html.idyn .istage canvas{display:block;position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .6s var(--e-std)}
+html.idyn .istage.ready canvas{opacity:1}
+html.idyn .istage.ready .iposter.open{opacity:0}
+html.idyn .icopy{position:fixed;inset:0;z-index:3;max-width:none;margin:0;padding:0;display:block;pointer-events:none}
+html.idyn .iscrim{display:block;position:absolute;inset:0;opacity:0;background:linear-gradient(to left,rgba(5,5,7,.9) 0%,rgba(5,5,7,.84) 47%,rgba(5,5,7,.55) 55%,rgba(5,5,7,0) 68%)}
+html.idyn .iblk{position:absolute;right:max(var(--gut),5vw);top:50%;width:min(560px,38vw);translate:0 -50%;opacity:0;will-change:opacity,transform}
+html.idyn .iblk .ih{font-size:clamp(40px,4.6vw,76px)}
+html.idyn .iblk .ip{margin-top:18px}
+html.idyn .iblk.iopen{width:min(740px,47vw);opacity:1}
+html.idyn .iblk.iopen .ih{font-size:clamp(44px,5.3vw,96px)}
+html.idyn .iblk.on{pointer-events:auto}
+
+html.idyn .irail{display:block;position:fixed;z-index:30;left:max(var(--gut),2.4vw);top:50%;translate:0 -50%;transition:opacity var(--t-3)}
+.irail ol{display:flex;flex-direction:column;gap:2px}
+.irail button{display:flex;align-items:center;gap:12px;min-height:30px;padding:4px 10px 4px 2px;font:600 13px var(--he);color:var(--x-muted);border-radius:8px;transition:color var(--t-2)}
+.irail button::before{content:"";width:8px;height:8px;border-radius:2px;border:1px solid var(--x-line-2);flex:0 0 auto;transition:background var(--t-2),border-color var(--t-2),box-shadow var(--t-2)}
+.irail button.done::before{background:rgba(200,255,46,.35);border-color:transparent}
+.irail button[aria-current="step"]{color:var(--x-fg)}
+.irail button[aria-current="step"]::before{background:var(--volt);border-color:var(--volt);box-shadow:0 0 10px -1px rgba(var(--volt-rgb),.8)}
+.irail .iskip{display:inline-flex;align-items:center;min-height:36px;margin-top:14px;padding:0 2px;font:700 13px var(--he);color:var(--x-fg-2);text-underline-offset:4px}
+@media (hover:hover) and (pointer:fine){.irail button:hover,.irail .iskip:hover{color:var(--x-fg)}}
+
+html.idyn .ihud{display:block;position:absolute;inset:0;pointer-events:none}
+.ihud .ret{position:absolute;left:0;top:0;width:10px;height:10px;opacity:0;will-change:transform}
+.ihud .ret i{position:absolute;width:16px;height:16px;border:0 solid var(--hud,var(--volt))}
+.ihud .ret i:nth-child(1){top:0;left:0;border-width:2px 0 0 2px;border-top-left-radius:6px}
+.ihud .ret i:nth-child(2){top:0;right:0;border-width:2px 2px 0 0;border-top-right-radius:6px}
+.ihud .ret i:nth-child(3){bottom:0;left:0;border-width:0 0 2px 2px;border-bottom-left-radius:6px}
+.ihud .ret i:nth-child(4){bottom:0;right:0;border-width:0 2px 2px 0;border-bottom-right-radius:6px}
+.ihud .ret span{position:absolute;left:0;bottom:calc(100% + 8px);font-size:11px;color:var(--hud,var(--volt));white-space:nowrap}
+.ihud .tag{position:absolute;left:0;top:0;padding:5px 9px;border-radius:7px;font-size:11px;color:var(--x-fg);background:rgba(5,5,7,.72);border:1px solid rgba(255,255,255,.16);white-space:nowrap;opacity:0;will-change:transform}
+.ihud .tag::before{content:"";display:inline-block;width:6px;height:6px;margin-inline-end:7px;border-radius:2px;background:var(--hud,var(--volt));vertical-align:1px}
+html.idyn .iflash{display:block;position:absolute;inset:0;background:#F4F5F0;opacity:0}
+
+/* while the world is on screen: a quiet header; once it has gone, hide every fixed layer */
+html.idyn.in-intro #hdr.sc{background:transparent;border-color:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
+html.idyn.past-intro .istage,html.idyn.past-intro .icopy,html.idyn.past-intro .irail{visibility:hidden}
+html.idyn.in-intro .olab{opacity:0!important}
+
+@media (min-width:900px) and (max-width:1199px){.irail button{font-size:0;gap:0;padding:4px 6px}}
+@media (max-width:899px){
+  html.idyn .iscrim{background:linear-gradient(to bottom,rgba(5,5,7,.92) 0%,rgba(5,5,7,.84) var(--sb,44%),rgba(5,5,7,0) calc(var(--sb,44%) + 16%))}
+  html.idyn .iblk,html.idyn .iblk.iopen{right:var(--gut);left:var(--gut);top:calc(84px + env(safe-area-inset-top,0px));width:auto;translate:none;text-align:center}
+  html.idyn .iblk .ih{font-size:clamp(34px,9.4vw,56px)}
+  html.idyn .iblk.iopen .ih{font-size:clamp(42px,12vw,72px)}
+  html.idyn .iblk .ip{margin-inline:auto;margin-top:12px;font-size:16px}
+  html.idyn .ichips{justify-content:center;margin-top:16px}
+  html.idyn .ichip{height:40px;padding:0 14px;font-size:13px}
+  html.idyn .ifin .btn{margin-top:20px}
+  html.idyn .irail{left:var(--gut);right:var(--gut);top:auto;bottom:calc(12px + env(safe-area-inset-bottom,0px));translate:none;display:flex;align-items:center;gap:14px}
+  .irail ol{flex:1;flex-direction:row;gap:4px}
+  .irail li{flex:1}
+  .irail button{width:100%;min-height:28px;padding:0;font-size:0;gap:0}
+  .irail button::before{width:100%;height:3px;border-radius:2px;border:0;background:rgba(255,255,255,.18)}
+  .irail button.done::before{background:rgba(200,255,46,.5)}
+  .irail button[aria-current="step"]::before{background:var(--volt)}
+  .irail .iskip{margin-top:0;min-height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--x-line-2);background:rgba(10,11,15,.72);text-decoration:none;font-size:12px}
+}
+@media (max-width:899px) and (max-height:700px){html.idyn .iblk .ih{font-size:clamp(30px,8.4vw,44px)}html.idyn .iblk.iopen .ih{font-size:clamp(36px,10.4vw,56px)}}

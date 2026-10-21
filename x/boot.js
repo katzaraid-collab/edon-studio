@@ -9,6 +9,8 @@
     var n = navigator, low = (n.deviceMemory && n.deviceMemory <= 2) || (n.hardwareConcurrency && n.hardwareConcurrency <= 3);
     if (/[?&]nogl=1/.test(q) || (low && !/[?&]gl=1/.test(q))) c += ' nogl';
   } catch (e) {}
+  // the intro world needs motion and WebGL; without them it renders as one still screen
+  if (!/\b(rm|nogl)\b/.test(c) && window.WebGLRenderingContext && document.getElementById) c += ' idyn';
   if (ss('edon-x-seen') === '1') c += ' seen'; else { try { sessionStorage.setItem('edon-x-seen', '1'); } catch (e) {} }
   h.className = c;
 })();

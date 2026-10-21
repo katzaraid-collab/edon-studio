@@ -84,12 +84,14 @@ function countUp(el) {
 
 /* ---------- preloader: 19:00 → 02:00, then the shutters split ---------- */
 let heroStarted = false;
+// with the scroll intro above it, the hero's entrance plays when the hero actually arrives on screen
+const heroGo = () => document.getElementById('intro') ? onEnter('#top', startHero, { threshold: .04, margin: '0px' }) : startHero();
 safe(() => {
-  if (RM) { startHero(); return; }
+  if (RM) { heroGo(); return; }
   const pre = document.createElement('div'); pre.id = 'xpre'; pre.setAttribute('aria-hidden', 'true');
   if (SEEN) {
     pre.innerHTML = '<div class="half t" style="height:100%"><div class="lay"></div></div>';
-    document.body.appendChild(pre); H.classList.add('ready'); startHero();
+    document.body.appendChild(pre); H.classList.add('ready'); heroGo();
     requestAnimationFrame(() => requestAnimationFrame(() => { pre.classList.add('fade'); setTimeout(() => pre.remove(), 320); }));
     return;
   }
@@ -113,7 +115,7 @@ safe(() => {
     H.classList.add('ready'); fl.classList.add('go');
     // while the shutters open the GL loop waits for its first frame (a shader compile must not block the removal timer)
     X.preHold = true; if (X.onHold) X.onHold();
-    setTimeout(() => { pre.classList.add('split'); hand(); startHero(); }, 20);
+    setTimeout(() => { pre.classList.add('split'); hand(); heroGo(); }, 20);
     setTimeout(() => { pre.remove(); X.preHold = false; if (X.onHold) X.onHold(); }, 450);
   };
   const tick = now => {
@@ -469,6 +471,11 @@ safe(() => {
     b.addEventListener('click', () => select(D.key)); dsw.appendChild(b);
   });
   select(DEMOS[0].key, true);
+  // the scroll intro builds these businesses and hands its choice back to the demo
+  window.__edonDemo = {
+    list: DEMOS.map(D => ({ key: D.key, chip: D.chip, name: D.name, sub: D.sub, letter: D.letter, acc: D.acc, accFg: D.accFg, services: D.services.map(v => ({ n: v.n, d: v.d, i: v.i })) })),
+    pick: key => { if (cur.key === key) return; const b = dsw.querySelector('.dchip[data-demo="' + key + '"]'); if (b) b.click(); },
+  };
   const more = () => { const max = dsw.scrollWidth - dsw.clientWidth; dsw.classList.toggle('more', max > 4 && Math.abs(dsw.scrollLeft) < max - 4); };
   dsw.addEventListener('scroll', more, { passive: true }); more();
   addEventListener('resize', () => { setBar(); more(); }); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { setBar(); more(); });
@@ -797,12 +804,12 @@ safe(() => {
     const dust = new THREE.Points(dgeo, dmat); dust.frustumCulled = false; world.add(dust);
 
     // state: pulses (the night breathes), bursts (a booking lights the room), ripples (a day column), kick (the lamp moment)
-    const pulses = [], bursts = [], ripples = []; let lastPulse = 0, dirty = true, lastP = -1, prog = 0, progT = 0, prog2 = 0, prog2T = 0, yaw = 0, pitch = 0, yawT = 0, pitchT = 0, first = true, fadeDip = 0, shaft = 1, shaftBase = 1, demoTop = 1, demoH = 1, mt = 0, kickT0 = -1, kick = 0;
+    const pulses = [], bursts = [], ripples = []; let lastPulse = 0, dirty = true, lastP = -1, prog = 0, progT = 0, prog2 = 0, prog2T = 0, yaw = 0, pitch = 0, yawT = 0, pitchT = 0, first = true, fadeDip = 0, shaft = 1, shaftBase = 1, demoTop = 1, demoH = 1, heroTop = 0, mt = 0, kickT0 = -1, kick = 0;
     const safeCell = () => { const far = LAYERS > 5 && Math.random() < .5; return cell(Math.random() * COLS | 0, far ? Math.random() * ROWS | 0 : Math.random() * 2 | 0, far ? 5 + (Math.random() * (LAYERS - 5) | 0) : 0); };
     const neigh = i => { const k = Math.floor(i / (ROWS * COLS)), r = Math.floor((i % (ROWS * COLS)) / COLS), c = i % COLS, out = []; if (c > 0) out.push(i - 1); if (c < COLS - 1) out.push(i + 1); if (r > 0) out.push(i - COLS); if (r < ROWS - 1) out.push(i + COLS); return out; };
     const top = $('top'), demo = $('demo');
     // the dolly is keyed to the demo, not the hero: screen 1 -> #demo top is the flight, then the camera eases on through #demo
-    const measure = () => { if (demo) { demoTop = Math.max(1, demo.getBoundingClientRect().top + scrollY); demoH = Math.max(1, demo.offsetHeight); } else { demoTop = Math.max(1, top.offsetHeight - innerHeight); demoH = innerHeight; } };
+    const measure = () => { heroTop = Math.max(0, top.getBoundingClientRect().top + scrollY); if (demo) { demoTop = Math.max(1, demo.getBoundingClientRect().top + scrollY); demoH = Math.max(1, demo.offsetHeight); } else { demoTop = Math.max(1, top.offsetHeight - innerHeight); demoH = innerHeight; } };
     const sizes = () => { const h = canvas.clientHeight || innerHeight, w = innerWidth; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); measure(); };
     sizes();
     let rw = innerWidth, rh = innerHeight, rt = 0;
@@ -817,7 +824,7 @@ safe(() => {
       const now = performance.now(), t = tms * .001; U.uTime.value = t;
       if ((mt++ % 90) === 0) measure();
       // scroll → camera dolly (smoothed on fine pointers, direct on touch)
-      const sy = scrollY; progT = clamp(sy / demoTop, 0, 1); prog2T = clamp((sy - demoTop) / demoH, 0, 1);
+      const sy = scrollY; progT = clamp((sy - heroTop) / Math.max(1, demoTop - heroTop), 0, 1); prog2T = clamp((sy - demoTop) / demoH, 0, 1);
       if (TOUCH) { prog = progT; prog2 = prog2T; } else { prog = lerp(prog, progT, .12); prog2 = lerp(prog2, prog2T, .12); }
       yaw = lerp(yaw, yawT, .06); pitch = lerp(pitch, pitchT, .06);
       // the lamp moment: a 200 ms push in and a 900 ms settle (camera dolly, tint boost, halo swell)
@@ -852,7 +859,7 @@ safe(() => {
     // loop only while the hero is on screen, the tab visible and the menu closed
     let vis = true;
     const upd = () => { const run = vis && !document.hidden && !X.held() && !(first && X.preHold); renderer.setAnimationLoop(run ? frame : null); if (!run && olab) { olab.style.opacity = '0'; olabV = 0; } };
-    new IntersectionObserver(es => { vis = es[0].isIntersecting; upd(); }).observe(top);
+    new IntersectionObserver(es => { vis = es[0].isIntersecting; upd(); }, { rootMargin: '0px 0px 60% 0px' }).observe(top);
     document.addEventListener('visibilitychange', upd); X.onHold = upd; upd();
     // reactions: the contract with the demo
     const readAcc = () => { const v = getComputedStyle($('demo')).getPropertyValue('--acc').trim(); if (!v) return; tintFrom.copy(tint); bright(tintTo.set(v)); tintT0 = performance.now(); };
