@@ -43,12 +43,12 @@ async function start() {
   try { await Promise.all(['900 40px "Noto Sans Hebrew X"', '700 24px "Heebo X"', '400 16px "Heebo X"', '400 16px "JetBrains Mono X"'].map(f => document.fonts.load(f, 'אבג 02:00'))); } catch (e) {}
 
   /* ---------- the track: legs in viewport-heights, one pace ---------- */
-  const LEGS = [['open', .70], ['color', .95], ['name', .75], ['btns', .95], ['text', .80], ['hush', .40], ['drop', 1.40], ['live', .60]];
+  const LEGS = [['open', .32], ['color', .45], ['name', .34], ['btns', .42], ['text', .36], ['hush', .18], ['drop', .66], ['live', .27]];
   const WSUM = LEGS.reduce((s, l) => s + l[1], 0);
   const L = {}; { let a = 0; LEGS.forEach(([k, w]) => { L[k] = { a: a / WSUM, b: (a + w) / WSUM, w }; a += w; }); }
   H.style.setProperty('--iw', (WSUM + 1).toFixed(2));
   const lp = (k, u) => sat((u - L[k].a) / (L[k].b - L[k].a));
-  const SPEED = 8; // world units per viewport-height while travelling
+  const SPEED = 15; // world units per viewport-height while travelling
   const TRAVEL = ['open', 'color', 'name', 'btns', 'text'];
   function dist(u) {
     let d = 0;
@@ -708,7 +708,7 @@ void main(){ vec2 auv = (vec2(mod(vG, 8.), floor(vG / 8.)) + vec2(vUv.x, 1. - vU
     if (running) raf = requestAnimationFrame(frame);
   }
   // once the world has gone, nothing in it reports as visible and the header logo is the real one again
-  function gone() { if (brand) brand.style.opacity = ''; blocks.forEach(b => { if (b.o !== 0) { b.el.style.opacity = '0'; b.o = 0; b.el.classList.remove('on'); b.foc.forEach(f => f.setAttribute('tabindex', '-1')); } }); scrim.style.opacity = '0'; }
+  function gone() { if (brand) brand.style.opacity = ''; blocks.forEach(b => { if (b.o !== 0) { b.el.style.opacity = '0'; b.o = 0; b.el.classList.remove('on'); b.foc.forEach(f => f.setAttribute('tabindex', '-1')); } }); scrim.style.opacity = '0'; stage.dataset.scVerifyState = 'gone'; }
   function wake() {
     const past = read().past; if (past) gone();
     const want = !document.hidden && !H.classList.contains('menu') && !past;

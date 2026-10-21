@@ -1,0 +1,60 @@
+/* EDON accessibility menu and the settings it switches on. Shared by every page. */
+
+/* ---------- the button and the panel ---------- */
+.a11y-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 14px 0 12px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:transparent;color:inherit;font:700 14px "Heebo X","Heebo",system-ui,Arial,sans-serif;cursor:pointer;flex:0 0 auto;transition:border-color .2s,color .2s}
+.a11y-btn svg{width:20px;height:20px;flex:0 0 auto}
+html:not(.a11y-js) .a11y-btn{display:none}
+header.top .a11y-btn{background:rgba(12,12,15,.6);-webkit-backdrop-filter:blur(16px) saturate(130%);backdrop-filter:blur(16px) saturate(130%);border-color:rgba(255,255,255,.14)}
+@media (hover:hover) and (pointer:fine){.a11y-btn:hover{border-color:currentColor}}
+.a11y-btn[aria-expanded="true"]{border-color:#C8FF2E;color:#C8FF2E}
+.a11y-btn:focus-visible,.a11y-panel :focus-visible{outline:2px solid #C8FF2E;outline-offset:3px}
+@media (max-width:700px){.a11y-btn{width:44px;padding:0}.a11y-btn .a11y-lb{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}}
+
+.a11y-panel{position:fixed;z-index:96;top:calc(76px + env(safe-area-inset-top,0px));left:max(12px,env(safe-area-inset-left,0px));width:min(340px,calc(100vw - 24px));max-height:calc(100vh - 96px);overflow:auto;padding:16px;border-radius:22px;background:#0E1016;border:1px solid rgba(255,255,255,.18);color:#F4F5F0;box-shadow:0 24px 60px -20px rgba(0,0,0,.85);font:400 15px/1.5 "Heebo X","Heebo",system-ui,Arial,sans-serif;direction:rtl;text-align:right}
+.a11y-panel[hidden]{display:none}
+.a11y-panel h2{margin:0;font:800 20px/1.2 "Heebo X","Heebo",system-ui,Arial,sans-serif;letter-spacing:0}
+.a11y-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.a11y-x{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:transparent;color:inherit;cursor:pointer}
+.a11y-x svg{width:18px;height:18px}
+.a11y-size{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0 14px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:6px}
+.a11y-step{display:flex;align-items:center;gap:6px}
+.a11y-step button{min-width:48px;height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.22);background:#171A22;color:#F4F5F0;font:800 16px "Heebo X","Heebo",system-ui,Arial,sans-serif;cursor:pointer}
+.a11y-step button:disabled{opacity:.4;cursor:default}
+.a11y-step output{min-width:72px;text-align:center;font-weight:700}
+.a11y-tg{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:48px;padding:6px 2px;border:0;border-bottom:1px solid rgba(255,255,255,.08);background:transparent;color:inherit;font:600 15px "Heebo X","Heebo",system-ui,Arial,sans-serif;text-align:right;cursor:pointer}
+.a11y-tg i{position:relative;flex:0 0 auto;width:40px;height:24px;border-radius:999px;background:#2A2E37;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);transition:background .2s}
+.a11y-tg i::after{content:"";position:absolute;top:4px;left:4px;width:16px;height:16px;border-radius:50%;background:#C9CCD4;transition:left .2s,background .2s}
+.a11y-tg[aria-pressed="true"] i{background:#C8FF2E;box-shadow:none}
+.a11y-tg[aria-pressed="true"] i::after{left:20px;background:#0B0B10}
+.a11y-ft{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
+.a11y-reset{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:transparent;color:inherit;font:700 14px "Heebo X","Heebo",system-ui,Arial,sans-serif;cursor:pointer}
+.a11y-ft a{color:#C8FF2E;font-weight:700;text-underline-offset:4px}
+
+/* ---------- text size: page content and the header grow; the fixed 3D stages keep their size ---------- */
+html.a11y-t1 main>:not(#intro),html.a11y-t1 body>footer{zoom:1.12}
+html.a11y-t2 main>:not(#intro),html.a11y-t2 body>footer{zoom:1.25}
+html.a11y-t1 #hdr .bar,html.a11y-t1 .intro .iblk{zoom:1.1}
+html.a11y-t2 #hdr .bar,html.a11y-t2 .intro .iblk{zoom:1.2}
+@media (min-width:700px){html.a11y-t1 header.top{zoom:1.1}html.a11y-t2 header.top{zoom:1.2}}
+header.top .chip{white-space:nowrap}
+html.a11y-t1 :is(.cbar,.cdlg,#menu .in,.mfoot){zoom:1.12}
+html.a11y-t2 :is(.cbar,.cdlg,#menu .in,.mfoot){zoom:1.24}
+
+/* ---------- high contrast ---------- */
+html.a11y-c{--x-fg-2:#FFFFFF;--x-muted:#E4E6EC;--x-line:rgba(255,255,255,.32);--x-line-2:rgba(255,255,255,.55);--soft:#FFFFFF;--muted:#E2E2DC;--line:#6E6E7A;--line-2:#8E8E9A}
+html.a11y-c body::after{display:none}
+html.a11y-c :is(.sub,.fine,.ip,.upd,small){color:#FFFFFF!important}
+html.a11y-c .intro .iscrim{background:rgba(5,5,7,.9)!important}
+
+/* ---------- links stand out ---------- */
+html.a11y-l a:not(.btn):not(.brand):not(.skip):not(.skip-link){text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:.22em!important}
+html.a11y-l :is(a.btn,button.btn){outline:2px solid currentColor;outline-offset:3px}
+
+/* ---------- readable font: plain Heebo instead of the condensed display face ---------- */
+html.a11y-f :is(h1,h2,h3,h4,.ih,.disp,.num,.lin),html.a11y-f :is(h1,h2,h3,h4,.ih) *{font-family:"Heebo X","Heebo",system-ui,Arial,sans-serif!important;font-stretch:100%!important;font-variation-settings:normal!important;letter-spacing:0!important}
+html.a11y-f :is(h1,h2,h3,h4,.ih,.disp,.num){font-weight:800!important}
+html.a11y-f .mono{font-family:"Heebo X","Heebo",system-ui,Arial,sans-serif!important;letter-spacing:.02em!important;text-transform:none!important}
+html.a11y-f body{letter-spacing:.01em;word-spacing:.06em}
+
+/* ---------- no motion (pages without their own motion switch) ---------- */
+html.a11y-still *,html.a11y-still *::before,html.a11y-still *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}

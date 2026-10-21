@@ -24,11 +24,13 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://edon-studio.vercel.app/og.jpg?v=2">
 <script src="/x/boot.js"></script>
+<script src="/a11y.js" data-motion="reload"></script>
 <link rel="preload" href="/x/fonts/noto-hebrew.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/x/fonts/heebo-hebrew.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="modulepreload" href="/x/vendor/three.module.min.js">
 <link rel="stylesheet" href="/x/x.css">
 <link rel="stylesheet" href="/x/intro.css">
+<link rel="stylesheet" href="/a11y.css">
 <link rel="preload" href="/x/intro/open-d.webp" as="image" media="(min-width:700px)">
 <link rel="preload" href="/x/intro/open-m.webp" as="image" media="(max-width:699px)">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"EDON","url":"https://edon-studio.vercel.app/","description":"אתרים, אפליקציות לקביעת תורים, מיתוג ואינסטגרם לעסקים קטנים.","sameAs":["https://instagram.com/edon.group"],"areaServed":"IL"}</script>
@@ -36,7 +38,6 @@
 <body>
 <a class="skip-link skip" href="#main">דילוג לתוכן</a>
 <div id="prog" aria-hidden="true"></div>
-<div id="cur" aria-hidden="true"><i class="dot"></i><i class="ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14M14 4l4 4-4 4M20 16H6M10 12l-4 4 4 4"/></svg><span>לצפייה</span></i></div>
 
 <svg class="sprite" aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden">
 <symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.1 15.9M14.5 14.5L20 20M8.1 8.1L12 12"/></symbol>
@@ -61,7 +62,7 @@
     <nav aria-label="ניווט ראשי"><a href="#demo">הדמו</a><a href="#services">שירותים</a><a href="#why">למה אפליקציה</a><a href="#process">תהליך</a><a href="#work">עבודות</a><a href="#faq">שאלות</a></nav>
     <div class="end">
       <a class="ig" href="https://ig.me/m/edon.group" target="_blank" rel="noopener" aria-label="EDON באינסטגרם (נפתח בחלון חדש)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r=".9" fill="currentColor" stroke="none"/></svg></a>
-      <button class="calm msw" type="button" aria-pressed="false" aria-label="להרגיע את התנועה" title="תנועה מלאה או רגועה"><span class="tk" aria-hidden="true"></span><span class="ml" aria-hidden="true">תנועה</span></button>
+      <button class="a11y-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="2"/><path d="M5 8.5l7 1.5 7-1.5M12 10v5M8.5 21l3.5-6 3.5 6"/></svg><span class="a11y-lb">נגישות</span></button>
       <a class="btn main sm" href="#contact">דברו איתנו</a>
       <button class="burger" id="burger" type="button" aria-label="תפריט" aria-expanded="false" aria-controls="menu"><span></span></button>
     </div>
@@ -71,12 +72,12 @@
 <div id="menu" aria-hidden="true">
   <div class="cells" aria-hidden="true"></div>
   <nav class="mlinks" aria-label="תפריט">
-    <a href="#demo"><span class="ln"><span class="lin"><i class="mono">01</i>הדמו</span></span></a>
-    <a href="#services"><span class="ln"><span class="lin"><i class="mono">02</i>שירותים</span></span></a>
-    <a href="#why"><span class="ln"><span class="lin"><i class="mono">03</i>למה אפליקציה</span></span></a>
-    <a href="#process"><span class="ln"><span class="lin"><i class="mono">04</i>תהליך</span></span></a>
-    <a href="#work"><span class="ln"><span class="lin"><i class="mono">05</i>עבודות</span></span></a>
-    <a href="#faq"><span class="ln"><span class="lin"><i class="mono">06</i>שאלות</span></span></a>
+    <a href="#demo"><span class="ln"><span class="lin">הדמו</span></span></a>
+    <a href="#services"><span class="ln"><span class="lin">שירותים</span></span></a>
+    <a href="#why"><span class="ln"><span class="lin">למה אפליקציה</span></span></a>
+    <a href="#process"><span class="ln"><span class="lin">תהליך</span></span></a>
+    <a href="#work"><span class="ln"><span class="lin">עבודות</span></span></a>
+    <a href="#faq"><span class="ln"><span class="lin">שאלות</span></span></a>
   </nav>
   <div class="mfoot">
     <a class="btn main" href="#contact">דברו איתנו</a>
@@ -100,7 +101,7 @@
     <div class="iscrim" aria-hidden="true"></div>
     <div class="iblk iopen" data-sc-copy data-win="open">
       <p class="ih"><span>האפליקציה שלכם.</span> <span class="ac">נבנית מול העיניים.</span></p>
-      <p class="ip">גוללים, וכל חלק נכנס למקום: העיצוב, הכיתוב וכל כפתור. הכל לפי הבחירה שלכם.</p>
+      <p class="ip">גוללים, והאפליקציה נבנית חלק אחרי חלק. העיצוב, הכיתוב וכל כפתור לפי הבחירה שלכם.</p>
     </div>
     <div class="iblk" data-sc-copy data-win="color">
       <p class="ih">קודם, הצבע.</p>
@@ -113,16 +114,16 @@
       </div>
     </div>
     <div class="iblk" data-sc-copy data-win="name">
-      <p class="ih">השם שלכם. הלוגו שלכם.</p>
-      <p class="ip">בראש המסך, איפה שכל לקוח רואה.</p>
+      <p class="ih">השם והלוגו של העסק.</p>
+      <p class="ip">הם יושבים בראש המסך, איפה שכל לקוח רואה אותם.</p>
     </div>
     <div class="iblk" data-sc-copy data-win="btns">
       <p class="ih">כל כפתור במקום שבחרתם.</p>
-      <p class="ip">השירותים, הזמנים והסדר. אתם מחליטים, אנחנו בונים.</p>
+      <p class="ip">אתם קובעים אילו שירותים יופיעו, כמה זמן כל אחד לוקח ובאיזה סדר.</p>
     </div>
     <div class="iblk" data-sc-copy data-win="text">
-      <p class="ih">המילים שלכם.</p>
-      <p class="ip">הכיתוב והטון של העסק, מילה במילה.</p>
+      <p class="ih">אחר כך, המילים.</p>
+      <p class="ip">כל משפט באפליקציה כתוב בשפה של העסק שלכם.</p>
     </div>
     <div class="iblk ifin" data-sc-copy data-win="fin">
       <p class="ih">והיא <span class="ac">באוויר.</span></p>
@@ -157,7 +158,7 @@
     <div class="inner">
       <p class="eyebrow" data-h><span class="mono">EDON · 02:00</span><span>אתרים ואפליקציות לעסקים קטנים · נתיבות</span></p>
       <h1><span class="ln"><span class="l1" id="l1">העסק שלכם פתוח.</span></span><span class="ln l2"><span class="lin">גם <span id="rot">ב־2 בלילה</span></span></span></h1>
-      <p class="sub" data-h>הלקוחות קובעים תור לבד, מהנייד, בכל שעה. EDON בונה לעסקים קטנים אתר, אפליקציית תורים ומיתוג, ומעלה הכל לאוויר, לרוב תוך 7 ימי עבודה מאישור העיצוב.</p>
+      <p class="sub" data-h>הלקוחות קובעים תור לבד מהנייד, בכל שעה. EDON בונה לעסקים קטנים אתר, אפליקציית תורים ומיתוג, ומעלה הכל לאוויר, לרוב תוך 7 ימי עבודה מאישור העיצוב.</p>
       <div class="ctas" data-h>
         <a class="btn main" href="#demo" id="tryDemo">לנסות את הדמו החי <svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <a class="btn line" href="#services">לבנות חבילה <svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
@@ -171,7 +172,7 @@
   </div>
 
   <div class="stage" id="demo">
-    <p class="cap"><span class="mono" lang="en">01 / LIVE DEMO</span><span>ככה נראית אפליקציית תורים של EDON ל<b id="capBiz">ברברשופ</b>. <span class="nw">נסו לקבוע תור.</span></span></p>
+    <p class="cap"><span>ככה נראית אפליקציית תורים של EDON ל<b id="capBiz">ברברשופ</b>. <span class="nw">נסו לקבוע תור.</span></span></p>
     <div class="dsw" id="dsw" role="tablist" aria-label="בחירת סוג העסק בדמו"></div>
     <div class="devwrap">
       <div class="pose3d">
@@ -212,7 +213,6 @@
   <i class="wire" aria-hidden="true"></i>
   <div class="in">
     <div class="head" data-x>
-      <p class="tag"><span class="mono" lang="en">02 / SERVICES</span></p>
       <h2 class="gl split">בונים בדיוק מה שהעסק צריך. ומקבלים הצעה סגורה.</h2>
       <p class="sub">כל עסק צריך משהו אחר, אז אין כאן מחירון אחד לכולם. הדליקו מה שמעניין אתכם, ואחרי שיחה קצרה תקבלו הצעה כתובה עם מחיר סגור מראש.</p>
     </div>
@@ -264,9 +264,8 @@
   <i class="horizon" aria-hidden="true"></i>
   <div class="in">
     <div class="head" data-x>
-      <p class="tag"><span class="mono" lang="en">03 / WHY</span></p>
       <h2 class="gl split">הדלת נעולה. היומן פתוח.</h2>
-      <p class="sub">אפליקציית תורים מקבלת הזמנות בכל שעה, חוסמת שעות תפוסות לכולם ושולחת לכם התראה. בלי שיחה אחת.</p>
+      <p class="sub">אפליקציית תורים מקבלת הזמנות בכל שעה, חוסמת שעות תפוסות לכולם ושולחת לכם התראה. אף אחד לא צריך להתקשר.</p>
     </div>
     <div class="hours" id="hours" data-x data-reveal>
       <div class="ticks mono" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
@@ -287,7 +286,6 @@
 <section id="ba" class="sec">
   <div class="in">
     <div class="head" data-x>
-      <p class="tag"><span class="mono" lang="en">04 / BEFORE · AFTER</span></p>
       <h2 class="gl split">אותו לילה. שני עסקים.</h2>
       <p class="sub">גררו את הידית או הדליקו את המתג. משמאל: הודעה ב־02:03 שמחכה לבוקר. מימין: אותו לקוח, אותה שעה, עם אפליקציה של EDON.</p>
     </div>
@@ -324,7 +322,6 @@
 <section id="process" class="sec proc">
   <div class="in">
     <div class="head" data-x>
-      <p class="tag"><span class="mono" lang="en">05 / PROCESS</span></p>
       <h2 class="gl split">שבעה ימי עבודה. ואז זה באוויר.</h2>
       <p class="sub">רואים עיצוב מלא לפני שנכתבת שורת קוד אחת. זה לוח זמנים טיפוסי: הזמן בפועל תלוי בחבילה, באישור העיצוב ובקבלת החומרים מכם בזמן.</p>
     </div>
@@ -353,7 +350,6 @@
   <div class="show" id="show">
   <div class="in">
     <div class="head" data-x>
-      <p class="tag"><span class="mono" lang="en">06 / WORK</span></p>
       <h2 class="gl split">עבודות.</h2>
       <p class="sub">שתיים באוויר, שלושה קונספטים, והמקום הבא פנוי.</p>
     </div>
@@ -464,9 +460,8 @@
 <section id="compare" class="sec">
   <div class="in">
     <div class="head" data-x>
-      <p class="tag"><span class="mono" lang="en">07 / COMPARE</span></p>
       <h2 class="gl split">למה לא פשוט וואטסאפ, או מערכת במנוי?</h2>
-      <p class="sub">אפשר גם ככה. ככה זה נראה כשמשווים.</p>
+      <p class="sub">אפשר, וזה עובד לחלק מהעסקים. ככה שלוש הדרכים נראות זו לצד זו.</p>
     </div>
     <div class="cmp">
       <div class="col hot" data-x>
@@ -511,7 +506,6 @@
 <section id="faq" class="sec">
   <div class="in faqw">
     <div class="head" data-x>
-      <p class="tag"><span class="mono" lang="en">08 / FAQ</span></p>
       <h2 class="gl split">שאלות שעסקים שואלים.</h2>
     </div>
     <div class="faq" id="faqs" data-x>
@@ -529,10 +523,9 @@
 <section id="contact" class="sec" data-mode="dm">
   <div class="in contact">
     <div class="ctext" data-x>
-      <p class="tag"><span class="mono" lang="en">09 / CONTACT</span></p>
       <h2 class="gl split">נשמח לבנות לכם את זה.</h2>
       <p class="sub" data-only="send">שני שלבים קצרים, לוחצים שליחה והפנייה מגיעה ישר אלינו. חוזרים אליכם תוך יום עבודה עם הצעה סגורה.</p>
-      <p class="sub" data-only="dm">כל הפניות מתנהלות בדיירקט באינסטגרם. שני שלבים, ההודעה נכתבת לבד, אתם רק שולחים. חוזרים אליכם תוך יום עבודה עם הצעה סגורה.</p>
+      <p class="sub" data-only="dm">כל הפניות מתנהלות בדיירקט באינסטגרם. ממלאים שני שלבים קצרים, ההודעה נכתבת לבד ואתם רק שולחים אותה. חוזרים אליכם תוך יום עבודה עם הצעה סגורה.</p>
       <div class="ways">
         <div><span>אינסטגרם</span><a href="https://ig.me/m/edon.group" target="_blank" rel="noopener"><b>@edon.group</b><span class="vh"> (נפתח בחלון חדש)</span></a></div>
         <div><span>זמני מענה</span><span>א׳–ה׳ · 09:00–19:00</span></div>

@@ -374,7 +374,7 @@ safe(() => {
       if (Xx && Xx.kind === 'vehicle') rows += '<div><span>רכב</span><b>' + ex.n + '</b></div>';
       if (Xx && Xx.kind === 'design') rows += '<div><span>עיצוב</span><b><i class="dotc" style="--c:' + Xx.colors[s.color] + '"></i>' + Xx.styles[s.style] + '</b></div>';
       rows += '<div><span>מתי</span><b>' + dayName(s.di) + ' · ' + d.getDate() + '.' + (d.getMonth() + 1) + ' · ' + s.slot + '</b></div><div><span>משך</span><b>' + curDur() + ' דק׳</b></div>';
-      html = crumbs() + BACK + '<h2>' + (D.classes ? 'אישור ההרשמה' : 'אישור התור') + '</h2><div class="sum">' + rows + '</div><input class="nm" type="text" id="nm" maxlength="24" autocomplete="off" placeholder="השם שלכם (לא חובה)" value="' + esc(s.name) + '"><button class="cta" type="button" id="confirm">' + (D.classes ? 'הרשמה לשיעור' : 'אישור התור') + '</button><p class="note2">בלי הרשמה, בלי הורדה. ביטול חינם עד 3 שעות לפני.</p>';
+      html = crumbs() + BACK + '<h2>' + (D.classes ? 'אישור ההרשמה' : 'אישור התור') + '</h2><div class="sum">' + rows + '</div><input class="nm" type="text" id="nm" maxlength="24" autocomplete="off" placeholder="השם שלכם (לא חובה)" value="' + esc(s.name) + '"><button class="cta" type="button" id="confirm">' + (D.classes ? 'הרשמה לשיעור' : 'אישור התור') + '</button><p class="note2">נכנסים מהלינק וקובעים. ביטול חינם עד 3 שעות לפני.</p>';
     } else if (kind === 'done') {
       const b = s.booking;
       html = '<div class="ok"><svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="35"/><path d="M24 41l11 11 21-23"/></svg><b>' + (D.classes ? 'נרשמתם לשיעור!' : 'התור נקבע!') + '</b><p>' + b.when + ' · ' + b.v.n + '</p><span class="chip">' + (D.classes ? 'נשארו ' + s.caps.get(b.key) + ' מקומות בשיעור' : (b.cov.length > 1 ? b.cov.length + ' חלונות נחסמו לשאר הלקוחות' : 'השעה נחסמה לשאר הלקוחות')) + '</span><p class="note2">העסק קיבל התראה. תזכורת תישלח אליכם יום לפני.</p><div class="acts"><button type="button" id="cal">+ הוספה ליומן</button><button type="button" id="cancel">ביטול</button></div></div><button class="cta" type="button" id="again">' + (D.classes ? 'להירשם לשיעור נוסף' : 'לקבוע תור נוסף') + '</button>';
@@ -660,21 +660,11 @@ safe(() => {
   }, { passive: true });
 });
 
-/* ---------- desktop: cursor, magnetic, tilt, glow ---------- */
+/* ---------- desktop: magnetic buttons, tilt, glow (the system cursor stays as it is) ---------- */
 safe(() => {
   if (!FINE || RM) return;
-  H.classList.add('cur');
-  const cur = $('cur'); let cx = innerWidth / 2, cy = innerHeight / 2, tx = cx, ty = cy, vis = false;
-  addEventListener('pointermove', e => {
-    tx = e.clientX; ty = e.clientY; if (!vis) { vis = true; cur.style.opacity = 1; }
-    const t = e.target.closest ? e.target : null; if (!t) return;
-    const view = t.closest('.case .shot'), hide = t.closest('.dev .scr'), tab = t.closest('[role=tab]'), drag = !view && !hide && !tab && t.closest('.ba,.track,#dsw'), act = !view && !hide && (tab || (!drag && t.closest('a,button,[role=switch],.case,.slot,.plan,.ba')));
-    cur.classList.toggle('view', !!view); cur.classList.toggle('hide', !!hide); cur.classList.toggle('drag', !!drag); cur.classList.toggle('act', !!act); cur.classList.toggle('inv', !!(act && t.closest('.btn.main,[aria-selected="true"],.app .cta,.bsw')));
-  }, { passive: true });
-  document.addEventListener('pointerleave', () => { cur.style.opacity = 0; vis = false; });
   const glow = $('glow'), hero = $('top');
   hero.addEventListener('pointermove', e => { const r = hero.getBoundingClientRect(); glow.style.setProperty('--gx', (e.clientX - r.left) + 'px'); glow.style.setProperty('--gy', (e.clientY - r.top) + 'px'); }, { passive: true });
-  (function loop() { cx += (tx - cx) * .16; cy += (ty - cy) * .16; cur.style.transform = 'translate(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px)'; requestAnimationFrame(loop); })();
   $$('.btn.main, .ig').forEach(b => {
     b.addEventListener('pointermove', e => { const r = b.getBoundingClientRect(); const x = e.clientX - r.left - r.width / 2, y = e.clientY - r.top - r.height / 2, f = clamp(1 - Math.hypot(x, y) / r.width, .4, 1); b.style.transition = 'transform 0s'; b.style.transform = 'translate(' + (x * .2 * f).toFixed(1) + 'px,' + (y * .26 * f).toFixed(1) + 'px)'; b.style.setProperty('--mx', (e.clientX - r.left) + 'px'); b.style.setProperty('--my', (e.clientY - r.top) + 'px'); });
     b.addEventListener('pointerleave', () => { b.style.transition = 'transform var(--t-4) var(--e-spring)'; b.style.transform = ''; });

@@ -36,7 +36,7 @@
 
 /* ---------- the world (html.idyn): fixed stage, fixed copy layer, one spacer ---------- */
 html.idyn .intro{display:block;padding:0;max-width:none;margin:0}
-html.idyn .itrack{display:block;height:calc(var(--iw,7.55) * 100vh);height:calc(var(--iw,7.55) * 100lvh)}
+html.idyn .itrack{display:block;height:calc(var(--iw,4) * 100vh);height:calc(var(--iw,4) * 100lvh)}
 html.idyn .istage{position:fixed;inset:0 0 auto 0;height:100vh;height:100lvh;max-width:none;margin:0;padding:0;z-index:1;overflow:hidden;background:var(--x-bg);pointer-events:none}
 html.idyn .iposter.fin{display:none}
 html.idyn .iposter.open{display:block;position:absolute;inset:0;transition:opacity .6s var(--e-std)}
