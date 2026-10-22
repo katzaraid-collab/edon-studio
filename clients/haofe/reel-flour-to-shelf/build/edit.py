@@ -21,12 +21,8 @@ W, H = 1080, 1920
 BEAT = 0.5
 DROP = 4.0
 
-# A light warm grade so the cool packing-room clips sit next to the oven ones.
-GRADE = (
-    "eq=contrast=1.03:saturation=1.06,"
-    "colorbalance=rs=0.015:bs=-0.015:rm=0.01:bm=-0.01,"
-    "vignette=angle=PI/8"
-)
+# No grade: the footage plays in its original colours ("null" is ffmpeg's pass-through).
+GRADE = "null"
 
 # (name, start beat, length in beats, source, src_start, speed, options)
 # Beat b of the grid sits at DROP + 0.5*b; the hook and rewind use negative beats.

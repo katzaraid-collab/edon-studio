@@ -13,13 +13,8 @@
   html, body { margin: 0; width: 1080px; height: 1920px; background: transparent; overflow: hidden; }
   body { font-family: "Heebo", sans-serif; color: var(--cream); position: relative; }
   .layer { position: absolute; inset: 0; }
-  .scrim-top {
-    background: linear-gradient(to bottom, rgba(26, 15, 9, .48) 0%, rgba(26, 15, 9, .2) 26%, rgba(26, 15, 9, 0) 42%);
-  }
-  .scrim-hook {
-    background: radial-gradient(ellipse 80% 34% at 50% 34%, rgba(26, 15, 9, .55), rgba(26, 15, 9, 0) 72%);
-  }
-  .shade { text-shadow: 0 4px 10px rgba(0,0,0,.45), 0 10px 40px rgba(0,0,0,.45); }
+  /* No darkening layer over the footage, so the text carries its own contrast. */
+  .shade { text-shadow: 0 2px 3px rgba(0,0,0,.6), 0 4px 14px rgba(0,0,0,.55), 0 10px 40px rgba(0,0,0,.45); }
 
   /* hook */
   #hook { text-align: center; }
@@ -31,18 +26,17 @@
   }
   #hook .l1, #hook .l2 { position: absolute; left: 0; right: 0; font-family: "Suez One", serif; line-height: 1; }
   #hook .l1 { top: 420px; font-size: 128px; }
-  #hook .l2 { top: 565px; font-size: 150px; color: var(--gold); white-space: nowrap; }
+  #hook .l2 { top: 565px; font-size: 150px; white-space: nowrap; }
 
   /* rewind */
   #rewind { display: flex; align-items: center; justify-content: center; }
   #rewind svg { width: 260px; height: 260px; filter: drop-shadow(0 6px 24px rgba(0,0,0,.5)); }
-  .scan {
-    background: repeating-linear-gradient(to bottom, rgba(255,255,255,.07) 0 2px, rgba(0,0,0,0) 2px 6px);
-    mix-blend-mode: screen;
-  }
 
   /* chapters */
-  #rail { position: absolute; top: 262px; left: 50%; width: 640px; height: 24px; transform: translateX(-50%); }
+  #rail {
+    position: absolute; top: 262px; left: 50%; width: 640px; height: 24px; transform: translateX(-50%);
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,.6)) drop-shadow(0 2px 8px rgba(0,0,0,.4));
+  }
   #rail .line { position: absolute; top: 11px; left: 0; right: 0; height: 2px; background: rgba(255, 246, 234, .35); }
   #rail .fill { position: absolute; top: 10px; right: 0; height: 4px; background: var(--gold); border-radius: 2px; }
   #rail .dot {
@@ -77,8 +71,6 @@
 </style>
 </head>
 <body>
-  <div class="layer scrim-top" id="scrimTop"></div>
-  <div class="layer scrim-hook" id="scrimHook"></div>
 
   <div class="layer" id="hook">
     <div class="pill shade">מאחורי הקלעים · האופה</div>
@@ -86,7 +78,6 @@
     <div class="l2 shade">הבריוש שלנו?</div>
   </div>
 
-  <div class="layer scan" id="scan"></div>
   <div class="layer" id="rewind">
     <svg viewBox="0 0 100 100" aria-hidden="true">
       <polygon points="50,22 50,78 14,50" fill="#fff6ea"/>
@@ -152,7 +143,6 @@ const dots = [...rail.querySelectorAll(".dot")];
 function seek(t) {
   // hook
   const hookOut = 1 - easeIn((t - (HOOK_OUT - 0.28)) / 0.26);
-  $("#scrimHook").style.opacity = clamp(Math.min(easeOut(t / 0.2), hookOut));
   $("#hook .pill").style.opacity = Math.min(easeOut((t - 0.05) / 0.3), hookOut);
   const p1 = easeBack((t - 0.12) / 0.32), p2 = easeBack((t - 0.42) / 0.36);
   const l1 = $("#hook .l1"), l2 = $("#hook .l2");
@@ -163,7 +153,6 @@ function seek(t) {
 
   // rewind between the hook and the drop
   const rw = t >= HOOK_OUT && t < DROP;
-  $("#scan").style.opacity = rw ? 1 : 0;
   const rwk = rw ? Math.min(easeOut((t - HOOK_OUT) / 0.08), 1 - easeIn((t - (DROP - 0.12)) / 0.12)) : 0;
   $("#rewind").style.opacity = rwk;
   $("#rewind svg").style.transform = `scale(${0.9 + 0.1 * Math.abs(Math.sin((t - HOOK_OUT) * 18))})`;
@@ -171,7 +160,6 @@ function seek(t) {
   // chapters + progress rail
   const railOn = env(t, DROP, 0.3, END - 0.05, 0.35);
   rail.style.opacity = railOn;
-  $("#scrimTop").style.opacity = clamp(Math.max(railOn, (t < HOOK_OUT) ? 0.6 : 0));
   let idx = -1;
   CHAPTERS.forEach((c, i) => {
     if (t >= c.t0 && t < c.t1) idx = i;

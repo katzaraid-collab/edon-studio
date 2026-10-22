@@ -64,7 +64,7 @@ for v in main nomusic; do
     -c:a aac -b:a 192k -ar 48000 -movflags +faststart -t 42.0 "$DEST/$name"
 done
 ffmpeg -v error -y -i "$RAW/IMG_0448.jpg" \
-  -vf "scale=1080:1920:flags=lanczos,eq=contrast=1.03:saturation=1.06,colorbalance=rs=0.015:bs=-0.015:rm=0.01:bm=-0.01" \
+  -vf "scale=1080:1920:flags=lanczos" \
   -q:v 2 "$HERE/overlay/cover_bg.jpg"
 node "$HERE/shot.js" "$HERE/overlay/cover.html" "$DEST/cover.jpg"
 rm -f "$HERE/overlay/cover_bg.jpg"
