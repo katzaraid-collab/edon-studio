@@ -1,9 +1,10 @@
 """HaOfe "from flour to shelf" reel: cut, grade and assemble the footage.
 
-Every cut sits on a 100 BPM grid (one beat = 0.6 s). The groove drops at
-3.0 s, right after the hook and the rewind.
+Every cut sits on the 120 BPM grid of the music (one beat = 0.5 s). The
+groove drops at 4.0 s, right after the hook and the rewind. Every clip runs
+at 1.25x or faster.
 
-Usage: python3 -I edit.py RAW_DIR OUT_DIR
+Usage: python3 -I edit.py RAW_DIR OUT_DIR [SHOT ...]
 """
 import json
 import subprocess
@@ -17,42 +18,45 @@ SEGS.mkdir(parents=True, exist_ok=True)
 
 FPS = 30
 W, H = 1080, 1920
-BEAT = 0.6
+BEAT = 0.5
+DROP = 4.0
 
-# Warm, slightly richer grade so the cool packing-room clips sit next to the oven ones.
+# A light warm grade so the cool packing-room clips sit next to the oven ones.
 GRADE = (
-    "eq=contrast=1.06:saturation=1.14:brightness=0.005,"
-    "colorbalance=rs=0.035:bs=-0.035:rm=0.025:bm=-0.025:rh=0.01:bh=-0.015,"
-    "vignette=angle=PI/5.5"
+    "eq=contrast=1.03:saturation=1.06,"
+    "colorbalance=rs=0.015:bs=-0.015:rm=0.01:bm=-0.01,"
+    "vignette=angle=PI/8"
 )
 
-# (name, start beat in video, length in beats, source, src_start, speed, options)
-# Video starts at t = 0; beat b of the grid sits at 3.0 + 0.6*b.
+# (name, start beat, length in beats, source, src_start, speed, options)
+# Beat b of the grid sits at DROP + 0.5*b; the hook and rewind use negative beats.
 SHOTS = [
-    # hook: golden close-up, slow push in
-    ("01_hook", -5, 4, "IMG_0440", 16.6, 1.0, {"zoom": (1.0, 1.10)}),
-    # rewind: the rack slides back into the oven at 6x
-    ("02_rewind", -1, 1, "IMG_0440", 0.0, 6.0, {"reverse": 3.6}),
-    ("03_mix", 0, 6, "IMG_0417", 0.3, 1.2, {}),
-    ("04_divide", 6, 4, "IMG_0413", 2.0, 1.5, {}),
-    ("05_braid", 10, 9, "IMG_1611", 9.0, 1.6, {}),
-    ("06_sesame", 19, 5, "IMG_0452", 8.4, 1.3, {}),
-    ("07_proof", 24, 4, "IMG_0431", 2.0, 1.0, {"zoom": (1.06, 1.0)}),
-    ("08_oven", 28, 6, "IMG_0440", 0.0, 1.0, {}),
-    ("09_round", 34, 3, "IMG_2093", 3.8, 1.0, {"zoom": (1.0, 1.06)}),
-    ("10_photo", 37, 3, "IMG_0448.jpg", 0, 1.0, {"still": (1.18, 1.0)}),
-    ("11_wrap", 40, 5, "IMG_2102", 0.0, 1.0, {}),
-    ("12_stack", 45, 2, "IMG_1195", 0.0, 1.0, {}),
-    ("13_label", 47, 3, "IMG_1194", 5.9, 1.0, {}),
-    ("14_box", 50, 2, "IMG_2105", 2.0, 1.0, {}),
-    ("15_shelf", 52, 4, "IMG_3189", 4.6, 1.0, {"zoom": (1.0, 1.05)}),
-    # store counter, then the same shot slows and blurs under the end card
-    ("16_store", 56, 10, "IMG_3191", 0.2, 4.0 / 6.0, {"endcard_blur_at": 2.4}),
+    # hook: golden close-ups, slow push in
+    ("01_hook", -8, 5, "IMG_0440", 17.1, 1.25, {"zoom": (1.0, 1.08)}),
+    ("02_hook2", -3, 2, "IMG_2093", 5.6, 1.25, {"zoom": (1.05, 1.0)}),
+    # rewind: the rack slides back into the oven at 7.2x
+    ("03_rewind", -1, 1, "IMG_0440", 0.0, 7.2, {"reverse": 3.6}),
+    ("04_mix", 0, 6, "IMG_0417", 0.3, 1.4, {}),
+    ("05_divide", 6, 4, "IMG_0413", 2.0, 1.6, {}),
+    ("06_braid", 10, 12, "IMG_1611", 8.6, 1.75, {}),
+    ("07_sesame", 22, 6, "IMG_0452", 8.0, 1.4, {}),
+    ("08_proof", 28, 4, "IMG_0431", 2.0, 1.25, {"zoom": (1.06, 1.0)}),
+    ("09_oven", 32, 7, "IMG_0440", 0.0, 1.25, {}),
+    ("10_round", 39, 3, "IMG_2093", 3.6, 1.25, {"zoom": (1.0, 1.06)}),
+    ("11_photo", 42, 4, "IMG_0448.jpg", 0, 1.0, {"still": (1.2, 1.0)}),
+    ("12_wrap", 46, 5, "IMG_2102", 0.0, 1.25, {}),
+    ("13_stack", 51, 2, "IMG_1195", 0.0, 1.3, {}),
+    ("14_label", 53, 3, "IMG_1194", 5.75, 1.25, {}),
+    ("15_box", 56, 2, "IMG_2105", 2.0, 1.25, {}),
+    ("16_shelf", 58, 3, "IMG_3189", 4.6, 1.25, {"zoom": (1.0, 1.04)}),
+    ("17_store", 61, 3, "IMG_3191", 0.2, 1.25, {}),
+    # the store shot carries on under the end card, blurred, then holds its last frame
+    ("18_end", 64, 12, "IMG_3191", 2.075, 1.25, {"endcard_blur_at": 0.0, "hold": True}),
 ]
 
 
 def t_of(beat):
-    return round(3.0 + BEAT * beat, 3)
+    return round(DROP + BEAT * beat, 3)
 
 
 def run(cmd):
@@ -96,7 +100,7 @@ def build_shot(name, start_b, len_b, src, ss, speed, opt):
         span = opt["reverse"]
         vf = (f"trim=0:{span},setpts=PTS-STARTPTS,reverse,setpts=PTS/{speed},"
               f"fps={FPS},scale={W}:{H},{GRADE},format=yuv420p")
-        af = (f"atrim=0:{span},asetpts=PTS-STARTPTS,areverse,atempo=2,atempo=3,"
+        af = (f"atrim=0:{span},asetpts=PTS-STARTPTS,areverse,atempo=2,atempo=2,atempo=1.8,"
               f"apad,atrim=0:{dur},afade=t=in:d=0.02,afade=t=out:st={dur-0.03}:d=0.03")
         run(["ffmpeg", "-v", "error", "-y", "-i", vin, "-vf", vf, "-af", af,
              "-frames:v", str(frames), "-c:v", "libx264", "-crf", "14", "-preset", "medium",
@@ -109,6 +113,8 @@ def build_shot(name, start_b, len_b, src, ss, speed, opt):
     if speed < 1:
         chain += f",framerate=fps={FPS}"
     chain += f",fps={FPS},scale={W}:{H}:flags=lanczos"
+    if opt.get("hold"):
+        chain += f",tpad=stop_mode=clone:stop_duration={dur}"
     if "zoom" in opt:
         chain += "," + zoom_filter(*opt["zoom"], frames)
     chain += f",{GRADE}"
@@ -146,7 +152,7 @@ def main():
     cursor = 0.0
     for shot in SHOTS:
         name, start_b, len_b = shot[0], shot[1], shot[2]
-        start = 0.0 if start_b == -5 else t_of(start_b)
+        start = t_of(start_b)
         assert abs(start - cursor) < 1e-6, (name, start, cursor)
         if not only or name in only:
             build_shot(*shot)

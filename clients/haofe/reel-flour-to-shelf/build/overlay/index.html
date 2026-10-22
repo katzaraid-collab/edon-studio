@@ -14,7 +14,7 @@
   body { font-family: "Heebo", sans-serif; color: var(--cream); position: relative; }
   .layer { position: absolute; inset: 0; }
   .scrim-top {
-    background: linear-gradient(to bottom, rgba(26, 15, 9, .62) 0%, rgba(26, 15, 9, .28) 26%, rgba(26, 15, 9, 0) 42%);
+    background: linear-gradient(to bottom, rgba(26, 15, 9, .48) 0%, rgba(26, 15, 9, .2) 26%, rgba(26, 15, 9, 0) 42%);
   }
   .scrim-hook {
     background: radial-gradient(ellipse 80% 34% at 50% 34%, rgba(26, 15, 9, .55), rgba(26, 15, 9, 0) 72%);
@@ -30,8 +30,8 @@
     background: rgba(52, 34, 27, .72); border: 2px solid rgba(196, 154, 102, .85);
   }
   #hook .l1, #hook .l2 { position: absolute; left: 0; right: 0; font-family: "Suez One", serif; line-height: 1; }
-  #hook .l1 { top: 420px; font-size: 132px; }
-  #hook .l2 { top: 560px; font-size: 200px; color: var(--gold); }
+  #hook .l1 { top: 420px; font-size: 128px; }
+  #hook .l2 { top: 565px; font-size: 150px; color: var(--gold); white-space: nowrap; }
 
   /* rewind */
   #rewind { display: flex; align-items: center; justify-content: center; }
@@ -59,10 +59,21 @@
   /* end card */
   #endshade { background: rgba(43, 26, 17, .74); }
   #end { text-align: center; }
-  #end .kicker { position: absolute; top: 452px; left: 0; right: 0; font-weight: 600; font-size: 48px; color: var(--gold); letter-spacing: 1px; }
-  #end img { position: absolute; top: 540px; left: 50%; width: 470px; margin-left: -235px; }
-  #end .city { position: absolute; top: 1300px; left: 0; right: 0; font-family: "Suez One", serif; font-size: 84px; }
-  #end .cta { position: absolute; top: 1404px; left: 0; right: 0; font-weight: 600; font-size: 46px; color: var(--cream); opacity: .92; }
+  #end img { position: absolute; top: 300px; left: 50%; width: 380px; margin-left: -190px; }
+  #end .h { position: absolute; left: 0; right: 0; font-family: "Suez One", serif; font-size: 96px; line-height: 1; }
+  #end .h1 { top: 935px; }
+  #end .h2 { top: 1045px; }
+  #end .where { position: absolute; top: 1172px; left: 0; right: 0; font-weight: 600; font-size: 46px; color: var(--gold); }
+  #end .chains {
+    position: absolute; top: 1258px; left: 0; right: 0;
+    display: flex; justify-content: center; align-items: center; gap: 16px;
+  }
+  #end .chain {
+    font-weight: 800; font-size: 40px; line-height: 1; white-space: nowrap;
+    padding: 14px 26px; border-radius: 999px; background: var(--cream); color: var(--brown);
+    box-shadow: 0 6px 20px rgba(0,0,0,.3);
+  }
+  #end .more { font-weight: 700; font-size: 42px; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -71,8 +82,8 @@
 
   <div class="layer" id="hook">
     <div class="pill shade">מאחורי הקלעים · האופה</div>
-    <div class="l1 shade">איך נולדת</div>
-    <div class="l2 shade">חלה?</div>
+    <div class="l1 shade">איך נולד</div>
+    <div class="l2 shade">הבריוש שלנו?</div>
   </div>
 
   <div class="layer scan" id="scan"></div>
@@ -88,23 +99,30 @@
 
   <div class="layer" id="endshade"></div>
   <div class="layer" id="end">
-    <div class="kicker shade">מהקמח ועד המדף</div>
     <img src="logo_dark.png" alt="">
-    <div class="city shade">נתיבות</div>
-    <div class="cta shade">מחכים לכם בחנות</div>
+    <div class="h h1 shade">חפשו אותנו</div>
+    <div class="h h2 shade">בסופרים ליד הבית</div>
+    <div class="where shade">בכל הארץ, מהצפון ועד הדרום</div>
+    <div class="chains">
+      <span class="chain">אושר עד</span>
+      <span class="chain">ויקטורי</span>
+      <span class="chain">מחסני השוק</span>
+      <span class="more shade">ועוד</span>
+    </div>
   </div>
 
 <script>
-// Every chapter starts on a cut from edit.py (seconds).
+// Timing from edit.py (seconds): hook, rewind, drop, end card.
+const HOOK_OUT = 3.5, DROP = 4.0, END = 36.0;
 const CHAPTERS = [
-  { t0: 3.0,  t1: 6.6,  title: "לישה" },
-  { t0: 6.6,  t1: 9.0,  title: "חלוקה" },
-  { t0: 9.0,  t1: 14.4, title: "קליעה ביד" },
-  { t0: 14.4, t1: 17.4, title: "שומשום" },
-  { t0: 17.4, t1: 19.8, title: "התפחה" },
-  { t0: 19.8, t1: 27.0, title: "אפייה", sub: "זהובה, ישר מהתנור", subAt: 21.0 },
-  { t0: 27.0, t1: 34.2, title: "אריזה" },
-  { t0: 34.2, t1: 39.0, title: "על המדף" },
+  { t0: 4.0,  t1: 7.0,  title: "לישה" },
+  { t0: 7.0,  t1: 9.0,  title: "חלוקה" },
+  { t0: 9.0,  t1: 15.0, title: "קליעה ביד" },
+  { t0: 15.0, t1: 18.0, title: "שומשום" },
+  { t0: 18.0, t1: 20.0, title: "התפחה" },
+  { t0: 20.0, t1: 27.0, title: "אפייה", sub: "זהובה, ישר מהתנור", subAt: 21.0 },
+  { t0: 27.0, t1: 33.0, title: "אריזה" },
+  { t0: 33.0, t1: 36.0, title: "על המדף" },
 ];
 
 const $ = (s, el = document) => el.querySelector(s);
@@ -133,7 +151,7 @@ const dots = [...rail.querySelectorAll(".dot")];
 
 function seek(t) {
   // hook
-  const hookOut = 1 - easeIn((t - 2.12) / 0.26);
+  const hookOut = 1 - easeIn((t - (HOOK_OUT - 0.28)) / 0.26);
   $("#scrimHook").style.opacity = clamp(Math.min(easeOut(t / 0.2), hookOut));
   $("#hook .pill").style.opacity = Math.min(easeOut((t - 0.05) / 0.3), hookOut);
   const p1 = easeBack((t - 0.12) / 0.32), p2 = easeBack((t - 0.42) / 0.36);
@@ -143,17 +161,17 @@ function seek(t) {
   l2.style.opacity = Math.min(clamp((t - 0.42) / 0.18), hookOut);
   l2.style.transform = `translateY(${(1 - p2) * 50 - (1 - hookOut) * 30}px) scale(${0.8 + 0.2 * p2})`;
 
-  // rewind 2.4 - 3.0
-  const rw = t >= 2.4 && t < 3.0;
+  // rewind between the hook and the drop
+  const rw = t >= HOOK_OUT && t < DROP;
   $("#scan").style.opacity = rw ? 1 : 0;
-  const rwk = rw ? Math.min(easeOut((t - 2.4) / 0.08), 1 - easeIn((t - 2.88) / 0.12)) : 0;
+  const rwk = rw ? Math.min(easeOut((t - HOOK_OUT) / 0.08), 1 - easeIn((t - (DROP - 0.12)) / 0.12)) : 0;
   $("#rewind").style.opacity = rwk;
-  $("#rewind svg").style.transform = `scale(${0.9 + 0.1 * Math.abs(Math.sin((t - 2.4) * 18))})`;
+  $("#rewind svg").style.transform = `scale(${0.9 + 0.1 * Math.abs(Math.sin((t - HOOK_OUT) * 18))})`;
 
   // chapters + progress rail
-  const railOn = env(t, 3.0, 0.3, 38.95, 0.35);
+  const railOn = env(t, DROP, 0.3, END - 0.05, 0.35);
   rail.style.opacity = railOn;
-  $("#scrimTop").style.opacity = clamp(Math.max(railOn, (t < 2.4) ? 0.6 : 0));
+  $("#scrimTop").style.opacity = clamp(Math.max(railOn, (t < HOOK_OUT) ? 0.6 : 0));
   let idx = -1;
   CHAPTERS.forEach((c, i) => {
     if (t >= c.t0 && t < c.t1) idx = i;
@@ -187,21 +205,25 @@ function seek(t) {
   }
   $("#rail .fill").style.width = (prog * 100) + "%";
 
-  // end card from 39.0
-  $("#endshade").style.opacity = easeOut((t - 39.0) / 0.5);
+  // end card
+  $("#endshade").style.opacity = easeOut((t - END) / 0.5);
   const e = $("#end");
-  const kk = easeOut((t - 39.15) / 0.4);
-  const lg = easeOut((t - 39.3) / 0.6);
-  const ct = easeOut((t - 39.9) / 0.45);
-  const cta = easeOut((t - 40.25) / 0.45);
-  e.querySelector(".kicker").style.opacity = kk;
-  e.querySelector(".kicker").style.transform = `translateY(${(1 - kk) * 16}px)`;
+  const rise = (el, at, dist = 20, dur = 0.45) => {
+    const k = easeOut((t - at) / dur);
+    el.style.opacity = k;
+    el.style.transform = `translateY(${(1 - k) * dist}px)`;
+  };
+  const lg = easeOut((t - (END + 0.15)) / 0.6);
   e.querySelector("img").style.opacity = lg;
   e.querySelector("img").style.transform = `scale(${0.9 + 0.1 * lg})`;
-  e.querySelector(".city").style.opacity = ct;
-  e.querySelector(".city").style.transform = `translateY(${(1 - ct) * 20}px)`;
-  e.querySelector(".cta").style.opacity = cta * 0.92;
-  e.querySelector(".cta").style.transform = `translateY(${(1 - cta) * 20}px)`;
+  rise(e.querySelector(".h1"), END + 0.7);
+  rise(e.querySelector(".h2"), END + 0.95);
+  rise(e.querySelector(".where"), END + 1.4);
+  e.querySelectorAll(".chains > *").forEach((el, i) => {
+    const k = easeBack((t - (END + 1.85 + i * 0.22)) / 0.4);
+    el.style.opacity = clamp((t - (END + 1.85 + i * 0.22)) / 0.15);
+    el.style.transform = `scale(${0.7 + 0.3 * k})`;
+  });
 }
 window.seek = seek;
 seek(0);
