@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="local.css">
+<style>
+  :root {
+    --brown: #34221b;
+    --deep: #21140d;
+    --gold: #c49a66;
+    --cream: #fff6ea;
+  }
+  html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--deep); }
+  body { font-family: "Heebo", sans-serif; color: var(--cream); }
+  #stage { position: absolute; inset: 0; overflow: hidden; background: var(--deep); }
+  .fill { position: absolute; inset: 0; }
+  #cam { transform-origin: 50% 46%; }
+  #shots { overflow: hidden; transform-origin: 50% 50%; }
+  .lay { position: absolute; inset: 0; will-change: transform; }
+  .lay img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .shade { text-shadow: 0 2px 3px rgba(0,0,0,.6), 0 4px 14px rgba(0,0,0,.55), 0 10px 40px rgba(0,0,0,.45); }
+  .hidden { display: none !important; }
+
+  /* progress: one segment per chapter, filling right to left */
+  #prog { position: absolute; top: 226px; left: 50%; width: 760px; margin-left: -380px; display: flex; gap: 10px;
+          filter: drop-shadow(0 1px 2px rgba(0,0,0,.55)) drop-shadow(0 2px 8px rgba(0,0,0,.35)); }
+  #prog .seg { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,246,234,.32); position: relative; overflow: hidden; }
+  #prog .seg i { position: absolute; top: 0; bottom: 0; right: 0; width: 0; background: var(--cream); border-radius: 3px; }
+  #prog .seg.now i { background: var(--gold); }
+
+  /* hook */
+  #hook { text-align: center; }
+  #hook .line { position: absolute; left: 0; right: 0; display: flex; justify-content: center; gap: 34px;
+                font-family: "Suez One", serif; line-height: 1.1; white-space: nowrap; }
+  #hook .l1 { top: 410px; font-size: 136px; }
+  #hook .l2 { top: 565px; font-size: 156px; }
+  #hook .w { display: inline-block; position: relative; transform-origin: 50% 60%; }
+  #hook .uline { position: absolute; left: 4%; right: 4%; bottom: -6px; height: 10px; border-radius: 5px;
+                 background: var(--gold); transform-origin: 100% 50%; box-shadow: 0 3px 12px rgba(0,0,0,.4); }
+  #hook .pill { position: absolute; top: 300px; left: 50%; transform: translateX(-50%); white-space: nowrap;
+                font-weight: 700; font-size: 36px; padding: 12px 30px; border-radius: 999px;
+                background: rgba(52, 34, 27, .82); border: 2px solid rgba(196, 154, 102, .9); }
+
+  /* rewind */
+  #rw { display: flex; align-items: center; justify-content: center; }
+  #rw svg { width: 230px; height: 230px; filter: drop-shadow(0 8px 30px rgba(0,0,0,.6)); }
+  #rw .streak { position: absolute; left: 0; height: 3px; border-radius: 2px; background: rgba(255,246,234,.55); }
+
+  /* chapters */
+  .chap { position: absolute; left: 0; right: 0; top: 0; height: 900px; text-align: center; }
+  .chap .num { position: absolute; left: 0; right: 0; top: 250px; font-weight: 800; font-size: 380px; line-height: 1;
+               direction: ltr; color: transparent; -webkit-text-stroke: 3px rgba(196,154,102,.95); letter-spacing: -8px; }
+  .chap .title { position: absolute; left: 0; right: 0; top: 400px; font-family: "Suez One", serif; font-size: 150px;
+                 line-height: 1.3; white-space: nowrap; }
+  .chap .title .mask { display: inline-block; overflow: hidden; padding: 0 16px 14px; vertical-align: top; }
+  .chap .title .ch { display: inline-block; white-space: pre; will-change: transform; }
+  .chap .sub { position: absolute; left: 0; right: 0; top: 625px; font-weight: 700; font-size: 54px; white-space: nowrap; }
+  .chap .sub .wd { display: inline-block; margin: 0 8px; }
+  .chap svg.orn { position: absolute; left: 50%; overflow: visible; filter: drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
+
+  /* sesame */
+  #seeds .seed { position: absolute; left: 0; top: 0; width: 22px; height: 11px; border-radius: 50%;
+                 background: radial-gradient(ellipse at 35% 35%, #fff8e6, #e8cf9e 55%, #b98d55); }
+
+  /* end card */
+  #endshade { background: linear-gradient(to bottom, rgba(33,20,13,.78), rgba(43,26,17,.72) 45%, rgba(33,20,13,.84)); }
+  #end { text-align: center; }
+  #logo { position: absolute; top: 300px; left: 50%; width: 380px; margin-left: -190px; height: 586px; }
+  #logo img { position: absolute; left: 0; width: 380px; display: block; }
+  #logo .wheat { top: 0; }
+  #logo .word { top: 332px; }
+  #logo .sub { top: 539px; }
+  #glint { position: absolute; inset: 0; -webkit-mask-image: url(assets/logo_full.png); -webkit-mask-size: 100% 100%;
+           mask-image: url(assets/logo_full.png); mask-size: 100% 100%; overflow: hidden; }
+  #glint i { position: absolute; top: -20%; bottom: -20%; width: 45%;
+             background: linear-gradient(105deg, rgba(255,255,255,0) 0%, rgba(255,248,230,.95) 50%, rgba(255,255,255,0) 100%); }
+  #end .h { position: absolute; left: 0; right: 0; font-family: "Suez One", serif; font-size: 96px; line-height: 1.3; white-space: nowrap; }
+  #end .h .mask { display: inline-block; overflow: hidden; padding: 0 12px 10px; }
+  #end .h .ch { display: inline-block; white-space: pre; }
+  #end .h1 { top: 915px; }
+  #end .h2 { top: 1030px; }
+  #end .where { position: absolute; top: 1172px; left: 0; right: 0; font-weight: 700; font-size: 46px; color: var(--gold); }
+  #end .chains { position: absolute; top: 1262px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 16px; }
+  #end .chain { font-weight: 800; font-size: 40px; line-height: 1; white-space: nowrap; padding: 15px 28px; border-radius: 999px;
+                background: var(--cream); color: var(--brown); box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+  #end .more { font-weight: 800; font-size: 42px; white-space: nowrap; }
+  #flash { background: #fff; opacity: 0; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <filter id="mbA" x="-30%" y="-5%" width="160%" height="110%"><feGaussianBlur id="mbAg" stdDeviation="0 0"/></filter>
+  <filter id="mbB" x="-30%" y="-5%" width="160%" height="110%"><feGaussianBlur id="mbBg" stdDeviation="0 0"/></filter>
+</svg>
+<div id="stage">
+  <div class="fill" id="cam">
+    <div class="fill" id="shots">
+      <div class="lay" id="layA"><img alt=""></div>
+      <div class="lay" id="layB"><img alt=""></div>
+    </div>
+  </div>
+  <div class="fill" id="endshade"></div>
+
+  <div id="prog"></div>
+
+  <div class="fill" id="hook">
+    <div class="pill shade">מאחורי הקלעים · האופה</div>
+    <div class="line l1"><span class="w shade">איך</span><span class="w shade">נולד</span></div>
+    <div class="line l2"><span class="w shade">הבריוש<i class="uline"></i></span><span class="w shade">שלנו?</span></div>
+  </div>
+
+  <div class="fill" id="rw">
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <polygon points="50,24 50,76 16,50" fill="#fff6ea"/>
+      <polygon points="84,24 84,76 50,50" fill="#fff6ea"/>
+    </svg>
+  </div>
+
+  <div class="fill" id="chapters"></div>
+  <div class="fill" id="seeds"></div>
+
+  <div class="fill" id="end">
+    <div id="logo">
+      <img class="wheat" src="assets/logo_wheat.png" alt="">
+      <img class="word" src="assets/logo_word.png" alt="">
+      <img class="sub" src="assets/logo_sub.png" alt="">
+      <div id="glint"><i></i></div>
+    </div>
+    <div class="h h1 shade" data-text="חפשו אותנו"></div>
+    <div class="h h2 shade" data-text="בסופרים ליד הבית"></div>
+    <div class="where shade">בכל הארץ, מהצפון ועד הדרום</div>
+    <div class="chains">
+      <span class="chain">אושר עד</span>
+      <span class="chain">ויקטורי</span>
+      <span class="chain">מחסני השוק</span>
+      <span class="more shade">ועוד</span>
+    </div>
+  </div>
+  <div class="fill" id="flash"></div>
+</div>
+
+<script src="timeline.js"></script>
+<script>
+const TL = window.TIMELINE;
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const eOut3 = x => 1 - Math.pow(1 - clamp(x), 3);
+const eIn3 = x => Math.pow(clamp(x), 3);
+const eInOut3 = x => { x = clamp(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+const eOutExpo = x => { x = clamp(x); return x === 1 ? 1 : 1 - Math.pow(2, -10 * x); };
+const eInOutSine = x => -(Math.cos(Math.PI * clamp(x)) - 1) / 2;
+// damped spring from 0 to 1 with overshoot
+const spring = (d, w = 13, z = 7) => d <= 0 ? 0 : 1 - Math.exp(-z * d) * Math.cos(w * d);
+const rnd = (seed => () => (seed = (seed * 16807) % 2147483647) / 2147483647)(42);
+
+// ---------- footage ----------
+const SHOTS = TL.shots;
+const PUSH = 0.13;               // half-length of a whip push
+function srcTime(shot, lt) {
+  if (shot.reverse) return shot.reverse[0] - shot.reverse[1] * lt;
+  const k = shot.speed;
+  let s = shot.offset || 0;
+  for (let i = 0; i < k.length; i++) {
+    const [t0, v0] = k[i];
+    const [t1, v1] = i + 1 < k.length ? k[i + 1] : [Infinity, v0];
+    if (lt <= t0) break;
+    const e = Math.min(lt, t1);
+    const ve = v0 + (v1 - v0) * ((e - t0) / (t1 - t0 || 1));
+    s += (e - t0) * (v0 + (isFinite(t1) ? ve : v0)) / 2;
+  }
+  return s;
+}
+function frameSrc(shot, t) {
+  if (shot.src === "@photo") return "assets/photo.jpg";
+  const lt = clamp(t - shot.t0, 0, shot.t1 - shot.t0 - 1e-6);
+  const n = TL.sources[shot.src];
+  const f = clamp(Math.round(srcTime(shot, lt) * TL.fps), 0, n - 1);
+  return `frames/${shot.src}/${String(f).padStart(4, "0")}.jpg`;
+}
+function shotAt(t) {
+  for (let i = 0; i < SHOTS.length; i++) if (t < SHOTS[i].t1) return i;
+  return SHOTS.length - 1;
+}
+function kbTransform(shot, t, extraScale = 0) {
+  const [s0, s1, x0, x1, y0, y1] = shot.kb;
+  const k = eInOutSine((t - shot.t0) / (shot.t1 - shot.t0));
+  let s = lerp(s0, s1, k);
+  const lt = t - shot.t0;
+  if (shot.cut === "punch") s *= 1 + 0.07 * (1 - eOutExpo(lt / 0.42));
+  if (shot.cut === "impact") s *= 1 + 0.15 * (1 - eOutExpo(lt / 0.5));
+  s *= 1 + extraScale;
+  return { s, x: lerp(x0, x1, k), y: lerp(y0, y1, k) };
+}
+const layA = $("#layA"), layB = $("#layB");
+const imgA = $("img", layA), imgB = $("img", layB);
+async function setImg(img, src) {
+  if (img.dataset.src !== src) { img.dataset.src = src; img.src = src; }
+  if (!img.complete || !img.naturalWidth) await img.decode().catch(() => {});
+}
+function place(lay, tr, dx, blur, gauss) {
+  lay.style.transform = `translate(${dx}px, 0) translate(${tr.x}%, ${tr.y}%) scale(${tr.s})`;
+  gauss.setAttribute("stdDeviation", `${blur.toFixed(1)} 0`);
+  lay.style.filter = blur > 0.5 ? `url(#${gauss.parentNode.id})` : "none";
+}
+
+// ---------- progress ----------
+const CH = TL.chapters;
+const prog = $("#prog");
+CH.forEach(() => { const s = document.createElement("div"); s.className = "seg"; s.innerHTML = "<i></i>"; prog.appendChild(s); });
+const segs = $$(".seg", prog);
+
+// ---------- chapters ----------
+function letters(el, text) {
+  el.innerHTML = `<span class="mask">${[...text].map(c => `<span class="ch">${c}</span>`).join("")}</span>`;
+  return $$(".ch", el);
+}
+const chapRoot = $("#chapters");
+CH.forEach((c, i) => {
+  const el = document.createElement("div");
+  el.className = "chap";
+  el.innerHTML = `<div class="num">${String(i + 1).padStart(2, "0")}</div>` +
+    `<div class="title shade"></div>` + (c.sub ? `<div class="sub shade">${c.sub.split(" ").map(w => `<span class="wd">${w}</span>`).join("")}</div>` : "");
+  chapRoot.appendChild(el);
+  c.el = el;
+  c.num = $(".num", el);
+  c.titleEl = $(".title", el);
+  c.chars = letters(c.titleEl, c.title);
+  c.words = $$(".sub .wd", el);
+  if (c.fx === "knead") $(".mask", c.titleEl).style.overflow = "visible";
+});
+const NS = "http://www.w3.org/2000/svg";
+function svgEl(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function buildOrnaments() {
+  CH.forEach(c => {
+    const r = $(".mask", c.titleEl).getBoundingClientRect();
+    const w = r.width, top = 400, h = r.height;
+    if (c.fx === "braid") {
+      const W = Math.max(520, w * 0.9), H = 46;
+      const svg = svgEl("svg", { class: "orn", width: W, height: H, viewBox: `0 0 ${W} ${H}` }, c.el);
+      svg.style.top = (top + h + 8) + "px"; svg.style.marginLeft = (-W / 2) + "px";
+      c.strands = [0, 1, 2].map(j => {
+        let d = "";
+        for (let x = W; x >= 0; x -= 4) {
+          const y = H / 2 + (H / 2 - 5) * Math.sin((W - x) / W * Math.PI * 6 + j * 2 * Math.PI / 3);
+          d += (x === W ? "M" : "L") + x.toFixed(1) + " " + y.toFixed(1) + " ";
+        }
+        return svgEl("path", { d, fill: "none", stroke: j === 1 ? "#fff6ea" : "#c49a66", "stroke-width": 5,
+          "stroke-linecap": "round", pathLength: 1, "stroke-dasharray": 1, "stroke-dashoffset": 1 }, svg);
+      });
+    }
+    if (c.fx === "box") {
+      const W = w + 70, H = h + 10;
+      const svg = svgEl("svg", { class: "orn", width: W, height: H, viewBox: `-4 -4 ${W + 8} ${H + 8}` }, c.el);
+      svg.style.top = (top - 8) + "px"; svg.style.marginLeft = (-W / 2 - 4) + "px";
+      const R = 22;
+      const d = `M${W - R} 0 L${R} 0 Q0 0 0 ${R} L0 ${H - R} Q0 ${H} ${R} ${H} L${W - R} ${H} Q${W} ${H} ${W} ${H - R} L${W} ${R} Q${W} 0 ${W - R} 0`;
+      c.boxPath = svgEl("path", { d, fill: "none", stroke: "#c49a66", "stroke-width": 5, "stroke-linejoin": "round",
+        pathLength: 1, "stroke-dasharray": 1, "stroke-dashoffset": 1 }, svg);
+    }
+    if (c.fx === "shelf") {
+      const W = Math.max(560, w + 120), H = 26;
+      const svg = svgEl("svg", { class: "orn", width: W, height: H, viewBox: `0 0 ${W} ${H}` }, c.el);
+      svg.style.top = (top + h - 18) + "px"; svg.style.marginLeft = (-W / 2) + "px";
+      c.shelf = svgEl("rect", { x: 0, y: 0, width: W, height: 12, rx: 6, fill: "#c49a66" }, svg);
+      c.shelfShadow = svgEl("rect", { x: 30, y: 14, width: W - 60, height: 6, rx: 3, fill: "rgba(0,0,0,.35)" }, svg);
+      c.shelfW = W;
+    }
+  });
+}
+
+// ---------- sesame ----------
+const seeds = [];
+for (let i = 0; i < 80; i++) {
+  const el = document.createElement("div");
+  el.className = "seed";
+  $("#seeds").appendChild(el);
+  const z = rnd();
+  seeds.push({ el, x: rnd() * 1080, t0: 15.02 + rnd() * 0.7, y0: -40 - rnd() * 500, v: 700 + rnd() * 700,
+               rot: rnd() * 360, vr: (rnd() - .5) * 900, z, sway: rnd() * 6.28 });
+}
+
+// ---------- rewind streaks ----------
+for (let k = 0; k < 14; k++) {
+  const st = document.createElement("i"); st.className = "streak";
+  st.style.top = (300 + rnd() * 1320) + "px"; st.style.width = (120 + rnd() * 380) + "px";
+  st.dataset.o = rnd() * 1600; $("#rw").appendChild(st);
+}
+
+// ---------- end card ----------
+const endH = $$("#end .h").map(el => ({ el, chars: letters(el, el.dataset.text) }));
+const pills = $$("#end .chains > *");
+
+// ---------- per-frame ----------
+const BARS = []; for (let b = 4; b < 36; b += 2) BARS.push(b);
+const SLAMS = [0.0, 0.5, 1.0, 1.5];
+
+window.seek = async function (t) {
+  // --- footage ---
+  const i = shotAt(t);
+  let push = null;
+  for (let j = 1; j < SHOTS.length; j++) {
+    if (SHOTS[j].cut === "push" && Math.abs(t - SHOTS[j].t0) < PUSH) { push = j; break; }
+  }
+  if (push !== null) {
+    const out = SHOTS[push - 1], inn = SHOTS[push];
+    const p = eInOut3((t - (inn.t0 - PUSH)) / (2 * PUSH));
+    const blur = Math.sin(Math.PI * p) * 70;
+    await Promise.all([setImg(imgA, frameSrc(out, Math.min(t, out.t1 - 1e-3))), setImg(imgB, frameSrc(inn, Math.max(t, inn.t0)))]);
+    place(layA, kbTransform(out, Math.min(t, out.t1)), -p * 1080, blur, $("#mbAg"));
+    place(layB, kbTransform(inn, Math.max(t, inn.t0)), (1 - p) * 1080, blur, $("#mbBg"));
+    layB.classList.remove("hidden");
+  } else {
+    const sh = SHOTS[i];
+    await setImg(imgA, frameSrc(sh, t));
+    let blur = 0;
+    if (sh.name === "rewind") blur = 26;
+    place(layA, kbTransform(sh, t), 0, blur, $("#mbAg"));
+    layB.classList.add("hidden");
+    if (sh.name === "end") {
+      const k = eOut3((t - 36.0) / 0.6);
+      layA.style.filter = `blur(${(26 * k).toFixed(1)}px) brightness(${(1 - .2 * k).toFixed(3)})`;
+    }
+  }
+
+  // rewind card
+  const shots = $("#shots");
+  let card = 0;
+  if (t >= 3.5 && t < 4.0) card = Math.min(eOut3((t - 3.5) / 0.1), 1 - eIn3((t - 3.9) / 0.1));
+  shots.style.transform = `scale(${1 - 0.13 * card})`;
+  shots.style.borderRadius = `${46 * card}px`;
+
+  // camera: bar pulses, hook slams, shake
+  let pulse = 0, sx = 0, sy = 0;
+  for (const b of BARS) if (t >= b && t < b + 0.6) pulse = Math.max(pulse, 0.022 * Math.exp(-(t - b) / 0.13));
+  for (const s of SLAMS) if (t >= s && t < s + 0.3) {
+    const d = t - s;
+    sy += 12 * Math.exp(-d / 0.07) * Math.cos(2 * Math.PI * d * 16);
+    sx += 6 * Math.exp(-d / 0.07) * Math.sin(2 * Math.PI * d * 13);
+    pulse = Math.max(pulse, 0.015 * Math.exp(-d / 0.12));
+  }
+  $("#cam").style.transform = `translate(${sx}px, ${sy}px) scale(${1 + pulse})`;
+
+  // flashes on the drop and the oven
+  let fl = 0, flc = "#fff";
+  if (t >= 4.0 && t < 4.25) fl = 0.5 * (1 - eOut3((t - 4.0) / 0.22));
+  if (t >= 20.0 && t < 20.3) { fl = 0.42 * (1 - eOut3((t - 20.0) / 0.28)); flc = "#ffd7a3"; }
+  $("#flash").style.opacity = fl;
+  $("#flash").style.background = flc;
+
+  // --- progress ---
+  const progOn = Math.min(eOut3((t - 4.0) / 0.3), 1 - eIn3((t - 35.75) / 0.25));
+  prog.style.opacity = progOn;
+  prog.style.transform = `translateY(${(1 - eOut3((t - 4.0) / 0.4)) * -30}px)`;
+  CH.forEach((c, k) => {
+    const f = t >= c.t1 ? 1 : t < c.t0 ? 0 : (t - c.t0) / (c.t1 - c.t0);
+    $("i", segs[k]).style.width = (f * 100) + "%";
+    segs[k].classList.toggle("now", t >= c.t0 && t < c.t1);
+  });
+
+  // --- hook ---
+  const hookEl = $("#hook");
+  hookEl.style.display = t < 3.55 ? "" : "none";
+  if (t < 3.55) {
+    const words = $$(".w", hookEl);
+    words.forEach((w, k) => {
+      const d = t - SLAMS[k];
+      const kk = eOutExpo(d / 0.28);
+      const out = eIn3((t - (3.1 + (3 - k) * 0.05)) / 0.22);
+      w.style.opacity = d < 0 ? 0 : Math.min(clamp(d / 0.05), 1 - out);
+      w.style.transform = `translateY(${-140 * out}px) scale(${1.6 - 0.6 * kk}) rotate(${-6 * (1 - kk)}deg)`;
+      w.style.filter = `blur(${(16 * (1 - kk) + 14 * out).toFixed(1)}px)`;
+    });
+    const u = $(".uline", hookEl);
+    u.style.transform = `scaleX(${eOutExpo((t - 1.7) / 0.35)})`;
+    const pill = $(".pill", hookEl);
+    const pk = eOutExpo((t - 2.0) / 0.4), pout = eIn3((t - 3.1) / 0.25);
+    pill.style.clipPath = `inset(0 ${50 * (1 - pk)}% 0 ${50 * (1 - pk)}% round 999px)`;
+    pill.style.opacity = 1 - pout;
+  }
+
+  // --- rewind ---
+  const rw = $("#rw");
+  rw.style.opacity = card;
+  if (card > 0) {
+    $("svg", rw).style.transform = `translateX(${-30 * (((t - 3.5) * 6) % 1)}px) scale(${0.92 + 0.08 * card})`;
+    $$(".streak", rw).forEach(st => { st.style.left = ((((t - 3.5) * 5200 + +st.dataset.o) % 1700) - 300) + "px"; });
+  }
+
+  // --- chapters ---
+  CH.forEach((c, k) => {
+    const lt = t - c.t0, dur = c.t1 - c.t0;
+    const on = t >= c.t0 - 0.01 && t < c.t1 + PUSH;
+    c.el.style.display = on ? "" : "none";
+    if (!on) return;
+    const last = k === CH.length - 1;
+    const xp = last ? 0 : clamp((t - (c.t1 - PUSH)) / (2 * PUSH));
+    const fade = last ? eIn3((t - (c.t1 - 0.3)) / 0.3) : eIn3(xp);
+    c.el.style.opacity = 1 - fade;
+    c.el.style.transform = `translateX(${-eIn3(xp) * 700}px) scale(${1 - (last ? 0.05 * fade : 0)})`;
+    c.el.style.filter = xp > 0 ? `blur(${(14 * xp).toFixed(1)}px)` : "none";
+
+    // big outline number: slides in, then drifts
+    const nk = eOutExpo(lt / 0.7);
+    c.num.style.opacity = 0.85 * nk;
+    c.num.style.transform = `translateX(${90 * (1 - nk) - 50 * (lt / dur)}px)`;
+
+    // title letters
+    const n = c.chars.length;
+    c.chars.forEach((ch, j) => {
+      let d = lt - 0.05 - j * 0.035;
+      if (c.fx === "knead") {
+        d = lt - 0.04 - j * 0.06;
+        const y = spring(d, 15, 6);
+        ch.style.opacity = clamp(d / 0.06);
+        ch.style.transformOrigin = "50% 100%";
+        ch.style.transform = `scale(${(1 + (1 - y) * 0.55).toFixed(3)}, ${Math.max(0.05, y).toFixed(3)})`;
+        return;
+      }
+      if (c.fx === "shelf") {
+        const y = spring(lt - 0.05 - j * 0.02, 16, 7);
+        ch.style.opacity = clamp((lt - 0.05) / 0.06);
+        ch.style.transform = `translateY(${(-150 * (1 - y)).toFixed(1)}px)`;
+        return;
+      }
+      const kk = eOutExpo(d / 0.5);
+      ch.style.transform = `translateY(${(1 - kk) * 115}%)`;
+    });
+    if (c.fx === "divide") c.titleEl.style.letterSpacing = (24 * eInOut3((lt - 0.55) / 0.5)) + "px";
+    if (c.fx === "rise") c.titleEl.style.transform = `scale(${0.9 + 0.17 * eInOutSine(lt / dur)})`;
+    if (c.fx === "heat") {
+      const g = 0.35 + 0.3 * Math.pow(Math.max(0, Math.cos(Math.PI * ((t - 20) % 1))), 6);
+      c.titleEl.style.textShadow = `0 2px 3px rgba(0,0,0,.6), 0 0 34px rgba(255,140,50,${g.toFixed(2)}), 0 0 80px rgba(255,120,40,${(g * .6).toFixed(2)}), 0 10px 40px rgba(0,0,0,.45)`;
+    }
+    if (c.strands) c.strands.forEach((p, j) => p.setAttribute("stroke-dashoffset", 1 - eInOut3((lt - 0.3 - j * 0.12) / 0.9)));
+    if (c.boxPath) c.boxPath.setAttribute("stroke-dashoffset", 1 - eInOut3((lt - 0.35) / 0.7));
+    if (c.shelf) {
+      const sk = eOutExpo((lt - 0.02) / 0.45);
+      const W = c.shelfW;
+      c.shelf.setAttribute("x", (W / 2) * (1 - sk)); c.shelf.setAttribute("width", W * sk);
+      c.shelfShadow.setAttribute("opacity", sk);
+    }
+    c.words.forEach((w, j) => {
+      const d = t - c.subAt - j * 0.14;
+      const kk = eOutExpo(d / 0.45);
+      w.style.opacity = clamp(d / 0.12);
+      w.style.transform = `translateY(${(1 - kk) * 40}px)`;
+      w.style.filter = `blur(${(8 * (1 - kk)).toFixed(1)}px)`;
+    });
+  });
+
+  // --- sesame ---
+  const seedsOn = t > 15.0 && t < 18.2;
+  $("#seeds").style.display = seedsOn ? "" : "none";
+  if (seedsOn) seeds.forEach(s => {
+    const d = t - s.t0;
+    if (d < 0) { s.el.style.opacity = 0; return; }
+    const sc = 0.7 + s.z * 1.6;
+    const y = s.y0 + s.v * d + 900 * d * d;
+    const x = s.x + Math.sin(s.sway + d * 3) * 30;
+    s.el.style.opacity = Math.min(1, d / 0.1) * (1 - eIn3((t - 17.6) / 0.5));
+    s.el.style.transform = `translate(${x}px, ${y}px) rotate(${s.rot + s.vr * d}deg) scale(${sc})`;
+    s.el.style.filter = s.z > 0.75 ? `blur(${((s.z - 0.75) * 14).toFixed(1)}px)` : "none";
+  });
+
+  // --- end card ---
+  const E = 36.0;
+  $("#endshade").style.opacity = eOut3((t - E) / 0.5);
+  const endOn = t >= E;
+  $("#end").style.display = endOn ? "" : "none";
+  if (endOn) {
+    const wk = eOutExpo((t - (E + 0.15)) / 0.8);
+    const wheat = $("#logo .wheat");
+    wheat.style.clipPath = `inset(${(1 - wk) * 100}% 0 0 0)`;
+    wheat.style.transform = `translateY(${(1 - wk) * 40}px)`;
+    const ok = eOutExpo((t - (E + 0.5)) / 0.6);
+    const word = $("#logo .word");
+    word.style.clipPath = `inset(0 0 0 ${(1 - ok) * 100}%)`;
+    word.style.transform = `scale(${1.08 - 0.08 * ok})`;
+    const sk = eOut3((t - (E + 0.95)) / 0.4);
+    $("#logo .sub").style.opacity = sk;
+    $("#logo .sub").style.transform = `translateY(${(1 - sk) * 14}px)`;
+    const gk = clamp((t - (E + 1.1)) / 0.65);
+    $("#glint i").style.left = `${-50 + 160 * eInOut3(gk)}%`;
+    $("#glint").style.opacity = gk > 0 && gk < 1 ? 1 : 0;
+    $("#logo").style.transform = `scale(${1 + 0.03 * eInOutSine((t - E) / 8)})`;
+
+    endH.forEach((h, k) => {
+      h.chars.forEach((ch, j) => {
+        const d = t - (E + 1.3 + k * 0.25) - j * 0.03;
+        ch.style.transform = `translateY(${(1 - eOutExpo(d / 0.5)) * 115}%)`;
+      });
+    });
+    const wkk = eOutExpo((t - (E + 2.0)) / 0.5);
+    $("#end .where").style.opacity = wkk;
+    $("#end .where").style.transform = `translateY(${(1 - wkk) * 24}px)`;
+    pills.forEach((p, k) => {
+      const d = t - (E + 2.5 + k * 0.5);
+      const y = spring(d, 18, 8);
+      p.style.opacity = clamp(d / 0.05);
+      p.style.transform = `scale(${(0.4 + 0.6 * y).toFixed(3)})`;
+    });
+  }
+};
+
+window.READY = (async () => {
+  await document.fonts.ready;
+  await Promise.all($$("img").filter(i => i.getAttribute("src")).map(i => i.decode().catch(() => {})));
+  buildOrnaments();
+  await window.seek(0);
+  return true;
+})();
+</script>
+</body>
+</html>
