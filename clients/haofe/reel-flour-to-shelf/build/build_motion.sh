@@ -1,20 +1,18 @@
 #!/usr/bin/env bash
-# Rebuild the motion-design cut of the HaOfe reel (44 s).
+# Rebuild the motion-design cut of the HaOfe reel (42 s, Fredoka type, no voiceover).
 # Needs: ffmpeg, python3, node + playwright. Run build.sh first for the footage
 # download (RAW) and the bakery ambience (out/ambient.wav).
-# Usage: build/build_motion.sh WORK_DIR [VOICEOVER.wav]
+# Usage: build/build_motion.sh WORK_DIR
 set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
 WORK="${1:?work dir}"
-VO="${2:-}"
 RAW="$WORK/raw"; AUD="$WORK/audio"; SFX="$WORK/sfx"; M="$WORK/motion"
 DEST="$(dirname "$HERE")"
 mkdir -p "$AUD" "$SFX" "$M"
 
-# 1. compositor page + assets, then source frames and the shot timeline
+# 1. compositor page, fonts and assets, then source frames and the shot timeline
 cp -r "$HERE/motion/." "$M/"
-cp "$HERE/overlay/"*.woff2 "$HERE/overlay/local.css" "$M/"
 cp "$RAW/IMG_0448.jpg" "$M/assets/photo.jpg"
 python3 -I "$HERE/motion_prep.py" "$RAW" "$M"
 
@@ -26,12 +24,11 @@ done
 
 # 3. picture: every frame built in the browser, piped to ffmpeg
 export NODE_PATH="$(npm root -g)"
-node "$HERE/motion_render.js" "$M" "$WORK/motion_silent.mp4" 44.0
+node "$HERE/motion_render.js" "$M" "$WORK/motion_silent.mp4" 42.0
 
 # 4. sound
-VOARG=(); [ -n "$VO" ] && VOARG=(--vo "$VO")
-python3 -I "$HERE/motion_mix.py" "$AUD/funkee_monkeee.mp3" "$WORK/out/ambient.wav" "$SFX" "$AUD/mix_motion.wav" "${VOARG[@]}"
-python3 -I "$HERE/motion_mix.py" "$AUD/funkee_monkeee.mp3" "$WORK/out/ambient.wav" "$SFX" "$AUD/mix_motion_nomusic.wav" --no-music "${VOARG[@]}"
+python3 -I "$HERE/motion_mix.py" "$AUD/funkee_monkeee.mp3" "$WORK/out/ambient.wav" "$SFX" "$AUD/mix_motion.wav"
+python3 -I "$HERE/motion_mix.py" "$AUD/funkee_monkeee.mp3" "$WORK/out/ambient.wav" "$SFX" "$AUD/mix_motion_nomusic.wav" --no-music
 
 # 5. final encodes
 for v in main nomusic; do
@@ -39,5 +36,5 @@ for v in main nomusic; do
   [ "$v" = nomusic ] && a="$AUD/mix_motion_nomusic.wav" && name=haofe-reel-motion-no-music.mp4
   ffmpeg -v error -y -i "$WORK/motion_silent.mp4" -i "$a" -map 0:v -map 1:a \
     -c:v libx264 -preset slow -crf 20 -profile:v high -level 4.1 -pix_fmt yuv420p -r 30 -g 60 \
-    -c:a aac -b:a 192k -ar 48000 -movflags +faststart -t 44.0 "$DEST/$name"
+    -c:a aac -b:a 192k -ar 48000 -movflags +faststart -t 42.0 "$DEST/$name"
 done

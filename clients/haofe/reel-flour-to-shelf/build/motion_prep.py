@@ -3,7 +3,7 @@
 The browser compositor (motion/index.html) builds every output frame from
 these JPEGs, so speed ramps, reverse, holds and camera moves all happen there.
 The music runs at 120 BPM with the drop at 4.0 s; shot starts match the
-earlier cut so the voiceover script still lines up. The end card is 8 s.
+earlier cut. The end card is 6 s.
 
 Usage: python3 -I motion_prep.py RAW_DIR MOTION_DIR
 """
@@ -61,7 +61,7 @@ SHOTS = [
     dict(name="shelf", t0=33.0, t1=34.5, src="shelf", speed=[[0, 1.25]], kb=[1.0, 1.06, 0, 0, 0, 0], cut="push"),
     dict(name="store", t0=34.5, t1=36.0, src="store", speed=[[0, 1.25]], kb=[1.0, 1.04, 0, 0, 0, 0], cut="punch"),
     # carries on from the store shot (offset 1.875 s) and holds its last frame under the end card
-    dict(name="end", t0=36.0, t1=44.0, src="store", offset=1.875, speed=[[0, 1.25]], kb=[1.04, 1.1, 0, 0, 0, 0], cut="hard"),
+    dict(name="end", t0=36.0, t1=42.0, src="store", offset=1.875, speed=[[0, 1.25]], kb=[1.04, 1.1, 0, 0, 0, 0], cut="hard"),
 ]
 
 CHAPTERS = [
@@ -87,7 +87,7 @@ def main():
                             "-q:v", "2", "-start_number", "0", out / "%04d.jpg"], check=True)
         counts[key] = len(list(out.glob("*.jpg")))
         print(key, counts[key], flush=True)
-    timeline = dict(fps=FPS, duration=44.0, drop=4.0, endAt=36.0,
+    timeline = dict(fps=FPS, duration=42.0, drop=4.0, endAt=36.0,
                     sources=counts, shots=SHOTS, chapters=CHAPTERS)
     (MOTION / "timeline.js").write_text(
         "window.TIMELINE = " + json.dumps(timeline, ensure_ascii=False, indent=1) + ";\n",

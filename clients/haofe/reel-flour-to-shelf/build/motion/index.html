@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
-<link rel="stylesheet" href="local.css">
+<link rel="stylesheet" href="fredoka.css">
 <style>
   :root {
     --brown: #34221b;
@@ -11,7 +11,7 @@
     --cream: #fff6ea;
   }
   html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--deep); }
-  body { font-family: "Heebo", sans-serif; color: var(--cream); }
+  body { font-family: "Fredoka", sans-serif; color: var(--cream); }
   #stage { position: absolute; inset: 0; overflow: hidden; background: var(--deep); }
   .fill { position: absolute; inset: 0; }
   #cam { transform-origin: 50% 46%; }
@@ -31,7 +31,7 @@
   /* hook */
   #hook { text-align: center; }
   #hook .line { position: absolute; left: 0; right: 0; display: flex; justify-content: center; gap: 34px;
-                font-family: "Suez One", serif; line-height: 1.1; white-space: nowrap; }
+                font-family: "Fredoka", sans-serif; font-weight: 700; line-height: 1.1; white-space: nowrap; }
   #hook .l1 { top: 410px; font-size: 136px; }
   #hook .l2 { top: 565px; font-size: 156px; }
   #hook .w { display: inline-block; position: relative; transform-origin: 50% 60%; }
@@ -48,9 +48,9 @@
 
   /* chapters */
   .chap { position: absolute; left: 0; right: 0; top: 0; height: 900px; text-align: center; }
-  .chap .num { position: absolute; left: 0; right: 0; top: 250px; font-weight: 800; font-size: 380px; line-height: 1;
+  .chap .num { position: absolute; left: 0; right: 0; top: 250px; font-weight: 700; font-size: 380px; line-height: 1;
                direction: ltr; color: transparent; -webkit-text-stroke: 3px rgba(196,154,102,.95); letter-spacing: -8px; }
-  .chap .title { position: absolute; left: 0; right: 0; top: 400px; font-family: "Suez One", serif; font-size: 150px;
+  .chap .title { position: absolute; left: 0; right: 0; top: 400px; font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 150px;
                  line-height: 1.3; white-space: nowrap; }
   .chap .title .mask { display: inline-block; overflow: hidden; padding: 0 16px 14px; vertical-align: top; }
   .chap .title .ch { display: inline-block; white-space: pre; will-change: transform; }
@@ -74,16 +74,16 @@
            mask-image: url(assets/logo_full.png); mask-size: 100% 100%; overflow: hidden; }
   #glint i { position: absolute; top: -20%; bottom: -20%; width: 45%;
              background: linear-gradient(105deg, rgba(255,255,255,0) 0%, rgba(255,248,230,.95) 50%, rgba(255,255,255,0) 100%); }
-  #end .h { position: absolute; left: 0; right: 0; font-family: "Suez One", serif; font-size: 96px; line-height: 1.3; white-space: nowrap; }
+  #end .h { position: absolute; left: 0; right: 0; font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 96px; line-height: 1.3; white-space: nowrap; }
   #end .h .mask { display: inline-block; overflow: hidden; padding: 0 12px 10px; }
   #end .h .ch { display: inline-block; white-space: pre; }
   #end .h1 { top: 915px; }
   #end .h2 { top: 1030px; }
   #end .where { position: absolute; top: 1172px; left: 0; right: 0; font-weight: 700; font-size: 46px; color: var(--gold); }
   #end .chains { position: absolute; top: 1262px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 16px; }
-  #end .chain { font-weight: 800; font-size: 40px; line-height: 1; white-space: nowrap; padding: 15px 28px; border-radius: 999px;
+  #end .chain { font-weight: 700; font-size: 40px; line-height: 1; white-space: nowrap; padding: 15px 28px; border-radius: 999px;
                 background: var(--cream); color: var(--brown); box-shadow: 0 8px 24px rgba(0,0,0,.35); }
-  #end .more { font-weight: 800; font-size: 42px; white-space: nowrap; }
+  #end .more { font-weight: 700; font-size: 42px; white-space: nowrap; }
   #flash { background: #fff; opacity: 0; }
 </style>
 </head>
@@ -489,7 +489,7 @@ window.seek = async function (t) {
     const gk = clamp((t - (E + 1.1)) / 0.65);
     $("#glint i").style.left = `${-50 + 160 * eInOut3(gk)}%`;
     $("#glint").style.opacity = gk > 0 && gk < 1 ? 1 : 0;
-    $("#logo").style.transform = `scale(${1 + 0.03 * eInOutSine((t - E) / 8)})`;
+    $("#logo").style.transform = `scale(${1 + 0.03 * eInOutSine((t - E) / 6)})`;
 
     endH.forEach((h, k) => {
       h.chars.forEach((ch, j) => {

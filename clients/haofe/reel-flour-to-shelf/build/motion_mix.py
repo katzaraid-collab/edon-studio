@@ -14,7 +14,7 @@ music, ambient, sfx_dir, out = args[:4]
 no_music = "--no-music" in args
 vo = args[args.index("--vo") + 1] if "--vo" in args else None
 SFX = Path(sfx_dir)
-DUR = 44.0
+DUR = 42.0
 MUSIC_START = 4.505   # the track's drop (8.505 s) lands on the 4.0 s cut
 
 # (file, event time, peak offset inside the file, volume, trim [start, end] or None)
