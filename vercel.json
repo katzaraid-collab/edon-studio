@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/contact.js": {
+      "maxDuration": 10
+    }
+  },
   "redirects": [
     {
       "source": "/day",

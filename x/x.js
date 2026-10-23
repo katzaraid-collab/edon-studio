@@ -150,6 +150,11 @@ function startHero() {
   });
   safe(() => setTimeout(() => $$('.hero [data-count]').forEach(countUp), 500));
 }
+// tabbing into the hero before it has played: start it, and show the focused item at once
+safe(() => document.addEventListener('focusin', e => {
+  const h = e.target.closest && e.target.closest('.hero [data-h]'); if (!h || !GS || RM) return;
+  startHero(); gsap.killTweensOf(h); gsap.set(h, { opacity: 1, y: 0 });
+}));
 safe(() => {
   if (!ST || RM) return;
   const inner = document.querySelector('.screen1 .inner'); if (!inner) return;
@@ -211,10 +216,17 @@ safe(() => {
   const xs = $$('[data-x]');
   if (!RM && GS) {
     const io = new IntersectionObserver(es => {
-      const els = es.filter(e => e.isIntersecting).map(e => { io.unobserve(e.target); return e.target; });
+      const els = es.filter(e => e.isIntersecting && !e.target.dataset.xin).map(e => { io.unobserve(e.target); e.target.dataset.xin = '1'; return e.target; });
       if (els.length) gsap.fromTo(els, { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: .7, ease: 'power4.out', stagger: .07, overwrite: true });
     }, { rootMargin: '0px 0px -6% 0px', threshold: .04 });
     xs.forEach(el => io.observe(el));
+    // keyboard focus never lands on something still faded out: its blocks show at once
+    document.addEventListener('focusin', e => {
+      for (let el = e.target.closest && e.target.closest('[data-x]'); el; el = el.parentElement && el.parentElement.closest('[data-x]')) {
+        if (el.dataset.xin) continue;
+        io.unobserve(el); el.dataset.xin = '1'; gsap.killTweensOf(el); gsap.set(el, { opacity: 1, y: 0 });
+      }
+    });
   } else xs.forEach(el => { el.style.opacity = 1; });
   const rio = new IntersectionObserver(es => es.forEach(e => {
     if (!e.isIntersecting) return;
