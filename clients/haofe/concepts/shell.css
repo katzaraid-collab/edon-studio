@@ -1,5 +1,26 @@
 /* האופה · מצגת כיווני עיצוב — מעטפת משותפת (סטודיו EDON)
-   Layout: עמוד מסמך צר לטקסט, במה רחבה למסגרות התצוגה. */
+   Shared styles for the presentation pages (index.html, a.html, b.html, c.html).
+   Layout: a narrow document column for text, a wide stage for the device frames.
+   The prototypes inside the frames have their own styles; only the temporary
+   photo placeholders (.ph*) and the .tbd marker at the bottom are shared with them.
+
+   Sections:
+     1. Tokens (light, then dark)
+     2. Base elements
+     3. Layout helpers
+     4. Top bar
+     5. Direction header
+     6. Stage: frames and their controls
+     7. Full-screen overlay (built by shell.js)
+     8. Specs: swatches, type cards, tables
+     9. Pager and notes
+    10. Temporary photo placeholders (used inside all prototypes)
+    11. Reduced motion */
+
+
+/* ===== 1. Tokens =====
+   Dark mode follows the system unless the page sets data-theme="light"; data-theme="dark"
+   forces it. The two dark blocks hold the same values — keep them in sync. */
 :root {
   --bg: #F5F5F2;
   --surface: #FFFFFF;
@@ -28,10 +49,14 @@
   color-scheme: dark;
 }
 
+
+/* ===== 2. Base elements ===== */
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 body {
-  margin: 0; background: var(--bg); color: var(--ink);
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
   font: 400 16px/1.65 var(--font);
   -webkit-font-smoothing: antialiased;
 }
@@ -40,28 +65,51 @@ a:hover { text-decoration-thickness: 2px; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
 p { margin: 0; }
-.skip { position: absolute; inset-inline-start: 16px; top: -60px; background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 6px; z-index: 50; }
+
+/* skip link: hidden above the page until it receives keyboard focus */
+.skip {
+  position: absolute; inset-inline-start: 16px; top: -60px; z-index: 50;
+  background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 6px;
+}
 .skip:focus { top: 12px; }
 
+
+/* ===== 3. Layout helpers ===== */
 .wrap {
-  max-width: 1360px; margin: 0 auto;
+  max-width: 1360px;
+  margin: 0 auto;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 .prose { max-width: 70ch; }
 
-/* top bar */
-.topbar { border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; }
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 21; background: var(--surface); }
+
+/* ===== 4. Top bar ===== */
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  border-bottom: 1px solid var(--line); background: var(--surface);
+}
+/* fills the notch / status-bar area above the sticky bar on phones */
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; z-index: 21;
+  height: env(safe-area-inset-top, 0px); background: var(--surface);
+}
 .topbar .wrap { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding-block: 10px; }
 .topbar .crumb { font-weight: 700; text-decoration: none; color: var(--ink); }
 .topbar nav { display: flex; gap: 6px; flex-wrap: wrap; margin-inline-start: auto; }
-.topbar nav a { text-decoration: none; color: var(--ink); padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); font-size: 14px; min-height: 40px; display: inline-flex; align-items: center; }
+.topbar nav a {
+  display: inline-flex; align-items: center; min-height: 40px; padding: 8px 12px;
+  border: 1px solid var(--line); border-radius: 999px;
+  color: var(--ink); font-size: 14px; text-decoration: none;
+}
 .topbar nav a[aria-current="page"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
-/* direction header */
+
+/* ===== 5. Direction header ===== */
 .dhead { padding-block: 40px 28px; display: grid; gap: 28px; grid-template-columns: minmax(0, 1fr); }
-@media (min-width: 980px) { .dhead { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; } }
+@media (min-width: 980px) {
+  .dhead { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; }
+}
 .eyebrow { font-size: 13px; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
 .dhead h1 { font-size: clamp(30px, 4.4vw, 52px); font-weight: 800; margin-block: 6px 14px; }
 .dhead .lead { font-size: 19px; color: var(--ink); max-width: 60ch; }
@@ -70,7 +118,10 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .facts ul { margin: 0; padding-inline-start: 18px; display: grid; gap: 6px; font-size: 15px; color: var(--muted); }
 .facts li strong { color: var(--ink); }
 
-/* stage */
+
+/* ===== 6. Stage: frames and their controls =====
+   Each .frame holds a .frame-bar (controls) and a .frame-box. shell.js sizes the
+   .frame-box and scales the .vp (the prototype's scrolling viewport) inside it. */
 .stage { display: grid; gap: 28px; padding-block: 8px 40px; }
 .phones { display: grid; gap: 28px; grid-template-columns: minmax(0, 1fr); align-items: start; }
 @media (min-width: 760px) { .phones { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -78,38 +129,69 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .frame { margin: 0; display: grid; gap: 10px; min-width: 0; }
 .frame-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 14px; }
 .frame-bar .label { font-weight: 700; margin-inline-end: auto; }
+
+/* light/dark segmented control (radio buttons styled as pills) */
 .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: var(--surface); }
 .seg input { position: absolute; opacity: 0; pointer-events: none; }
 .seg label { padding: 6px 14px; border-radius: 999px; cursor: pointer; min-height: 34px; display: inline-flex; align-items: center; }
 .seg input:checked + label { background: var(--ink); color: var(--bg); }
 .seg input:focus-visible + label { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* checkboxes and buttons */
 .chk { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; min-height: 40px; }
 .chk input { width: 18px; height: 18px; accent-color: var(--accent); }
-.btn { font: inherit; font-size: 14px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 8px 14px; min-height: 40px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 8px 14px;
+  font: inherit; font-size: 14px; font-weight: 600;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--surface); color: var(--ink); cursor: pointer;
+}
 .btn:hover { border-color: var(--ink); }
 .btn--solid { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
-.frame-box { position: relative; overflow: hidden; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); box-shadow: 0 1px 0 rgba(0,0,0,.03), 0 18px 40px -24px rgba(0,0,0,.35); max-width: 100%; }
-.frame--phone .frame-box { border-radius: 44px; border: 10px solid #111; box-shadow: 0 0 0 1px var(--line), 0 24px 50px -28px rgba(0,0,0,.5); margin-inline: auto; }
-.vp { position: absolute; top: 0; right: 0; overflow-y: auto; overflow-x: hidden; transform-origin: top right; scrollbar-width: thin; overscroll-behavior: contain; }
+/* the device frames */
+.frame-box {
+  position: relative; overflow: hidden; max-width: 100%;
+  border-radius: 14px; border: 1px solid var(--line); background: var(--surface);
+  box-shadow: 0 1px 0 rgba(0,0,0,.03), 0 18px 40px -24px rgba(0,0,0,.35);
+}
+.frame--phone .frame-box {
+  border-radius: 44px; border: 10px solid #111; margin-inline: auto;
+  box-shadow: 0 0 0 1px var(--line), 0 24px 50px -28px rgba(0,0,0,.5);
+}
+.vp {
+  position: absolute; top: 0; right: 0; transform-origin: top right;
+  overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; scrollbar-width: thin;
+}
 .vp:focus-visible { outline-offset: -4px; }
 .frame figcaption { font-size: 13px; color: var(--muted); }
 
+/* "how to use the demo" box next to the phones */
 .howto { padding: 18px 20px; border: 1px dashed var(--line); border-radius: 12px; display: grid; gap: 10px; font-size: 15px; align-self: start; }
 .howto h2 { font-size: 16px; }
 .howto ul { margin: 0; padding-inline-start: 18px; display: grid; gap: 6px; }
 
-/* full screen */
+
+/* ===== 7. Full-screen overlay (built by shell.js) ===== */
 .fs { position: fixed; inset: 0; z-index: 100; background: var(--bg); display: grid; grid-template-rows: auto minmax(0, 1fr); }
-.fs-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding-block: calc(8px + env(safe-area-inset-top, 0px)) 8px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); border-bottom: 1px solid var(--line); background: var(--surface); font-size: 14px; }
+.fs-bar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding-block: calc(8px + env(safe-area-inset-top, 0px)) 8px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  border-bottom: 1px solid var(--line); background: var(--surface); font-size: 14px;
+}
 .fs-bar strong { margin-inline-end: auto; }
 .fs .vp { position: relative; width: 100%; height: 100%; transform: none; }
 
-/* specs */
+
+/* ===== 8. Specs: swatches, type cards, tables ===== */
 .specs { display: grid; gap: 40px; padding-block: 24px 64px; }
 .specs section { display: grid; gap: 16px; }
 .specs h2 { font-size: 24px; font-weight: 800; }
 .specs h3 { font-size: 16px; font-weight: 700; }
+
+/* colour swatches */
 .swatches { display: grid; gap: 22px; grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 900px) { .swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .swset { display: grid; gap: 10px; }
@@ -119,28 +201,38 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .sw div { padding: 8px 10px; display: grid; gap: 2px; }
 .sw b { font-weight: 700; }
 .sw code { font: 12px/1.4 var(--mono); color: var(--muted); direction: ltr; text-align: right; }
+
+/* type cards */
 .type-card { border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: grid; gap: 10px; background: var(--surface); min-width: 0; }
 .type-grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 900px) { .type-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .type-card .meta { font-size: 13px; color: var(--muted); }
+
+/* tables (scroll sideways inside .tbl-wrap on narrow screens) */
 .tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
 table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 760px; }
 th, td { text-align: start; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { font-weight: 700; background: color-mix(in srgb, var(--ink) 4%, var(--surface)); white-space: nowrap; }
 tr:last-child td { border-bottom: 0; }
 td code, .mono { font: 12.5px/1.5 var(--mono); direction: ltr; unicode-bidi: isolate; }
+
+
+/* ===== 9. Pager and notes ===== */
 .pager { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: 24px 56px; border-top: 1px solid var(--line); }
 .pager a { font-weight: 700; text-decoration: none; padding: 10px 0; }
 .note { font-size: 14px; color: var(--muted); }
 
-/* ===== shared: temporary photo slots (used inside all prototypes) =====
-   Abstract colour studies sampled from the business's own posts; each one is
-   labelled as temporary and names the real shot that should replace it. */
+
+/* ===== 10. Temporary photo placeholders (used inside all prototypes) =====
+   Abstract colour studies sampled from the business's own posts. Each one is
+   labelled as temporary (.ph-tag) and names the real shot that should replace it
+   (.ph-cap). Delete this section once real photos are in. */
 .ph {
   position: relative; overflow: hidden; isolation: isolate; background-color: #CDB08A;
   display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start;
   padding: 10px; min-height: 120px; max-width: 100%;
 }
+/* film grain over every placeholder */
 .ph::after {
   content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .5; mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.12  0 0 0 0 0.05  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
@@ -150,6 +242,8 @@ td code, .mono { font: 12.5px/1.5 var(--mono); direction: ltr; unicode-bidi: iso
   border: 1px dashed rgba(255, 255, 255, .7); padding: 5px 8px; border-radius: 999px; backdrop-filter: blur(2px);
 }
 .ph-cap { font: 500 12px/1.35 var(--font); color: #fff; background: rgba(20, 14, 10, .62); padding: 5px 8px; border-radius: 6px; max-width: 92%; }
+
+/* one colour study per product */
 .ph--frena {
   background-color: #D7B98F;
   background-image:
@@ -224,7 +318,12 @@ td code, .mono { font: 12.5px/1.5 var(--mono); direction: ltr; unicode-bidi: iso
     repeating-linear-gradient(90deg, transparent 0 38px, rgba(120, 90, 60, .14) 38px 40px),
     linear-gradient(180deg, #5D3B23 0 24%, #EDE5D8 24% 64%, transparent 64%);
 }
-.ph--shop::before { content: ""; position: absolute; inset: 64% 0 0; z-index: -2; background: repeating-conic-gradient(#A8552E 0 25%, #EAE1D2 0 50%) 0 0 / 40px 40px; transform: perspective(300px) rotateX(38deg); transform-origin: top; }
+/* the shop's checkered floor, tilted back in perspective */
+.ph--shop::before {
+  content: ""; position: absolute; inset: 64% 0 0; z-index: -2;
+  background: repeating-conic-gradient(#A8552E 0 25%, #EAE1D2 0 50%) 0 0 / 40px 40px;
+  transform: perspective(300px) rotateX(38deg); transform-origin: top;
+}
 .ph--rack {
   background-color: #8E959A;
   background-image:
@@ -237,10 +336,18 @@ td code, .mono { font: 12.5px/1.5 var(--mono); direction: ltr; unicode-bidi: iso
   background-color: #2A211B;
   background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,.18) 0 9%, transparent 9.5%), linear-gradient(160deg, #5B3D2A, #1E1612);
 }
+
+/* .tbd marks a detail still waiting for the owner's confirmation ("לאישור"), dashed underline */
 .tbd {
   border-bottom: 2px dashed currentColor; padding-inline: 2px;
   background: color-mix(in srgb, currentColor 9%, transparent); border-radius: 3px 3px 0 0;
 }
+
+
+/* ===== 11. Reduced motion =====
+   Safety net: no page sets CSS smooth scrolling today, but if one ever does, people who
+   ask their system for less motion still get instant jumps. (In-prototype jumps are
+   handled in shell.js, which also honours the page's own reduced-motion checkbox.) */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; }
 }

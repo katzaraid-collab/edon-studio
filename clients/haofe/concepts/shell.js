@@ -1,199 +1,461 @@
-/* האופה · מצגת כיווני עיצוב — מנגנון המסגרות המשותף.
-   Each direction page holds <template id="proto"> and defines window.PROTO.init(root, ctx).
-   The shell clones the prototype into every [data-frame], scales it, and wires the controls. */
+/* האופה · מצגת כיווני עיצוב — the shared presentation shell (EDON studio).
+ *
+ * WHAT THIS FILE DOES
+ *   Every direction page (a.html, b.html, c.html) holds one <template id="proto">.
+ *   This file copies ("mounts") that template into:
+ *     - every <figure data-frame> on the page (desktop 1280px, two phones 390px),
+ *       scaled down with a CSS transform so it fits the column, and
+ *     - a full-screen overlay opened by the [data-full] button.
+ *   It also wires the frame controls: the light/dark radios, the reduced-motion
+ *   checkbox (#rm), the replay button [data-replay] and the overlay's close button.
+ *
+ * CONTRACT WITH THE DIRECTION PAGES
+ *   1. The direction's own behaviour:
+ *        window.PROTO = { init: function (root, ctx) { ...; return cleanup; } };
+ *   2. Optional extra modules (motion etc.), started in the order they were pushed:
+ *        (window.ProtoModules = window.ProtoModules || []).push({
+ *          name: 'b-hero', init: function (root, ctx) { ...; return cleanup; } });
+ *   3. ctx = { scroller, reduced, frame }
+ *        scroller  the scrolling .vp element that holds this mount
+ *        reduced   true when motion should be reduced (system setting or #rm checkbox)
+ *        frame     'desktop' | 'phone' | 'full'
+ *   4. Returning a cleanup function is optional. The shell calls it before the mount
+ *      is thrown away: replay, reduced-motion toggle, or the overlay closing.
+ *   5. If a module throws, the error is logged with console.warn and the page carries on.
+ *
+ * LIFECYCLE OF ONE MOUNT (see build())
+ *   run the old mount's cleanups → clone the template → classes, ids, mode
+ *   → shell helpers (theme button, menu, anchors) → PROTO.init → each module → reveal
+ *
+ * RULES FOR PROTOTYPE CODE (the same template is mounted up to four times at once)
+ *   - no position:fixed and no window scrolling: use sticky/absolute inside the root
+ *   - listen to scroll on ctx.scroller, and use it as the IntersectionObserver root
+ *   - no document-level ids: write data-id / data-for / data-controls / ... (see Shell.ids)
+ *   - the root has class "anim" when motion is allowed and "rm" when it is reduced,
+ *     and data-mode="light" | "dark"
+ */
 (function () {
   'use strict';
-  var sysReduced = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
-  var forceReduced = false;
-  var seq = 0;
+
+  /* ===== State ===== */
+
+  var systemReduced = window.matchMedia
+    ? window.matchMedia('(prefers-reduced-motion: reduce)')
+    : { matches: false };
+  var forcedReduced = false; // set by the "הדמיית הפחתת תנועה" checkbox (#rm)
+  var idCounter = 0;         // makes every mount's id prefix unique
+  var frames = [];           // one entry per <figure data-frame> on the page
+
+  /* Shell.ids turns each template attribute (left) into the real attribute (right). */
+  var ID_ATTRIBUTES = [
+    ['data-id', 'id'],
+    ['data-for', 'for'],
+    ['data-controls', 'aria-controls'],
+    ['data-labelledby', 'aria-labelledby'],
+    ['data-describedby', 'aria-describedby']
+  ];
+
+  /* Anchor jumps stop this far above their section so the sticky header does not cover it. */
+  var JUMP_OFFSET = 64;
+
+  /* ===== Small helpers ===== */
+
+  function noop() {}
+
+  /* addEventListener that returns a function which removes the same listener again. */
+  function listen(el, type, handler) {
+    el.addEventListener(type, handler);
+    return function () { el.removeEventListener(type, handler); };
+  }
+
+  /* Calls every cleanup, newest first. One failing cleanup does not stop the others. */
+  function runCleanups(cleanups) {
+    for (var i = cleanups.length - 1; i >= 0; i--) {
+      try {
+        cleanups[i]();
+      } catch (err) {
+        console.warn('[shell] a cleanup function failed:', err);
+      }
+    }
+  }
+
+  /* Wraps a list of cleanups into a single cleanup function. */
+  function combine(cleanups) {
+    return function () { runCleanups(cleanups); };
+  }
+
+  /* Scrolls a (possibly CSS-scaled) viewport so that `target` sits just under its header. */
+  function scrollViewportTo(scroller, target) {
+    var box = scroller.getBoundingClientRect();
+    // getBoundingClientRect() measures scaled screen pixels; dividing by the
+    // frame's scale converts the distance back to the prototype's own pixels.
+    var scale = box.height / scroller.offsetHeight || 1;
+    var distance = (target.getBoundingClientRect().top - box.top) / scale;
+    scroller.scrollTo({
+      top: scroller.scrollTop + distance - JUMP_OFFSET,
+      behavior: Shell.reduced() ? 'auto' : 'smooth'
+    });
+  }
+
+  /* ===== Public API: window.Shell ===== */
 
   var Shell = {
-    reduced: function () { return forceReduced || sysReduced.matches; },
-
-    /* unique ids inside a clone: data-id / data-for / data-controls / data-labelledby / data-describedby */
-    ids: function (root) {
-      var p = 'p' + (++seq) + '-';
-      root.querySelectorAll('[data-id]').forEach(function (el) { el.id = p + el.getAttribute('data-id'); });
-      root.querySelectorAll('[data-for]').forEach(function (el) { el.setAttribute('for', p + el.getAttribute('data-for')); });
-      root.querySelectorAll('[data-controls]').forEach(function (el) { el.setAttribute('aria-controls', p + el.getAttribute('data-controls')); });
-      root.querySelectorAll('[data-labelledby]').forEach(function (el) { el.setAttribute('aria-labelledby', p + el.getAttribute('data-labelledby')); });
-      root.querySelectorAll('[data-describedby]').forEach(function (el) { el.setAttribute('aria-describedby', p + el.getAttribute('data-describedby')); });
-      return p;
+    /* True when motion should be reduced: the system setting or the #rm checkbox. */
+    reduced: function () {
+      return forcedReduced || systemReduced.matches;
     },
 
+    /* Gives one mount its own ids. Templates write data-id="menu" instead of id="menu";
+       this sets id="p3-menu" (and data-for → for="p3-…", etc.). Returns the prefix. */
+    ids: function (root) {
+      var prefix = 'p' + (++idCounter) + '-';
+      ID_ATTRIBUTES.forEach(function (pair) {
+        var from = pair[0];
+        var to = pair[1];
+        root.querySelectorAll('[' + from + ']').forEach(function (el) {
+          el.setAttribute(to, prefix + el.getAttribute(from));
+        });
+      });
+      return prefix;
+    },
+
+    /* Switches one mount to 'light' or 'dark', updates its theme buttons, and fires a
+       bubbling 'protomode' event so the frame's radios can follow along. */
     setMode: function (root, mode) {
+      var dark = mode === 'dark';
       root.setAttribute('data-mode', mode);
-      root.querySelectorAll('[data-theme-toggle]').forEach(function (b) {
-        var dark = mode === 'dark';
-        b.setAttribute('aria-pressed', dark ? 'true' : 'false');
-        var l = b.querySelector('[data-theme-label]');
-        if (l) l.textContent = dark ? (b.getAttribute('data-label-dark') || 'כהה') : (b.getAttribute('data-label-light') || 'בהיר');
+      root.querySelectorAll('[data-theme-toggle]').forEach(function (button) {
+        button.setAttribute('aria-pressed', dark ? 'true' : 'false');
+        var label = button.querySelector('[data-theme-label]');
+        if (!label) return;
+        label.textContent = dark
+          ? (button.getAttribute('data-label-dark') || 'כהה')
+          : (button.getAttribute('data-label-light') || 'בהיר');
       });
       root.dispatchEvent(new CustomEvent('protomode', { bubbles: true, detail: mode }));
     },
 
+    /* The light/dark button inside the prototype's own header. Returns a cleanup. */
     themeButtons: function (root) {
-      root.querySelectorAll('[data-theme-toggle]').forEach(function (b) {
-        b.addEventListener('click', function () {
-          Shell.setMode(root, root.getAttribute('data-mode') === 'dark' ? 'light' : 'dark');
-        });
+      var cleanups = [];
+      root.querySelectorAll('[data-theme-toggle]').forEach(function (button) {
+        cleanups.push(listen(button, 'click', function () {
+          var next = root.getAttribute('data-mode') === 'dark' ? 'light' : 'dark';
+          Shell.setMode(root, next);
+        }));
       });
+      return combine(cleanups);
     },
 
-    /* scroll reveals: content is visible by default; .anim only adds the entry motion */
+    /* Scroll reveals. Content is visible by default. When motion is allowed (.anim),
+       each [data-rv] gets .rv-in the first time it scrolls into view. Returns a cleanup. */
     reveal: function (root, scroller) {
-      var els = root.querySelectorAll('[data-rv]');
-      if (!root.classList.contains('anim') || !('IntersectionObserver' in window)) {
-        els.forEach(function (el) { el.classList.add('rv-in'); });
-        return;
+      var items = root.querySelectorAll('[data-rv]');
+      var canAnimate = root.classList.contains('anim') && 'IntersectionObserver' in window;
+      if (!canAnimate) {
+        items.forEach(function (el) { el.classList.add('rv-in'); });
+        return noop;
       }
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) { e.target.classList.add('rv-in'); io.unobserve(e.target); }
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('rv-in');
+          observer.unobserve(entry.target); // reveal once, then stop watching it
         });
       }, { root: scroller, rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
-      els.forEach(function (el) { io.observe(el); });
+      items.forEach(function (el) { observer.observe(el); });
+      return function () { observer.disconnect(); };
     },
 
-    /* disclosure menu for the mobile header: Esc closes, focus returns, Tab stays inside */
+    /* Mobile header menu (disclosure pattern). The button toggles the panel; Esc closes it
+       and returns focus to the button; Shift+Tab on the first item goes back to the button;
+       choosing a link closes the panel. Returns a cleanup. */
     menu: function (root) {
-      var btn = root.querySelector('[data-menu-btn]');
+      var button = root.querySelector('[data-menu-btn]');
       var panel = root.querySelector('[data-menu]');
-      if (!btn || !panel) return;
-      function set(open, focusBack) {
-        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (!button || !panel) return noop;
+
+      function isOpen() {
+        return button.getAttribute('aria-expanded') === 'true';
+      }
+
+      function setOpen(open, returnFocus) {
+        button.setAttribute('aria-expanded', open ? 'true' : 'false');
         panel.hidden = !open;
         root.classList.toggle('menu-open', open);
-        if (open) { var f = panel.querySelector('a,button'); if (f) f.focus(); }
-        else if (focusBack) btn.focus();
-      }
-      btn.addEventListener('click', function () { set(btn.getAttribute('aria-expanded') !== 'true', false); });
-      panel.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') { e.preventDefault(); set(false, true); }
-        if (e.key === 'Tab') {
-          var f = panel.querySelectorAll('a,button');
-          if (!f.length) return;
-          if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); btn.focus(); }
+        if (open) {
+          var first = panel.querySelector('a,button');
+          if (first) first.focus();
+        } else if (returnFocus) {
+          button.focus();
         }
+      }
+
+      // preventDefault() on Esc tells the full-screen overlay "already handled, stay open"
+      function onButtonKey(e) {
+        if (e.key === 'Escape' && isOpen()) {
+          e.preventDefault();
+          setOpen(false, true);
+        }
+      }
+
+      function onPanelKey(e) {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          setOpen(false, true);
+        }
+        if (e.key === 'Tab' && e.shiftKey) {
+          var first = panel.querySelector('a,button');
+          if (first && document.activeElement === first) {
+            e.preventDefault();
+            button.focus();
+          }
+        }
+      }
+
+      var cleanups = [
+        listen(button, 'click', function () { setOpen(!isOpen(), false); }),
+        listen(button, 'keydown', onButtonKey),
+        listen(panel, 'keydown', onPanelKey)
+      ];
+      panel.querySelectorAll('a').forEach(function (link) {
+        cleanups.push(listen(link, 'click', function () { setOpen(false, false); }));
       });
-      btn.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') set(false, true);
-      });
-      panel.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { set(false, false); }); });
+      return combine(cleanups);
     },
 
-    /* in-prototype anchor links scroll their own viewport, not the presentation page */
+    /* Links with data-jump="x" scroll their own viewport to [data-section="x"]
+       instead of scrolling the presentation page. Returns a cleanup. */
     anchors: function (root, scroller) {
-      root.querySelectorAll('a[data-jump]').forEach(function (a) {
-        a.addEventListener('click', function (e) {
-          var t = root.querySelector('[data-section="' + a.getAttribute('data-jump') + '"]');
-          if (!t) return;
+      var cleanups = [];
+      root.querySelectorAll('a[data-jump]').forEach(function (link) {
+        cleanups.push(listen(link, 'click', function (e) {
+          var name = link.getAttribute('data-jump');
+          var target = root.querySelector('[data-section="' + name + '"]');
+          if (!target) return;
           e.preventDefault();
-          var top = t.getBoundingClientRect().top - scroller.getBoundingClientRect().top;
-          var scale = scroller.getBoundingClientRect().height / scroller.offsetHeight || 1;
-          scroller.scrollTo({ top: scroller.scrollTop + top / scale - 64, behavior: Shell.reduced() ? 'auto' : 'smooth' });
-          t.setAttribute('tabindex', '-1'); t.focus({ preventScroll: true });
-        });
+          scrollViewportTo(scroller, target);
+          target.setAttribute('tabindex', '-1');
+          target.focus({ preventScroll: true });
+        }));
       });
+      return combine(cleanups);
     }
   };
   window.Shell = Shell;
 
-  function build(vp, mode) {
-    var tpl = document.getElementById('proto');
+  /* ===== Mounting the prototype ===== */
+
+  /* Runs one init function and keeps its cleanup if it returned one. If it throws, the
+     error is logged and the build carries on. PROTO failures are logged as errors
+     (a real bug in the direction); module failures as warnings (per the contract). */
+  function runStep(label, start, cleanups, isCritical) {
+    try {
+      var cleanup = start();
+      if (typeof cleanup === 'function') cleanups.push(cleanup);
+    } catch (err) {
+      if (isCritical) console.error('[shell] ' + label + ' failed:', err);
+      else console.warn('[shell] ' + label + ' failed and was skipped:', err);
+    }
+  }
+
+  /* The registered modules, read fresh on every build. Bad entries are skipped. */
+  function registeredModules() {
+    var list = Array.isArray(window.ProtoModules) ? window.ProtoModules : [];
+    return list.filter(function (mod) {
+      var valid = !!mod && typeof mod.init === 'function';
+      if (!valid) console.warn('[shell] skipped a ProtoModules entry without init():', mod);
+      return valid;
+    });
+  }
+
+  /* Throws away whatever is mounted in `vp`: runs its cleanups, then empties it.
+     The cleanups are stored on the vp itself (vp.protoCleanups) by build(). */
+  function unmount(vp) {
+    runCleanups(vp.protoCleanups || []);
+    vp.protoCleanups = [];
     vp.innerHTML = '';
+  }
+
+  /* Builds (or rebuilds) one mount inside `vp` and returns its .proto root.
+     mode: 'light' | 'dark'.  frame: 'desktop' | 'phone' | 'full'. */
+  function build(vp, mode, frame) {
+    unmount(vp);
     vp.scrollTop = 0;
-    vp.appendChild(tpl.content.cloneNode(true));
+    vp.appendChild(document.getElementById('proto').content.cloneNode(true));
+
     var root = vp.querySelector('.proto');
-    root.classList.toggle('anim', !Shell.reduced());
-    root.classList.toggle('rm', Shell.reduced());
+    var reduced = Shell.reduced();
+    root.classList.toggle('anim', !reduced);
+    root.classList.toggle('rm', reduced);
     Shell.ids(root);
     Shell.setMode(root, mode);
-    Shell.themeButtons(root);
-    Shell.menu(root);
-    Shell.anchors(root, vp);
-    if (window.PROTO && window.PROTO.init) window.PROTO.init(root, { scroller: vp, reduced: Shell.reduced() });
-    Shell.reveal(root, vp);
+
+    var ctx = { scroller: vp, reduced: reduced, frame: frame };
+    var cleanups = [
+      Shell.themeButtons(root),
+      Shell.menu(root),
+      Shell.anchors(root, vp)
+    ];
+    if (window.PROTO && typeof window.PROTO.init === 'function') {
+      runStep('PROTO.init', function () { return window.PROTO.init(root, ctx); }, cleanups, true);
+    }
+    registeredModules().forEach(function (mod) {
+      var label = 'module "' + (mod.name || 'unnamed') + '"';
+      runStep(label, function () { return mod.init(root, ctx); }, cleanups, false);
+    });
+    cleanups.push(Shell.reveal(root, vp));
+
+    vp.protoCleanups = cleanups;
     return root;
   }
 
-  var frames = [];
-  function fit(f) {
-    var w = +f.el.getAttribute('data-w'), h = +f.el.getAttribute('data-h');
-    var cs = getComputedStyle(f.box);
-    var bw = parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
-    var bh = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
-    var avail = f.box.parentElement.clientWidth - bw;
-    var s = Math.min(1, avail / w);
-    f.vp.style.width = w + 'px';
-    f.vp.style.height = h + 'px';
-    f.vp.style.transform = s < 1 ? 'scale(' + s + ')' : 'none';
-    f.box.style.width = Math.floor(w * s + bw) + 'px';
-    f.box.style.height = Math.floor(h * s + bh) + 'px';
-  }
-  function modeOf(f) {
-    var r = f.el.querySelector('input[type=radio]:checked');
-    return r ? r.value : (f.el.getAttribute('data-mode') || 'light');
-  }
-  function rebuildAll() { frames.forEach(function (f) { f.root = build(f.vp, f.root ? f.root.getAttribute('data-mode') : modeOf(f)); }); }
+  /* ===== Frames on the page ===== */
 
-  function openFull(mode) {
-    var opener = document.activeElement;
-    var fs = document.createElement('div');
-    fs.className = 'fs';
-    fs.setAttribute('role', 'dialog');
-    fs.setAttribute('aria-modal', 'true');
-    fs.setAttribute('aria-label', 'אב־טיפוס במסך מלא');
-    fs.innerHTML = '<div class="fs-bar"><strong>מסך מלא · ' + (document.querySelector('h1') ? document.querySelector('h1').textContent : '') +
-      '</strong><button type="button" class="btn btn--solid" data-close>סגירה (Esc)</button></div><div class="vp" tabindex="0" aria-label="תצוגת האתר"></div>';
+  /* Scales a frame's 1280px / 390px viewport down to the column width (never up). */
+  function fitFrame(f) {
+    var width = +f.el.getAttribute('data-w');
+    var height = +f.el.getAttribute('data-h');
+    var style = getComputedStyle(f.box);
+    var borderX = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
+    var borderY = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+    var available = f.box.parentElement.clientWidth - borderX;
+    var scale = Math.min(1, available / width);
+
+    f.vp.style.width = width + 'px';
+    f.vp.style.height = height + 'px';
+    f.vp.style.transform = scale < 1 ? 'scale(' + scale + ')' : 'none';
+    f.box.style.width = Math.floor(width * scale + borderX) + 'px';
+    f.box.style.height = Math.floor(height * scale + borderY) + 'px';
+  }
+
+  /* A frame's current mode: its mounted prototype, else its checked radio,
+     else its data-mode attribute, else light. */
+  function currentMode(f) {
+    if (f.root) return f.root.getAttribute('data-mode');
+    var checked = f.el.querySelector('input[type=radio]:checked');
+    if (checked) return checked.value;
+    return f.el.getAttribute('data-mode') || 'light';
+  }
+
+  /* Replay button and reduced-motion toggle: rebuild every frame in its current mode. */
+  function rebuildAllFrames() {
+    frames.forEach(function (f) {
+      f.root = build(f.vp, currentMode(f), f.kind);
+    });
+  }
+
+  /* Registers one <figure data-frame>, mounts the prototype and connects its radios. */
+  function setupFrame(el) {
+    var f = {
+      el: el,
+      box: el.querySelector('.frame-box'),
+      vp: el.querySelector('.vp'),
+      kind: el.classList.contains('frame--phone') ? 'phone' : 'desktop',
+      root: null
+    };
+    frames.push(f);
+    f.root = build(f.vp, currentMode(f), f.kind);
+    fitFrame(f);
+
+    // radio → prototype
+    el.querySelectorAll('input[type=radio]').forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        if (radio.checked) Shell.setMode(f.root, radio.value);
+      });
+    });
+    // prototype's own theme button → radio
+    el.addEventListener('protomode', function (e) {
+      var radio = el.querySelector('input[type=radio][value="' + e.detail + '"]');
+      if (radio) radio.checked = true;
+    });
+  }
+
+  /* ===== Full-screen overlay ===== */
+
+  var OVERLAY_HTML =
+    '<div class="fs-bar"><strong></strong>' +
+    '<button type="button" class="btn btn--solid" data-close>סגירה (Esc)</button></div>' +
+    '<div class="vp" tabindex="0" aria-label="תצוגת האתר"></div>';
+
+  /* While the overlay is open the page behind it can't be focused or scrolled. */
+  function setPageBehindInert(inert) {
     var main = document.getElementById('main');
-    var top = document.querySelector('.topbar');
-    document.body.appendChild(fs);
-    if (main) main.inert = true;
-    if (top) top.inert = true;
-    document.documentElement.style.overflow = 'hidden';
-    build(fs.querySelector('.vp'), mode);
-    var close = fs.querySelector('[data-close]');
-    function done() {
-      fs.remove();
-      if (main) main.inert = false;
-      if (top) top.inert = false;
-      document.documentElement.style.overflow = '';
+    var topbar = document.querySelector('.topbar');
+    if (main) main.inert = inert;
+    if (topbar) topbar.inert = inert;
+    document.documentElement.style.overflow = inert ? 'hidden' : '';
+  }
+
+  function openFullScreen(mode) {
+    var opener = document.activeElement;
+    var heading = document.querySelector('h1');
+
+    var overlay = document.createElement('div');
+    overlay.className = 'fs';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'אב־טיפוס במסך מלא');
+    overlay.innerHTML = OVERLAY_HTML;
+    overlay.querySelector('strong').textContent = 'מסך מלא · ' + (heading ? heading.textContent : '');
+    document.body.appendChild(overlay);
+    setPageBehindInert(true);
+
+    var vp = overlay.querySelector('.vp');
+    var closeButton = overlay.querySelector('[data-close]');
+    build(vp, mode, 'full');
+
+    function close() {
+      unmount(vp); // runs this mount's cleanups before the overlay disappears
+      overlay.remove();
+      setPageBehindInert(false);
       if (opener && opener.focus) opener.focus();
     }
-    close.addEventListener('click', done);
-    fs.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && !fs.querySelector('.menu-open')) { e.preventDefault(); done(); }
+
+    closeButton.addEventListener('click', close);
+    overlay.addEventListener('keydown', function (e) {
+      // Esc closes the overlay, unless something inside already used it (e.g. the menu)
+      if (e.key !== 'Escape' || e.defaultPrevented) return;
+      if (overlay.querySelector('.menu-open')) return;
+      e.preventDefault();
+      close();
     });
-    close.focus();
+    closeButton.focus();
   }
+
+  /* The overlay opens in whatever mode the desktop frame is showing. */
+  function desktopMode() {
+    return frames[0] && frames[0].root ? frames[0].root.getAttribute('data-mode') : 'light';
+  }
+
+  /* ===== Start ===== */
 
   function init() {
-    document.querySelectorAll('[data-frame]').forEach(function (el) {
-      var f = { el: el, box: el.querySelector('.frame-box'), vp: el.querySelector('.vp') };
-      frames.push(f);
-      f.root = build(f.vp, modeOf(f));
-      fit(f);
-      el.querySelectorAll('input[type=radio]').forEach(function (r) {
-        r.addEventListener('change', function () { if (r.checked) Shell.setMode(f.root, r.value); });
-      });
-      el.addEventListener('protomode', function (e) {
-        var r = el.querySelector('input[type=radio][value="' + e.detail + '"]');
-        if (r) r.checked = true;
-      });
-    });
-    var ro = new ResizeObserver(function () { frames.forEach(fit); });
-    frames.forEach(function (f) { ro.observe(f.box.parentElement); });
+    if (!document.getElementById('proto')) return; // nothing to mount on this page
 
-    var rm = document.getElementById('rm');
-    if (rm) {
-      rm.checked = sysReduced.matches;
-      rm.addEventListener('change', function () { forceReduced = rm.checked; rebuildAll(); });
+    document.querySelectorAll('[data-frame]').forEach(setupFrame);
+
+    // re-fit the frames whenever their column changes width
+    var resizeObserver = new ResizeObserver(function () { frames.forEach(fitFrame); });
+    frames.forEach(function (f) { resizeObserver.observe(f.box.parentElement); });
+
+    var reducedCheckbox = document.getElementById('rm');
+    if (reducedCheckbox) {
+      reducedCheckbox.checked = systemReduced.matches;
+      reducedCheckbox.addEventListener('change', function () {
+        forcedReduced = reducedCheckbox.checked;
+        rebuildAllFrames();
+      });
     }
-    document.querySelectorAll('[data-replay]').forEach(function (b) { b.addEventListener('click', rebuildAll); });
-    document.querySelectorAll('[data-full]').forEach(function (b) {
-      b.addEventListener('click', function () { openFull(frames[0] && frames[0].root ? frames[0].root.getAttribute('data-mode') : 'light'); });
+
+    document.querySelectorAll('[data-replay]').forEach(function (button) {
+      button.addEventListener('click', rebuildAllFrames);
+    });
+    document.querySelectorAll('[data-full]').forEach(function (button) {
+      button.addEventListener('click', function () { openFullScreen(desktopMode()); });
     });
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();
