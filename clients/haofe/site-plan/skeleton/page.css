@@ -17,6 +17,11 @@
 html.pb { font-size: 106.25%; }
 body { margin: 0; }
 
+/* the hidden attribute beats component display rules such as `.pb .menu { display: grid }`
+   (shell.css line 55 does this for the prototype). The menu keeps painting while b-motion-micro
+   folds it away (.mi-closing), which shell.css's unconditional !important rule prevents. */
+[hidden]:not(.mi-closing) { display: none !important; }
+
 /* in-page links land below the sticky header and above the mobile bar (audit A11Y-02) */
 html { scroll-padding-top: 84px; }
 @media (max-width: 999.98px) { html { scroll-padding-bottom: calc(76px + env(safe-area-inset-bottom)); } }
