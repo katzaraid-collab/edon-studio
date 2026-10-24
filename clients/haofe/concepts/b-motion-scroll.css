@@ -1,0 +1,28 @@
+/* ==========================================================================
+   Direction B · השקית — motion: scroll (reveals, ticker, section entrances)
+   Owner: scroll motion module (pairs with b-motion-scroll.js).
+
+   OWNS
+     - [data-rv] scroll reveals: hidden until Shell.reveal adds .rv-in, boxes staggered by --i
+     - section entrances (none beyond the reveals yet)
+     - the ticker loop: .tk-track slides left to right (the Hebrew reading direction),
+       paused by .ticker.paused (the pause button in b.js) and on hover
+
+   RULES
+     - every moving rule is scoped to .pb.anim; the static reduced-motion ticker lives in b.css
+     - keyframes in this file are prefixed b-scroll-
+     - scroll listeners and IntersectionObservers use ctx.scroller (see b-motion-scroll.js)
+     - use the motion tokens defined on .pb in b.css (--ease-*, --spring-*, --dur-*, --stagger);
+       --spring / --ease are the legacy curves the current rules were written with
+     - hooks: see "hooks motion modules may rely on" at the top of b.css
+   ========================================================================== */
+
+/* ticker loop */
+.pb.anim .tk-track { animation: b-scroll-tick 38s linear infinite; }
+.pb .ticker.paused .tk-track, .pb .ticker:hover .tk-track { animation-play-state: paused; }
+@keyframes b-scroll-tick { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+/* scroll reveals: content is visible by default; .anim only adds the entry */
+.pb.anim [data-rv] { transition: opacity .5s var(--ease), transform .55s var(--spring); }
+.pb.anim [data-rv]:not(.rv-in) { opacity: 0; transform: translateY(26px) rotate(4deg); }
+.pb.anim .box[data-rv].rv-in { transition-delay: calc(var(--i, 0) * 70ms); }

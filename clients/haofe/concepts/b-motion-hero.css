@@ -1,0 +1,35 @@
+/* ==========================================================================
+   Direction B · השקית — motion: the opening (hero)
+   Owner: hero motion module (pairs with b-motion-hero.js).
+
+   OWNS
+     - logo sticker press: .stamp lands from 160% onto its -7deg tilt
+     - caramel ink ring spreading from the sticker (.stamp::after)
+     - hero text rise: .hero h1, .sub, .ctas, staggered
+     - handwritten note: .note-hand span writes on, its arrow path draws
+
+   RULES
+     - every rule is scoped to .pb.anim, so reduced motion (.rm) gets the static page from b.css
+     - keyframes in this file are prefixed b-hero-
+     - use the motion tokens defined on .pb in b.css (--ease-*, --spring-*, --dur-*, --stagger);
+       --spring / --ease are the legacy curves the current rules were written with
+     - hooks: see "hooks motion modules may rely on" at the top of b.css
+   ========================================================================== */
+
+/* logo sticker press + ink ring */
+.pb.anim .stamp { animation: b-hero-stamp .55s .1s var(--spring) both; }
+@keyframes b-hero-stamp { 0% { opacity: 0; transform: scale(1.6) rotate(6deg); } 60% { opacity: 1; } 100% { transform: rotate(-7deg); } }
+.pb.anim .stamp::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 3px solid var(--caramel); animation: b-hero-ink .7s .5s ease-out both; }
+@keyframes b-hero-ink { from { transform: scale(1); opacity: .7; } to { transform: scale(1.35); opacity: 0; } }
+
+/* hero text rise */
+.pb.anim .hero h1, .pb.anim .hero .sub, .pb.anim .hero .ctas { animation: b-hero-up .5s var(--spring) both; }
+.pb.anim .hero .sub { animation-delay: .08s; }
+.pb.anim .hero .ctas { animation-delay: .16s; }
+@keyframes b-hero-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+/* handwritten note: the words write on right to left, then the arrow is drawn */
+.pb.anim .note-hand span { animation: b-hero-write .7s .45s steps(14, end) both; }
+@keyframes b-hero-write { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0 0 0 0); } }
+.pb.anim .note-hand path { stroke-dasharray: 120; animation: b-hero-draw .5s .9s ease-out both; }
+@keyframes b-hero-draw { from { stroke-dashoffset: 120; } to { stroke-dashoffset: 0; } }

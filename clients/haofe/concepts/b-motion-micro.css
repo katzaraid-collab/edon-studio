@@ -1,0 +1,45 @@
+/* ==========================================================================
+   Direction B · השקית — motion: micro-interactions
+   Owner: micro motion module (pairs with b-motion-micro.js).
+
+   OWNS
+     - theme toggle: the page colours cross-fade, the button squeezes on press
+     - buttons (.btn-b): the hard shadow shortens on hover, the button presses in
+     - boxes: lift and straighten on hover/focus, lid chevron flips, details open in height
+     - feed polaroids: straighten and grow on hover/focus
+     - order module: the "soon" dot blinks, the slip springs in when data-order flips to "live"
+
+   RULES
+     - the reduced-motion safety net in b.css (.pb.rm) zeroes every animation and transition here
+     - keyframes in this file are prefixed b-micro-
+     - use the motion tokens defined on .pb in b.css (--ease-*, --spring-*, --dur-*, --press-scale*);
+       --spring / --ease are the legacy curves the current rules were written with
+     - hooks: see "hooks motion modules may rely on" at the top of b.css
+   ========================================================================== */
+
+/* theme toggle */
+.pb { transition: background-color .35s var(--ease), color .35s var(--ease); }
+.pb .theme-btn { transition: transform .3s var(--spring); }
+.pb .theme-btn:active { transform: scale(.88); }
+
+/* hard-shadow buttons */
+.pb .btn-b { transition: transform .25s var(--spring), box-shadow .25s var(--spring); }
+.pb .btn-b:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--caramel); }
+.pb .btn-b:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--caramel); }
+
+/* boxes and their lids */
+.pb .box { transition: transform .4s var(--spring), box-shadow .4s var(--spring); }
+.pb .box:hover, .pb .box:focus-within { transform: rotate(0) translateY(-6px); }
+.pb .lid svg { transition: transform .35s var(--spring); }
+.pb .lid[aria-expanded="true"] svg { transform: rotate(180deg); }
+.pb .det { transition: grid-template-rows .35s var(--ease); }
+
+/* order module */
+.pb.anim .soon i { animation: b-micro-blink 2.4s ease-in-out infinite; }
+@keyframes b-micro-blink { 50% { opacity: .25; } }
+.pb.anim[data-order="live"] .slip { animation: b-micro-live .5s var(--spring) both; }
+@keyframes b-micro-live { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+/* feed polaroids */
+.pb .pola { transition: transform .4s var(--spring); }
+.pb .pola:hover, .pb .pola:focus-visible { transform: rotate(0) scale(1.02); }
