@@ -1,143 +1,143 @@
 {
-  "when": "2026-10-24T09:55:04.696Z",
+  "when": "2026-10-24T14:10:39.179Z",
   "chromium": "chromium",
   "results": [
     {
       "name": "inline boot == theme.js boot, and its hash is in the CSP",
       "ok": true,
-      "ms": 1,
+      "ms": 2,
       "note": "'sha256-JlKEa1zbkwouf3M2XVeqKqMeshmacDoo4DOZ37W6xjQ='"
     },
     {
       "name": "order \"soon\": no app URL and no live-only markup in the HTML",
       "ok": true,
-      "ms": 1,
+      "ms": 0,
       "note": "grep haofeapp: 0"
     },
     {
       "name": "first visit is light even when the OS is dark (inline boot only, all external JS blocked)",
       "ok": true,
-      "ms": 415,
+      "ms": 636,
       "note": "mode=light bg=rgb(247, 241, 230) classes=\"pb anim\""
     },
     {
       "name": "saved dark is applied before <body> exists (no flash), external JS blocked",
       "ok": true,
-      "ms": 386,
+      "ms": 513,
       "note": "data-mode at <body> insertion = dark; bg rgb(23, 16, 11)"
     },
     {
       "name": "first paint is already dark while theme.js is still downloading (2.5 s delay)",
       "ok": true,
-      "ms": 699,
+      "ms": 765,
       "note": "theme.js pending, header luminance 32 (dark)"
     },
     {
       "name": "toggle on desktop: flips once, aria-pressed follows, choice saved and restored on reload",
       "ok": true,
-      "ms": 1329,
+      "ms": 1571,
       "note": "{\"a\":{\"mode\":\"dark\",\"pressed\":\"true\",\"saved\":\"dark\"},\"b\":{\"mode\":\"dark\",\"pressed\":\"true\"},\"c\":\"light\"}"
     },
     {
       "name": "toggle on a phone: b-motion-micro swaps inside a document view transition and the choice is still saved",
       "ok": true,
-      "ms": 1635,
+      "ms": 1579,
       "note": "{\"mode\":\"dark\",\"saved\":\"dark\",\"vt\":1,\"pressed\":\"true\"}"
     },
     {
       "name": "localStorage that throws on access: page stays light, toggle works for the visit, no errors",
       "ok": true,
-      "ms": 832,
+      "ms": 895,
       "note": "light -> dark (click) -> light (reload, nothing saved)"
     },
     {
       "name": "theme follows a change made in another tab (storage event)",
       "ok": true,
-      "ms": 991,
+      "ms": 850,
       "note": "second tab switched to dark"
     },
     {
       "name": "CSP from vercel.json: zero violations over a full scroll at 1280 and 390",
       "ok": true,
-      "ms": 4051,
+      "ms": 3897,
       "note": "1280: 0, 390: 0"
     },
     {
       "name": "CSP is really enforced: an edited inline boot is blocked (negative control)",
       "ok": true,
-      "ms": 552,
+      "ms": 460,
       "note": "script-src-elem inline"
     },
     {
       "name": "runtime boots the three ported modules with contract-2 ctx",
       "ok": true,
-      "ms": 436,
+      "ms": 508,
       "note": "ran b-hero, b-scroll, b-micro; root classes \"pb anim sx mi mi-ready\""
     },
     {
       "name": "IntersectionObserver uses the viewport: ticker and hero idle off screen and wake on return",
       "ok": true,
-      "ms": 1481,
+      "ms": 1585,
       "note": "top: on, bottom: off, top again: on"
     },
     {
       "name": "window scroll drives the hero depth (ScrollTimeline on document.scrollingElement)",
       "ok": true,
-      "ms": 2198,
+      "ms": 2335,
       "note": "matrix(1, 0, 0, 1, 0, 0) -> matrix(1.22222, 0, 0, 1.22222, -28.4444, -56)"
     },
     {
       "name": "scroll entrances: every [data-rv] finishes, the leap flies from the bag inside <body>",
       "ok": true,
-      "ms": 7936,
-      "note": "17/17 entrances, up to 2 copies in flight, layer in <body>"
+      "ms": 7977,
+      "note": "17/17 entrances, up to 3 copies in flight, layer in <body>"
     },
     {
       "name": "a jump past content (nav link, End key) never leaves entrances hidden above the view",
       "ok": true,
-      "ms": 2303,
+      "ms": 2379,
       "note": "12 entrances above the view after the jump, 0 hidden"
     },
     {
       "name": "reduced motion: html.rm, modules do nothing, static ticker",
       "ok": true,
-      "ms": 833,
+      "ms": 696,
       "note": "classes \"pb rm\", running animations 0"
     },
     {
       "name": "reduced-motion setting changes mid-visit: modules clean up and boot again",
       "ok": true,
-      "ms": 1681,
+      "ms": 1686,
       "note": "boots 1 -> 2 (reduce, clean) -> 3 (motion back)"
     },
     {
       "name": "unported prototype modules are skipped with a warning; the site behaviour still works",
       "ok": true,
-      "ms": 1424,
+      "ms": 482,
       "note": "ran b-hero, b-scroll, b-micro; skipped only the unmarked: legacy-probe; menu and lids still work"
     },
     {
       "name": "keyboard: skip link first, menu closes when focus leaves it (A11Y-03) and on Esc",
       "ok": true,
-      "ms": 508,
+      "ms": 485,
       "note": "skip link visible on focus; tab-out and Esc close the menu"
     },
     {
       "name": "in-page link lands below the sticky header (scroll-padding)",
       "ok": true,
-      "ms": 950,
-      "note": "header bottom 75px, #visit top 203px"
+      "ms": 929,
+      "note": "header bottom 75px, #visit top 211px"
     },
     {
       "name": "no horizontal scroll at 320, 390, 768, 1280; landmarks present",
       "ok": true,
-      "ms": 5351,
+      "ms": 5451,
       "note": "320:320 390:390 768:768 1280:1280"
     },
     {
       "name": "without JavaScript: light, static (rm), menu hidden, ticker static",
       "ok": true,
-      "ms": 380,
+      "ms": 4678,
       "note": "{\"cls\":\"pb rm\",\"mode\":null,\"bg\":\"rgb(247, 241, 230)\",\"menu\":\"none\",\"copies\":true}"
     }
   ]
