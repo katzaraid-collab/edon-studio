@@ -15,7 +15,12 @@
 /* b.css sets `font: 400 17px/1.6` on .pb; on <html> a px size would ignore the visitor's own
    default text size. 106.25% is the same 17px at the browser default of 16px. */
 html.pb { font-size: 106.25%; }
-body { margin: 0; }
+/* the tilted ticker tape (b.css: rotate -1.2deg on .ticker) bleeds past both edges of the page. b.css
+   clips that on .pb, but on the site .pb is <html>, whose overflow goes to the viewport, where clip
+   is read as hidden: the page still measured 327px wide at 320 (398 at 390) and could be panned
+   sideways. Clipped on body instead (not a scroll container, so the sticky header and bar keep
+   working): 320px at 320, 390px at 390 (tests/skeleton.test.mjs, "no horizontal scroll") */
+body { margin: 0; overflow-x: clip; }
 
 /* the hidden attribute beats component display rules such as `.pb .menu { display: grid }`
    (shell.css line 55 does this for the prototype). The menu keeps painting while b-motion-micro

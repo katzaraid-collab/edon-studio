@@ -6,7 +6,8 @@
      1 the evening look: a dim layer over the plate (lightest under the lamp above the bag), the
        morning beam giving way to the lamp's glow pooled on the bag (design 7), and from 1000px a
        scrim on the text side (A11Y-05, dark's values, plan R4). Static, so it holds with motion off
-       too; the 600ms cross-fade is .anim only. Also static: the sticker's own filter (R13, design 4)
+       too; the cross-fade, timed with the page's 450ms colour fade, is .anim only. Also static: the
+       sticker's own filter (R13, design 4)
        and, on phones, the fade that makes the wall grow out of the kraft above it (design 6; on the
        whole back plane, see section 1)
      2 the opening: the plate settles from a push-in (no fade: it is the LCP image, perf P2), the
@@ -35,7 +36,7 @@
      h1 .b-wi, .sub, .ctas
                     the opening below (CSS only, so it plays even if the script fails)
      b.css keeps every static position, the rotate/translate of the sticker and the wheat, and the
-     evening filters on .sc-bag and .sc-wheat (this file only adds their 600ms transition).
+     evening filters on .sc-bag and .sc-wheat (this file only adds their 450ms transition).
 
    RULES
      - motion is scoped to .pb.anim; the b.css safety net (.pb.rm) zeroes it under reduced motion
@@ -124,23 +125,25 @@
       linear-gradient(to left, rgba(12, 6, 2, .5), rgba(12, 6, 2, .18) 34%, rgba(12, 6, 2, 0) 56%),
       radial-gradient(ellipse 58% 78% at var(--b-lamp), rgba(30, 15, 6, .3), rgba(19, 10, 4, .6) 58%, rgba(12, 6, 2, .76));
   }
-  /* b.css paints the same scrim on .hero::before until this file has one (its comment asks for it to
-     be deleted then). One scrim, not two: delete that rule in b.css, and then this line */
-  .pb[data-mode="dark"] .hero::before { content: none; }
 }
 
 /* the sticker takes the scene's light: warmer paper, a shadow cast to the left (design finding 4).
    The opening's b-hero-lift ends on exactly this value, so nothing jumps when it finishes (R13) */
 .pb .hero .sc-sticker { filter: sepia(.12) brightness(.96) drop-shadow(-2px 3px 2px rgba(60, 35, 12, .3)); }
 
-/* the day-to-evening change, ~600ms: the sun fades, then the lamp comes up. The dim leads
-   (ease-out) because the text flips colour almost at once and needs the wall behind it to follow.
-   The bag is dimmed as one object (b.css filter on .sc-bag, R13), so the transition is on .sc-bag */
-.pb.anim .hero .sc-light::before, .pb.anim .hero .sc-light::after { transition: opacity .6s var(--ease-in-out); }
-.pb.anim .hero .sc-back::after { transition: opacity .6s var(--ease-out); }
-.pb.anim[data-mode="dark"] .hero .sc-light::after { transition-delay: .12s; }
-.pb.anim[data-mode="light"] .hero .sc-light::before { transition-delay: .12s; }
-.pb.anim .hero .sc-bag, .pb.anim .hero .sc-wheat { transition: filter .6s var(--ease-in-out); }
+/* the day-to-evening change moves with the page's own colour fade (b-motion-micro.css section 1:
+   surfaces 450ms --ease-in-out, ink switching in the middle 220ms from 115ms), so the headline never
+   sits on a wall that has already changed under it (design recheck #11: the old 600ms ease-out dim
+   was 60% dark at 80ms, before the ink had started). The dim decides the text's contrast, so it is
+   centred on the ink's switch: 300ms from a small 75ms delay, steepest at 225ms like the ink. The
+   bag, the wheat and the light layers follow the surfaces' 450ms curve. Frame by frame at 1440, light
+   to dark (paused transitions seeked every 40ms): headline under 3:1 for 63ms, subtitle under 4.5:1
+   for 136ms; with the old timing 143ms and 282ms. The bag is dimmed as one object (b.css filter on
+   .sc-bag, R13), so its transition is on .sc-bag. During a view-transition swap none of this runs:
+   b-motion-micro.css turns transitions off under .mi-vt, the snapshot does the fade */
+.pb.anim .hero .sc-back::after { transition: opacity .3s .075s var(--ease-in-out); }
+.pb.anim .hero .sc-light::before, .pb.anim .hero .sc-light::after { transition: opacity .45s var(--ease-in-out); }
+.pb.anim .hero .sc-bag, .pb.anim .hero .sc-wheat { transition: filter .45s var(--ease-in-out); }
 
 
 /* ---------- 2 hooks the script drives ---------- */

@@ -17,10 +17,19 @@
  *   2. Optional extra modules (motion etc.), started in the order they were pushed:
  *        (window.ProtoModules = window.ProtoModules || []).push({
  *          name: 'b-hero', init: function (root, ctx) { ...; return cleanup; } });
- *   3. ctx = { scroller, reduced, frame }
- *        scroller  the scrolling .vp element that holds this mount
- *        reduced   true when motion should be reduced (system setting or #rm checkbox)
- *        frame     'desktop' | 'phone' | 'full'
+ *   3. ctx = { contract: 2, page: false, frame, reduced, scroller, ioRoot, scrollEvents, vtHost, view() }
+ *        frame        'desktop' | 'phone' | 'full'
+ *        reduced      true when motion should be reduced (system setting or #rm checkbox)
+ *        scroller     the scrolling .vp element that holds this mount (scroll position, sizes,
+ *                     ScrollTimeline source, ResizeObserver)
+ *        ioRoot       IntersectionObserver root       } all three are the same .vp here; on the site
+ *        scrollEvents target for 'scroll' listeners   } (site-plan/skeleton/runtime.js) they are null,
+ *        vtHost       startViewTransition host        } window and document, so use the right one
+ *        view()       { top, left, right, bottom, width, height, scale } of the visible scroll area
+ *                     in client px; scale = screen px per prototype px (the frames are scaled down)
+ *      This is page contract 2 (site-plan/plan.md 6.2). A contract-1 module, which only reads
+ *      scroller, reduced and frame, keeps working: the shell runs every module, with or without the
+ *      `contract: 2` marker (only the site's runtime.js requires it).
  *   4. Returning a cleanup function is optional. The shell calls it before the mount
  *      is thrown away: replay, reduced-motion toggle, or the overlay closing.
  *   5. If a module throws, the error is logged with console.warn and the page carries on.
@@ -57,7 +66,11 @@
     ['data-describedby', 'aria-describedby']
   ];
 
-  /* Anchor jumps stop this far above their section so the sticky header does not cover it. */
+  /* In-page jumps land this far below the mount's sticky header (prototype px), so the target's heading
+     never touches it (design recheck #4, a11y recheck N5: a fixed 64px left map labels under the 75px
+     desktop header). */
+  var JUMP_GAP = 12;
+  /* Used only when the mount has no header to measure. */
   var JUMP_OFFSET = 64;
 
   /* ===== Small helpers ===== */
@@ -86,15 +99,29 @@
     return function () { runCleanups(cleanups); };
   }
 
-  /* Scrolls a (possibly CSS-scaled) viewport so that `target` sits just under its header. */
-  function scrollViewportTo(scroller, target) {
+  /* How much of the viewport's top the mount's header covers, in prototype px: its real height while
+     it is sticky, 0 when it scrolls away with the page (b.css unsticks it on short screens), null when
+     the mount has no header. Measured at jump time, so it follows the header's own breakpoints. */
+  function headerCover(root, scale) {
+    var header = root && root.querySelector('.hd, header');
+    if (!header) return null;
+    var position = getComputedStyle(header).position;
+    if (position !== 'sticky' && position !== 'fixed') return 0;
+    return header.getBoundingClientRect().height / scale;
+  }
+
+  /* Scrolls a (possibly CSS-scaled) viewport so that `target` sits JUMP_GAP below the sticky header.
+     A target that starts right under the header (the hero, data-jump="top") lands on scrollTop 0. */
+  function scrollViewportTo(scroller, target, root) {
     var box = scroller.getBoundingClientRect();
     // getBoundingClientRect() measures scaled screen pixels; dividing by the
     // frame's scale converts the distance back to the prototype's own pixels.
     var scale = box.height / scroller.offsetHeight || 1;
     var distance = (target.getBoundingClientRect().top - box.top) / scale;
+    var cover = headerCover(root || target.closest('.proto'), scale);
+    var offset = cover === null ? JUMP_OFFSET : cover + JUMP_GAP;
     scroller.scrollTo({
-      top: scroller.scrollTop + distance - JUMP_OFFSET,
+      top: Math.max(0, scroller.scrollTop + distance - offset),
       behavior: Shell.reduced() ? 'auto' : 'smooth'
     });
   }
@@ -255,7 +282,7 @@
           var target = root.querySelector('[data-section="' + name + '"]');
           if (!target) return;
           e.preventDefault();
-          scrollViewportTo(scroller, target);
+          scrollViewportTo(scroller, target, root);
           target.setAttribute('tabindex', '-1');
           target.focus({ preventScroll: true });
         }));
@@ -312,7 +339,25 @@
     Shell.ids(root);
     Shell.setMode(root, mode);
 
-    var ctx = { scroller: vp, reduced: reduced, frame: frame };
+    // contract 2 (site-plan/plan.md 6.2): inside a frame the one scrolling .vp is every one of these;
+    // the site's runtime.js passes the page's objects under the same names
+    var ctx = {
+      contract: 2,
+      page: false,
+      frame: frame,
+      reduced: reduced,
+      scroller: vp,
+      ioRoot: vp,
+      scrollEvents: vp,
+      vtHost: vp,
+      view: function () {
+        var r = vp.getBoundingClientRect();
+        return {
+          top: r.top, left: r.left, right: r.right, bottom: r.bottom, width: r.width, height: r.height,
+          scale: (r.height / (vp.offsetHeight || r.height || 1)) || 1
+        };
+      }
+    };
     var cleanups = [
       Shell.themeButtons(root),
       Shell.menu(root),
@@ -398,10 +443,16 @@
 
   /* ===== Full-screen overlay ===== */
 
+  /* The overlay's .vp is a named region but not a Tab stop (a11y recheck N4: as one it took focus with
+     no visible ring, its outline painted under the prototype). The prototype always has focusable
+     content, so Tab goes from the close button straight to its skip link, and from any focus inside
+     it the arrow keys, PageUp/PageDown, Space, Home and End scroll this .vp, the focused element's
+     nearest scroller. The frames on the page keep their own tabindex (shell.css shows their ring on
+     the frame box). */
   var OVERLAY_HTML =
     '<div class="fs-bar"><strong></strong>' +
     '<button type="button" class="btn btn--solid" data-close>סגירה (Esc)</button></div>' +
-    '<div class="vp" role="region" tabindex="0" aria-label="תצוגת האתר"></div>';
+    '<div class="vp" role="region" aria-label="תצוגת האתר"></div>';
 
   /* While the overlay is open nothing behind it can be focused or scrolled: every direct
      child of <body> except the overlay itself (audit A11Y-11: before, only #main and

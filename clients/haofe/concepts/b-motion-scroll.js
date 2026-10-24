@@ -1,28 +1,40 @@
 /* ==========================================================================
-   Direction B · השקית — motion module: scroll (the peak, entrances, the map, ticker, drift)
+   Direction B · השקית — motion module: scroll (the peak, entrances, the map, ticker)
    Pairs with b-motion-scroll.css (its header lists the devices and every class this file adds).
-   Version 3, 24.10.2026: rebuilt for the v3 page (boxes without lids, the "אנחנו כאן." map,
-   the pinned feed board / phone rail) and for page contract 2.
+   Version 3.1, 24.10.2026: answers audit/design/recheck.md 1, 5, 10 and audit/a11y/recheck.md N6,
+   and follows the 3.1 map (labels in flow on an 800x660 frame). Version 3 rebuilt the module for
+   the v3 page (boxes without lids, the "אנחנו כאן." map, the feed board / phone rail) and contract 2.
 
-   THE PEAK  the bread jumps out of the bag into the boxes. When a product's window is in view,
-   copies of the frena, challah and baguette leave the hero bag (.sc-bag) where it sits on screen
-   right now and fly an arc into their windows; at impact the copy gives way to the real image,
-   which squashes and springs back (--spring-bounce) while its box rocks once. The Friday box gets
-   two loaves (the lower slot fills first). If the bag is far away (the visitor jumped down), no copy
-   crosses the page: the real image drops in from just above its box, spinning, with the same
-   bounce. The dairy, parve and sufganiyot products fall in from above and plop (--spring-settle).
-   The boxes themselves, their names and lists are never hidden: only the product images wait.
+   THE PEAK  the bread jumps out of the bag into the boxes. When a leaping bread's window is 30% in
+   view, copies of the frena, challah and baguette leave the hero bag (.sc-bag) where it sits on
+   screen right now and fly an arc into their windows; at impact the copy gives way to the real
+   image, which squashes and springs back (--spring-bounce) while its box rocks once. The bag counts
+   as near while the bread's spot is at most 1.1 visible heights above the view (NEAR): on laptops
+   and desktops it has already left the screen when the boxes arrive, so the copies come out from
+   under the header, through a quick hidden stretch. The Friday box gets two loaves (the lower slot
+   first when they start together); on wide screens its lower slot comes into view later, and that
+   second loaf comes the way the first one came. If the bag is far away (the visitor jumped down),
+   no copy crosses the page: the real image drops in from just above its box, spinning, with the
+   same bounce. The dairy, parve and sufganiyot products (at 60% in view) fall in from above and
+   plop (--spring-settle). The boxes, their names and lists are never hidden: only the images wait.
 
    THE MAP  ("אנחנו כאן.", the page's peak of pride) the dotted route Ofakim > Netivot > Sderot >
    Kiryat Gat draws itself as the visitor scrolls (stroke-dashoffset on a mask over the dotted
    path, so the dots stay dots). The scroll only ever adds to it, and a short catch-up keeps the line
    smooth between wheel steps. The range is measured so the line starts when Ofakim is on screen
    and ends while Kiryat Gat still is. Each stop stamps its logo pin when the line reaches it and
-   its oven lights up (the pin's glow); on wide maps its label swings in on its nail right after.
-   When the route is complete the production house is stamped, its bread leaves the map northward
-   (the dashed arrow draws) and "לסופרים בכל הארץ" arrives last, with its label. On narrow maps the
-   labels are a list under the map and enter as they scroll in. Pause with part of the map in view
-   and the rest plays by itself; jump past it and it is complete.
+   its oven lights up (the pin's glow). On a map wide enough for the labels to stand on it (b.css:
+   --map-labels: on, from a 760px map) each label swings in on its nail right after its pin; under
+   a narrower map the labels are a list and enter as they scroll in. When the route is complete the
+   production house is stamped, its bread leaves the map northward (the arrow draws) and "לסופרים
+   בכל הארץ" arrives last, with its label.
+     - pause with part of the map in view: the rest plays by itself, and the whole entrance has
+       ended within about 3.2 s of coming to rest (a11y N6: under 4 s)
+     - a jump to the map (hero "בחרו סניף", "סניפים", the bar's "ניווט": the shell focuses
+       section.here): it plays at double tempo as soon as the map is in view, every label readable
+       about 1 s after the click (design 5)
+     - a jump to a label (footer cities, "לעסקים": the shell focuses the label), keyboard focus in
+       a label, or a jump past the map: it is complete at once
 
    CONTRACT 2 (site-plan/plan.md 6.2; shell.js passes contract 1 today, runtime.js passes 2)
      init(root, ctx) runs for every mounted copy, after PROTO.init (b.js) and before Shell.reveal.
@@ -32,20 +44,21 @@
        scrollEvents  where 'scroll' fires (the .vp; on a page window)
        view()        { top, left, width, height, scale } of the visible scroll area in client px
      Each key falls back to the prototype frame when the shell does not pass it. On a page the
-     flying copies go into <body> (root is <html>) and a window resize re-measures (the viewport
-     height changes without <html> changing size).
+     flying copies go into <body> (root is <html>), a window resize re-measures (the viewport
+     height changes without <html> changing size), and an anchor link (hashchange) to the map or a
+     label is treated like the shell's focus jump.
      Inside a prototype: no position: fixed, no window scroll. Under reduced motion it does nothing.
      The returned cleanup removes every listener, observer, timer, rAF, animation, injected node and
      sx- class. .rv-done stays as a record (harmless without .sx), so a reboot on a page does not
      replay entrances that already finished.
 
    SMOOTHNESS
-     transform / individual transform properties / opacity / clip-path first, composite 'replace'
-     (the compositor plays them alone). Layout is read only in IntersectionObserver callbacks, in
+     transform / individual transform properties / opacity first, composite 'replace' (the
+     compositor plays them alone). Layout is read only in IntersectionObserver callbacks, in
      ResizeObserver callbacks and in timers after scrolling settles, never in the scroll handler,
      which takes the position from a ScrollTimeline (sampled once per frame) and cached sizes.
-     One rAF loop (ticker easing, the route's catch-up, drift without scroll timelines) that sleeps
-     when nothing moves; the ticker pauses off screen.
+     One rAF loop (ticker easing, the route's catch-up) that sleeps when nothing moves; the ticker
+     pauses off screen. No scroll-linked drift on the products any more (design 10).
 
    NO CONTENT STAYS HIDDEN (the safety net)
      - already on screen at load (even partly): shown at once, no entrance
@@ -72,6 +85,12 @@
     baguette: { x: .11, y: .18, r: -74, f: .62 }
   };
   var LEAPER = /(frena|challah|baguette)/;
+  /* the bag is "near" (the bread leaps out of it) while the bread's spot in the bag is at most this
+     many visible heights above the view; beyond it (a nav jump, a fling) the bread falls in through
+     its own box's rim. Measured (sx5/geo.js): at a 30% window the spot is 0.25-0.45 heights up on
+     laptops and desktops, the Friday box's lower slot 0.7-0.95, plus what a fast wheel adds before the
+     observer reports. NEAR_PAIR: the second loaf of a box whose first loaf leapt */
+  var NEAR = 1.1, NEAR_PAIR = 3;
 
   function noop() {}
   function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
@@ -195,7 +214,6 @@
       var tkLists = track ? qa('.tk-list', track) : [];
       var boxes = qa('.box-grid .box');
       var polas = qa('.pola[data-rv]');
-      var timelines = !!(window.CSS && CSS.supports && CSS.supports('animation-timeline: view()') && CSS.supports('timeline-scope: --sx'));
 
       /* the part of the scroller not covered by the sticky header (top) or the mobile bar (bottom),
          in the prototype's own pixels; k converts screen pixels of a scaled frame back to them.
@@ -244,14 +262,16 @@
            watch its wrapper, which has the same box */
         addInfo(kind === 'print' && el.parentElement ? el.parentElement : el, { el: el, kind: kind, need: need });
       });
-      boxes.forEach(function (box, bi) {
+      /* a leaping bread starts when its window is 30% in view (design recheck 1: at 60% the bag of a
+         16:9 hero has already left the top of a laptop screen); the others drop in at 60% */
+      boxes.forEach(function (box) {
         if (box.classList.contains('rv-done')) return;
         qa('.prod', box).forEach(function (prod) {
           var name = LEAPER.exec(prod.getAttribute('src') || prod.currentSrc || '');
           boxLeft.set(box, (boxLeft.get(box) || 0) + 1);
           addInfo(prod, {
-            el: box, prod: prod, shot: prod.closest('.shot') || prod.parentElement, tl: bi + 1,
-            spot: name ? BAG_SPOTS[name[1]] : null, kind: name ? 'leap' : 'drop', need: .6
+            el: box, prod: prod, shot: prod.closest('.shot') || prod.parentElement,
+            spot: name ? BAG_SPOTS[name[1]] : null, kind: name ? 'leap' : 'drop', need: name ? .3 : .6
           });
         });
       });
@@ -307,15 +327,15 @@
         go(el);
         var a = [];
         if (hand) a.push(play(hand, [{ opacity: 0, translate: '14px 0' }, { opacity: 1, translate: '0 0' }],
-          { duration: 460, delay: delay, easing: E_OUT, fill: 'backwards' }));
+          { duration: 420, delay: delay, easing: E_OUT, fill: 'backwards' }));
         if (h2) a.push(play(h2, [
           { translate: '0 105%', clipPath: 'inset(-0.3em -0.3em calc(105% - 0.28em) -0.3em)' },
           { translate: '0 0', clipPath: 'inset(-0.3em -0.3em -0.28em -0.3em)' }
-        ], { duration: 720, delay: delay + 2 * STAG, easing: E_OUT, fill: 'backwards' }));
+        ], { duration: 640, delay: delay + 2 * STAG, easing: E_OUT, fill: 'backwards' }));
         Array.prototype.forEach.call(el.children, function (kid) {
           if (kid === hand || kid === h2) return;
           a.push(play(kid, [{ opacity: 0, translate: '0 10px' }, { opacity: 1, translate: '0 0' }],
-            { duration: 520, delay: delay + 6 * STAG, easing: E_OUT, fill: 'backwards' }));
+            { duration: 460, delay: delay + 5 * STAG, easing: E_OUT, fill: 'backwards' }));
         });
         follow(info, a);
       }
@@ -324,7 +344,7 @@
          (::after, it also hides the torn edges and the shadow) shrinks toward the bottom while the
          paper feeds down a little; then the status line is stamped on. Transforms only. */
       function print(info, delay) {
-        var el = info.el, slot = el.parentElement, T = 1000;
+        var el = info.el, slot = el.parentElement, T = 850;
         var stampEl = qa('.order-status', el).filter(function (p) { return p.offsetParent !== null; })[0];
         go(el);
         var a = [play(el, [{ translate: '0 -18px' }, { translate: '0 0' }], { duration: T, delay: delay, easing: E_OUT, fill: 'backwards' })];
@@ -333,8 +353,11 @@
           a.push(play(slot, [{ scale: '1 1' }, { scale: '1 0' }], { duration: T, delay: delay, easing: E_INOUT, fill: 'both', pseudoElement: '::after' }));
         }
         if (stampEl) {
-          a.push(play(stampEl, [{ scale: 1.3, rotate: '-2.5deg' }, { scale: 1, rotate: '0deg' }], { duration: D_BOUNCE + 120, delay: delay + 820, easing: BOUNCE, fill: 'backwards' }));
-          a.push(play(stampEl, [{ opacity: 0 }, { opacity: 1 }], { duration: 160, delay: delay + 820, easing: E_OUT, fill: 'backwards' }));
+          a.push(play(stampEl, [
+            { scale: 1.3, rotate: '-2.5deg', opacity: 0, easing: BOUNCE },
+            { opacity: 1, offset: .24 },
+            { scale: 1, rotate: '0deg', opacity: 1 }
+          ], { duration: D_BOUNCE + 120, delay: delay + 700, fill: 'backwards' }));
         }
         follow(info, a);
       }
@@ -345,39 +368,45 @@
         var el = info.el, a = [], i = 0;
         go(el);
         Array.prototype.forEach.call(el.children, function (kid) {
-          var d = delay + i++ * 3 * STAG;
+          var d = delay + i++ * 2 * STAG;
           if (kid.tagName === 'BLOCKQUOTE') {
             var words = kid.firstElementChild || kid, rtl = getComputedStyle(kid).direction === 'rtl';
             a.push(play(words, [
               { clipPath: rtl ? 'inset(-14% 0 -14% 100%)' : 'inset(-14% 100% -14% 0)' },
               { clipPath: 'inset(-14% 0 -14% 0)' }
-            ], { duration: 900, delay: d, easing: E_INOUT, fill: 'backwards' }));
+            ], { duration: 780, delay: d, easing: E_INOUT, fill: 'backwards' }));
             Array.prototype.forEach.call(kid.children, function (part) {
-              if (part !== words) a.push(play(part, [{ opacity: 0 }, { opacity: 1 }], { duration: 420, delay: d + 640, easing: E_OUT, fill: 'backwards' }));
+              if (part !== words) a.push(play(part, [{ opacity: 0 }, { opacity: 1 }], { duration: 360, delay: d + 540, easing: E_OUT, fill: 'backwards' }));
             });
             i += 2;   // the writing takes a while: the lines after it wait a little longer
             return;
           }
           a.push(play(kid, [{ opacity: 0, translate: '0 18px' }, { opacity: 1, translate: '0 0' }],
-            { duration: 680, delay: d, easing: E_OUT, fill: 'backwards' }));
+            { duration: 560, delay: d, easing: E_OUT, fill: 'backwards' }));
         });
         follow(info, a);
       }
 
       /* place labels: tags swinging to rest on a nail above them (on the map with their pins, or
-         as the list under a narrow map) */
+         as the list under a narrow map). On the map the swing is smaller and shorter, so the whole
+         map entrance ends within 4 s of coming to rest (a11y N6); after a jump to the map it is
+         quicker still (design 5) */
       function hang(info, delay) {
-        var el = info.el, a0 = (info.nth % 2 ? -1 : 1) * (mapS && mapS.overlay ? 7 : 10);
+        var el = info.el, onMap = !!(mapS && mapS.overlay), quick = !!(mapS && mapS.fast);
+        var a0 = (info.nth % 2 ? -1 : 1) * (onMap ? 7 : 10) * (quick ? .6 : 1);
+        var T = quick ? 650 : onMap ? 1000 : 1300;
         go(el);
+        /* one animation: the swing, with the fade in over its first 200-280ms (property-specific
+           keyframes: opacity has its own two) */
         follow(info, [
           play(el, [
-            { rotate: a0 + 'deg', translate: '0 -18px', easing: SWAY },
+            { rotate: a0 + 'deg', translate: '0 -18px', opacity: 0, easing: SWAY },
+            { opacity: 1, offset: (quick ? 200 : 280) / T },
             { rotate: (-a0 * .46).toFixed(2) + 'deg', translate: '0 0', offset: .34, easing: SWAY },
             { rotate: (a0 * .2).toFixed(2) + 'deg', offset: .58, easing: SWAY },
             { rotate: (-a0 * .07).toFixed(2) + 'deg', offset: .8, easing: SWAY },
-            { rotate: '0deg', translate: '0 0' }
-          ], { duration: 1300, delay: delay, fill: 'backwards' }),
-          play(el, [{ opacity: 0 }, { opacity: 1 }], { duration: 280, delay: delay, easing: E_OUT, fill: 'backwards' })
+            { rotate: '0deg', translate: '0 0', opacity: 1 }
+          ], { duration: T, delay: delay, fill: 'backwards' })
         ]);
       }
 
@@ -432,12 +461,11 @@
             var zStack = String(n - i + 1), zMove = String(6 + i);
             follow(info, [
               play(info.el, [
-                Object.assign(ip(dx, dy + 48, rot, .92), { offset: 0, easing: E_OUT }),
-                Object.assign(ip(dx, dy, rot, .94), { offset: tIn / T, easing: 'linear' }),
+                Object.assign(ip(dx, dy + 48, rot, .92), { offset: 0, easing: E_OUT, opacity: 0 }),
+                Object.assign(ip(dx, dy, rot, .94), { offset: tIn / T, easing: 'linear', opacity: 1 }),
                 Object.assign(ip(dx, dy, rot, .94), { offset: at, easing: SETTLE }),
-                Object.assign(ip(0, 0, 0, 1), { offset: 1 })
+                Object.assign(ip(0, 0, 0, 1), { offset: 1, opacity: 1 })
               ], { duration: T, fill: 'backwards' }),
-              play(info.el, [{ opacity: 0 }, { opacity: 1 }], { duration: tIn, easing: E_OUT, fill: 'backwards' }),
               play(info.el, [
                 { zIndex: zStack, offset: 0 }, { zIndex: zStack, offset: at },
                 { zIndex: zMove, offset: Math.min(1, at + .001) }, { zIndex: zMove, offset: 1 }
@@ -456,24 +484,29 @@
           go(info.el);
           var w = r.width / g.k, d = n++ * 4 * STAG;
           follow(info, [
-            play(info.el, [ip(end * w * .55, 14, -end * 6, .96), ip(0, 0, 0, 1)],
-              { duration: 820, delay: d, easing: SETTLE, fill: 'backwards' }),
-            play(info.el, [{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: d, easing: E_OUT, fill: 'backwards' })
+            play(info.el, [
+              Object.assign(ip(end * w * .55, 14, -end * 6, .96), { opacity: 0, easing: SETTLE }),
+              { opacity: 1, offset: .3 },
+              Object.assign(ip(0, 0, 0, 1), { opacity: 1 })
+            ], { duration: 760, delay: d, fill: 'backwards' })
           ]);
         });
       }
       function toss(info) {
         var s = info.nth % 2 ? -1 : 1;   // first from the start side (right)
         follow(info, [
-          play(info.el, [ip(58 * s, 42, 9 * s, 1.04), ip(0, 0, 0, 1)],
-            { duration: 760, easing: SETTLE, fill: 'backwards' }),
-          play(info.el, [{ opacity: 0 }, { opacity: 1 }], { duration: 300, easing: E_OUT, fill: 'backwards' })
+          play(info.el, [
+            Object.assign(ip(58 * s, 42, 9 * s, 1.04), { opacity: 0, easing: SETTLE }),
+            { opacity: 1, offset: .32 },
+            Object.assign(ip(0, 0, 0, 1), { opacity: 1 })
+          ], { duration: 720, fill: 'backwards' })
         ]);
       }
 
       /* ===== the peak ===== */
 
       var layer = null, flying = 0;
+      var boxWay = new Map();   // box -> 'leap' | 'fall': how its first loaf came
       function ensureLayer() {
         if (!layer) {
           layer = document.createElement('div');
@@ -492,11 +525,6 @@
         if (m) { var v = m[1].split(','); deg = Math.atan2(parseFloat(v[1]), parseFloat(v[0])) * 180 / Math.PI; }
         var r = parseFloat(cs.rotate);
         return isFinite(r) ? deg + r : deg;
-      }
-      function driftOf(el) {
-        var t = getComputedStyle(el).translate;
-        if (!t || t === 'none') return 0;
-        return parseFloat(t.split(/\s+/)[1]) || 0;
       }
       /* the window's contact shadow grows from nothing while the first product approaches, spreads
          at impact and settles (transform only: the micro module may own its scale and opacity).
@@ -534,22 +562,28 @@
           info.started = true;
           if (!w || !h || (!prod.currentSrc && !prod.src)) { finishInfo(info); return; }
           var ex = (pr.left + pr.width / 2 - lr.left) / g.k;
-          var ey = (pr.top + pr.height / 2 - lr.top) / g.k - driftOf(prod);
+          var ey = (pr.top + pr.height / 2 - lr.top) / g.k;
           var th = tiltOf(box), side = n % 2 ? -1 : 1;
           var spot = info.spot || BAG_SPOTS.frena;
           var bagMode = false, sx, sy, r0, s0, C1, C2, T, weight;
           var toScreen = (lr.top - g.vr.top) / g.k;   // content y + toScreen = y on screen (at launch)
+          var first = boxWay.get(box);                 // how this box's first loaf came, if one has
           if (br && br.width > 0) {
             var bx = br.left + br.width * spot.x, by = br.top + br.height * spot.y;
             sy = (by - lr.top) / g.k;
-            /* the bag counts as near while the bread's spot is at most half a screen above the view */
-            if (sy + toScreen > g.visTop - g.effH * .5 && sy < ey - 60) {
+            /* the bag counts as near while the bread's spot is at most NEAR visible heights above the
+               view (the hidden stretch of the flight passes quickly, see flightPath). The Friday box's
+               second loaf, lower in a two-row box on wide screens, comes the way the first one came,
+               so a quick scroll does not turn its leap into a fall */
+            var reach = first === 'leap' ? NEAR_PAIR : NEAR;
+            if (first !== 'fall' && sy + toScreen > g.visTop - g.effH * reach && sy < ey - 60) {
               bagMode = true;
               sx = (bx - lr.left) / g.k;
               r0 = spot.r;
               s0 = clamp(br.width / g.k * spot.f / w, .3, 1);
             }
           }
+          if (!first) boxWay.set(box, bagMode ? 'leap' : 'fall');
           var delay = n * 3 * STAG;
           /* the bag is far away (the visitor jumped down): no copy flies across the page; the real
              image falls into its own window through the rim, spinning, and lands with the same bounce */
@@ -587,13 +621,11 @@
           img.style.height = px(h);
           var filter = getComputedStyle(prod).filter;   // the evening dim and the Friday drop shadow
           if (filter && filter !== 'none') img.style.filter = filter;
-          if (timelines) { img.classList.add('sx-ride'); img.style.setProperty('--sx-tl', '--sxb' + info.tl); }
           info.clone = img;
           flying++;
           var launch = function () {
             if (dead || info.fin) return;
             L.appendChild(img);
-            if (!timelines) pfSync();
             var flight = play(img, frames, { duration: T, delay: delay, easing: 'linear', fill: 'both' });
             var sh = shotShadow(info, delay, T, 640);
             info.anims = [flight, sh].filter(Boolean);
@@ -681,12 +713,24 @@
         var m = {
           here: here, art: art, svg: svg, route: route, places: here.querySelector('.places'),
           pins: qa('.pin', art), stops: [], tail: [], anims: [], masks: [],
-          p: 0, goal: 0, last: -1, auto: false, done: false, vis: false, tailOn: false, geomOk: false,
-          top: 0, h: 0, visTop: 0, s0: 0, s1: 1, y0: .7, y1: .075, overlay: false, mp: null
+          p: 0, goal: 0, last: -1, auto: false, fast: false, done: false, vis: false, tailOn: false, geomOk: false,
+          top: 0, h: 0, visTop: 0, s0: 0, s1: 1, y0: .7, y1: .075, overlay: false, mp: null, dots: 0
         };
         here.classList.add('sx-map');
-        m.mp = addMask(m, route);
+        /* the dotted line grows dot by dot through its own dash pattern (design 10: a mask over the
+           route re-rastered the whole map every frame of the draw, about 1.5 ms a frame on a desktop);
+           a pattern this cannot read falls back to the mask */
+        m.dots = routeDots(route);
+        if (m.dots) route.style.visibility = 'hidden'; else m.mp = addMask(m, route);
         return m;
+      }
+      /* b.css draws the route as round dots: stroke-dasharray "0 G" on pathLength="L", so the dots sit
+         at 0, G, 2G ... L: L / G + 1 of them. Returns that count, or 0 for any other pattern */
+      function routeDots(route) {
+        var da = (getComputedStyle(route).strokeDasharray || '').split(/[\s,]+/).map(parseFloat).filter(isFinite);
+        var L = parseFloat(route.getAttribute('pathLength'));
+        if (da.length !== 2 || da[0] !== 0 || !(da[1] > 0) || !(L > 0)) return 0;
+        return Math.floor(L / da[1] + 1e-6) + 1;
       }
       /* the dotted path is revealed by a solid stroke in a mask, so the dots stay round dots while
          the line grows (the mask path keeps user units: vector-effect none) */
@@ -764,8 +808,11 @@
         else if (s1 - s0 > maxR) s1 = s0 + maxR;
         m.s0 = s0;
         m.s1 = s1;
+        /* labels on the map (b.css: a map 760px or wider stands them on it, in flow, and says so with
+           --map-labels: on) wait for their pins; under a narrower map they are a list that enters
+           as it scrolls in */
         var was = m.overlay;
-        m.overlay = !!m.places && getComputedStyle(m.places).position === 'absolute';
+        m.overlay = !!m.places && getComputedStyle(m.places).getPropertyValue('--map-labels').trim() === 'on';
         /* the map just got wide enough for labels on it: the stops already lit bring theirs */
         if (m.overlay && !was) m.stops.concat(m.tailOn ? m.tail : []).forEach(function (s) { if (s.on) startLabel(s.label, 0); });
         mapScroll(scroller.scrollTop);
@@ -780,19 +827,36 @@
         if (pt > m.goal) { m.goal = pt; wake(); }
       }
       function drawRoute(p) {
+        var m = mapS, r = m.route;
+        if (m.dots) {
+          /* the first n dots of the pattern, then one gap longer than the route; all of them: the
+             pattern b.css gives it. Only a change of n touches the path (one style write) */
+          var n = p <= 0 ? 0 : Math.min(m.dots, Math.floor(p * (m.dots - 1) + 1e-6) + 1);
+          if (n === m.last) return;
+          m.last = n;
+          if (!n) { r.style.visibility = 'hidden'; return; }
+          r.style.visibility = '';
+          if (n >= m.dots) { r.style.removeProperty('stroke-dasharray'); return; }
+          var gap = (parseFloat(r.getAttribute('pathLength')) || 1000) / (m.dots - 1), parts = [];
+          for (var i = 1; i < n; i++) parts.push('0 ' + gap);
+          parts.push('0 ' + (2 * (gap * m.dots + 1)));
+          r.style.strokeDasharray = parts.join(' ');
+          return;
+        }
         var v = Math.round(1001 * (1 - p) * 10) / 10;
-        if (v === mapS.last) return;
-        mapS.last = v;
-        mapS.mp.style.strokeDashoffset = String(v);
+        if (v === m.last) return;
+        m.last = v;
+        m.mp.style.strokeDashoffset = String(v);
       }
       /* the loop: the line chases the scroll (never back), at least 1/1900 of the route per ms so it
-         always arrives, at most a full route in 0.6 s (1.1 s when it plays by itself) */
+         always arrives, at most a full route in 0.6 s. When it plays by itself it runs at an even
+         pace to the end: a full route in 0.8 s, after a jump to the map in 0.35 s */
       function mapStep(dt) {
         var m = mapS;
         if (!m || m.done || !m.geomOk) return false;
         var goal = m.auto ? 1 : m.goal;
         if (m.p < goal) {
-          var v = clamp((goal - m.p) / 120, 1 / 1900, m.auto ? 1 / 1100 : 1 / 600);
+          var v = m.auto ? (m.fast ? 1 / 350 : 1 / 800) : clamp((goal - m.p) / 120, 1 / 1900, 1 / 600);
           m.p = Math.min(goal, m.p + v * dt);
           drawRoute(m.p);
         }
@@ -802,11 +866,13 @@
         }
         /* the last oven lights first; the production house follows a beat later (and in a frame of
            its own, so the two never share one frame's work) */
-        if (m.p >= 1 && !m.tailOn) { m.tailOn = true; later(tail, 260); }
+        if (m.p >= 1 && !m.tailOn) { m.tailOn = true; later(tail, m.fast ? 60 : 200); }
         return m.p < goal;
       }
-      /* a stop: the logo pin is pressed on like the bag's sticker, then its oven lights; Ofakim, the
-         past, is a dotted ring that settles; the production house a square that is stamped */
+      /* a stop: the logo pin is pressed on like the bag's sticker, and its oven (the pin's ::before
+         glow, which rides the pin) flares as it is pressed and settles with it; Ofakim, the past, is
+         a dotted ring that settles; the production house a square that is stamped. One animation
+         per pin, on the pin alone (design 10: no second animated element, no second layer) */
       function stamp(s, delay, quiet) {
         var m = mapS, pin = s.pin;
         s.on = true;
@@ -815,18 +881,14 @@
           m.anims.push(play(pin, [{ transform: 'scale(1.9)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }],
             { duration: 700, delay: delay, easing: E_OUT, fill: 'backwards' }));
         } else {
-          m.anims.push(play(pin, [{ transform: 'scale(1.7) rotate(-8deg)' }, { transform: 'scale(1) rotate(0deg)' }],
-            { duration: D_BOUNCE + 100, delay: delay, easing: BOUNCE, fill: 'backwards' }));
-          m.anims.push(play(pin, [{ opacity: 0 }, { opacity: 1 }], { duration: 160, delay: delay, easing: E_OUT, fill: 'backwards' }));
-          if (!s.square) {
-            m.anims.push(play(pin, [
-              { opacity: 0, transform: 'scale(.35)' },
-              { opacity: 1, transform: 'scale(1.08)', offset: .55 },
-              { opacity: 1, transform: 'scale(1)' }
-            ], { duration: 900, delay: delay + 180, easing: E_OUT, fill: 'backwards', pseudoElement: '::before' }));
-          }
+          /* property-specific keyframes: the opacity is in by a quarter, the press springs to the end */
+          m.anims.push(play(pin, [
+            { transform: 'scale(1.7) rotate(-8deg)', opacity: 0, easing: BOUNCE },
+            { opacity: 1, offset: .25 },
+            { transform: 'scale(1) rotate(0deg)', opacity: 1 }
+          ], { duration: D_BOUNCE + 100, delay: delay, fill: 'backwards' }));
         }
-        if (s.label && m.overlay && !quiet) startLabel(s.label, delay + 160);
+        if (s.label && m.overlay && !quiet) startLabel(s.label, delay + (m.fast ? 40 : 160));
       }
       function fadeIn(el, delay, dur) {
         if (!el) return;
@@ -834,23 +896,26 @@
         mapS.anims.push(play(el, [{ opacity: 0, offset: 0 }], { duration: dur, delay: delay, easing: E_OUT, fill: 'backwards' }));
       }
       /* after the route: the production house is stamped, its bread leaves the map northward and
-         "לסופרים בכל הארץ" arrives last, with its label */
+         "לסופרים בכל הארץ" arrives last, with its label (after a jump its label comes with its stamp:
+         the visitor asked for the places). 1.5 s in all (0.85 s after a jump), so from a rest the
+         whole map has played within about 3 s: 0.5 s dwell, at most 0.8 s of route, 0.2 s, the tail
+         (a11y N6: under 4 s; measured 1.9-3.3 s, sx5/n6.js) */
       function tail() {
         var m = mapS;
         if (!m || m.done) return;
+        var k = m.fast ? .5 : 1;
         /* DOM writes first (the arrow's mask, the class that lets the lines show), then the animations */
         var out = m.svg.querySelector('.out'), mp = out ? addMask(m, out) : null;
         m.here.classList.add('sx-tail');
-        m.tail.forEach(function (s, i) { stamp(s, i * 120, true); });   // their labels come last
-        fadeIn(m.svg.querySelector('.fac-dot'), 60, 360);
-        fadeIn(m.svg.querySelector('.fac-lead'), 120, 360);
-        if (mp) m.anims.push(play(mp, [{ strokeDashoffset: '1001' }, { strokeDashoffset: '0' }], { duration: 1000, delay: 280, easing: E_INOUT, fill: 'backwards' }));
-        fadeIn(m.svg.querySelector('.out-head'), 1180, 260);
-        if (m.overlay) fadeIn(m.svg.querySelector('.leaders'), 320, 600);
+        m.tail.forEach(function (s, i) { stamp(s, i * 120 * k, true); });   // their labels come last
+        fadeIn(m.svg.querySelector('.fac-dot'), 40 * k, 300 * k);
+        fadeIn(m.svg.querySelector('.fac-lead'), 80 * k, 300 * k);
+        if (mp) m.anims.push(play(mp, [{ strokeDashoffset: '1001' }, { strokeDashoffset: '0' }], { duration: 700 * k, delay: 160 * k, easing: E_INOUT, fill: 'backwards' }));
+        fadeIn(m.svg.querySelector('.out-head'), 760 * k, 200 * k);
         var outLabel = m.art.querySelector('.map-out');
         if (outLabel) m.anims.push(play(outLabel, [{ opacity: 0, translate: '0 8px' }, { opacity: 1, translate: '0 0' }],
-          { duration: 520, delay: 1220, easing: E_OUT, fill: 'backwards' }));
-        if (m.overlay) m.tail.forEach(function (s) { startLabel(s.label, 1300); });
+          { duration: 400 * k, delay: 800 * k, easing: E_OUT, fill: 'backwards' }));
+        if (m.overlay) m.tail.forEach(function (s) { startLabel(s.label, m.fast ? 120 : 500); });
         settled(m.anims.slice(), function () { if (!m.done) { m.done = true; restoreMap(); } });
       }
       function startLabel(info, delay) {
@@ -866,9 +931,24 @@
         m.anims = [];
         m.masks.forEach(function (k) { k.target.removeAttribute('mask'); k.mask.remove(); });
         m.masks = [];
+        m.route.style.removeProperty('visibility');
+        m.route.style.removeProperty('stroke-dasharray');
         m.here.classList.remove('sx-map', 'sx-tail');
         m.pins.forEach(function (pin) { pin.classList.remove('sx-on'); });
         m.art.classList.add('rv-done');
+      }
+      /* a jump to the map (the hero's "בחרו סניף", "סניפים", the bar's "ניווט": the shell focuses
+         section.here as the smooth scroll starts): the visitor asked for the branches, so the
+         sequence starts now at double tempo instead of waiting for the scroll to rest. The map comes
+         into view about halfway through the glide, with its last pins and labels still landing, and
+         every label is readable about 1 s after the click (design 5) */
+      function fastMap() {
+        var m = mapS;
+        if (!m || m.done || m.fast) return;
+        m.fast = true;
+        m.auto = true;
+        wake();
+        armDwell();
       }
       /* no animation: on screen at load, jumped past, or keyboard focus arrived in a label */
       function finishMap() {
@@ -966,7 +1046,8 @@
       function armDwell(msDelay) {
         if (!meta.size && !(mapS && !mapS.done)) return;
         unlater(dwellT);
-        dwellT = later(dwell, msDelay || DWELL);
+        /* after a jump to the map, the labels of a narrow map (the list) need no long rest either */
+        dwellT = later(dwell, msDelay || (mapS && mapS.fast && !mapS.done ? 150 : DWELL));
       }
       function dwell() {
         dwellT = 0;
@@ -981,15 +1062,27 @@
       }
 
       /* keyboard focus never lands on faded content: finish that entrance at once (focus in a map
-         label finishes the whole map) */
+         label finishes the whole map: the footer's city links and "לעסקים" focus their label). A jump
+         that focuses the map's section plays the map at double tempo (fastMap) */
       on(root, 'focusin', function (e) {
         var t = e.target;
         if (!t || !t.closest) return;
-        if (mapS && !mapS.done && mapS.places && mapS.places.contains(t)) finishMap();
+        if (mapS && !mapS.done) {
+          if (mapS.places && mapS.places.contains(t)) finishMap();
+          else if (t === mapS.here) fastMap();
+        }
         var el = t.closest('[data-rv]');
         if (!el || el.classList.contains('rv-done') || el.classList.contains('box')) return;
         var info = byEl.get(el);
         if (info) finishNow(info);
+      });
+      /* on a page an anchor link (#id) can reach the map without moving focus */
+      if (page) on(window, 'hashchange', function () {
+        var t = null;
+        try { t = location.hash.length > 1 ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null; } catch (e) { t = null; }
+        if (!t || !mapS || mapS.done) return;
+        if (mapS.places && mapS.places.contains(t)) finishMap();
+        else if (t === mapS.here) fastMap();
       });
 
       /* ===== the ticker: a CSS loop; scroll speed surges it (at most 1.5x), a hovering pointer
@@ -1051,47 +1144,6 @@
         } catch (e) { ticker.classList.toggle('sx-tk2', two); }
       }
 
-      /* ===== product drift without scroll timelines: one cached measure, then scrollTop only ===== */
-
-      var pf = timelines ? null : { items: [], vh: 0 };
-      function pfMeasure() {
-        if (!pf) return;
-        var vr = view(), k = vr.scale || 1, st = scroller.scrollTop;
-        pf.vh = scroller.clientHeight;
-        pf.items.forEach(function (it) {
-          var r = it.box.getBoundingClientRect();
-          it.top = (r.top - vr.top) / k + st;
-          it.h = r.height / k;
-        });
-      }
-      function pfSync() {
-        if (!pf) return;
-        var st = scroller.scrollTop;
-        pf.items.forEach(function (it) {
-          var aloft = it.infos.filter(function (info) { return info.clone; });
-          if (!it.vis && !aloft.length) return;
-          var p = clamp((st + pf.vh - it.top) / (pf.vh + it.h), 0, 1);
-          var y = px(7 - 14 * p);
-          aloft.forEach(function (info) { if (info.clone.style.getPropertyValue('--sx-par') !== y) info.clone.style.setProperty('--sx-par', y); });
-          if (y === it.last) return;
-          it.last = y;
-          it.shot.style.setProperty('--sx-par', y);
-        });
-      }
-      if (pf) {
-        root.classList.add('sx-pf');
-        boxes.forEach(function (box) {
-          var infos = qa('.prod', box).map(function (prod) { return byEl.get(prod); }).filter(Boolean);
-          var shot = box.querySelector('.shot');
-          if (infos.length && shot) pf.items.push({ box: box, shot: shot, infos: infos, vis: false, last: '' });
-        });
-        var pfIO = observe(function (entries) {
-          entries.forEach(function (en) { pf.items.forEach(function (it) { if (it.box === en.target) it.vis = en.isIntersecting; }); });
-          pfSync();
-        }, { root: ioRoot });
-        pf.items.forEach(function (it) { pfIO.observe(it.box); });
-      }
-
       /* ===== one rAF loop for the module, asleep unless something is easing ===== */
 
       function wake() {
@@ -1105,18 +1157,19 @@
         var dt = Math.min(Math.max(t - lastFrame, 1), 64);
         lastFrame = t;
         var more = false;
+        if (scrolled) sampleScroll();
         if (tick) more = tickerStep(dt) || more;
         if (mapS) more = mapStep(dt) || more;
-        if (pf) pfSync();
         if (more) raf = requestAnimationFrame(frame);
       }
 
       /* ===== scroll: positions without layout reads ===== */
       /* The position comes from a ScrollTimeline, which the browser samples once per frame (reading
          it forces nothing), times the scroll range, which is cached and refreshed only when sizes
-         change. The ticker surge: each pixel of travel adds a little speed, which the loop lets ebb
-         away. The map: the route's goal. */
-      var tl = null, range = 0, lastPos = null;
+         change. The scroll handler only notes that the page moved; the loop reads the position in
+         the next animation frame (sampleScroll). The ticker surge: each pixel of travel adds a
+         little speed, which the loop lets ebb away. The map: the route's goal. */
+      var tl = null, range = 0, lastPos = null, scrolled = false;
       if ((tick || mapS) && window.ScrollTimeline) {
         try { tl = new ScrollTimeline({ source: scroller, axis: 'block' }); } catch (e) { tl = null; }
       }
@@ -1128,25 +1181,28 @@
       on(scrollEvents, 'scroll', function () {
         if (trig && !sweepT && (meta.size || (mapS && !mapS.done))) sweepT = later(sweep, 200);
         armDwell();
-        var pos = (tick || (mapS && !mapS.done)) ? position() : null;
-        if (pos !== null && tick) {
+        if (tick || (mapS && !mapS.done)) { scrolled = true; wake(); }
+      }, { passive: true });
+      /* in the frame after a scroll: scroll events fire before the browser updates its scroll
+         timelines in the same frame, so a read in the handler is a frame late, and the last step
+         of a scroll (or a single instant jump) would never reach the route */
+      function sampleScroll() {
+        scrolled = false;
+        var pos = position();
+        if (pos === null) return;
+        if (tick) {
           var dist = lastPos === null ? 0 : Math.abs(pos - lastPos);
           lastPos = pos;
-          if (tickerOn && mountOn && !tick.hover && dist && dist < 2000) {
-            tick.boost = Math.min(tick.boost + dist * .006, SURGE_MAX - 1);
-            wake();
-          }
+          if (tickerOn && mountOn && !tick.hover && dist && dist < 2000) tick.boost = Math.min(tick.boost + dist * .006, SURGE_MAX - 1);
         }
-        if (pos !== null && mapS && !mapS.done) mapScroll(pos);
-        if (pf) wake();
-      }, { passive: true });
+        if (mapS && !mapS.done) mapScroll(pos);
+      }
 
       /* ===== sizes: one measure for everything cached, on resize (and window resize on a page) ===== */
       var measureQ = 0;
       function measure() {
         if (dead) return;
         range = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
-        if (pf) { pfMeasure(); pfSync(); }
         if (mapS && !mapS.done) measureMap();
         fitCopies();
       }
@@ -1179,14 +1235,6 @@
           });
         }, { root: ioRoot, rootMargin: '100% 0px 100% 0px' });
         warm.observe(grid);
-      }
-
-      /* product drift only on boxes within 15% of the view (CSS .sx-dr; none on phones, see the CSS) */
-      if (timelines && boxes.length) {
-        var drIO = observe(function (entries) {
-          entries.forEach(function (en) { en.target.classList.toggle('sx-dr', en.isIntersecting); });
-        }, { root: ioRoot, rootMargin: '15% 0px 15% 0px' });
-        boxes.forEach(function (box) { drIO.observe(box); });
       }
 
       /* the whole mount off screen (frame scrolled away on the presentation page) or behind the
@@ -1233,15 +1281,15 @@
         layer = null;
         if (mapS) {
           mapS.masks.forEach(function (k) { k.target.removeAttribute('mask'); k.mask.remove(); });
+          mapS.route.style.removeProperty('visibility');
+          mapS.route.style.removeProperty('stroke-dasharray');
           mapS.here.classList.remove('sx-map', 'sx-tail');
           mapS.pins.forEach(function (pin) { pin.classList.remove('sx-on'); });
         }
-        root.classList.remove('sx', 'sx-pf');
-        boxes.forEach(function (box) { box.classList.remove('sx-dr'); });
+        root.classList.remove('sx');
         qa('.sx-hold').forEach(function (el) { el.classList.remove('sx-hold'); });
         qa('.sx-go').forEach(function (el) { el.classList.remove('sx-go'); });
         qa('.sx-slot').forEach(function (el) { el.classList.remove('sx-slot'); });
-        qa('.shot').forEach(function (el) { el.style.removeProperty('--sx-par'); });
         if (ticker) ticker.classList.remove('sx-tk', 'sx-tk2', 'sx-off');
       };
     }

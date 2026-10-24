@@ -84,7 +84,7 @@ document.addEventListener('load', function (e) { var t = e.target; if (t.tagName
         <h2>הדגמה אינטראקטיבית</h2>
         <ul>
           <li><b>הלוגו ״נלחץ״ על השקית</b> בפתיחה, וטבעת קרמל מתפשטת ממנו.</li>
-          <li><b>״אנחנו כאן.״</b>: מפה בקנה מידה אמיתי. במחשב התוויות יושבות ליד התנורים, ובטלפון הן רשימה ממוספרת מתחת למפה. ״Google Maps״ בכל תווית פותח את הסניף הנכון.</li>
+          <li><b>״אנחנו כאן.״</b>: מפה בקנה מידה אמיתי. במחשב התוויות עומדות על שולי המפה, וכל אחת נושאת את המספר או הסימן של התנור שלה. בטלפון הן רשימה ממוספרת מתחת למפה. ״Google Maps״ בכל תווית פותח את הסניף הנכון.</li>
           <li><b>סרט ההדבקה</b> נע לאט עם שמות המוצרים. אפשר לעצור אותו בכפתור (דרישת WCAG 2.2.2), והוא נעצר גם כשהעכבר עליו.</li>
           <li><b>הזמנה אונליין · בקרוב</b>: הקבלה מובילה עם הטלפון ומודיעה שההזמנה באפליקציה בדרך. אין בה קישור פעיל ואין איסוף פרטים. ״הדמיית יום ההשקה״ מראה מה משתנה כשהאפליקציה נפתחת: מתג אחד מוסיף כפתור ל־haofeapp.com/order.</li>
           <li><b>בטלפון</b> המוצרים בשני טורים והפיד הוא מסילה שגוללים הצידה, כך שהעמוד קצר בערך בשליש.</li>
@@ -153,8 +153,9 @@ document.addEventListener('load', function (e) { var t = e.target; if (t.tagName
     <section aria-labelledby="mot-b">
       <h2 id="mot-b">תנועה</h2>
       <p class="note prose">אופי: מוחשי וקופצני, כמו לפתוח קופסה. עקומת קפיץ <span class="mono">cubic-bezier(.34,1.56,.64,1)</span> לתנועות קצרות (250 עד 550 מ״ש), ועקומה רכה לשינויי גובה. הקפיץ מוגבל להזזות קטנות כדי שלא יעייף. כל לולאה ברקע נעצרת לבד תוך 5 שניות, ולסרט יש כפתור עצירה.</p>
-      <div class="tbl-wrap">
+      <div class="tbl-wrap" role="region" tabindex="0" aria-labelledby="mot-cap">
         <table>
+          <caption id="mot-cap" style="position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0">טבלת התנועה: כל רכיב, מתי הוא זז, מה קורה, כמה זמן, ומה נשאר בהפחתת תנועה</caption>
           <thead><tr><th>רכיב</th><th>מתי</th><th>מה קורה</th><th>משך</th><th>למה</th><th>בהפחתת תנועה</th></tr></thead>
           <tbody>
             <tr><td>לוגו־מדבקה</td><td>טעינה</td><td>נוחת מגודל 160% לסיבוב של 6°־, וטבעת קרמל מתפשטת ונעלמת</td><td>550 + 580 מ״ש</td><td>רגע מותג אחד, ברור</td><td>סטטית</td></tr>
@@ -371,7 +372,7 @@ document.addEventListener('load', function (e) { var t = e.target; if (t.tagName
       <div class="slip" data-rv>
         <div class="slip-copy">
           <h2 data-id="or">מזמינים בטלפון</h2>
-          <p class="order-num"><a href="tel:1700552255"><bdi dir="ltr">1700-55-22-55</bdi></a></p>
+          <p class="order-num"><a href="tel:1700552255"><bdi dir="ltr">1700-<wbr>55-<wbr>22-<wbr>55</bdi></a></p>
           <p>קו ההזמנות של האופה.</p>
         </div>
         <div class="acts">
@@ -393,23 +394,24 @@ document.addEventListener('load', function (e) { var t = e.target; if (t.tagName
         </blockquote>
         <p class="here-story">אבא של עמיר אפה באופקים כבר בשנות ה־80. עמיר ועדיאל המשיכו את העסק המשפחתי ופתחו את האופה בנתיבות. אחריה נפתח סניף בשדרות, בשיא הקורונה, ובאוגוסט 2022 סניף בקריית גת. <span class="tbd">טיוטה מתוך הכתבה בוואלה (2021), לאישורכם</span></p>
         <p class="here-facts">שלושה סניפים ובית ייצור, כ־27 ק״מ בקו אוויר בין נתיבות לקריית גת. מבית הייצור בנתיבות יוצאים לחמים לסופרים בכל הארץ.</p>
-        <p class="here-src">המפה בקנה מידה אמיתי. מיקומים: Google Maps ובד״ץ בית יוסף (גם הכשרות). אופקים: © OpenStreetMap contributors.</p>
+        <p class="here-src">המפה בקנה מידה אמיתי. מיקומים: Google Maps ובד״ץ בית יוסף (גם הכשרות). אופקים: <span lang="en" dir="ltr">© OpenStreetMap contributors</span>.</p>
       </div>
       <div class="map-wrap">
         <div class="map-art" role="img" aria-label="מפה בקנה מידה אמיתי: הדרך מאופקים לנתיבות, לשדרות ולקריית גת, ובית הייצור בנתיבות שממנו יוצאים לחמים לסופרים בכל הארץ">
-          <svg viewBox="0 0 800 800" aria-hidden="true" focusable="false">
-            <path class="map-grid" d="M0 25H800M0 100H800M0 175H800M0 250H800M0 325H800M0 400H800M0 475H800M0 550H800M0 625H800M0 700H800M0 775H800M25 0V800M100 0V800M175 0V800M250 0V800M325 0V800M400 0V800M475 0V800M550 0V800M625 0V800M700 0V800M775 0V800"/>
+          <!-- 800x660 map units: the 800x800 survey frame less 20 units at the top and 120 at the bottom (every y = survey y - 20) -->
+          <svg viewBox="0 0 800 660" aria-hidden="true" focusable="false">
+            <path class="map-grid" d="M0 5H800M0 80H800M0 155H800M0 230H800M0 305H800M0 380H800M0 455H800M0 530H800M0 605H800M25 0V660M100 0V660M175 0V660M250 0V660M325 0V660M400 0V660M475 0V660M550 0V660M625 0V660M700 0V660M775 0V660"/>
             <!-- the family route, in date order: Ofakim (1980s), Netivot, Sderot, Kiryat Gat (2022) -->
-            <path class="route-base" d="M351.5 563.4C340 500 312 440 305.3 377.6C298.6 315.2 316 262 319.5 202.7C323 143.4 470 80 567.4 60"/>
-            <path class="route" pathLength="1000" d="M351.5 563.4C340 500 312 440 305.3 377.6C298.6 315.2 316 262 319.5 202.7C323 143.4 470 80 567.4 60"/>
-            <!-- the production house (true point and callout) and its bread leaving for the rest of the country -->
-            <path class="fac-lead" d="M300 391.6L267 416"/>
-            <circle class="fac-dot" cx="300" cy="391.6" r="2.5"/>
-            <path class="out" d="M256 412C230 386 60 380 34 330L34 56"/>
-            <path class="out-head" d="M26 70L34 52L42 70"/>
-            <path class="leaders" d="M567 80V92M302 203H288M323 385L380 394M255 420H248M345 570L238 648"/>
-            <path class="north" d="M772 724V688M766 698L772 688L778 698"/>
-            <path class="scale" d="M610 786H760M610 780V792M760 780V792"/>
+            <path class="route-base" d="M351.5 543.4C340 480 312 420 305.3 357.6C298.6 295.2 316 242 319.5 182.7C323 123.4 470 60 567.4 40"/>
+            <path class="route" pathLength="1000" d="M351.5 543.4C340 480 312 420 305.3 357.6C298.6 295.2 316 242 319.5 182.7C323 123.4 470 60 567.4 40"/>
+            <!-- the production house (true point and callout) and its bread leaving north, for the rest of the country -->
+            <path class="fac-lead" d="M300 371.6L267 396"/>
+            <circle class="fac-dot" cx="300" cy="371.6" r="2.5"/>
+            <path class="out" d="M262 389V48"/>
+            <path class="out-head" d="M254 64L262 46L270 64"/>
+            <path class="leaders"/>
+            <path class="north" d="M772 548V512M766 522L772 512L778 522"/>
+            <path class="scale" d="M610 648H760M610 642V654M760 642V654"/>
           </svg>
           <span class="pin" data-place="netivot"><img src="assets/logo/haofe-logo-badge.svg" alt="" width="40" height="40" loading="lazy" decoding="async"><b class="pin-n">1</b><span class="pin-tag">נתיבות</span></span>
           <span class="pin" data-place="sderot"><img src="assets/logo/haofe-logo-badge.svg" alt="" width="40" height="40" loading="lazy" decoding="async"><b class="pin-n">2</b><span class="pin-tag">שדרות</span></span>
@@ -503,7 +505,7 @@ document.addEventListener('load', function (e) { var t = e.target; if (t.tagName
     <div class="ft-main">
       <p class="ft-name">האופה - בוטיק לחם</p>
       <p class="ft-label">הזמנה בטלפון</p>
-      <a class="ft-num" href="tel:1700552255"><bdi dir="ltr">1700-55-22-55</bdi></a>
+      <a class="ft-num" href="tel:1700552255"><bdi dir="ltr">1700-<wbr>55-<wbr>22-<wbr>55</bdi></a>
       <nav class="ft-cities" aria-label="הסניפים במפה"><a href="#" data-jump="netivot">נתיבות</a><a href="#" data-jump="sderot">שדרות</a><a href="#" data-jump="kiryat-gat">קריית גת</a></nav>
       <p class="ft-b2b">לעסקים ולרשתות: <span class="tbd">איש קשר לאישורכם</span></p>
     </div>

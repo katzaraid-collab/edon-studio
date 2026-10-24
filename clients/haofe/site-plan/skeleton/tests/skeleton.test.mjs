@@ -371,23 +371,43 @@ await test('reduced-motion setting changes mid-visit: modules clean up and boot 
 });
 
 await test('unported prototype modules are skipped with a warning; the site behaviour still works', async () => {
+  // The untouched prototype files (?raw, no port). A module is ported when its own registration says
+  // `contract: 2` next to its name (plan.md 6.2); only the modules WITHOUT that marker may be skipped,
+  // and every module with it must run. Since 24.10.2026 all three prototype modules carry the marker,
+  // so a probe module without it is appended to one of them: the guard itself stays under test.
+  const MODULES = [['b-hero', 'b-motion-hero.js'], ['b-scroll', 'b-motion-scroll.js'], ['b-micro', 'b-motion-micro.js']];
+  const CONCEPTS = resolve(SK, '../../concepts');
+  const marked = (file, name) => new RegExp(`name:\\s*'${name}',\\s*contract:\\s*2\\b`).test(readFileSync(join(CONCEPTS, file), 'utf8'));
+  const PROBE = "\n;(window.ProtoModules = window.ProtoModules || []).push({ name: 'legacy-probe', init: function () { window.__legacyProbeRan = true; } });\n";
+  const expectRan = MODULES.filter(([name, file]) => marked(file, name)).map(([name]) => name);
+  const expectSkipped = MODULES.filter(([name, file]) => !marked(file, name)).map(([name]) => name).concat('legacy-probe');
   const { ctx, page, log } = await open({
     viewport: { width: 390, height: 780 },
-    route: async (p) => p.route(/b-motion-(hero|scroll|micro)\.js$/, (r) => r.continue({ url: r.request().url() + '?raw' }))
+    route: async (p) => p.route(/b-motion-(hero|scroll|micro)\.js$/, async (r) => {
+      const res = await r.fetch({ url: r.request().url() + '?raw' });
+      const body = await res.text();
+      r.fulfill({ response: res, body: /b-motion-micro\.js$/.test(r.request().url()) ? body + PROBE : body });
+    })
   });
   await page.goto(PAGE, { waitUntil: 'load' });
-  const st = await page.evaluate(() => window.__haofeRuntime);
+  const st = await page.evaluate(() => ({ ...window.__haofeRuntime, seen: window.ProtoModules.map((m) => [m.name, m.contract >= 2]), probeRan: !!window.__legacyProbeRan }));
   await page.click('.menu-btn');
   const menuOpen = await page.evaluate(() => !document.getElementById('menu').hidden);
   await page.keyboard.press('Escape');
   await page.locator('.box .lid').first().click();
   const lid = await page.evaluate(() => document.querySelector('.box .lid').getAttribute('aria-expanded'));
   await ctx.close();
-  assert(st.ran.length === 0 && st.skipped.length === 3, JSON.stringify(st));
-  assert(log.warnings.filter((w) => /contract: 2/.test(w)).length === 3, 'warnings: ' + log.warnings.join(' | '));
+  // what the runtime saw agrees with the sources' markers
+  const seenRan = st.seen.filter(([, ok]) => ok).map(([name]) => name);
+  assert(JSON.stringify(seenRan) === JSON.stringify(expectRan), `markers in the sources ${expectRan} vs on the page ${seenRan}`);
+  assert(JSON.stringify(st.ran) === JSON.stringify(expectRan), `ran ${st.ran}, expected ${expectRan}: ${JSON.stringify(st)}`);
+  assert(JSON.stringify([...st.skipped].sort()) === JSON.stringify([...expectSkipped].sort()), `skipped ${st.skipped}, expected only the unmarked ${expectSkipped}`);
+  assert(!st.failed.length && !st.probeRan, JSON.stringify(st));
+  const warned = log.warnings.filter((w) => /contract: 2/.test(w));
+  assert(warned.length === expectSkipped.length, `warnings: ${warned.length}, expected ${expectSkipped.length}: ` + log.warnings.join(' | '));
   assert(menuOpen && lid === 'true', `menu ${menuOpen}, lid ${lid}`);
   assert(!log.errors.length, log.errors.join(' | '));
-  return `skipped ${st.skipped.join(', ')}; menu and lids still work`;
+  return `ran ${st.ran.join(', ') || '-'}; skipped only the unmarked: ${st.skipped.join(', ')}; menu and lids still work`;
 });
 
 /* ---------- page basics ---------- */

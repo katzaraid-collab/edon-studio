@@ -10,11 +10,13 @@
    morning shop into the evening shop.
 
    OWNS
-     1 theme       the whole prototype cross-fades between morning and evening in ~450ms: wide
-                   layouts interpolate the registered colour tokens; phone layouts swap inside a
-                   view transition (JS) scoped to the mount's own viewport in a frame, to the
-                   document on a real page (vtHost, plan C7/M6). The logo sticker fades to its
-                   evening print; the sun sets into the moon in the toggle; a warm bloom at the switch
+     1 theme       the whole prototype cross-fades between morning and evening in ~450ms: the
+                   in-page toggle swaps inside a view transition (JS, every width) scoped to the
+                   mount's own viewport in a frame, to the document on a real page (vtHost, plan
+                   C7/M6); a switch from outside (the presentation page's radios) or without view
+                   transitions interpolates the registered colour tokens, with the hero's evening
+                   timed to the ink (b-motion-hero.css). The logo sticker lifts off its evening
+                   print; the sun sets into the moon in the toggle; a warm bloom at the switch
      2 focus       focus-visible rings that ease in (fade and close in from a wider offset); the skip
                    link is deliberately not animated (in view the moment it takes focus)
      3 buttons     .btn-b (primary and secondary), .order, .lbl .go, .bar a, the icon buttons: hover
@@ -132,7 +134,9 @@
    are registered too (plan 2.6, dark): the bands (ticker tape, mobile bar), the focus ring, the
    strong line (theme button rim, receipt divider) and the map ground, so none of them jumps while
    the rest of the page fades. --focus is a var(--head) alias in b.css; registered, it computes to
-   a colour at each element that sets it (.pb, the bands, the map, the labels) and follows the fade. */
+   a colour at each element that sets it (.pb, the bands, the map, the labels) and follows the fade.
+   This fade serves a switch made from outside the prototype (the page's radios, another tab on the
+   site) and browsers without view transitions; the in-page toggle swaps in a view transition. */
 @property --bg { syntax: "<color>"; inherits: true; initial-value: #F7F1E6; }
 @property --paper { syntax: "<color>"; inherits: true; initial-value: #FFFCF6; }
 @property --kraft { syntax: "<color>"; inherits: true; initial-value: #EADBC2; }
@@ -170,10 +174,11 @@
    polaroids and labels already transition their shadow for hover) */
 .pb.mi-ready .slip, .pb.mi-ready .menu { transition: box-shadow .45s var(--ease-in-out); }
 
-/* Phone layouts (a 390px frame, the overlay on a phone, a phone visiting the real page): there the
-   token fade costs a full restyle of the page every frame, so the JS swaps the theme inside a view
-   transition: in a frame it is scoped to this mount's own viewport (never the presentation
-   document: other mounts share it), on a real page it covers the document (vtHost = document).
+/* The in-page toggle, at every width: the token fade costs a full restyle of the page every frame
+   (at 1440, 243-360ms of long tasks per switch in headless Chromium), so the JS swaps the theme
+   inside a view transition (31-41ms): in a frame it is scoped to this mount's own viewport (never the
+   presentation document: other mounts share it), on a real page it covers the document (vtHost =
+   document). One curve for the whole scene, so the hero text and its wall cannot get out of step.
    The evening frame is drawn once, live, and the morning snapshot fades off it on the compositor:
    no blend group, no per-frame restyle. Timing is the --ease-in-out token written out (the
    pseudo-elements hang off the transition's host, outside .pb in a frame, so they cannot read its
@@ -184,11 +189,26 @@
 :has(> .pb.mi-vt)::view-transition-new(root), :root.pb.mi-vt::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 :has(> .pb.mi-vt)::view-transition-old(root), :root.pb.mi-vt::view-transition-old(root) { mix-blend-mode: normal; animation: b-micro-dusk .45s cubic-bezier(.65, 0, .35, 1) both; }
 @keyframes b-micro-dusk { from { opacity: 1; } to { opacity: 0; } }
+/* ...and the live frame under the snapshot is drawn once, already in its final state: nothing of its
+   own transitions while the snapshot fades (the hero's dim and filters, the logo, the shadows would
+   otherwise fade a second time and restyle every frame). The bloom is an animation, it still plays */
+.pb.mi-vt *, .pb.mi-vt *::before, .pb.mi-vt *::after { transition: none !important; }
 
-/* the logo sticker: both prints stacked, the evening print fades in over the morning one */
-.pb.anim .mark-logo img.for-light, .pb.anim .mark-logo img.for-dark { display: block !important; grid-area: 1 / 1; transition: opacity .45s var(--ease-in-out); }
-.pb.anim .mark-logo img.for-dark, .pb.anim[data-mode="dark"] .mark-logo img.for-light { opacity: 0; }
-.pb.anim[data-mode="dark"] .mark-logo img.for-dark { opacity: 1; }
+/* the logo sticker. The morning print lies on top together with its white paper (under .anim the
+   disk b.css paints on .mark-logo moves onto the print), the evening print lies under it at full
+   strength. So the cross-fade always overlaps: to evening the morning sticker lifts off from 150ms,
+   once the header has darkened enough for the cream print to read; to morning it is laid back on over
+   the first 300ms. No frame has both prints half gone (design recheck #11: at ~240ms both sat at 50%
+   on a half-faded disk, and the two <img> layers promoted at the switch could paint blank for a
+   frame). Both prints keep a layer of their own (will-change), rastered once, so a switch only
+   changes one opacity on the compositor. Under .rm b.css swaps them (display) with no fade. */
+.pb.anim .mark-logo { background: transparent; box-shadow: none; }
+.pb.anim .mark-logo img.for-light, .pb.anim .mark-logo img.for-dark { display: block !important; grid-area: 1 / 1; will-change: opacity; }
+.pb.anim .mark-logo img.for-light {
+  z-index: 1; border-radius: 50%; background: #FFFFFF; box-shadow: 0 0 0 1px #FFFFFF, 0 0 0 2px var(--line);
+  transition: opacity .3s var(--ease-in-out);
+}
+.pb.anim[data-mode="dark"] .mark-logo img.for-light { opacity: 0; transition: opacity .3s .15s var(--ease-in-out); }
 
 /* the toggle: the sun sets (its rays draw in, it turns away and shrinks) as the moon swings up */
 .pb.anim .theme-btn .moon, .pb.anim[data-mode="dark"] .theme-btn .sun { display: block; }
@@ -316,8 +336,9 @@
    so it can turn; it keeps its baseline and size */
 .pb .nav .chip-soon { display: inline-block; }
 
-/* the logo is a sticker: hover tips it like a peeling corner; the evening print fades its paper */
-.pb .mark-logo { transition: transform var(--dur-spring-bounce) var(--spring-bounce), background-color .45s var(--ease-in-out), box-shadow .45s var(--ease-in-out); }
+/* the logo is a sticker: hover tips it like a peeling corner (its paper fades with the morning print,
+   section 1) */
+.pb .mark-logo { transition: transform var(--dur-spring-bounce) var(--spring-bounce); }
 @media (hover: hover) { .pb.anim .mark:hover .mark-logo { transform: rotate(-12deg) scale(1.06); } }
 .pb.anim .mark:focus-visible .mark-logo { transform: rotate(-12deg) scale(1.06); }
 .pb.anim .mark:active .mark-logo { transform: rotate(-5deg) scale(var(--press-scale)); transition-duration: 80ms; transition-timing-function: var(--ease-out); }

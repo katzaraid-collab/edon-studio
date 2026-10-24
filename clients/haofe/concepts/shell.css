@@ -167,7 +167,13 @@ body::before {
   position: absolute; top: 0; right: 0; transform-origin: top right;
   overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; scrollbar-width: thin;
 }
-.vp:focus-visible { outline-offset: -4px; }
+/* A focused .vp cannot show its own ring: the prototype paints over the inside of the box, and the
+   frame box clips anything outside it (a11y recheck N4: 0% visible). The page frames' .vp keep their
+   tabindex (Tab, then the arrow keys scroll a scaled frame), so the ring goes on the frame box. The
+   overlay's .vp is not a Tab stop (shell.js); if it ever takes focus, the bar above it shows it. */
+.vp:focus-visible { outline: none; }
+.frame-box:has(> .vp:focus-visible) { outline: 3px solid var(--accent); outline-offset: 3px; }
+.fs:has(> .vp:focus-visible) > .fs-bar { box-shadow: inset 0 -3px 0 var(--accent); }
 /* Direction B's sticky header (74px) and mobile bar (65px) sit inside the viewport, so tell
    the scroller about them: a control reached with Tab then stops clear of both instead of
    under them (audit A11Y-02). On the real site the window scrolls; see skeleton/page.css. */

@@ -1,17 +1,17 @@
 /* ==========================================================================
-   Direction B · השקית — motion: scroll (the peak, entrances, the map, ticker, product drift)
-   Owner: scroll motion module (pairs with b-motion-scroll.js). Version 3, 24.10.2026.
+   Direction B · השקית — motion: scroll (the peak, entrances, the map, ticker)
+   Owner: scroll motion module (pairs with b-motion-scroll.js). Version 3.1, 24.10.2026.
 
    THE STORY  "It's the site where the bread jumps out of the bag into the boxes, and the ovens
    light up along the family's road."
 
    OWNS
-     - THE PEAK: when a product's window comes into view, the frena and the challah (the Friday
-       box, the lower slot first) and the baguette leap out of the hero bag (.sc-bag) along an arc
-       into their windows and land with --spring-bounce while the box rocks once (bag far away:
-       they fall in through their own box's rim instead); dairy, parve and sufganiyot drop into
-       theirs from above and plop (--spring-settle). Only the product images wait: the boxes, their
-       names, lists and the printed "הדמיית AI" are always there.
+     - THE PEAK: when a product's window comes into view (30% for the three leaping breads), the
+       frena and the challah (the Friday box) and the baguette leap out of the hero bag (.sc-bag)
+       along an arc into their windows and land with --spring-bounce while the box rocks once (bag
+       far away: they fall in through their own box's rim instead); dairy, parve and sufganiyot drop
+       into theirs from above and plop (--spring-settle). Only the product images wait: the boxes,
+       their names, lists and the printed "הדמיית AI" are always there.
      - entrances for every [data-rv], one device per section, never the same in two sections in a row:
          boxes heading   rises out of a mask                         (.boxes .sec-head)
          boxes           the peak above                              (.box > .prod)
@@ -19,17 +19,21 @@
          map copy        heading rises, the quote is written in from the start side, lines follow
                          (.here-copy)
          map             the dotted route draws with scroll (Ofakim > Netivot > Sderot > Kiryat
-                         Gat); each pin is stamped and its oven lights when the line reaches it;
-                         then the production house, its bread leaving north, "לסופרים בכל הארץ"
-         place labels    swing in on a nail (.place): on a wide map right after their pin, the
-                         production house last; under a narrow map as the list scrolls in
+                         Gat); each pin is stamped, its oven glow flaring, when the line reaches it;
+                         then the production house, its bread leaving north, "לסופרים בכל הארץ".
+                         At rest it plays the rest by itself and ends within about 3.2 s; after a
+                         jump to the map it plays at double tempo
+         place labels    swing in on a nail (.place): on a map with the labels on it (b.css
+                         --map-labels: on) right after their pin, the production house last; under
+                         a narrow map as the list scrolls in
          feed heading    rises out of a mask (.feed .sec-head)
          polaroids       board: dealt from one stack onto their overlapping places; phone rail: the
                          cards in sight slide in along the rail from its far end (.pola)
        the JS adds .rv-done to each element when its entrance has finished
      - the ticker loop (reading direction, left to right), its scroll surge (at most 1.5x) and hover
        brake; two list copies instead of four while one list is wider than the band
-     - in-slot drift of the product cutouts while scrolling (a few px, scroll-driven, 700px and up)
+     - 3.1 dropped the scroll-linked drift of the product cutouts (design recheck 10: it kept every
+       product near the view on a scroll timeline, for a few px nobody saw)
 
    RULES
      - every waiting rule needs .sx on the root (the JS is running), so the page is complete if the
@@ -37,31 +41,32 @@
        module apply untouched afterwards
      - who moves what (agreed with the micro module, see its header):
          .box, .pola, .place   translate / rotate / scale / opacity here; `transform` is micro's
-         .prod                 translate = drift here; `transform` = the landing here
+         .prod                 `transform` = the landing here (nothing at rest)
          .shot::after          transform here (waiting, landing); scale and opacity are micro's
-         .pin                  transform + opacity here (b.css centres it with `translate`);
-         .pin::before          transform + opacity here (the oven glow)
+         .pin                  transform + opacity here (b.css centres it with `translate`); its
+                               ::before glow is not animated here any more (it rides the pin's stamp)
          .route, .out          a JS mask (stroke-dashoffset on the mask path) while drawing
        Everything is composite 'replace', so the compositor runs it (an 'add' animation falls back
-       to the main thread). While the line draws, its mask repaints the map's svg each frame; the
-       svg is not given a layer of its own (measured: with the labels on top of it that cost more
-       paint and layerize work than it saved).
+       to the main thread). One animation per element and entrance where opacity and movement go
+       together (property-specific keyframes), so an entrance costs as few animated elements as it
+       can. While the line draws, its mask repaints the map's svg each frame; the svg is not given a
+       layer of its own (measured: with the labels on top of it that cost more paint and layerize
+       work than it saved). Nothing here uses will-change: the compositor promotes an element only
+       while its animation runs.
      - nothing here under .rm: the JS adds no classes and no nodes there; the map is complete, and
        b.css section 6 turns the ticker into a static wrapping list
      - keyframes in this file are prefixed b-scroll-; classes this module adds are prefixed sx-
      - motion tokens from .pb (b.css): --ease-*, --spring-*, --dur-*, --stagger
      - hooks: see "hooks motion modules may rely on" at the top of b.css
-     - page contract 2: nothing to change here; timeline-scope on .pb.anim and the boxes'
-       view-timeline resolve to whichever element scrolls (the frame's .vp or the page)
+     - page contract 2: nothing to change here
 
    CLASSES THE JS ADDS (all sx- classes are removed by its cleanup)
-     root      .sx (module running)  .sx-pf (no scroll timelines: JS drives the product drift)
+     root      .sx (module running)
      [data-rv] .sx-go (its entrance has started)  .rv-done (finished: entrance rules stop matching;
                kept after cleanup as a record)
      .prod     .sx-hold (waiting to land: hidden until its leap or drop brings it in)
      .shot     .sx-hold (its contact shadow waits at scale 0)
-     .box      .sx-dr (box near the view: its product drift runs, from 700px wide up)
-               .rv-done (all its products have landed)
+     .box      .rv-done (all its products have landed)
      .ticker   .sx-tk (JS eases the hover stop)  .sx-off (out of view: loop paused)
                .sx-tk2 (two list copies are enough: copies 3 and 4 leave layout, 19s per loop)
      receipt wrapper (.order-sec .in)  .sx-slot (carries the print cover while the receipt prints)
@@ -70,8 +75,8 @@
      .pin      .sx-on (stamped)
      .map-art  .rv-done (the map has played; a reboot does not replay it)
      injected  .sx-layer > img.sx-fly (aria-hidden copies of the three leaping products, removed on
-               landing); .sx-ride when the copy rides its box's view timeline.
-               svg > mask#sx-mask-N (the route's and the arrow's reveal), removed when the map is done
+               landing); svg > mask#sx-mask-N (the route's and the arrow's reveal), removed when the
+               map is done
    ========================================================================== */
 
 
@@ -95,12 +100,11 @@
   background: var(--bg); transform-origin: 50% 100%;
 }
 
-/* the map: pins, their oven light, the production house's lines and the "לסופרים בכל הארץ" arrow
-   wait for their turn; the grid, the faint road (.route-base), the north arrow and the scale are the
-   print itself and are there from the start. */
-.pb.sx .here.sx-map .pin:not(.sx-on),
-.pb.sx .here.sx-map .pin:not(.sx-on)::before { opacity: 0; }
-.pb.sx .here.sx-map:not(.sx-tail) :is(.out, .out-head, .fac-lead, .fac-dot, .leaders, .map-out) { opacity: 0; }
+/* the map: pins (their oven glow, ::before, is inside them), the production house's lines and the
+   "לסופרים בכל הארץ" arrow wait for their turn; the grid, the faint road (.route-base), the north
+   arrow and the scale are the print itself and are there from the start. */
+.pb.sx .here.sx-map .pin:not(.sx-on) { opacity: 0; }
+.pb.sx .here.sx-map:not(.sx-tail) :is(.out, .out-head, .fac-lead, .fac-dot, .map-out) { opacity: 0; }
 
 /* the leaping copies of the products (the real images stay in their windows) */
 .pb .sx-layer { position: absolute; top: 0; left: 0; width: 0; height: 0; z-index: 8; pointer-events: none; }
@@ -125,40 +129,3 @@
 @media (hover: hover) and (pointer: fine) {
   .pb .ticker:not(.sx-tk):hover .tk-track { animation-play-state: paused; }
 }
-
-
-/* ---------- 3 product drift: the cutouts float a few px inside their windows while scrolling ---------- */
-/* each box publishes a view timeline; its products and the window's contact shadow ride it together
-   so the bread never leaves its shadow. The names of the two boxes the leap flies into (Friday,
-   breads) are hoisted to the root so a leaping copy can ride the same timeline and land exactly
-   where the real image sits.
-   Cost control: the JS marks a box .sx-dr only while it is within 15% of the view, so only boxes on
-   screen carry a scroll-linked animation (the switch happens off screen, where the few px are
-   unseen). Phones get no drift at all: there the boxes pass at thumb speed, the drift would be
-   invisible, and the frame budget is tight. */
-@keyframes b-scroll-drift { from { translate: 0 7px; } to { translate: 0 -7px; } }
-@supports (animation-timeline: view()) and (timeline-scope: --sx) {
-  .pb.anim { timeline-scope: --sxb1, --sxb2; }
-  @container pb (min-width: 700px) {
-    .pb.anim .box.sx-dr:nth-child(1) { view-timeline: --sxb1 block; }
-    .pb.anim .box.sx-dr:nth-child(2) { view-timeline: --sxb2 block; }
-    .pb.anim .box.sx-dr:nth-child(3) { view-timeline: --sxb3 block; }
-    .pb.anim .box.sx-dr:nth-child(4) { view-timeline: --sxb4 block; }
-    .pb.anim .box.sx-dr:nth-child(5) { view-timeline: --sxb5 block; }
-    .pb.anim .box.sx-dr .prod,
-    .pb.anim .box.sx-dr .shot::after,
-    .pb.anim .sx-fly.sx-ride { animation: b-scroll-drift linear both; animation-range: cover 0% cover 100%; }
-    .pb.anim .box.sx-dr:nth-child(1) .prod, .pb.anim .box.sx-dr:nth-child(1) .shot::after { animation-timeline: --sxb1; }
-    .pb.anim .box.sx-dr:nth-child(2) .prod, .pb.anim .box.sx-dr:nth-child(2) .shot::after { animation-timeline: --sxb2; }
-    .pb.anim .box.sx-dr:nth-child(3) .prod, .pb.anim .box.sx-dr:nth-child(3) .shot::after { animation-timeline: --sxb3; }
-    .pb.anim .box.sx-dr:nth-child(4) .prod, .pb.anim .box.sx-dr:nth-child(4) .shot::after { animation-timeline: --sxb4; }
-    .pb.anim .box.sx-dr:nth-child(5) .prod, .pb.anim .box.sx-dr:nth-child(5) .shot::after { animation-timeline: --sxb5; }
-    /* a copy rides its box's timeline; with that box not marked, the timeline is inactive and the copy
-       does not drift, exactly like the real image */
-    .pb.anim .sx-fly.sx-ride { animation-timeline: var(--sx-tl); }
-  }
-}
-/* fallback without scroll timelines: the JS writes --sx-par on each .shot (and on a leaping copy) */
-.pb.sx-pf .box .prod,
-.pb.sx-pf .box .shot::after,
-.pb.sx-pf .sx-fly { translate: 0 var(--sx-par, 0px); }

@@ -17,10 +17,11 @@
      - the mobile menu: panel unfolds and links slide in one after another (--stagger) when
        Shell.menu shows it; it folds away when Shell.menu hides it (kept painted and inert while it
        leaves, so nothing in it can be focused or clicked). Focus handling stays Shell.menu's.
-     - theme: on phone layouts the in-page toggle swaps the mode inside a view transition on vtHost
+     - theme: at every width the in-page toggle swaps the mode inside a view transition on vtHost
        (the mount's own viewport in a frame, the document on a page), so the cross-fade runs on the
-       compositor; wide layouts and switches from outside (the page's radios) use the CSS token
-       fade. A short bloom around the toggle at every switch. The icon morph is CSS.
+       compositor; switches from outside (the page's radios) and browsers without view transitions
+       use the CSS token fade. A short bloom around the toggle at every switch. The icon morph is
+       CSS (token fade only: under the snapshot the new icon is simply there).
      - order receipt (owner override O1): when data-order flips to "live" the status line is
        stamped on, the order button prints in and the nav chip is stamped; back to "soon" the
        status line and the chip fade in. The "בקרוב:" mark gives two oven-timer beats the first
@@ -42,8 +43,8 @@
        view()        { top, left, width, height, scale } of the visible scroll area in client px
      Each key falls back to the prototype frame when the shell does not pass it. On a page root is
      <html class="pb">. No window resize listener is needed here: nothing caches the viewport
-     height; the box sizes and the phone/wide switch come from ResizeObservers, which also fire
-     on a page (<html> changes width with the window), and every hover measures afresh.
+     height; the box sizes come from a ResizeObserver, which also fires on a page (<html>
+     changes width with the window), and every hover measures afresh.
      Under reduced motion (ctx.reduced / .rm) only the map pairing runs: the CSS gives instant,
      calm states and nothing moves or is injected.
      The returned cleanup removes every listener, observer, rAF, timer, animation, injected node,
@@ -540,15 +541,19 @@
         });
       }
 
-      /* Phone layouts: the in-page toggle swaps the theme inside a view transition on vtHost (the
-         CSS fades the morning snapshot off the live evening frame on the compositor). Measured at
-         4x CPU throttle this removes ~2s of main-thread work per four switches. Wide layouts keep
-         the CSS token fade, which is cheaper there than compositing two full-size frames, and so
-         does any switch made from outside (the page's radios). */
-      var narrow = scroller.clientWidth < 700;   // b.css: the phone composition lives below 700px
+      /* Every width: the in-page toggle swaps the theme inside a view transition on vtHost (the CSS
+         fades the morning snapshot off the live evening frame on the compositor; nothing in the live
+         frame transitions meanwhile, .mi-vt). The whole scene changes on one curve, so the hero text
+         and the wall behind it can never get out of step, and the logo is never blank (design
+         recheck #11). Measured at 1440 with real clicks, 8 switches (headless Chromium): click to
+         next paint 216-224ms and 31-41ms of long tasks per switch, against 304-344ms and 243-360ms
+         for the registered-token fade; at 4x CPU 304-360ms against 568-640ms, ~10 frames per switch
+         against ~6. (At 4x the phones had shown the same: ~2s less main-thread work per four
+         switches.) A switch made from outside (the presentation page's radios, another tab on the
+         site) and a browser without view transitions get the token fade, timed in the CSS. */
       var vtRun = null;
       function canSwap() {
-        return narrow && typeof vtHost.startViewTransition === 'function' && !!window.Shell && typeof window.Shell.setMode === 'function';
+        return typeof vtHost.startViewTransition === 'function' && !!window.Shell && typeof window.Shell.setMode === 'function';
       }
       function swapTheme(next) {
         root.classList.remove('mi-ready');   // the token fade must not run under the snapshot
@@ -581,11 +586,6 @@
         e.stopPropagation();
         swapTheme(root.getAttribute('data-mode') === 'dark' ? 'light' : 'dark');
       }, true);
-      if (window.ResizeObserver) {
-        var vpRO = new ResizeObserver(function () { narrow = scroller.clientWidth < 700; });
-        vpRO.observe(scroller);
-        observers.push(vpRO);
-      }
 
       /* ===== the order receipt: launch day, and the "בקרוב:" timer ===== */
 
