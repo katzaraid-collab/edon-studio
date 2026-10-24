@@ -175,35 +175,6 @@
         "meta_description": 129
       }
     },
-    "/order": {
-      "publish_when": "launch day as a coming-soon page; becomes a 302 to the app on launch day of ordering",
-      "title": "הזמנה מראש אונליין: בקרוב | האופה - בוטיק לחם",
-      "meta_description": "ההזמנה אונליין מהאופה עוד לא פתוחה, ואי אפשר להזמין דרכה כרגע. בינתיים מזמינים בטלפון, בקו ההזמנות 1700-55-22-55.",
-      "canonical": "https://haofe.example/order",
-      "robots": "noindex, follow",
-      "og": {
-        "og:type": "website",
-        "og:site_name": "האופה - בוטיק לחם",
-        "og:locale": "he_IL",
-        "og:url": "https://haofe.example/order",
-        "og:title": "בקרוב: מזמינים מראש מהאופה",
-        "og:description": "ההזמנות אונליין עוד לא פתוחות. בינתיים מזמינים בטלפון: 1700-55-22-55.",
-        "og:image": "https://haofe.example/og/haofe-1200x630.png",
-        "og:image:width": "1200",
-        "og:image:height": "630",
-        "og:image:alt": "הלוגו של האופה - בוטיק לחם על רקע שמנת, ומתחתיו: נתיבות · שדרות · קריית גת"
-      },
-      "twitter": {
-        "twitter:card": "summary_large_image",
-        "twitter:title": "בקרוב: מזמינים מראש מהאופה",
-        "twitter:description": "ההזמנות אונליין עוד לא פתוחות. בינתיים מזמינים בטלפון: 1700-55-22-55.",
-        "twitter:image": "https://haofe.example/og/haofe-1200x630.png"
-      },
-      "lengths": {
-        "title": 45,
-        "meta_description": 113
-      }
-    },
     "/about": {
       "publish_when": "when the owner approves the story",
       "title": "הסיפור שלנו | האופה - בוטיק לחם",

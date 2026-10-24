@@ -4,7 +4,7 @@
 // Writes screenshots and results.json to tests/out/.
 
 import { createRequire } from 'node:module';
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { start } from '../tools/serve.mjs';
@@ -79,12 +79,43 @@ await test('inline boot == theme.js boot, and its hash is in the CSP', async () 
   return sha256(boot);
 });
 
-await test('order "soon": no app URL and no live-only markup in the HTML', async () => {
-  const raw = readFileSync(join(SK, 'index.html'), 'utf8');
-  assert(!/haofeapp/i.test(raw), 'found "haofeapp"');
-  const html = raw.replace(/<!--[\s\S]*?-->/g, '');   // the markup, not the comments that explain it
-  assert(!/when-live|data-live-href/.test(html), 'found live-only markup');
-  return 'grep haofeapp: 0';
+await test('guard: the ordering app\'s domain is in no skeleton or served file; no online-order markup', async () => {
+  // Owner decision 24.10.2026: the bakery's ordering app is not part of the site. Ordering is by phone
+  // only (the receipt in #order), so the app's domain must never appear in any file the site builds or
+  // serves, and the old soon/live order machinery must not come back. The domain is assembled here so
+  // that a plain grep of this folder finds nothing.
+  const APP = new RegExp(['haofe', 'app'].join(''), 'i');
+  const TEXT = /\.(html|js|mjs|css|json|txt|svg|xml|webmanifest)$/;
+  // every text file of the skeleton (tests/ holds this file and old results); dist/ too once the site build exists
+  const dirs = [SK];
+  const dist = resolve(SK, '../../site/dist');
+  if (existsSync(dist)) dirs.push(dist);
+  const files = [];
+  const walk = (d) => readdirSync(d, { withFileTypes: true }).forEach((e) => {
+    const p = join(d, e.name);
+    if (e.isDirectory()) { if (p !== join(SK, 'tests')) walk(p); } else if (TEXT.test(e.name)) files.push(p);
+  });
+  dirs.forEach(walk);
+  const fileHits = files.filter((f) => APP.test(readFileSync(f, 'utf8')));
+  // every text response the page loads through the server, including the concepts/ files it links to
+  const { ctx, page } = await open();
+  const pending = [];
+  page.on('response', (r) => {
+    if (/text|javascript|json|svg|xml/.test(r.headers()['content-type'] || '')) pending.push(r.text().then((t) => [r.url(), t]).catch(() => null));
+  });
+  await page.goto(PAGE, { waitUntil: 'load' });
+  const served = (await Promise.all(pending)).filter(Boolean);
+  await ctx.close();
+  const servedHits = served.filter(([, t]) => APP.test(t)).map(([u]) => u.replace(ORIGIN, ''));
+  // the markup, not the comments that explain it
+  const html = readFileSync(join(SK, 'index.html'), 'utf8').replace(/<!--[\s\S]*?-->/g, '');
+  const markup = html.match(/\b(?:when-soon|when-live|chip-soon|btn-soon)\b|data-order|data-live-href|href="\/order"/g) || [];
+  const receipt = /<section class="order-sec" id="order"[\s\S]*?<h2 id="or">מזמינים בטלפון<\/h2>[\s\S]*?href="tel:1700552255"[\s\S]*?href="#visit">לסניפים<\/a>/.test(html);
+  assert(!fileHits.length, 'app domain in ' + fileHits.map((f) => f.slice(SK.length + 1)).join(', '));
+  assert(served.length > 0 && !servedHits.length, `app domain served in ${servedHits.join(', ') || '(no text responses seen)'}`);
+  assert(!markup.length, 'online-order markup: ' + [...new Set(markup)].join(', '));
+  assert(receipt, '#order is not the phone receipt (h2 "מזמינים בטלפון", tel:1700552255, "לסניפים" to #visit)');
+  return `${files.length} files + ${served.length} served text responses: 0 hits; #order = phone receipt`;
 });
 
 /* ---------- theme ---------- */

@@ -16,8 +16,8 @@
          -scrollY, which breaks every "content y + offset = screen y" calculation).
 
    CONTRACT 2 (what a module gets here; shell.js can pass the same keys, see plan.md 6.2)
-     init(root, ctx)  root = <html class="pb">, the element that carries data-mode, data-order,
-                      .anim/.rm and the theme tokens.
+     init(root, ctx)  root = <html class="pb">, the element that carries data-mode, .anim/.rm
+                      and the theme tokens.
      ctx = {
        contract: 2, page: true, frame: 'page', reduced,
        scroller      document.scrollingElement

@@ -4,8 +4,8 @@
   - Replace https://haofe.example with the real canonical origin (https, one host, no trailing slash on paths).
   - List only canonical, indexable URLs that return 200. Generate it at build time from the same page list the site uses.
   - lastmod = the date that page's content last changed (from the build), not the deploy date of every page.
-  - Never listed: /order (noindex while ordering is "soon"; it becomes a 302 to the app at launch),
-    any URL on the ordering app's domain, the 404 page, UTM-tagged URLs, staging hosts, /assets/ai/ images.
+  - Never listed: the 404 page, UTM-tagged URLs, staging hosts, /assets/ai/ images, external URLs.
+    The site has no /order page: ordering is by phone only (owner decision 24.10.2026).
   - changefreq and priority are left out on purpose: Google ignores them.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

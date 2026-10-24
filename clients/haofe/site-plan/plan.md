@@ -6,15 +6,17 @@ This plan turns the approved prototype (`concepts/b.html` + `b.css` + `b.js` + `
 
 A working skeleton is in `site-plan/skeleton/`. It is the real home page, running on the window scroll with the prototype's three motion modules, the theme handling and the production CSP, and Playwright tests it at 23 of 23 passing (section 10; files in section 13).
 
+**Owner decision, 24.10.2026:** haofeapp.com, the bakery's ordering app, is not part of the site. The site has no link to it, no online ordering and no "coming soon" state, no `/order` page, no launch-day plan and no build switch for it (`orderApp.status`, `data-order`, `.when-soon`/`.when-live`, `.chip-soon`, `data-live-href` are all gone). Ordering is by phone only: the home page's order receipt "מזמינים בטלפון" shows the ordering line 1700-55-22-55, the line "הסניפים: כתובות, טלפונים ושעות בהמשך העמוד" and a "לסניפים" button to the branches. This plan and the skeleton were updated to match; removed items are marked "cancelled" where they had a number or a section.
+
 ---
 
 ## 0. Decisions at a glance
 
 | Topic | Decision | Why, in one line |
 |---|---|---|
-| Stack | Static HTML, CSS and JS, built by one **zero-dependency Node 22 script** (`site/build/build.mjs`). No framework. | The build exists for four jobs plain files can't do safely: shared header, footer and bar; build-time rendering of the order state; the menu from `products.json`; checks such as the CSP hash and "no `haofeapp`". See section 3. |
+| Stack | Static HTML, CSS and JS, built by one **zero-dependency Node 22 script** (`site/build/build.mjs`). No framework. | The build exists for three jobs plain files can't do safely: shared header, footer and bar; the menu from `products.json`; checks such as the CSP hash and the guard that the ordering app's domain is in no output file. See section 3. |
 | Hosting | A **separate Vercel project** from the same repo. Its Root Directory is `clients/haofe`, it has its own `vercel.json` and `.vercelignore`, and its own domain. | The studio project ignores `clients/` and serves a CSP that would block the bakery's boot script. See section 9. |
-| Root element | **`<html class="pb rm" data-order="soon">`** is the prototype's `.proto.pb`. It carries the tokens, `data-mode`, `data-order`, `.anim`/`.rm`, and it is the query container. | The theme can then be applied before the first paint by a 1-line inline script, with no CSS changes. Tested. |
+| Root element | **`<html class="pb rm">`** is the prototype's `.proto.pb`. It carries the tokens, `data-mode`, `.anim`/`.rm`, and it is the query container. | The theme can then be applied before the first paint by a 1-line inline script, with no CSS changes. Tested. |
 | Layout queries | **Keep the container queries.** | The hero module decides layout with `root.offsetWidth >= 1000`, so CSS and JS keep the same breakpoint. `html` as the container does not break `position: fixed` or `sticky` (tested). |
 | Theme | Light on a first visit, whatever the OS setting. A toggle. The choice is saved in `localStorage["haofe:theme"]`, wrapped in try/catch. An inline `<head>` script prevents a flash. | As the owner asked. Tested with storage that throws, with `theme.js` delayed by 2.5 s, and in another tab. |
 | Motion on a page | A runtime adapter (`runtime.js`) passes **ctx contract 2**: `scroller = document.scrollingElement`, `ioRoot = null`, `scrollEvents = window`, `vtHost = document`, `view()`. It boots only modules that declare `contract: 2`. | The prototype modules assume a scrolling `<div>`. On a page, 14 of 17 entrances fire at load and the ticker never idles (measured, section 6.6). |
@@ -32,7 +34,7 @@ A working skeleton is in `site-plan/skeleton/`. It is the real home page, runnin
 | `concepts/b.html` (template `#proto`, lines 179-420), `b.js`, `shell.js`, `b.css` (header "HOOKS MOTION MODULES MAY RELY ON") | as of 24.10.2026, about 03:50 | `b.css` was also being edited, so line numbers below are approximate. Selectors are exact. |
 | `concepts/b-motion-hero.js` / `-scroll.js` / `-micro.js` (+ `.css`) | md5 at the last test run: hero.js `ae175f2…`, scroll.js `8679c78…`, micro.js `4860f1a…`, micro.css `2cbd8f0…` | Other agents are editing these. My snapshot is in `scratchpad/agents4/archsnap/`. The port runs on the live files and was re-run after their edits. |
 | `concepts/assets/ai/r/manifest.json` | generated 2026-10-24 by `audit/perf/tools/gen.py` | Widths, bytes, LQIP. All images are AI renders and must carry "הדמיית AI". |
-| `research/site-architecture.md`, `seo/plan.md`, `seo/head-meta.json` | 24.10.2026 | URL list, publish conditions, order "soon/live" rules. |
+| `research/site-architecture.md`, `seo/plan.md`, `seo/head-meta.json` | 24.10.2026 | URL list, publish conditions. The order "soon/live" rules of the IA draft are superseded: the owner removed the ordering app from the site on 24.10.2026. |
 | `audit/perf/report.md`, `recommended-markup.html` | 24.10.2026 | Fonts (§7), image markup (§6), P2 (plate fade hides the LCP). |
 | `audit/a11y/README.md` | snap2 / live | A11Y-02, -03, -07, -08, -09, -10, -15, -21 and -22 shape the page template. |
 | `legal/privacy-policy.md`, `legal/checklist.md` | 24.10.2026 | D3 (preference in localStorage), C4 (no third-party embeds or scripts without updating the policy). |
@@ -50,7 +52,7 @@ The URLs follow the IA and the SEO plan: Latin slugs, no trailing slash, publish
 
 | URL | Output file | Content source | Sections reused from the template | Publish when (per `seo/head-meta.json`) |
 |---|---|---|---|---|
-| `/` | `index.html` | the skeleton's `index.html` | header, hero, ticker, boxes (6 category boxes linking to `/products`), order slip, feed, b2b band, branch labels, footer, bar | launch day |
+| `/` | `index.html` | the skeleton's `index.html` | header, hero, ticker, boxes (6 category boxes linking to `/products`), order receipt (phone), feed, b2b band, branch labels, footer, bar | launch day |
 | `/products` (the menu) | `products.html` | **`data/products.json`**, rendered by the build (section 2.1) | `.sec-head`; category chips; plain lists, **not** the box disclosure (find-in-page and SEO need the text open) | when the owner approves the list |
 | `/branches` | `branches.html` | `site/data/branches.json` (new, section 2.2) | `.labels` / `.label` with `id="netivot|sderot|kiryat-gat"` anchors | launch day |
 | `/branches/netivot`, `/sderot`, `/kiryat-gat` | `branches/<slug>.html` | the same JSON | one `.label` enlarged, plus "סניפים נוספים" | Netivot at launch; the others once the owner confirms the phone (IA §5) |
@@ -58,7 +60,7 @@ The URLs follow the IA and the SEO plan: Latin slugs, no trailing slash, publish
 | `/about` (story) | `about.html` | owner-approved story (the prototype's draft from Walla 2021 is pending) | `.story-card` | when the owner approves the story |
 | `/accessibility` | `accessibility.html` | `legal/accessibility-statement.md`, converted once by hand after the bracketed variants are resolved | text page template (section 4.4) | launch day |
 | `/privacy` | `privacy.html` | `legal/privacy-policy.md`, the **"עם העדפה, לפי D3"** variant, because the theme choice is stored | text page template | launch day |
-| `/order` | `order.html` | IA §6 "soon" text | `.slip` (soon state only) | launch day, `noindex, follow`, left out of the sitemap. On ordering launch day it becomes a 302 (section 9.4) |
+| ~~`/order`~~ | — | — | — | **Cancelled (24.10.2026):** no order page. Ordering is by phone only, on the home page's receipt (`#order`). |
 | 404 | `404.html` | `seo/plan.md` §3 copy | text page template, with links to `/` and `/branches` | launch day; Vercel serves `404.html` from the output root with status 404 ([Vercel guide](https://vercel.com/kb/guide/custom-404-page)) |
 
 ### 2.1 `/products` from `data/products.json`
@@ -77,7 +79,7 @@ The build follows the rules the data agent wrote in `data/menu.md`, "Notes for t
 
 ```json
 { "slug": "netivot", "city": "נתיבות",
-  "address":  { "value": "שדרות ירושלים 136, נתיבות", "confirmed": true,  "source": "verify:branches (research.json), haofeapp.com/order 24.10.2026" },
+  "address":  { "value": "שדרות ירושלים 136, נתיבות", "confirmed": true,  "source": "verify:branches (research.json); the owner's ordering system, viewed 24.10.2026" },
   "phone":    { "value": "08-9752093",               "confirmed": true,  "source": "verify:branches" },
   "hours":    { "value": null, "confirmed": false, "source": "4 sources disagree (verify:branches)" },
   "kashrut":  { "value": null, "confirmed": false, "source": "no Badatz record for the store (research:kashrut)" },
@@ -99,13 +101,12 @@ clients/haofe/                       Vercel Root Directory of the new project "h
 └── site/
     ├── package.json                 { "type": "module", "scripts": { "build": "node build/build.mjs",
     │                                  "test": "node tests/site.test.mjs" }, "engines": { "node": "22.x" } }
-    ├── site.config.json             { orderApp: { status: "soon", url, branches: ["netivot"] },
-    │                                  origin: "https://haofe.example", pages: { "/products": { publish: false }, … } }
+    ├── site.config.json             { origin: "https://haofe.example", pages: { "/products": { publish: false }, … } }
     ├── data/branches.json           section 2.2
     ├── src/
-    │   ├── partials.mjs             head(meta), header(page), footer(), bar(), orderSlip(status): template-literal functions
+    │   ├── partials.mjs             head(meta), header(page), footer(), bar(), orderSlip() (the phone receipt): template-literal functions
     │   ├── pages/                   index.mjs, products.mjs, branches.mjs, branch.mjs, business.mjs, about.mjs,
-    │   │                            accessibility.mjs, privacy.mjs, order.mjs, notfound.mjs  (each: export render(data) => html)
+    │   │                            accessibility.mjs, privacy.mjs, notfound.mjs  (each: export render(data) => html)
     │   ├── css/  base.css (= promoted concepts/b.css), motion-hero.css, motion-scroll.css, motion-micro.css (ported),
     │   │         page.css (= skeleton/page.css), fonts.css
     │   └── js/   theme.js, site.js, runtime.js (= skeleton), motion/hero.js, scroll.js, micro.js (ported)
@@ -123,10 +124,9 @@ clients/haofe/                       Vercel Root Directory of the new project "h
 2. For each page whose `publish` is true, call `render()`. The page is wrapped in `head(meta) + header + <main id="main" tabindex="-1">…</main> + footer + bar`. The inline boot script is copied **byte for byte** from `src/js/theme.js` between `/*! boot:start */` and `/*! boot:end */`, exactly as `skeleton/tools/csp-hash.mjs` does.
 3. Fingerprint CSS and JS into `dist/assets/<name>.<sha256-8>.<ext>` and rewrite the references, so `/assets/*` can be cached as `immutable` (section 9.3). Fonts get a version in the file name (`rubik-400-700-heb.v1.woff2`).
 4. Generate every `<picture>` from `manifest.json` (section 8) and emit the LQIP placeholders as a generated CSS file of classes instead of `style=""` attributes. Then `style-src-attr 'unsafe-inline'` can go.
-5. Write `sitemap.xml` from the published, indexable pages (not `/order`, not 404). Copy `public/`.
+5. Write `sitemap.xml` from the published, indexable pages (not 404). Copy `public/`.
 6. **Fail the build** if any of these is true:
-   - `orderApp.status === 'soon'` and `haofeapp` appears anywhere in `dist/` (IA §6, CI rule).
-   - The `/order` redirect in `vercel.json` disagrees with `orderApp.status` (section 9.4).
+   - The ordering app's domain appears anywhere in `dist/` (a guard after the owner's decision of 24.10.2026; the skeleton test "guard: …" does the same check).
    - The sha256 of the boot snippet is not in `vercel.json`'s CSP.
    - Any of "לאישור", "[[חסר", `class="tbd"`, `data-live-href` or `style="` appears.
    - An internal `href` points to a page that was not written, or to an `#id` that does not exist.
@@ -148,11 +148,11 @@ Production never reads `concepts/` at build time. `site/tools/promote.mjs` is ru
 
 | In the prototype (template `#proto` in `b.html`) | On the site | Where in the skeleton |
 |---|---|---|
-| `<div class="proto pb" data-mode="light" data-order="soon">` | `<html lang="he" dir="rtl" class="pb rm" data-order="soon">`. Static `rm` = the calm, static page without JS. The boot script swaps it for `anim` or `rm` and sets `data-mode`. | `index.html` line 2 |
+| `<div class="proto pb" data-mode="light">` | `<html lang="he" dir="rtl" class="pb rm">`. Static `rm` = the calm, static page without JS. The boot script swaps it for `anim` or `rm` and sets `data-mode`. | `index.html` line 2 |
 | `data-id="x"` / `data-for` / `data-controls` / `data-labelledby` (made unique by `Shell.ids`) | `id="x"` / `for` / `aria-controls` / `aria-labelledby` written in the HTML; the build checks uniqueness | all sections |
 | `<a href="#" data-jump="boxes">` (`Shell.anchors` scrolls the frame) | `<a href="#boxes">` in-page, or `/products` across pages. `html { scroll-padding-top: 84px }` plus `scroll-padding-bottom` on phones (A11Y-02). `html.anim { scroll-behavior: smooth }`. | `page.css` |
 | no `<main>`, no skip link (A11Y-10) | `<a class="skip" href="#main">` first in `<body>`, then `<main id="main" tabindex="-1">` around hero to branches | `index.html`, `page.css` |
-| `.when-soon` / `.when-live` pairs and `data-live-href` (b.js `orderSwitch` writes the app URL) | Only one state is rendered, at build time. In "soon" the app URL is in no file. `orderSwitch` is not ported. | `index.html` `#order`; test "order soon" |
+| The order module (its `.when-soon` / `.when-live` pairs, `data-live-href` and b.js `orderSwitch` were removed from the prototype on 24.10.2026) | Ordering is by phone only. `#order` is the receipt "מזמינים בטלפון": the ordering line 1700-55-22-55 as a `tel:` link, "הסניפים: כתובות, טלפונים ושעות בהמשך העמוד", and "לסניפים" → `#visit`. No online-ordering state, no app link. | `index.html` `#order`; test "guard: …" |
 | `<img src="assets/ai/plate.webp">` | `<picture>` with AVIF and WebP `srcset`/`sizes` and LQIP (section 8) | hero, 6 boxes |
 | `<p class="hand">@haofe_bakery</p>` | `<bdi dir="ltr">@haofe_bakery</bdi>` (A11Y-09) | feed |
 | `.ai-note` before the `<h1>` in DOM order (A11Y-21) | moved after `.in`; the CSS still pins it to the scene corner | hero |
@@ -179,9 +179,9 @@ Production never reads `concepts/` at build time. `site/tools/promote.mjs` is ru
 | `Shell.anchors`, `Shell.ids` | gone (real links and ids) |
 | `Shell.reveal` (`.rv-in`) | `runtime.js` `reveal()` with `root: null`. No CSS uses `.rv-in` today; kept only because `b.css`'s hook list promises it. |
 | `PROTO.init` (`b.js`) | `site.js`: boxes and the ticker pause. Runs once on the real DOM and is not rebuilt when the modules reboot. |
-| frames, overlay, `#rm`, `#order-live`, replay | presentation only, dropped |
+| frames, overlay, `#rm`, replay | presentation only, dropped |
 
-### 4.4 Text pages (accessibility, privacy, 404, order)
+### 4.4 Text pages (accessibility, privacy, 404)
 
 Same header, footer and bar. The body is `<main class="doc"><div class="in">`, with headings in `--display` and body copy at 60ch. Legal pages have no motion modules (do not load the `b-motion-*` files). `theme.js` and `site.js` still load.
 
@@ -319,7 +319,7 @@ var ctx = { contract: 2, page: false, reduced: reduced, frame: frame, scroller: 
 
 1. `shell.css` line 55 `[hidden] { display: none !important; }` beats `b-motion-micro.css` `.pb .menu.mi-closing[hidden] { display: grid; }`, so in the prototype the menu's fold-away animation never paints. The skeleton's `page.css` uses `[hidden]:not(.mi-closing) { display: none !important; }` instead.
 2. Adopt contract 2 upstream: section 6.3, plus `contract: 2` and the `shell.js` ctx keys (section 6.2). Then `promote.mjs` copies the files unchanged and the port script can be retired.
-3. A11Y-07: the wheat sway, the flour dust and the "soon" timer move for more than 5 s with no control. Choose option (a) or (b) before launch.
+3. A11Y-07: the wheat sway and the flour dust move for more than 5 s with no control (the "soon" dot left the page with the online-ordering state, 24.10.2026). Choose option (a) or (b) before launch.
 
 ---
 
@@ -358,7 +358,7 @@ The skeleton covers A11Y-02 (scroll padding; unsticking the bars at `max-height:
   `concepts/`, `audit/`, `legal/` and `research/` stay out of the upload. Only `site/dist` is served in any case ("Only the contents of this Output Directory will be served").
 - **Build settings:** Framework Preset "Other". The build command and output come from `vercel.json` (`node site/build/build.mjs`, `site/dist`). Node 22.
 - **Builds per commit:** the automatic "skip unaffected projects" needs npm/yarn/pnpm/Bun workspaces ([monorepos](https://vercel.com/docs/monorepos)), which this repo does not have. Use the **Ignored Build Step**: `git diff --quiet HEAD^ HEAD -- .` (exit 0 = skip) in the bakery project, so studio commits do not rebuild it. Optionally do the same in the studio project for commits that touch only `clients/`.
-- **Domain:** MISSING. The marketing domain is not decided. The SEO plan uses the placeholder `https://haofe.example`. `haofeapp.com` cannot host the site: its root is the staff login and `www` has no DNS record (`research.json` "research:app-domain"). Until a domain is chosen, use the `*.vercel.app` URL with password protection or noindex.
+- **Domain:** MISSING. The marketing domain is not decided. The SEO plan uses the placeholder `https://haofe.example`. Until a domain is chosen, use the `*.vercel.app` URL with password protection or noindex.
 
 ### 9.2 Content-Security-Policy (in `skeleton/vercel.json`, tested)
 
@@ -385,24 +385,20 @@ Workflow: edit the boot in `theme.js` → `node tools/csp-hash.mjs --fix` → co
 
 - On every route: `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()` and `Cross-Origin-Opener-Policy: same-origin`. These are the studio's own values from the repo-root `vercel.json`.
 - `Cache-Control: public, max-age=31536000, immutable` on `/assets/(.*)` (fingerprinted) and `/fonts/(.*)` (versioned names). HTML keeps Vercel's default revalidation.
-- `X-Robots-Tag: noindex, follow` on `/order` while it is "soon" (SEO T5), in addition to the meta tag.
 - **Given by Vercel, not set by us:** HSTS `max-age=63072000`, and `x-robots-tag: noindex` on preview and outdated production deployments ([Vercel response headers](https://vercel.com/docs/headers/response-headers)). Do not add HSTS `preload` until the domain is final.
 - `cleanUrls: true` (`/about.html` → 308 to `/about`) and `trailingSlash: false` (`/about/` → 308 to `/about`) ([vercel.json](https://vercel.com/docs/project-configuration/vercel-json)). The SEO plan says "301". These are 308s, also permanent. Uppercase URLs are not redirected; they 404. No middleware just for that.
 
-### 9.4 Ordering launch day (IA §6, in code)
+### 9.4 Ordering launch day: cancelled (24.10.2026)
 
-1. `site.config.json`: `orderApp.status = "live"`.
-2. `vercel.json` `redirects`: `{ "source": "/order", "destination": "https://haofeapp.com/order", "permanent": false }` (302, so it can be undone). Remove the `/order` `X-Robots-Tag` block.
-3. The build refuses a mix of the two, and renders the live slip, header chip and bar item from the same flag.
-
-The redirect is written in `vercel.json` by hand, not by the build, because `vercel.json` is project configuration Vercel reads for the deployment. A build that rewrote it would be a second source of truth. The build only checks it.
+The owner removed the ordering app from the site's scope. The site has no `orderApp` switch, no `/order` page or redirect, and nothing changes on the site when the app launches. `vercel.json` keeps `"redirects": []`, and its `/order` `X-Robots-Tag` block was removed.
 
 ---
 
 ## 10. Testing
 
 - `skeleton/tests/skeleton.test.mjs` (Playwright, Chromium) starts `tools/serve.mjs`. That server serves `clients/haofe/` with `vercel.json`'s headers and ports the motion modules from the live `concepts/` files on each request. Result on 24.10.2026: **23 of 23 pass** (`tests/out/results.json`, plus screenshots).
-- The site keeps the same suite, pointed at `dist/`, and adds: one h1 per page, link integrity, the soon/live grep, an axe run with `scratchpad/agents4/a11y/axe-run.js` (the a11y agent's harness), and Firefox and WebKit projects (MISSING today).
+- The guard test checks every text file of the skeleton and every text response the page loads for the ordering app's domain, checks the markup for the old online-order hooks (`.when-soon`, `.when-live`, `.chip-soon`, `.btn-soon`, `data-order`, `data-live-href`, `href="/order"`), and checks that `#order` is the phone receipt. When `site/dist/` exists it scans that folder too.
+- The site keeps the same suite, pointed at `dist/`, and adds: one h1 per page, link integrity, an axe run with `scratchpad/agents4/a11y/axe-run.js` (the a11y agent's harness), and Firefox and WebKit projects (MISSING today).
 
 ---
 
@@ -426,7 +422,7 @@ Estimates are mine, in hours, for one front-end developer who knows this code. O
 | 6 | Home page: move the skeleton markup into `pages/index.mjs` + partials; `picture()` helper from the manifest; LQIP as CSS, then drop `style-src-attr` | `/` matching the skeleton | 4 |
 | 7 | `/products` from `products.json` (section 2.1), category chips, `abbr` for תפו״א | `/products` (unpublished until approved) | 4 |
 | 8 | `/branches` hub from `branches.json`; JSON-LD from `seo/jsonld.json`; `/branches/netivot` | 2 pages | 4 |
-| 9 | `/order` (soon), 404, the text-page template | 2 pages | 2 |
+| 9 | 404 and the text-page template (`/order` cancelled on 24.10.2026) | 1 page | 2 (not re-estimated after the `/order` cut) |
 | 10 | `/accessibility`, `/privacy` from `legal/*.md` after the owner and lawyer resolve the brackets | 2 pages | 3 |
 | 11 | `/business`, `/about` once their copy is approved; `/branches/sderot` and `/kiryat-gat` once the phones are confirmed | up to 4 pages | 2 each |
 | 12 | Accessibility fixes not yet in the skeleton: A11Y-01/-06 focus token, A11Y-04 token, A11Y-05 hero scrim, A11Y-07 motion control (needs a boot change → new hash) | CSS and JS edits | 4 |
@@ -446,7 +442,7 @@ Order of work: steps 1-6 make a deployable home page; 7-10 add the pages that ha
 | Path | What it is |
 |---|---|
 | `site-plan/plan.md` | this file |
-| `skeleton/index.html` | The home page as a real page. `html.pb` root, inline boot, `<picture>` markup (generated from the perf agent's recommended markup), the soon-only order module, only confirmed branch fields. Loads `b.css` and the motion files from `../../concepts/`. |
+| `skeleton/index.html` | The home page as a real page. `html.pb` root, inline boot, `<picture>` markup (generated from the perf agent's recommended markup), the phone-order receipt (as `concepts/b.html` `.order-sec`), only confirmed branch fields. Loads `b.css` and the motion files from `../../concepts/`. |
 | `skeleton/theme.js` | The boot snippet (between markers; copied inline) and the toggle (`window.HaofeTheme`) |
 | `skeleton/runtime.js` | The page adapter: ctx contract 2, the `Shell` shim, the contract guard, reboot on a reduced-motion change |
 | `skeleton/site.js` | `b.js` boxes and ticker + `Shell.menu`, with the A11Y-03 fix |

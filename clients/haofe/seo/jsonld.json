@@ -4,7 +4,7 @@
     "Placeholder origin https://haofe.example must be replaced everywhere before deploy (.example is reserved, so a missed one is obvious).",
     "pages: paste each page's jsonld object into that page as <script type=\"application/ld+json\"> ... </script>, rendered in the HTML on the server (not injected by client JS).",
     "pending_owner_confirmation: values that exist but are not confirmed, or are MISSING. Merge only after confirmation.",
-    "after_app_launch: add only when the ordering app is live. While orderApp.status is 'soon', the string haofeapp must not appear in any built page, sitemap or JSON-LD.",
+    "No ordering markup: on 24.10.2026 the owner removed the ordering app from the site, so no node carries an order action or a menu link to it, and the app's domain must not appear in any built page, sitemap or JSON-LD. Ordering is by phone only (Organization.contactPoint, contactType orders, 1700-55-22-55).",
     "Not marked up on purpose: Beit Shemesh (closed / unknown), the production plant at הסוללים 1 (not a customer location, last confirmed 2023), aggregateRating/review (self-serving reviews are not eligible), priceRange (no prices published), servesCuisine.",
     "If a JS framework serializes this, escape every < as \\u003c."
   ],
@@ -17,12 +17,12 @@
   },
   "_sources": {
     "Organization.name": "TikTok @haofe_bakery1 nickname (saved fetch 2026-10-24 01:47 UTC); Instagram @haofe_bakery display name; Facebook brand page name (research:social, 2026-10-24)",
-    "Organization.alternateName": "logo wordmark; haofeapp.com PWA manifest name (research:app-domain)",
+    "Organization.alternateName": "logo wordmark; the app manifest name of the owner's ordering system, viewed 24.10.2026 (research:app-domain)",
     "Organization.description": "Instagram @haofe_bakery bio, word for word: 'רשת מאפיות ובית ייצור למאפים, לחמים ודברי פרימיום' (research:social other_findings, 2026-10-24)",
     "Organization.contactPoint": "Instagram and TikTok bios: 'להזמנות: 1700-55-22-55'; same number on Google (Kiryat Gat) and Badatz (research:kiryat-gat other_findings)",
     "Organization.sameAs": "own accounts: @haofe_bakery (owner confirmed as the verified account), @haofe_bakery1 (link sent by the owner; bio lists the three branch cities and the 1700 line)",
-    "Organization.logo": "/home/user/edon-studio/clients/haofe/brand/png/haofe-logo-512.png, traced from haofeapp.com/brand/icon-512.png; must be hosted at /brand/haofe-logo-512.png",
-    "Netivot": "address + phone: haofeapp.com/order branch panel (owner's own page, viewed 2026-10-24) and Google cid 11794734948161764260; alternateName: the app's branch panel 'האופה · בוטיק לחם נתיבות'",
+    "Organization.logo": "/home/user/edon-studio/clients/haofe/brand/png/haofe-logo-512.png, traced from the icon of the owner's ordering system (icon-512.png, viewed 24.10.2026); must be hosted at /brand/haofe-logo-512.png",
+    "Netivot": "address + phone: the branch panel of the owner's ordering system (viewed 24.10.2026) and Google cid 11794734948161764260; alternateName: the same branch panel, 'האופה · בוטיק לחם נתיבות'",
     "Sderot": "address: branch post https://www.instagram.com/p/DeghqXvtZje/ (2026-10-15), Google cid 10594881781052471767, Badatz; alternateName: @haofe_sderot display name; sameAs: account that published DeghqXvtZje and DetORsxtzJW",
     "Kiryat Gat": "address: branch post https://www.instagram.com/p/DeJXIltIyeh/ (2026-10-06), branch bio, Google cid 4460162658001013556, Badatz; alternateName and sameAs: @haofe_kiryatgat profile",
     "hasMap": "Google Maps cid URL of each listing, viewed 2026-10-24, none flagged closed"
@@ -174,7 +174,7 @@
       }
     },
     "/branches/netivot": {
-      "when": "now: address and phone are confirmed by the owner's own ordering page and by Google",
+      "when": "now: address and phone are confirmed by the owner's ordering system (viewed 24.10.2026) and by Google",
       "jsonld": {
         "@context": "https://schema.org",
         "@graph": [
@@ -493,7 +493,7 @@
           }
         ]
       },
-      "status": "MISSING: four sources disagree for every branch (owner app, Google, zips.co.il, bakerias). A closing time after midnight is written as closes 00:00 or later per schema.org; holidays go in specialOpeningHoursSpecification"
+      "status": "MISSING: four sources disagree for every branch (the owner's ordering system, Google, zips.co.il, bakerias). A closing time after midnight is written as closes 00:00 or later per schema.org; holidays go in specialOpeningHoursSpecification"
     },
     "geo": {
       "status": "add after the owner confirms each pin in its Google Business Profile",
@@ -556,38 +556,6 @@
     },
     "kashrut": {
       "status": "no schema property. Show it as visible text on each branch page, worded exactly as the certificate the owner provides (Badatz online, 2026-10-24: Sderot למהדרין חלבי + פרווה; Kiryat Gat למהדרין פרווה; Netivot store: no record)"
-    }
-  },
-  "after_app_launch": {
-    "_conditions": [
-      "The owner confirms in writing that online ordering is live and has placed a test order (WhatsApp confirmation and staff dashboard working).",
-      "The site's orderApp.status is switched to 'live' in the build config.",
-      "The URL is exactly https://haofeapp.com/order (https, no trailing slash, no www, never the root, which is the staff login).",
-      "Merge into the Netivot node only (same @id). Sderot and Kiryat Gat get nothing: the app covers Netivot pickup only."
-    ],
-    "_note": "Google does not document OrderAction, so this creates no order button in Search. It describes the action for other consumers (AI agents). In the Rich Results Test only check that it adds no errors.",
-    "merge_into": "https://haofe.example/branches/netivot#bakery",
-    "jsonld": {
-      "@context": "https://schema.org",
-      "@type": "Bakery",
-      "@id": "https://haofe.example/branches/netivot#bakery",
-      "potentialAction": {
-        "@type": "OrderAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": "https://haofeapp.com/order",
-          "inLanguage": "he",
-          "actionPlatform": [
-            "https://schema.org/DesktopWebPlatform",
-            "https://schema.org/MobileWebPlatform"
-          ]
-        },
-        "deliveryMethod": "https://schema.org/OnSitePickup"
-      }
-    },
-    "optional_hasMenu": {
-      "hasMenu": "https://haofeapp.com/order",
-      "note": "Only if the owner is happy for the order page (49 items, no prices) to act as the menu. Use hasMenu or menu, not both."
     }
   }
 }

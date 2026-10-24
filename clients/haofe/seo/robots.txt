@@ -3,8 +3,8 @@
 # Serve at the root of the canonical host only. Staging and preview hosts get "Disallow: /" plus a password instead.
 
 # 1. Everyone may crawl everything.
-#    /order (the "coming soon" page) is NOT blocked here on purpose: it carries
-#    <meta name="robots" content="noindex, follow">, and a crawler can only obey a noindex it is allowed to fetch.
+#    Nothing is blocked here on purpose: a page that must stay out of search (the 404 page) carries
+#    <meta name="robots" content="noindex"> instead, and a crawler can only obey a noindex it is allowed to fetch.
 User-agent: *
 Allow: /
 

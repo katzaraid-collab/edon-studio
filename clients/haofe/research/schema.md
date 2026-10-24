@@ -1,3 +1,5 @@
+> **Note, 24.10.2026:** historical draft, not maintained. On 24.10.2026 the owner removed haofeapp.com from the site's scope, so the /order, order-app and OrderAction parts below (section 3, "Add only after the app launches") are superseded by `seo/plan.md` and `site-plan/plan.md`. The current JSON-LD is `seo/jsonld.json`. Ordering on the site is by phone only (1700-55-22-55).
+
 # HaOfe JSON-LD: brand Organization plus 3 active branches (as of 2026-10-24)
 
 The core graph below contains only verified fields. Netivot, Sderot and Kiryat Gat are the branches marked `ok_to_show_as_active`, and nothing in it points to haofeapp.com. I parsed both files and every `@id` reference resolves.

@@ -2,14 +2,16 @@
 
 Draft 2026-10-24 · SEO step · output folder `/home/user/edon-studio/clients/haofe/seo/`
 
+**Owner decision, 24.10.2026:** haofeapp.com, the bakery's ordering app, is not part of the site. The site has no link to it, no online ordering or "coming soon", no `/order` page and no launch-day switch. Ordering is by phone only, on the ordering line 1700-55-22-55. This plan was updated to match: `/order` is gone from the IA, titles, robots, status codes and link map; T15, L15, section 11 and owner item 17 are cancelled.
+
 ## סיכום לבעלים (בעברית)
 
 - **שם אחד בכל מקום:** "האופה - בוטיק לחם". היום שלושת הפרופילים בגוגל רשומים בשלוש צורות שונות. להאחיד אותם, בלי גרשיים ובלי שם העיר.
 - **פרופיל קריית גת בגוגל:** נראה שאף אחד לא תבע עליו בעלות, ואין בו קישור לאתר. זו הסקה שלנו: מופיע בו "תביעת בעלות על עסק זה". כדאי לתבוע אותו מאותו חשבון גוגל שמנהל את נתיבות ושדרות.
-- **שעות פתיחה:** בכל סניף ארבעה מקורות סותרים. זה הדבר שהכי פוגע בגוגל ובתשובות של צ׳אטבוטים. צריך מכם שעות שבועיות לכל סניף, ואז נעדכן אותן בגוגל, באתר ובאפליקציה באותו יום.
+- **שעות פתיחה:** בכל סניף ארבעה מקורות סותרים. זה הדבר שהכי פוגע בגוגל ובתשובות של צ׳אטבוטים. צריך מכם שעות שבועיות לכל סניף, ואז נעדכן אותן בגוגל ובאתר באותו יום.
 - **טלפונים:** בשדרות צריך לאשר את 08-6491122. בקריית גת צריך לבחור מספר אחד מתוך שלושה.
 - **האתר ייבנה כ־HTML רגיל, לא כמו האב־טיפוס.** באב־טיפוס כל התוכן נטען ב־JavaScript, ולכן מנועי חיפוש וצ׳אטבוטים לא רואים אותו.
-- **אפליקציית ההזמנות:** עד ההשקה, הכתובת haofeapp.com לא תופיע באתר. כדאי לבקש מהמפתח לחסום כבר עכשיו את דף הכניסה לצוות ממנועי חיפוש.
+- **הזמנות:** באתר מזמינים בטלפון בלבד, בקו ההזמנות 1700-55-22-55. לפי ההחלטה שלכם מ־24.10.2026, אפליקציית ההזמנות אינה חלק מהאתר, והאתר לא מקשר אליה.
 - **קבצים:** כל הקבצים מוכנים בתיקייה הזו: מבנה האתר, כותרות ותיאורים לכל דף, נתונים מובנים (JSON-LD), llms.txt, robots.txt, sitemap.xml ובדיקת טקסט חלופי לכל תמונה.
 
 ## Contents
@@ -23,7 +25,7 @@ Draft 2026-10-24 · SEO step · output folder `/home/user/edon-studio/clients/ha
 8. Local SEO: the three Google Business Profiles
 9. NAP consistency: every source's current values
 10. AI search (AEO/GEO)
-11. Launch day of the ordering app: SEO switches
+11. Launch day of the ordering app: cancelled (24.10.2026)
 12. Owner decisions and missing data
 13. Files in this folder
 
@@ -36,15 +38,15 @@ Draft 2026-10-24 · SEO step · output folder `/home/user/edon-studio/clients/ha
   - The product names in the owner's own ordering app (saved app files under `scratchpad/agents/app/raw`).
   - Two owner statements recorded on the research page `concepts/index.html` (24.10.2026): the production house sells bread to supermarkets nationwide, and @haofe_bakery is the verified Instagram account.
 - **Unknowns are marked MISSING.** Values that conflict are never shown, and the wording "pending owner" marks them.
-- **Placeholder domain.** The marketing domain is not known, so `https://haofe.example` stands in for it everywhere. `.example` is reserved, so a forgotten placeholder will be obvious. haofeapp.com cannot host the marketing site: its root is the staff login and `www` has no DNS record (`research:app-domain`).
-- **Earlier drafts.** This plan builds on the earlier site-architecture draft (`clients/haofe/research/site-architecture.md`) and schema draft (`clients/haofe/research/schema.md`), and keeps their slugs and the `orderApp.status` switch.
+- **Placeholder domain.** The marketing domain is not known, so `https://haofe.example` stands in for it everywhere. `.example` is reserved, so a forgotten placeholder will be obvious.
+- **Earlier drafts.** This plan builds on the earlier site-architecture draft (`clients/haofe/research/site-architecture.md`) and schema draft (`clients/haofe/research/schema.md`), and keeps their slugs. Their `/order` page, `orderApp.status` switch and OrderAction block are superseded by the owner's decision of 24.10.2026 (top of this file).
 
 **Verified facts used in this plan**
 
 | Fact | Value | Source |
 |---|---|---|
 | Active branches | נתיבות, שדרות, קריית גת (only these three) | `verify:branches`: own post https://www.instagram.com/p/DegS23RIAJ-/ (2026-10-15), IG bio |
-| Netivot | שדרות ירושלים 136, נתיבות · 08-9752093 | owner's app haofeapp.com/order branch panel; Google cid 11794734948161764260 |
+| Netivot | שדרות ירושלים 136, נתיבות · 08-9752093 | the branch panel of the owner's ordering system, viewed 24.10.2026; Google cid 11794734948161764260 |
 | Sderot | יגאל אלון 4, שדרות | branch post DeghqXvtZje (2026-10-15); Google cid 10594881781052471767; Badatz |
 | Kiryat Gat | הרימון 70, קריית גת; opened 22.8.2022; seating, coffee, pastries, cakes, sandwiches | branch post DeJXIltIyeh (2026-10-06); FB opening post 2022-08-22; Google cid 4460162658001013556 |
 | Ordering line | 1700-55-22-55 ("להזמנות") | IG and TikTok bios |
@@ -52,7 +54,7 @@ Draft 2026-10-24 · SEO step · output folder `/home/user/edon-studio/clients/ha
 | Sderot balcony and coffee | "לשתות קפה במרפסת היפה שלנו", "wifi חינם" | owner description on the Sderot Google listing; post DetORsxtzJW (2026-10-20) |
 | Products | באגט, ג׳בטה, פיתה, חלה, צמה ירושלמית, פרנה, מיני פרנה, בורקס גבינה, גביניות, רוגלאך, קוראסון שוקולד, בייגל רומני, גאלט, and others | owner's app catalogue (49 items, no prices); sufganiyot from IG posts of 11, 18 and 20.10.2026 |
 | Supermarkets | the production house sells bread to supermarkets nationwide (no chain names) | owner statement 24.10.2026 (research page). The Victory "בוטיק האופה" link is rejected in `verify:branches` |
-| Online ordering | not launched. The app covers Netivot pickup only | owner; `research:app-domain` |
+| Online ordering | not on the site: ordering is by phone only | owner decision, 24.10.2026 |
 
 **Not used.** These are rejected or unresolved in `verify:branches`:
 - opening hours (all branches);
@@ -75,7 +77,6 @@ Draft 2026-10-24 · SEO step · output folder `/home/user/edon-studio/clients/ha
 │   ├── /branches/sderot       סניף שדרות               index · sitemap · when owner confirms phone
 │   └── /branches/kiryat-gat   סניף קריית גת            index · sitemap · when owner picks phone
 ├── /products            מה יש בקופסה (catalogue)       index · sitemap · when owner approves the list
-├── /order               הזמנה מראש · בקרוב             NOINDEX · not in sitemap · 302 to app on launch day
 ├── /business            לעסקים ולסופרמרקטים            index · sitemap · when owner approves wording + contact
 ├── /about               הסיפור שלנו                    index · sitemap · when owner approves the story
 ├── /accessibility       הצהרת נגישות                   index · sitemap · launch day
@@ -89,7 +90,7 @@ Draft 2026-10-24 · SEO step · output folder `/home/user/edon-studio/clients/ha
 - **One host.** Use one https origin, www or apex but not both. Everything else gets a 301 to it, including http to https.
 - **Until a branch page exists,** its links and JSON-LD `url` point to `/branches#sderot` or `/branches#kiryat-gat`. The anchors are the `id` of each branch card on the hub. When the page goes live, change the links in one data file. Don't add redirects from fragments; there is nothing to redirect.
 - **No pages for:** a city without a branch, Beit Shemesh, the factory, single products, or a blog. None of them has real content yet, and swapping city names into copied text is doorway content.
-- **Branch pages are not doorways:** each of the three has its own Google listing, phone, Instagram account, kashrut level (per Badatz) and features. Kiryat Gat has seating, Sderot has the balcony, and online ordering (when live) is Netivot only.
+- **Branch pages are not doorways:** each of the three has its own Google listing, phone, Instagram account, kashrut level (per Badatz) and features. Kiryat Gat has seating, and Sderot has the balcony.
 
 **Hub or one long page?** Both: the home page keeps the three branch cards (as in b.html `.visit`), and each card links to its branch page. A local search ("מאפייה בשדרות") should land on a page whose title, H1, address and schema are about that one branch. The page set is small enough for every page to be written by hand.
 
@@ -110,7 +111,6 @@ Draft 2026-10-24 · SEO step · output folder `/home/user/edon-studio/clients/ha
 | `/branches/sderot` | מאפייה בשדרות: האופה - בוטיק לחם, יגאל אלון 4 (45) | סניף האופה בשדרות, ברחוב יגאל אלון 4: מאפים וקפה במרפסת של הסניף. כתובת, ניווט ופרטי הסניף, ועדכונים מהסניף באינסטגרם @haofe_sderot. (132) |
 | `/branches/kiryat-gat` | מאפייה בקריית גת: האופה - בוטיק לחם, הרימון 70 (46) | סניף האופה בקריית גת, הרימון 70: מקום לעצור בו באמצע היום, עם ישיבה במקום, קפה, מאפים, עוגות וכריכים. כתובת, ניווט ופרטי הסניף. (127) |
 | `/products` | לחמים, חלות ומאפים \| האופה - בוטיק לחם (38) | מה אופים בהאופה: באגט, ג׳בטה ופיתה, חלות וצמה ירושלמית לשישי, פרנה, מאפים חלביים ופרווה כמו בורקס גבינה ורוגלאך, וסופגניות בעונה. (129) |
-| `/order` (noindex) | הזמנה מראש אונליין: בקרוב \| האופה - בוטיק לחם (45) | ההזמנה אונליין מהאופה עוד לא פתוחה, ואי אפשר להזמין דרכה כרגע. בינתיים מזמינים בטלפון, בקו ההזמנות 1700-55-22-55. (113) |
 | `/business` | לחם לסופרמרקטים ולעסקים \| האופה - בוטיק לחם (43) | בית הייצור של האופה - בוטיק לחם מספק לחמים לסופרמרקטים ברחבי הארץ. מידע לסופרים, לרשתות ולעסקים שרוצים את הלחם שלנו על המדף. (124) |
 | `/about` | הסיפור שלנו \| האופה - בוטיק לחם (31) | איך מאפייה אחת בנתיבות הפכה לשלושה סניפים ולבית ייצור: הסיפור של האופה - בוטיק לחם, מנתיבות דרך שדרות ועד קריית גת. (115) |
 | `/accessibility` | הצהרת נגישות \| האופה - בוטיק לחם (32) | הצהרת הנגישות של אתר האופה - בוטיק לחם: מה הונגש באתר, מה עוד בטיפול, ואיך פונים אלינו בנושא נגישות. (100) |
@@ -127,7 +127,6 @@ Draft 2026-10-24 · SEO step · output folder `/home/user/edon-studio/clients/ha
 | `/branches/sderot` | האופה בשדרות · יגאל אלון 4 | מחכים לכם ביגאל אלון 4, שדרות. מאפים, קפה והמרפסת שלנו. |
 | `/branches/kiryat-gat` | האופה בקריית גת · הרימון 70 | קריית גת, אנחנו מחכים לכם: קפה, מאפים ומקום נעים לשבת. הרימון 70. |
 | `/products` | מה יש בקופסה · האופה - בוטיק לחם | לחמים, חלות לשישי, פרנה, בורקס, רוגלאך וסופגניות בעונה. מהתנור של האופה. |
-| `/order` | בקרוב: מזמינים מראש מהאופה | ההזמנות אונליין עוד לא פתוחות. בינתיים מזמינים בטלפון: 1700-55-22-55. |
 | `/business` | הלחם של האופה, גם על המדף בסופר | בית הייצור של האופה מספק לחמים לסופרמרקטים ברחבי הארץ. |
 | `/about` | הסיפור של האופה | מאפייה אחת בנתיבות, שלושה סניפים ובית ייצור. |
 | `/accessibility` | הצהרת נגישות · האופה | מה הונגש באתר האופה ואיך פונים אלינו בנושא נגישות. |
@@ -137,7 +136,6 @@ Draft 2026-10-24 · SEO step · output folder `/home/user/edon-studio/clients/ha
 - **When hours are confirmed,** append "שעות פתיחה" to each branch description, e.g. "כתובת, שעות פתיחה וניווט". Until then, no description promises hours.
 - **When a branch phone is confirmed,** add it to that branch's description in the same form as Netivot ("טלפון לסניף 0X-XXXXXXX").
 - **Kashrut** never goes in a title, description or OG text until the owner gives the certificate wording for that branch.
-- **Phone in the `/order` text.** It uses the 1700 line because the bios label it "להזמנות". If the owner prefers the Netivot line 08-9752093 for pickup orders, swap it in both the title tag group and the page body.
 
 ---
 
@@ -179,7 +177,7 @@ Draft 2026-10-24 · SEO step · output folder `/home/user/edon-studio/clients/ha
 </head>
 ```
 
-- **Robots meta:** `/order` gets `<meta name="robots" content="noindex, follow">` while the app is "soon". The 404 page gets `noindex`. No other page gets a robots meta.
+- **Robots meta:** the 404 page gets `noindex`. No other page gets a robots meta.
 
 ---
 
@@ -195,7 +193,7 @@ Draft 2026-10-24 · SEO step · output folder `/home/user/edon-studio/clients/ha
    - **Style:** `.h1-kicker` is a block, styled like the existing `.hand`/eyebrow text: small, `--stamp` colour.
    - **Why the hidden colon:** the `sr-only` colon keeps the extracted text readable ("…וקריית גת: הטעם שתמיד…").
    - **Alternative if design rejects the kicker:** keep the H1 and start `.sub` (line 231) with "האופה - בוטיק לחם, מאפייה בנתיבות, בשדרות ובקריית גת:". It is weaker, because headings carry more weight than body text.
-2. **The order H2 holds both states.** `.order-sec h2` (line 306) renders "בקרוב: מזמינים מראש מהאופהמזמינים מראש מהאופה" as one text, because both `.when-soon` and `.when-live` are in the DOM. Lines 305, 307, 310–311 and the nav chips (186, 204) have the same problem. Render only the current state at build time (§6 T2).
+2. **The order H2 held both states.** Done in b.html on 24.10.2026: the order module is now the phone receipt with one H2, "מזמינים בטלפון", and the nav chips are gone (the owner removed online ordering from the site).
 3. **Product headings run words together.** Each `.box h3` reads e.g. "פרנה ומיני פרנה לשישיפתחו". Put a space between `</span></span>` and `<span class="open">`, so the text reads "…לשישי פתחו". Keep the "פתחו" label visible and inside the button; it is the button's visible label.
 4. **Branch headings are just city names.** The branch card `h3` (lines 370, 381, 391) shows only the city. Use "סניף נתיבות", "סניף שדרות" and "סניף קריית גת", so each heading still makes sense when quoted alone.
 5. **A CTA promises today's stock.** The anchor "מה יש היום" (line 236) promises a daily-availability view the site doesn't have. Use "מה יש בקופסה" (the section's own H2) and link it to `/products` once that page is live.
@@ -205,7 +203,7 @@ Draft 2026-10-24 · SEO step · output folder `/home/user/edon-studio/clients/ha
 H1  [האופה - בוטיק לחם · נתיבות, שדרות וקריית גת] הטעם שתמיד כיף לחזור אליו
   H2  מה יש בקופסה
     H3  פרנה ומיני פרנה · H3 חלות · H3 לחמים ולחמניות · H3 מאפים חלביים · H3 מאפים פרווה · H3 סופגניות
-  H2  בקרוב: מזמינים מראש מהאופה            (one state only)
+  H2  מזמינים בטלפון
   H2  מאפייה אחת בנתיבות, שלושה סניפים ובית ייצור   (only after the story is approved)
   H2  מהפיד
   H2  הלחם שלנו, גם על המדף בסופר            (only after the /business wording is approved)
@@ -233,13 +231,12 @@ H1  האופה - בוטיק לחם · סניף נתיבות
   H2  שעות פתיחה           MISSING → until confirmed: "לשעות פתיחה התקשרו לסניף"
   H2  מה אופים כאן         product groups (owner confirms the range per branch)
   H2  כשרות                only from the certificate the owner provides; otherwise the section is not rendered
-  H2  הזמנה מראש           Netivot only: "בקרוב" now, a link to the app at launch
   H2  שאלות נפוצות         §10.3
   H2  סניפים נוספים        links to Sderot and Kiryat Gat with descriptive anchors
 ```
 **Per-branch differences:**
-- **Sderot:** add `H2 קפה במרפסת`. Sources: the owner's Google description ("לשתות קפה במרפסת היפה שלנו", "wifi חינם") and post DetORsxtzJW. There is no ordering H2.
-- **Kiryat Gat:** add `H2 לשבת אצלנו` (seating, coffee, pastries, cakes, sandwiches; post DeJXIltIyeh). Optionally add "נפתח באוגוסט 2022" (FB post 2022-08-22). There is no ordering H2. "בניין תיקשוב, ליד הארנונה" appears only in the 2022 post; use it only after the owner confirms.
+- **Sderot:** add `H2 קפה במרפסת`. Sources: the owner's Google description ("לשתות קפה במרפסת היפה שלנו", "wifi חינם") and post DetORsxtzJW.
+- **Kiryat Gat:** add `H2 לשבת אצלנו` (seating, coffee, pastries, cakes, sandwiches; post DeJXIltIyeh). Optionally add "נפתח באוגוסט 2022" (FB post 2022-08-22). "בניין תיקשוב, ליד הארנונה" appears only in the 2022 post; use it only after the owner confirms.
 
 ### 5.4 Other pages
 - **`/products`:**
@@ -255,7 +252,7 @@ H1  האופה - בוטיק לחם · סניף נתיבות
     H2 איפה קונים → /branches
   ```
   Item names come from the app catalogue. The חלבי/פרווה split follows the app's own labels. Don't imply that every item is sold in every branch.
-- **`/order`:** `H1 הזמנה מראש אונליין: בקרוב` · `H2 בינתיים מזמינים בטלפון` · `H2 הסניפים`. No launch date, prices, delivery promises or form (`research:ordering-law` coming_soon_guidance).
+- ~~`/order`~~: cancelled (24.10.2026). There is no order page; ordering is by phone only, on the home page's receipt.
 - **`/business`:** `H1 הלחם של האופה, גם על המדף בסופר` · `H2 בית הייצור` · `H2 יצירת קשר לעסקים`. The business contact is MISSING. Don't publish the page without it. Name no supermarket chains.
 - **`/about`:** `H1 הסיפור שלנו` · `H2 מאפייה בנתיבות` · `H2 שדרות` · `H2 קריית גת` · `H2 בית הייצור`. The text is the Walla 2021 draft from b.html line 323 and needs the owner's approval.
 - **`/accessibility`, `/privacy`:** one H1 each, with plain H2 sections.
@@ -267,10 +264,10 @@ H1  האופה - בוטיק לחם · סניף נתיבות
 | # | Item | Exact change | Verify |
 |---|---|---|---|
 | T1 | **Ship content as HTML** | b.html puts the whole site in `<template id="proto">` (line 179), and shell.js line 285 clones it into the page. Crawlers that don't run JS see no content. AI crawlers such as GPTBot, ClaudeBot and PerplexityBot generally read the raw HTML without running JavaScript. Production pages must be server-rendered or static HTML; motion JS only enhances. | `curl -s https://haofe.example/branches/netivot \| grep -c "שדרות ירושלים 136"` ≥ 1 |
-| T2 | **Render one order state** | Render `orderApp.status` at build time. Drop the `.when-soon`/`.when-live` pairs; render only the current one. While it is `soon`, the string `haofeapp` must not appear anywhere in the build. Today b.html line 311 still carries `data-live-href="https://haofeapp.com/order"`. | `grep -r haofeapp dist/` returns nothing while `soon` |
+| T2 | **No online-order state** (changed 24.10.2026) | The owner removed the ordering app from the site. b.html's order module is now the phone receipt "מזמינים בטלפון" with 1700-55-22-55, and the `.when-soon`/`.when-live` pairs and `data-live-href` are gone. Keep a guard: the app's domain must not appear anywhere in the build (the skeleton test does this check). | a grep for the app's domain over `dist/` returns nothing |
 | T3 | **Head tags per page** | Title, description, canonical, OG and Twitter come from `head-meta.json`. Keep `<html lang="he" dir="rtl">`. The prototype's `<title>האופה · כיוון ב׳ השקית</title>` and its missing description and canonical are presentation-page artefacts. | View source on each page |
 | T4 | **One canonical host** | 301 these to the canonical: http→https, www↔apex, trailing slash→none, uppercase→lowercase. Every canonical is self-referencing, and query strings (UTM) are stripped in canonicals. | `curl -sI http://…` shows a 301 to https |
-| T5 | **Status codes** | The 404 page returns HTTP 404 with `noindex`. `/order` returns 200 with `noindex, follow` while `soon`, and a 302 to `https://haofeapp.com/order` on launch day. | `curl -sI` |
+| T5 | **Status codes** | The 404 page returns HTTP 404 with `noindex`. There is no `/order` page or redirect (cancelled 24.10.2026). | `curl -sI` |
 | T6 | **Root files** | Serve `/robots.txt`, `/sitemap.xml` and `/llms.txt` from this folder at the canonical host's root. Generate the sitemap from the same page list the router uses. Staging hosts get `Disallow: /` and a password. | Fetch each URL |
 | T7 | **JSON-LD** | Server-render `jsonld.json → pages[path].jsonld` in each page. Validate it in the Rich Results Test: expect Organization and Local business items with 0 errors. "Site name" won't show there, which is normal. Also run https://validator.schema.org/. | Both tools, then Search Console URL Inspection |
 | T8 | **No placeholder text in production** | Remove every `.tbd` span ("לאישור", "איזה מספר להציג?", "טיוטה…"). Fields that are not confirmed are not rendered at all, rather than hidden with CSS. | `grep -r 'class="tbd"' dist/` returns nothing |
@@ -280,7 +277,7 @@ H1  האופה - בוטיק לחם · סניף נתיבות
 | T12 | **Mobile bar** | `.bar` "ניווט" (b.html line 415) goes to Netivot only. Point it to `/branches`. | Tap test |
 | T13 | **Footer NAP** | The footer lists each branch as plain text in one fixed format: "סניף נתיבות · שדרות ירושלים 136, נתיבות · 08-9752093". Phones appear only once confirmed. Use the same string as the branch page and the Google listing. | Text matches §9 canonical record |
 | T14 | **Concepts and staging stay out of search** | If `concepts/` (including the research page `index.html`, which holds internal notes and unverified data) is hosted anywhere public, add `<meta name="robots" content="noindex">` and a password. | `site:` check |
-| T15 | **haofeapp.com (owner's developer)** | The root is a staff login titled "הזמנות האופה" with no noindex. It can rank for brand searches and send customers to a login screen. Ask the developer to add `X-Robots-Tag: noindex` to the root, all staff routes and the order-tracking token pages, which likely show personal order details (inference from the app's JS, which redirects to a tracking-token page after an order). Do the same for `/order` until launch, and redirect http→https (`research:app-domain`: HTTP is served without a redirect). | `curl -sI https://haofeapp.com/` shows the header |
+| T15 | ~~**The ordering app's search settings**~~ | **Cancelled (24.10.2026):** the ordering app is not part of the site. Its own search and compliance settings are the owner's business, outside the site's scope. | — |
 | T16 | **Measurement without cookies** | Verify a Search Console domain property, import it into Bing Webmaster Tools, and submit the sitemap in both. Add GA4 only after the consent decision in the architecture draft. | Both consoles show the sitemap as read |
 | T17 | **Accessibility and privacy pages** | These pages are a legal requirement (`research:ordering-law` §7, reg. 35ה, unless exempt) and are indexable. | Linked from every footer |
 
@@ -290,13 +287,12 @@ H1  האופה - בוטיק לחם · סניף נתיבות
 
 | From | To (anchor text) |
 |---|---|
-| Header, all pages | logo → `/` · "מה יש בקופסה" → `/products` (until live: `/#boxes`) · "סניפים" → `/branches` · "הזמנה אונליין · בקרוב" → `/order` · "לעסקים" → `/business` (when live) |
+| Header, all pages | logo → `/` · "מה יש בקופסה" → `/products` (until live: `/#boxes`) · "סניפים" → `/branches` · "לעסקים" → `/business` (when live) |
 | Footer, all pages | "סניף נתיבות" → `/branches/netivot` · "סניף שדרות" → `/branches/sderot` or `/branches#sderot` · "סניף קריית גת" → `/branches/kiryat-gat` or `/branches#kiryat-gat` · "כל הסניפים" → `/branches` · הצהרת נגישות · מדיניות פרטיות · Instagram, TikTok (external) |
-| `/` | hero "בחרו סניף" → `/branches` · "מה יש בקופסה" → `/products` · each branch card → its page ("לעמוד הסניף בנתיבות") · order module → `/order` |
+| `/` | hero "בחרו סניף" → `/branches` · "מה יש בקופסה" → `/products` · each branch card → its page ("לעמוד הסניף בנתיבות") · order receipt "לסניפים" → the branch section on the same page |
 | `/branches` | each card → its page · breadcrumb → `/` |
-| Branch page | breadcrumb `דף הבית › סניפים › סניף נתיבות` · "סניפים נוספים": "סניף האופה בשדרות", "סניף האופה בקריית גת" · "מה אופים כאן" → `/products` · Netivot only: "הזמנה מראש · בקרוב" → `/order` |
+| Branch page | breadcrumb `דף הבית › סניפים › סניף נתיבות` · "סניפים נוספים": "סניף האופה בשדרות", "סניף האופה בקריית גת" · "מה אופים כאן" → `/products` |
 | `/products` | "איפה קונים" → `/branches` · per group: no per-branch claims |
-| `/order` | "סניף נתיבות" → `/branches/netivot` · "כל הסניפים" → `/branches` |
 | `/about` | the city names in the story → the three branch pages · "בית הייצור" → `/business` |
 | 404 | `/` and `/branches` |
 
@@ -321,15 +317,15 @@ H1  האופה - בוטיק לחם · סניף נתיבות
 | L4 | **Categories** | Owner | **Primary:** "מאפייה" (Bakery), which is what all three use today. Keep it. **Additional, only if true:** "בית קפה" for Sderot (owner description: coffee on the balcony) and Kiryat Gat (post: coffee and seating). Add a cake or pastry category only if the owner confirms cakes are sold at that branch (Kiryat Gat's post mentions cakes). Never add wholesale categories to retail profiles. |
 | L5 | **Website link** | Owner | Each profile links to its own branch page with UTM tags; the canonical tag strips them. `https://haofe.example/branches/netivot?utm_source=google&utm_medium=organic&utm_campaign=gbp-netivot`. Do the same for `sderot` and `kiryat-gat`. Until those two pages exist, use `https://haofe.example/branches?utm_source=google&utm_medium=organic&utm_campaign=gbp-sderot#sderot` (and the Kiryat Gat equivalent). |
 | L6 | **Phones** | Owner | **Netivot:** primary 08-9752093 (verified). **Sderot:** primary 08-6491122, pending owner confirmation. **Kiryat Gat:** today 1-700-552-255; the owner picks one of 08-6669750, 1700-55-22-55 or 054-4306123. **Optional:** add the chain line 1700-55-22-55 as the "additional phone" on all three. Use the same numbers on the site (T13). |
-| L7 | **Hours** | Owner | Set regular hours from the owner's own weekly schedule. On the same day, use the same hours on the site and in the app (§9.2 shows the conflicts). Saturday means Motzei Shabbat only. Set special hours before each holiday; the app says "לשעות פעילות בחגים יש לפנות לסניף", so holiday hours are a known gap. Don't leave Google's partial hours as they are. |
+| L7 | **Hours** | Owner | Set regular hours from the owner's own weekly schedule. On the same day, use the same hours on the site (§9.2 shows the conflicts). Saturday means Motzei Shabbat only. Set special hours before each holiday; the owner's ordering system says "לשעות פעילות בחגים יש לפנות לסניף", so holiday hours are a known gap. Don't leave Google's partial hours as they are. |
 | L8 | **Description** | Owner | Use the drafts in §8.3: factual, with no links, prices or phone numbers. The Sderot description is already the owner's own; keep it. |
 | L9 | **Photos** | Owner | **Real photos only, never AI renders or stock.** Each branch needs at least: the exterior with the sign, in daylight; the entrance (the 2022 opening post places Kiryat Gat in an office building, "בנין תיקשוב"); the counter or display; 5–10 product photos; the seating area (Sderot balcony, Kiryat Gat seating). Add staff only with consent. Logo: `brand/png/haofe-logo-1024.png`. Cover: a real product or storefront photo. Re-use the same real photos on the matching branch page. |
 | L10 | **Attributes** | Owner | Set only what the owner confirms. **Sderot:** Wi-Fi and outdoor seating (both in the owner's description). **Kiryat Gat:** dine-in seating; Google already shows wheelchair-accessible parking, so confirm it. **Netivot:** MISSING. |
 | L11 | **Opening date** | Owner | Kiryat Gat: August 2022 (Facebook post "קרית גת!! פתחנו!!", 2022-08-22). Netivot and Sderot: MISSING. Walla 2021 gives only approximate years, so don't use them. |
 | L12 | **Reviews** | Owner | Use each branch's own review link (from "Ask for reviews" in the profile). Ask in neutral words: "תודה שבחרתם בהאופה. אם תרצו לשתף איך היה, אפשר להשאיר ביקורת כאן: [קישור לסניף]. נשמח לשמוע כל דעה." No incentives, no picking only happy customers, no suggested wording. Reply to each review specifically, about what the reviewer actually wrote, and offer complaints a private contact path. Google review counts seen on zips.co.il (a Google mirror): Netivot 283 (newest 11.11.2025), Sderot 122 (newest shown 21.07.2023), Kiryat Gat 35 (newest 04.07.2025). |
-| L13 | **Posts** | Owner | Use profile posts for real updates: the sufganiyot season, already posted on Instagram 11, 18 and 20.10.2026, and the app launch. Google doesn't reward a posting frequency, so post only when there is news. |
+| L13 | **Posts** | Owner | Use profile posts for real updates: the sufganiyot season, already posted on Instagram 11, 18 and 20.10.2026. Google doesn't reward a posting frequency, so post only when there is news. |
 | L14 | **Q&A** | — | Google discontinued its Q&A API on 3.11.2025. Answer common questions on the branch pages (§10.3) instead of planning profile Q&A. |
-| L15 | **After the app launches** | Owner | Netivot profile only: add `https://haofeapp.com/order` as the order-ahead / "הזמנה מראש" link, if the profile interface offers one. Not before launch, and not on Sderot or Kiryat Gat. |
+| L15 | ~~**After the app launches**~~ | — | **Cancelled (24.10.2026):** the ordering app is not part of the site, so nothing is added to the profiles for it. |
 | L16 | **Other maps** | Owner | **Bing Places:** import from Google after L3–L7 are done. Copilot and ChatGPT search draw on Bing (skill: ai-seo platform reference). **Apple Business Connect:** claim all three for Apple Maps and Siri. **Waze:** check in the app that each branch shows the right name and pin, and report errors through the app. We could not reach Waze (403). |
 
 **Claiming Kiryat Gat (L2), step by step:**
@@ -362,7 +358,7 @@ H1  האופה - בוטיק לחם · סניף נתיבות
 - **Netivot:**
   > האופה - בוטיק לחם בנתיבות, בשדרות ירושלים 136. אופים כאן לחמים ולחמניות, חלות וצמה ירושלמית, פרנה, ומאפים חלביים ופרווה כמו בורקס גבינה, גביניות ורוגלאך. האופה היא רשת מאפיות ובית ייצור למאפים, עם סניפים גם בשדרות ובקריית גת.
 
-  *Sources: app catalogue (Netivot pickup), IG bio.*
+  *Sources: the product catalogue (`data/products.json`, Netivot list), IG bio.*
 - **Sderot:** keep the owner's text, which starts "ברוכים הבאים למאפייה הכי יפה בעיר!" and mentions coffee on the balcony and free Wi-Fi. Optionally add one closing line:
   > האופה - בוטיק לחם היא רשת מאפיות עם סניפים גם בנתיבות ובקריית גת.
 - **Kiryat Gat:**
@@ -385,7 +381,7 @@ H1  האופה - בוטיק לחם · סניף נתיבות
 | Source | Name shown | Address | Phone | Link / website | Data date | Conflict → action |
 |---|---|---|---|---|---|---|
 | Google Business Profile (cid 11794734948161764260) | "האופה" - בוטיק לחם | שדרות ירושלים 136, נתיבות (in מרכז מסחרי טדי קולק) | +972 8-975-2093 | not recorded | 2026-10-24 | name format → L3; website → L5 |
-| haofeapp.com/order (owner's app, not launched) | האופה · בוטיק לחם נתיבות | שדרות ירושלים 136, נתיבות · איסוף עצמי בלבד | 08-9752093 | links to netivotonline.com/haofe/ as "עמוד הסניף" | 2026-10-24 | developer: point "עמוד הסניף" to `/branches/netivot` once live |
+| The owner's ordering system (branch panel; not part of the site) | האופה · בוטיק לחם נתיבות | שדרות ירושלים 136, נתיבות · איסוף עצמי בלבד | 08-9752093 | links to netivotonline.com/haofe/ as "עמוד הסניף" | 2026-10-24 | none: outside the site's scope (owner decision 24.10.2026) |
 | zips.co.il (mirrors Google) | "האופה" - בוטיק לחם | שדרות ירושלים 136, נתיבות | +972 8-975-2093 | — | hours "as of Jan 2026" | follows Google; recheck after L7 |
 | bakerias.com (mirrors Facebook page 895926247234370) | האופה - בוטיק לחם | שדרות ירושליים 136 (typo) | +97289752093 | — | posts to 11.12.2025 | fix the address spelling and hours on the Facebook page; the mirror follows |
 | netivotonline.com/haofe/ | האופה בוטיק לחם | שד' ירושלים 136, נתיבות | 08-9752093 | Facebook page; email haofebutik@gmail.com | modified 2024-11-05 | ask them to add a link to the site |
@@ -450,7 +446,7 @@ H1  האופה - בוטיק לחם · סניף נתיבות
 
 | Branch | Source | Sun–Thu | Fri | Motzei Shabbat |
 |---|---|---|---|---|
-| Netivot | owner's app (not launched) | 05:00–22:00 | 05:00–15:00 | 20:00–23:00 |
+| Netivot | the owner's ordering system (branch panel) | 05:00–22:00 | 05:00–15:00 | 20:00–23:00 |
 | Netivot | Google (limited view) | not shown | 05:00–16:00 | 21:00–00:00 |
 | Netivot | zips.co.il (as of Jan 2026) | 05:30–22:00 | 05:00–16:00 | 20:00–23:30 |
 | Netivot | bakerias (Facebook mirror, undated) | 06:00–22:00 | 06:00–14:00 | 18:30–22:00 |
@@ -465,9 +461,8 @@ H1  האופה - בוטיק לחם · סניף נתיבות
 **Order of updates, same day:**
 1. Google Business Profile
 2. The site's branch data file
-3. The app's branch panel
-4. Facebook pages
-5. d.co.il, rest.co.il and easy.co.il
+3. Facebook pages
+4. d.co.il, rest.co.il and easy.co.il
 
 ### 9.3 Citation cleanup, by priority
 1. **Google Business Profiles:** L1–L7.
@@ -514,7 +509,7 @@ H1  האופה - בוטיק לחם · סניף נתיבות
 | מה שעות הפתיחה של האופה ב{עיר}? | owner's weekly hours | MISSING |
 | האם האופה ב{עיר} פתוח במוצאי שבת? | owner's weekly hours | MISSING |
 | איזו כשרות יש בסניף? | the certificate in the branch. Badatz online: Sderot למהדרין חלבי + פרווה; Kiryat Gat למהדרין פרווה; Netivot store: no record | pending owner (per branch, never chain-wide) |
-| אפשר להזמין מראש? | Now: by phone (Netivot 08-9752093, or the 1700 line). Online: "בקרוב", Netivot pickup only | can publish the phone part now |
+| אפשר להזמין מראש? | By phone: the ordering line 1700-55-22-55, or the Netivot branch 08-9752093. The site has no online ordering | can publish now |
 | יש מקום לשבת? | Sderot: balcony (owner's description). Kiryat Gat: yes (post 6.10.2026). Netivot: MISSING | Sderot and Kiryat Gat can publish now |
 | יש חניה? | Kiryat Gat: Google shows wheelchair-accessible parking. Others: MISSING | confirm |
 | יש משלוחים? | MISSING | don't answer until the owner decides |
@@ -528,7 +523,7 @@ H1  האופה - בוטיק לחם · סניף נתיבות
   - **Pending lines.** Add hours, the Sderot and Kiryat Gat phones and kashrut only after confirmation.
   - **Later, optional:** `llms-full.txt` (the whole site's text in one file) once the site has more than about six pages.
 - **`/robots.txt`** (in this folder) states the AI stance. Search discovery is allowed: OAI-SearchBot, PerplexityBot, Claude-SearchBot. Training bots are allowed by default, but that is the owner's choice and the file says how to opt out.
-- **Check the CDN as well.** If the site sits behind Cloudflare, check *Security → Bots / AI Crawl Control*. Cloudflare can block AI crawlers at the edge regardless of robots.txt, and haofeapp.com already serves Cloudflare's managed content-signals block (`research:app-domain`). Search-discovery bots must not be blocked there.
+- **Check the CDN as well.** If the site sits behind Cloudflare, check *Security → Bots / AI Crawl Control*. Cloudflare can block AI crawlers at the edge regardless of robots.txt. Search-discovery bots must not be blocked there.
 - **Bing Webmaster Tools.** Import from Search Console, submit the sitemap and turn on IndexNow (Cloudflare offers it through Crawler Hints; many hosts and CMSs have a plugin). This feeds Copilot and ChatGPT search.
 - **Brave Search.** Search the brand at search.brave.com after launch. Claude's web search uses Brave's index, so if the site is missing there, Claude can't cite it.
 
@@ -541,7 +536,7 @@ H1  האופה - בוטיק לחם · סניף נתיבות
 | Wrong hours | four conflicting sources; d.co.il default | §9.2 |
 | Kiryat Gat phone 054-4306123 | rest.co.il/d.co.il | §9.3 item 3 |
 | "Kosher lemehadrin at all branches" | assumption | kashrut per branch, from certificates only |
-| "You can order online" | haofeapp.com/order is public and indexable | T15; the site says "בקרוב" until launch |
+| "You can order online on the site" | an ordering app exists outside the site | the site says phone ordering only (1700-55-22-55), in the receipt and in llms.txt. The app itself is the owner's business (T15 cancelled) |
 | Victory "בוטיק האופה" bread credited to the chain | similar brand name on Wolt | never name chains; the owner decides whether to clarify on `/business` |
 | Confused with another "האופה" | similar names | §10.1 |
 
@@ -564,18 +559,9 @@ H1  האופה - בוטיק לחם · סניף נתיבות
 
 ---
 
-## 11. Launch day of the ordering app: SEO switches
+## 11. Launch day of the ordering app: cancelled (24.10.2026)
 
-All of these happen only after the owner confirms in writing and runs a test order. They apply to Netivot only.
-1. `orderApp.status = 'live'` → the build renders the live order module. `/order` becomes a 302 to `https://haofeapp.com/order` (no trailing slash, no www).
-2. JSON-LD: merge `jsonld.json → after_app_launch.jsonld` into the Netivot node.
-3. `/llms.txt`: replace the "הזמנות" line with `- [הזמנה מראש לאיסוף מסניף נתיבות](https://haofeapp.com/order): איסוף עצמי בלבד. הזמנות ליום שישי בטלפון 08-9752093.` The scope is from the app; confirm it is still true on launch day.
-4. Update the `/order` title and meta (they currently say "בקרוב"). The page now redirects, so only the in-site CTA text changes: "הזמנה מראש לאיסוף מסניף נתיבות".
-5. Netivot Google profile: add the order-ahead link (L15). Post the launch on the profile and on Instagram.
-6. The app developer adds a website link back to `/branches/netivot`, replacing netivotonline.com, and removes `noindex` from `/order` only if the owner wants the order page itself in search. The staff routes stay `noindex`.
-7. The sitemap does not change: external URLs and redirects are never listed.
-
-**Rollback:** set `orderApp.status = 'soon'`, redeploy and revert steps 2, 3 and 5.
+The owner removed the ordering app from the site's scope. There are no SEO switches for it: no `orderApp.status`, no `/order` page or redirect, no OrderAction or hasMenu in the JSON-LD, no llms.txt change, and no order link on the Google profiles (L15 cancelled). The sitemap never lists external URLs.
 
 ---
 
@@ -599,7 +585,7 @@ All of these happen only after the owner confirms in writing and runs a test ord
 | 14 | `/business` wording ("לסופרמרקטים ברחבי הארץ", no chain names) and a business contact. The same line is in the llms.txt summary; change both together | `/business`, llms.txt |
 | 15 | Whether the site mentions the closed Beit Shemesh branch (default: no) | §10.5 |
 | 16 | AI training crawlers: allow (default in robots.txt) or block | robots.txt group 3 |
-| 17 | Ask the app developer for `noindex` on haofeapp.com root, staff and tracking routes, and on `/order` until launch, plus http→https | T15 |
+| 17 | ~~Ask the app developer for `noindex` and http→https~~ Cancelled (24.10.2026): the ordering app is not part of the site | — |
 | 18 | Whether the Netivot address line may say "במרכז המסחרי טדי קולק" (Google only), and Kiryat Gat "בניין תיקשוב" (2022 post only) | branch page directions |
 
 ---
@@ -610,9 +596,9 @@ All of these happen only after the owner confirms in writing and runs a test ord
 |---|---|
 | `plan.md` | this plan |
 | `head-meta.json` | per-page title, description, canonical, robots, OG and Twitter values, with lengths |
-| `jsonld.json` | JSON-LD per page (Organization, WebSite, one Bakery per branch, BreadcrumbList), the pending fields, and the after-launch block. Validated: every `@id` reference resolves, and there is no `haofeapp` outside the after-launch block |
+| `jsonld.json` | JSON-LD per page (Organization, WebSite, one Bakery per branch, BreadcrumbList) and the pending fields. Validated: every `@id` reference resolves. The after-launch block (OrderAction, hasMenu) was removed on 24.10.2026, and no ordering-app URL is left in the file |
 | `llms.txt` | draft for `/llms.txt` |
-| `robots.txt` | draft for `/robots.txt`, tested with Python's robotparser: Googlebot may fetch `/order`; Googlebot-Image is blocked from `/assets/ai/` |
+| `robots.txt` | draft for `/robots.txt`, tested with Python's robotparser (24.10.2026): Googlebot may fetch every page; Googlebot-Image is blocked from `/assets/ai/` |
 | `sitemap.xml` | draft for `/sitemap.xml`, launch-day URLs, with later pages commented out alongside their condition |
 | `alt-text.md` | alt-text review of every image in `concepts/b.html` |
 

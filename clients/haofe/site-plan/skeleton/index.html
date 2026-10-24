@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="he" dir="rtl" class="pb rm" data-order="soon">
+<html lang="he" dir="rtl" class="pb rm">
 <head>
 <meta charset="utf-8">
 <script>(function(d,w){var r=d.documentElement;if(r.hasAttribute('data-mode'))return;var m='light',q=false;try{var s=w.localStorage.getItem('haofe:theme');if(s==='dark'||s==='light')m=s}catch(e){}try{q=w.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}r.setAttribute('data-mode',m);r.classList.remove('rm');r.classList.add(q?'rm':'anim');d.addEventListener('load',function(e){var t=e.target;if(t&&t.tagName==='IMG'&&t.hasAttribute('data-lqip'))t.removeAttribute('data-lqip')},true)})(document,window);</script>
@@ -32,7 +32,6 @@
     <a class="mark" href="./" aria-label="האופה, בוטיק לחם. לדף הבית"><span class="mark-logo"><img class="for-light" src="../../concepts/assets/logo/haofe-logo-clean.svg" alt="" width="44" height="44"><img class="for-dark" src="../../concepts/assets/logo/haofe-logo-mono-cream.svg" alt="" width="44" height="44" loading="lazy" decoding="async"></span><b>האופה</b></a>
     <nav class="nav" aria-label="ראשי">
       <a href="/products">מה יש בקופסה</a>
-      <a href="/order">הזמנה אונליין<span class="chip-soon">בקרוב</span></a>
       <a href="/branches">סניפים</a>
       <a href="/business">לעסקים</a>
     </nav>
@@ -49,7 +48,7 @@
   </div>
   <nav class="menu paper" id="menu" data-menu hidden aria-label="תפריט נייד">
     <a href="/products">מה יש בקופסה</a>
-    <a href="/order">הזמנה אונליין · בקרוב</a>
+    <a href="#order">הזמנה בטלפון</a>
     <a href="/branches">סניפים</a>
     <a href="/business">לעסקים ולרשתות</a>
     <a href="https://www.instagram.com/haofe_bakery/" target="_blank" rel="noopener">אינסטגרם <span class="sr">(נפתח בחלון חדש)</span></a>
@@ -174,19 +173,19 @@
     </div>
   </section>
 
-  <!-- order module, rendered for orderApp.status = "soon": no .when-live markup and no app URL anywhere in the page -->
+  <!-- order receipt, as concepts/b.html .order-sec: ordering is by phone only (owner decision 24.10.2026).
+       The site has no online ordering, no link to an ordering app and no order page. -->
   <section class="order-sec" id="order" aria-labelledby="or">
     <div class="in">
       <div class="slip" data-rv>
-        <img class="logo-s" src="../../concepts/assets/logo/haofe-logo-badge.svg" alt="" width="64" height="64" loading="lazy" decoding="async">
         <div class="slip-copy">
-          <p class="soon"><i aria-hidden="true"></i><span>בקרוב</span></p>
-          <h2 id="or">בקרוב: מזמינים מראש מהאופה</h2>
-          <p>אנחנו מכינים אפליקציה להזמנת לחם ומאפים מראש, לאיסוף מהסניף. נעדכן באינסטגרם כשהיא תיפתח.</p>
+          <h2 id="or">מזמינים בטלפון</h2>
+          <p class="order-num"><a href="tel:1700552255"><bdi dir="ltr">1700-<wbr>55-<wbr>22-<wbr>55</bdi></a></p>
+          <p>קו ההזמנות של האופה.</p>
         </div>
         <div class="acts">
-          <span class="btn-soon">ההזמנות עוד לא פתוחות</span>
-          <p class="phone-line">בינתיים מזמינים בטלפון: <a href="tel:1700552255" dir="ltr">1700-55-22-55</a></p>
+          <p class="order-status"><span class="st">הסניפים:</span> כתובות, טלפונים ושעות בהמשך העמוד</p>
+          <a class="btn-b" href="#visit">לסניפים</a>
         </div>
       </div>
     </div>

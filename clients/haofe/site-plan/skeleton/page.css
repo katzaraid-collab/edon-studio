@@ -2,8 +2,8 @@
    האופה · page-level rules: what a real page needs that the prototype got from shell.css or from
    its scrolling .vp frame. Loaded after b.css and the three motion files.
 
-   The root of the site is <html class="pb">: it carries the tokens, data-mode, data-order and
-   .anim/.rm, and it is the query container (b.css: `.pb { container-type: inline-size }`), so every
+   The root of the site is <html class="pb">: it carries the tokens, data-mode and .anim/.rm,
+   and it is the query container (b.css: `.pb { container-type: inline-size }`), so every
    @container rule in b.css and b-motion-*.css works unchanged. One catch: an element cannot query
    itself, so rules that style <html> itself (scroll padding below) use @media instead.
    ========================================================================== */

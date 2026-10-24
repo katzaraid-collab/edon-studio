@@ -5,8 +5,8 @@
    FROM b.js (PROTO.init)
      - product boxes: the lid <button> opens and closes its details (.box.open, aria-expanded)
      - ticker: the pause button (WCAG 2.2.2) toggles .ticker.paused and its label
-     - NOT ported: orderSwitch(). On the site the order module is rendered for one state at build
-       time (site.config.json orderApp.status), so the "soon" HTML never contains the app URL.
+     - nothing for ordering: ordering is by phone only (owner decision 24.10.2026). The order module
+       is a static receipt with the ordering line 1700-55-22-55; there is no online-ordering state.
    FROM shell.js
      - Shell.menu: the mobile menu disclosure (Esc returns focus to the button, Shift+Tab on the
        first item goes back to the button, choosing a link closes it), plus the audit fix A11Y-03:
