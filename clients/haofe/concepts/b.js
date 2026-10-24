@@ -10,10 +10,8 @@
    OWNS
      - ticker: the pause button (WCAG 2.2.2) toggles .ticker.paused and its label
      - feed rail (phones): a polaroid that receives keyboard focus is centred in the rail
-     - online ordering: root[data-order] follows the page's "הדמיית יום ההשקה" checkbox
    The product boxes have no lid any more (plan R1): the list is printed on each box, so
-   there is nothing to open. The real site does not get orderSwitch(): it builds one state
-   from site.config.json (plan BL-7).
+   there is nothing to open. Ordering is by phone only: the site has no online ordering.
    ========================================================================== */
 (function () {
   'use strict';
@@ -49,30 +47,10 @@
     });
   }
 
-  /* online ordering: data-order="soon" | "live" flips the receipt on launch day */
-  function orderSwitch(root) {
-    var box = document.getElementById('order-live');
-    /* the app URL is written into the link only when the switch says live, so the "soon" page never contains it */
-    var links = root.querySelectorAll('[data-live-href]');
-    function apply() {
-      var live = !!(box && box.checked);
-      root.setAttribute('data-order', live ? 'live' : 'soon');
-      links.forEach(function (a) {
-        if (live) a.setAttribute('href', a.getAttribute('data-live-href'));
-        else a.removeAttribute('href');
-      });
-    }
-    apply();
-    if (!box) return;
-    box.addEventListener('change', apply);
-    return function () { box.removeEventListener('change', apply); };
-  }
-
   window.PROTO = {
     init: function (root, ctx) {
       ticker(root);
       feedRail(root, ctx);
-      return orderSwitch(root);
     }
   };
 })();

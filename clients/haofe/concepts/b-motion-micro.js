@@ -12,7 +12,7 @@
      - map pairing: pointing at a pin or at its label, or moving keyboard focus into a label,
        marks both .mi-pair (and .here.mi-fac for the production house); the CSS lifts the label
        and flares the oven. This part also runs under reduced motion: it is a highlight, not motion.
-     - enter-once accents, each played to the end: the nav chip wobbles, a box's tag wobbles, a map
+     - enter-once accents, each played to the end: a box's tag wobbles, a map
        label sways on its nail, the pin in the main button hops, the tape's pause icon pops
      - the mobile menu: panel unfolds and links slide in one after another (--stagger) when
        Shell.menu shows it; it folds away when Shell.menu hides it (kept painted and inert while it
@@ -22,11 +22,6 @@
        compositor; switches from outside (the page's radios) and browsers without view transitions
        use the CSS token fade. A short bloom around the toggle at every switch. The icon morph is
        CSS (token fade only: under the snapshot the new icon is simply there).
-     - order receipt (owner override O1): when data-order flips to "live" the status line is
-       stamped on, the order button prints in and the nav chip is stamped; back to "soon" the
-       status line and the chip fade in. The "בקרוב:" mark gives two oven-timer beats the first
-       time the printed receipt is on screen: once per mount, over about 3 s after it starts (O5,
-       plan R5 option b: nothing ambient runs past 5 s). It never repeats and never loops.
      - the header's scroll shadow where CSS scroll timelines are missing (.mi-lift)
      - .mi-scrolling on the root while the page scrolls (and ~160ms after): hover reactions wait,
        a tilted box settles back, a pointer pairing drops, so nothing reacts to merely passing
@@ -55,7 +50,7 @@
      sizes come from ResizeObservers.
      One rAF loop, running only while a box is being tilted or settling (or the header fallback
      has a change to write); asleep otherwise, and so asleep whenever the mount is off screen.
-     Timers: the two timer beats (only while the receipt is on screen) and the scroll-end timeout.
+     Timers: the scroll-end timeout.
      Hooks: see "hooks motion modules may rely on" at the top of b.css.
    ========================================================================== */
 (function () {
@@ -65,9 +60,6 @@
   var TILT = 4.5;       // degrees of 3D tilt with the cursor at a box's edge (gentle: past ~9 it is a toy)
   var LIFT = -6;        // px, the hover lift in b-motion-micro.css
   var PERSPECTIVE = 1000;
-  var BEATS = 2;        // the "בקרוב:" timer beats, once per mount (O5: all of it inside 5 s)
-  var BEAT_GAP = 1500;  // ms from one beat's start to the next; a beat lasts 1100ms
-  var BEAT_WAIT = 450;  // ms after the printed receipt is in view before the first beat
 
   function noop() {}
   function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
@@ -451,12 +443,11 @@
         play(icon, [{ scale: .45, rotate: '-40deg', opacity: .2 }, { scale: 1, rotate: '0deg', opacity: 1 }], { duration: D_BOUNCE, easing: BOUNCE });
       }
       function accent(el, kind) {
-        if (kind === 'nav') wobble(el.querySelector('.chip-soon'));
-        else if (kind === 'box') wobble(el.querySelector('.tag'), 60);
+        if (kind === 'box') wobble(el.querySelector('.tag'), 60);
         else if (kind === 'place') sway(el);
         else if (kind === 'btn') hop(el);
       }
-      var ACCENTS = [['.nav a', 'nav'], ['.box', 'box'], ['.place', 'place'], ['.btn-b', 'btn']];
+      var ACCENTS = [['.box', 'box'], ['.place', 'place'], ['.btn-b', 'btn']];
       if (pointerFx) {
         on(root, 'pointerover', function (e) {
           if (e.pointerType !== 'mouse' || !fine.matches || scrolling || !e.target.closest) return;
@@ -475,8 +466,7 @@
         var visible = false;
         try { visible = t.matches(':focus-visible'); } catch (err) { visible = false; }
         if (!visible) return;
-        if (t.matches('.nav a')) accent(t, 'nav');
-        else if (t.matches('.btn-b')) accent(t, 'btn');
+        if (t.matches('.btn-b')) accent(t, 'btn');
       });
       on(root, 'click', function (e) {
         var tp = e.target && e.target.closest && e.target.closest('.tk-pause');
@@ -587,118 +577,16 @@
         swapTheme(root.getAttribute('data-mode') === 'dark' ? 'light' : 'dark');
       }, true);
 
-      /* ===== the order receipt: launch day, and the "בקרוב:" timer ===== */
+      /* ===== the evening bloom when the mode changes ===== */
 
-      var slip = q('.slip');
-      var soonLine = slip && slip.querySelector('.order-status.when-soon');
-      var mark = soonLine && soonLine.querySelector('.st');
-      var chip = q('.nav .chip-soon');
-
-      /* the stamp on the status line: the same device the scroll module uses when the receipt
-         prints, so launch day reads as the receipt being stamped again */
-      function stampLine(el, delay) {
-        if (!el || busy(el)) return;
-        play(el, [{ scale: 1.3, rotate: '-2.5deg' }, { scale: 1, rotate: '0deg' }], { duration: D_BOUNCE + 120, delay: delay, easing: BOUNCE, fill: 'backwards' });
-        play(el, [{ opacity: 0 }, { opacity: 1 }], { duration: 160, delay: delay, easing: E_OUT, fill: 'backwards' });
-      }
-      /* the chip: comes down large and turned, the spring's overshoot is the squash on impact */
-      function stampChip(el, delay) {
-        if (!el) return;
-        play(el, [{ scale: 1.6, rotate: '-10deg' }, { scale: 1, rotate: '0deg' }], { duration: D_BOUNCE, delay: delay, easing: BOUNCE, fill: 'backwards' });
-        play(el, [{ opacity: 0 }, { opacity: 1 }], { duration: 110, delay: delay, easing: 'linear', fill: 'backwards' });
-      }
-      /* the print: the button feeds out downward while it is revealed top to bottom */
-      function print(el, delay, pad) {
-        if (!el) return;
-        play(el, [
-          { clipPath: 'inset(' + pad[0] + ' ' + pad[1] + ' 100% ' + pad[3] + ')', translate: '0 -8px' },
-          { clipPath: 'inset(' + pad.join(' ') + ')', translate: '0 0' }
-        ], { duration: 480, delay: delay, easing: E_OUT, fill: 'backwards' });
-      }
-      function orderLive() {
-        stopBeats(true);
-        stampLine(slip && slip.querySelector('.order-status.when-live'), 0);
-        var btn = slip && slip.querySelector('.btn-b.when-live');
-        if (btn) {
-          print(btn, 300, ['-4px', '-24px', '-28px', '-24px']);
-          play(btn, [{ scale: .92 }, { scale: 1 }], { duration: D_BOUNCE, delay: 420, easing: BOUNCE, fill: 'backwards' });
-        }
-        stampChip(chip, 60);
-      }
-      function orderSoon() {
-        [soonLine, chip].forEach(function (el, i) {
-          play(el, [{ opacity: 0, translate: '0 4px' }, { opacity: 1, translate: '0 0' }], { duration: 320, delay: i * STAG, easing: E_OUT, fill: 'backwards' });
-        });
-      }
-      var mode = root.getAttribute('data-mode'), order = root.getAttribute('data-order');
+      var mode = root.getAttribute('data-mode');
       if (window.MutationObserver) {
         var stateWatch = new MutationObserver(function () {
-          var m = root.getAttribute('data-mode'), o = root.getAttribute('data-order');
+          var m = root.getAttribute('data-mode');
           if (m !== mode) { mode = m; bloom(); }
-          if (o !== order) { order = o; if (o === 'live') orderLive(); else orderSoon(); syncBeats(); }
         });
-        stateWatch.observe(root, { attributes: true, attributeFilter: ['data-mode', 'data-order'] });
+        stateWatch.observe(root, { attributes: true, attributeFilter: ['data-mode'] });
         observers.push(stateWatch);
-      }
-
-      /* the oven timer, limited (O5, plan R5 option b): two beats on "בקרוב:", the first BEAT_WAIT
-         after the printed receipt's status line is fully on screen, the second BEAT_GAP later; then
-         nothing, for the life of this mount. If the line leaves the screen between the beats, the
-         second is dropped (it never comes back later as a stray beat). Between beats no animation
-         exists, so nothing ticks. */
-      var lineOn = false, mountOn = true, beatT = 0, beats = 0, beatDone = !mark, slipWatch = null;
-      function printed() {   // the receipt is not waiting for, or still in, its print entrance
-        return !root.classList.contains('sx') || !slip.hasAttribute('data-rv') || slip.classList.contains('rv-done');
-      }
-      function beat() {
-        beatT = 0;
-        if (dead || beatDone) return;
-        beats++;
-        play(mark, [
-          { scale: 1, easing: E_OUT },
-          { scale: 1.16, offset: .14, easing: E_INOUT },
-          { scale: .96, offset: .3, easing: E_INOUT },
-          { scale: 1.07, offset: .46, easing: E_INOUT },
-          { scale: 1, offset: .66 },
-          { scale: 1 }
-        ], { duration: 1100 });
-        if (beats < BEATS) beatT = setTimeout(beat, BEAT_GAP);
-        else stopBeats(true);
-      }
-      function stopBeats(forGood) {
-        if (beatT) { clearTimeout(beatT); beatT = 0; }
-        if (!forGood) return;
-        beatDone = true;
-        if (slipWatch) { slipWatch.disconnect(); slipWatch = null; }
-      }
-      function syncBeats() {
-        if (beatDone) return;
-        var want = lineOn && mountOn && order !== 'live' && printed();
-        if (want && !beatT) beatT = setTimeout(beat, beats ? BEAT_GAP : BEAT_WAIT);
-        else if (!want && beatT) stopBeats(beats > 0);   // started and interrupted: done for good
-      }
-      if (mark && 'IntersectionObserver' in window) {
-        var lineIO = new IntersectionObserver(function (entries) {
-          var en = entries[entries.length - 1];
-          lineOn = en.isIntersecting && en.intersectionRatio > .98;
-          syncBeats();
-        }, { root: ioRoot, threshold: [0, 1] });
-        lineIO.observe(soonLine);
-        observers.push(lineIO);
-        /* the whole mount on the presentation page (on a real page the root always intersects) */
-        var mountIO = new IntersectionObserver(function (entries) {
-          mountOn = entries[entries.length - 1].isIntersecting;
-          syncBeats();
-        }, { threshold: 0 });
-        mountIO.observe(scroller);
-        observers.push(mountIO);
-        /* the scroll module marks the receipt .rv-done when its print has finished */
-        if (!printed() && window.MutationObserver) {
-          slipWatch = new MutationObserver(function () { if (printed()) { slipWatch.disconnect(); slipWatch = null; syncBeats(); } });
-          slipWatch.observe(slip, { attributes: true, attributeFilter: ['class'] });
-        }
-      } else {
-        beatDone = true;
       }
 
       /* ===== header shadow without scroll timelines ===== */
@@ -723,7 +611,6 @@
         if (vtRun) { try { vtRun.skipTransition(); } catch (e) { /* done */ } vtRun = null; }
         offs.forEach(function (off) { off(); });
         observers.forEach(function (o) { o.disconnect(); });
-        if (slipWatch) slipWatch.disconnect();
         pairs.off();
         if (raf) cancelAnimationFrame(raf);
         if (armRaf) cancelAnimationFrame(armRaf);
@@ -743,9 +630,8 @@
           if (menuInert) panel.inert = false;
         }
         if (hd) hd.classList.remove('mi-lift');
-        if (beatT) clearTimeout(beatT);
         if (scrollT) clearTimeout(scrollT);
-        beatT = scrollT = 0;
+        scrollT = 0;
         root.classList.remove('mi', 'mi-ready', 'mi-vt', 'mi-scrolling');
       };
     }

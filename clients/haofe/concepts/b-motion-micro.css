@@ -1,7 +1,8 @@
 /* ==========================================================================
    Direction B · השקית — motion: micro-interactions. Version 3, 24.10.2026.
    Owner: micro motion module (pairs with b-motion-micro.js). Source: plan.md section 2.6 with the
-   owner overrides O1 (phone first, "בקרוב" kept), O5 (no ambient loop past 5 s).
+   owner overrides O5 (no ambient loop past 5 s). Ordering is by phone only (24.10.2026: the ordering
+   app is not part of the site).
 
    THE IDEA  everything the visitor touches behaves like the bakery's packaging: buttons are pressed
    tabs that come up off the counter and press back in, the kraft boxes straighten and lift like a
@@ -23,16 +24,15 @@
                    lifts the button 2px while its soft shadow grows, press sinks it (--press-scale)
                    with the shadow drawn in close. No hard caramel shadow (design 10, R11)
      4 header      nav links underline themselves with a hand-drawn stroke, right to left; the
-                   "בקרוב" chip wobbles; the logo sticker tips on hover; a soft shadow gathers under
+                   logo sticker tips on hover; a soft shadow gathers under
                    the header once the page scrolls under it
      5 menu        the panel unfolds from the header, links slide in one after another; it folds away
                    on close (the JS keeps it painted while it leaves); the menu icon morphs into an X
      6 boxes       hover: the box straightens and lifts (fine pointers: the JS also tilts it toward the
                    cursor, a soft glare follows the cursor in its window); the bread rises a little
                    in its window while its contact shadow spreads; the tag wobbles (JS)
-     7 order       launch day (data-order="live", O1): the JS stamps the status line on and prints
-                   the order button in, and stamps the nav chip "חדש"; the "בקרוב:" mark gives two
-                   oven-timer beats the first time the printed receipt is on screen (JS, ~3 s, once)
+     7 order       the receipt's phone number underlines on hover/focus (the scroll module prints
+                   the receipt and stamps its branches line)
      8 feed        polaroids straighten and lift on hover/focus
      9 map         a label and its pin pair up on hover and on keyboard focus inside the label: the
                    label lifts off the map, the pin's oven flares and gets a cream rim; pointing at
@@ -55,12 +55,9 @@
      .pin::before   scale = this file             (scroll no longer animates it: the glow rides the pin's stamp)
      .pin img       box-shadow = this file (the rim, switched, not animated)
      .place::after  everything = this file (the lifted label's longer shadow, faded by opacity)
-     .order-status  transform-ish WAAPI (scale, rotate, opacity) = this file on the live switch;
-                    the scroll module stamps the visible one while the receipt prints
-     .order-status .st   scale = this file (timer beats)
-     .btn-b etc.    transform, box-shadow, background-color = this file; clip-path / scale (WAAPI)
-                    = the JS live print
-     .tag, .chip-soon    rotate = this file (wobble); the chip's scale/opacity = the live stamp
+     .order-status  scale/rotate/opacity = the scroll module (stamped while the receipt prints)
+     .btn-b etc.    transform, box-shadow, background-color = this file
+     .tag           rotate = this file (wobble)
    Nothing here waits on reveal state ([data-rv]); hover/press work at any time, except the bread's
    rise above, which waits for its landing.
 
@@ -331,11 +328,6 @@
 }
 .pb .nav a:focus-visible::after { clip-path: inset(0); opacity: 1; transition: clip-path .46s var(--ease-out), opacity 0s; }
 
-/* the "בקרוב" / "חדש" chip wobbles when its link is entered or focused (the JS plays it once per
-   entry, to the end, so leaving early never snaps it), and is stamped on launch day. inline-block
-   so it can turn; it keeps its baseline and size */
-.pb .nav .chip-soon { display: inline-block; }
-
 /* the logo is a sticker: hover tips it like a peeling corner (its paper fades with the morning print,
    section 1) */
 .pb .mark-logo { transition: transform var(--dur-spring-bounce) var(--spring-bounce); }
@@ -421,13 +413,7 @@
 
 
 /* ---------- 7 order receipt ---------- */
-/* O1: the receipt leads with the phone; the status line says the online order is coming. The JS
-   gives the "בקרוב:" mark two oven-timer beats (a tick and a smaller tick, scale only) the first
-   time the printed receipt is on screen, then never again in that mount: about 3 s, inside the 5 s
-   that O5 allows any ambient motion, and nothing between or after. On launch day the status line is
-   stamped on and the order button prints in (JS). inline-block so the mark can scale; one word,
-   same line box. */
-.pb.mi .order-status .st { display: inline-block; }
+/* phone ordering only; the receipt's number link is styled with the other text links above */
 
 
 /* ---------- 8 feed polaroids ---------- */

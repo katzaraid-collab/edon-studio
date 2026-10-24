@@ -40,14 +40,14 @@ document.addEventListener('load', function (e) { var t = e.target; if (t.tagName
     <div>
       <p class="eyebrow">כיוון ב׳ · הכיוון שבחרת · גרסה 3</p>
       <h1>השקית</h1>
-      <p class="lead">המותג כמו שהוא מגיע הביתה: שקית, קופסה, והלוגו העגול מודבק עליה כמו מדבקה. הצבעים לקוחים מהלוגו ומאפליקציית ההזמנות: שמנת של נייר, קרמל של השיבולים והטבעת, ושוקולד כהה של המילה ״האופה״. בגרסה 3 האריזה ממשיכה גם אחרי הפתיחה: קופסאות קרפט עם חלון, קבלה של הזמנה בטלפון, מפה של שלושת התנורים, ופוטר שנסגר כמו תחתית של שקית. הקול נשאר הקול שלכם מהאינסטגרם.</p>
+      <p class="lead">המותג כמו שהוא מגיע הביתה: שקית, קופסה, והלוגו העגול מודבק עליה כמו מדבקה. הצבעים לקוחים מהלוגו ומהמיתוג הקיים שלכם: שמנת של נייר, קרמל של השיבולים והטבעת, ושוקולד כהה של המילה ״האופה״. בגרסה 3 האריזה ממשיכה גם אחרי הפתיחה: קופסאות קרפט עם חלון, קבלה של הזמנה בטלפון, מפה של שלושת התנורים, ופוטר שנסגר כמו תחתית של שקית. הקול נשאר הקול שלכם מהאינסטגרם.</p>
     </div>
     <div class="facts">
       <h2>מה השתנה בגרסה 3</h2>
       <ul>
         <li><strong>מפה, ״אנחנו כאן.״</strong>: שלושת הסניפים ובית הייצור על מפה בקנה מידה אמיתי, עם הדרך מהמאפייה של אבא באופקים. היא מחליפה את הסיפור, את רצועת העסקים ואת כרטיסי הסניפים, וגם הלחמים לסופרים בכל הארץ מופיעים בה.</li>
-        <li><strong>הזמנה: קודם הטלפון</strong>, שעובד כבר היום, ומתחתיו ״בקרוב: הזמנה אונליין לאיסוף מסניף נתיבות״. בתפריט נשאר ״הזמנה אונליין · בקרוב״, כמו שביקשתם.</li>
-        <li><strong>קופסאות בלי מכסה</strong>: רשימת המוצרים מודפסת על הקופסה, בשמות המדויקים מהאפליקציה. קופסת שישי, עם פרנה וחלות, היא הגדולה.</li>
+        <li><strong>הזמנה בטלפון</strong>: קבלה עם קו ההזמנות 1700-55-22-55, והמספר מחייג בלחיצה. אין באתר הזמנה אונליין ואין קישור לאפליקציה.</li>
+        <li><strong>קופסאות בלי מכסה</strong>: רשימת המוצרים מודפסת על הקופסה, בשמות המוצרים שלכם. קופסת שישי, עם פרנה וחלות, היא הגדולה.</li>
         <li><strong>נגישות וערב</strong>: טבעת פוקוס כהה שבולטת על כל רקע, דילוג לתוכן, רצועות בשוקולד של הלוגו במצב כהה, ותנועה שנעצרת לבד.</li>
         <li><strong>הירו רגוע יותר</strong>: השקית גדולה יותר, השיבולים מטושטשות בקדמת התמונה, ובטלפון זו סצנה אחת.</li>
       </ul>
@@ -63,7 +63,6 @@ document.addEventListener('load', function (e) { var t = e.target; if (t.tagName
           <input type="radio" name="b-mode" id="b-d" value="dark"><label for="b-d">כהה</label>
         </div>
         <label class="chk"><input type="checkbox" id="rm"> הדמיית הפחתת תנועה</label>
-        <label class="chk"><input type="checkbox" id="order-live"> הדמיית יום ההשקה של ההזמנות</label>
         <button type="button" class="btn" data-replay>הפעלה מחדש של הפתיחה</button>
         <button type="button" class="btn btn--solid" data-full>מסך מלא</button>
       </div>
@@ -86,11 +85,11 @@ document.addEventListener('load', function (e) { var t = e.target; if (t.tagName
           <li><b>הלוגו ״נלחץ״ על השקית</b> בפתיחה, וטבעת קרמל מתפשטת ממנו.</li>
           <li><b>״אנחנו כאן.״</b>: מפה בקנה מידה אמיתי. במחשב התוויות עומדות על שולי המפה, וכל אחת נושאת את המספר או הסימן של התנור שלה. בטלפון הן רשימה ממוספרת מתחת למפה. ״Google Maps״ בכל תווית פותח את הסניף הנכון.</li>
           <li><b>סרט ההדבקה</b> נע לאט עם שמות המוצרים. אפשר לעצור אותו בכפתור (דרישת WCAG 2.2.2), והוא נעצר גם כשהעכבר עליו.</li>
-          <li><b>הזמנה אונליין · בקרוב</b>: הקבלה מובילה עם הטלפון ומודיעה שההזמנה באפליקציה בדרך. אין בה קישור פעיל ואין איסוף פרטים. ״הדמיית יום ההשקה״ מראה מה משתנה כשהאפליקציה נפתחת: מתג אחד מוסיף כפתור ל־haofeapp.com/order.</li>
+          <li><b>הזמנה בטלפון</b>: הקבלה ״מודפסת״ כשמגיעים אליה, והמספר מחייג לקו ההזמנות. מתחתיה קיצור לכתובות ולשעות של הסניפים.</li>
           <li><b>בטלפון</b> המוצרים בשני טורים והפיד הוא מסילה שגוללים הצידה, כך שהעמוד קצר בערך בשליש.</li>
           <li>בהפחתת תנועה הסרט הופך לרשימה סטטית ושום דבר לא זז.</li>
         </ul>
-        <p class="note">השקית, הקיר, השיבולים והמוצרים הם הדמיות AI, וכל אחת מסומנת ״הדמיית AI״. תמונות הפיד הן מקומות שמורים ״צילום זמני״. הלוגו הוא הלוגו שלכם מאפליקציית ההזמנות.</p>
+        <p class="note">השקית, הקיר, השיבולים והמוצרים הם הדמיות AI, וכל אחת מסומנת ״הדמיית AI״. תמונות הפיד הן מקומות שמורים ״צילום זמני״. הלוגו שוחזר מקובץ קטן שלכם, עד שיגיע הקובץ המקורי.</p>
       </aside>
     </div>
   </div>
@@ -98,18 +97,18 @@ document.addEventListener('load', function (e) { var t = e.target; if (t.tagName
   <div class="wrap specs">
     <section aria-labelledby="pal-b">
       <h2 id="pal-b">פלטה</h2>
-      <p class="note prose">הגוונים נלקחו מהלוגו (טבעת ושיבולים בקרמל, המילה ״האופה״ בשוקולד) ומקוד העיצוב של haofeapp.com (שמנת, כרטיסים, כפתור כהה). הקרמל המקורי משמש רק לגרפיקה, כי כטקסט קטן הוא לא עובר ניגודיות. לטקסט יש גוון קרמל עמוק יותר. טבעת הפוקוס היא בשוקולד של הכותרות, ועל הרצועות הכהות היא בשמנת.</p>
+      <p class="note prose">הגוונים נלקחו מהלוגו (טבעת ושיבולים בקרמל, המילה ״האופה״ בשוקולד) ומהמיתוג הדיגיטלי הקיים שלכם (שמנת, כרטיסים, כפתור כהה). הקרמל המקורי משמש רק לגרפיקה, כי כטקסט קטן הוא לא עובר ניגודיות. לטקסט יש גוון קרמל עמוק יותר. טבעת הפוקוס היא בשוקולד של הכותרות, ועל הרצועות הכהות היא בשמנת.</p>
       <div class="swatches">
         <div class="swset"><h3>בהיר · נייר ושיבולים</h3>
           <div class="swrow">
-            <div class="sw"><i style="background:#F7F1E6"></i><div><b>שמנת · רקע</b><code>#F7F1E6 · מהאפליקציה</code></div></div>
-            <div class="sw"><i style="background:#FFFCF6"></i><div><b>נייר · כרטיסים</b><code>#FFFCF6 · מהאפליקציה</code></div></div>
+            <div class="sw"><i style="background:#F7F1E6"></i><div><b>שמנת · רקע</b><code>#F7F1E6 · מהמיתוג</code></div></div>
+            <div class="sw"><i style="background:#FFFCF6"></i><div><b>נייר · כרטיסים</b><code>#FFFCF6 · מהמיתוג</code></div></div>
             <div class="sw"><i style="background:#EADBC2"></i><div><b>קרפט · קופסאות ופיד</b><code>#EADBC2</code></div></div>
             <div class="sw"><i style="background:#4A1D0B"></i><div><b>שוקולד · כותרות ופוקוס</b><code>#4A1D0B · מהלוגו · 12.7:1</code></div></div>
             <div class="sw"><i style="background:#24180F"></i><div><b>טקסט</b><code>#24180F · 15.4:1</code></div></div>
             <div class="sw"><i style="background:#B0702A"></i><div><b>קרמל · גרפיקה</b><code>#B0702A · מהלוגו</code></div></div>
             <div class="sw"><i style="background:#7A4520"></i><div><b>קרמל · טקסט</b><code>#7A4520 · 6.9:1</code></div></div>
-            <div class="sw"><i style="background:#2A1D14"></i><div><b>כפתור ורצועות</b><code>#2A1D14 · מהאפליקציה</code></div></div>
+            <div class="sw"><i style="background:#2A1D14"></i><div><b>כפתור ורצועות</b><code>#2A1D14 · מהמיתוג</code></div></div>
           </div>
         </div>
         <div class="swset"><h3>כהה · דלפק בערב</h3>
@@ -140,7 +139,7 @@ document.addEventListener('load', function (e) { var t = e.target; if (t.tagName
         <div class="type-card">
           <p class="meta">גוף · Rubik 400 עד 700</p>
           <p style="font:400 18px/1.6 'Rubik',sans-serif">שדרות ירושלים 136, נתיבות · <bdi dir="ltr">08-9752093</bdi> · <bdi dir="ltr">@haofe_bakery</bdi></p>
-          <p class="note">אותו פונט שבאפליקציית ההזמנות, כך שהמעבר מהאתר לאפליקציה מרגיש רציף. גם הכינויים ברשתות כתובים בו.</p>
+          <p class="note">פונט גוף קריא ורחב, שמתאים לכתובות, לשעות ולמספרי טלפון. גם הכינויים ברשתות כתובים בו.</p>
         </div>
         <div class="type-card">
           <p class="meta">פתקים · Playpen Sans Hebrew 600</p>
@@ -174,13 +173,13 @@ document.addEventListener('load', function (e) { var t = e.target; if (t.tagName
     <section aria-labelledby="tmp-b">
       <h2 id="tmp-b">מה זמני בתצוגה</h2>
       <ul class="note prose">
-        <li><b>לוגו:</b> שוחזר לווקטור מקובץ ה־512 פיקסלים שבאפליקציה. אם יש קובץ מקורי מהמעצב, הוא עדיף.</li>
+        <li><b>לוגו:</b> שוחזר לווקטור מקובץ של 512 פיקסלים. אם יש קובץ מקורי מהמעצב, הוא עדיף.</li>
         <li><b>הדמיות AI:</b> הקיר, השקית, השיבולים והמוצרים בקופסאות נוצרו בבינה מלאכותית לבקשתכם (Higgsfield). הם לא מראים את המאפייה או את המוצרים שלכם, מסומנים ״הדמיית AI״, ויוחלפו בצילום אמיתי לפני העלייה לאוויר.</li>
         <li><b>הסיפור במפה:</b> טיוטה מתוך הכתבה בוואלה (2021), ממתינה לאישור שלכם. אין תמונה של המאפייה באופקים ואין לה הדמיה. אם יש לכם תמונה משם, היא תהיה התמונה החזקה ביותר באתר.</li>
         <li><b>הציטוט ״ונמשיך להיות כאן…״</b> מהפוסט של 7.10.2026, והשורה על הסניף בשדרות: ממתינים לאישור שלכם.</li>
-        <li><b>שעות, טלפונים וכשרות:</b> מה שלא אומת מסומן בקו מקווקו. השעות של נתיבות לקוחות מאפליקציית ההזמנות. הכשרות של שדרות ושל קריית גת לפי רישומי בד״ץ בית יוסף.</li>
+        <li><b>שעות, טלפונים וכשרות:</b> מה שלא אומת מסומן בקו מקווקו. השעות של נתיבות לקוחות מהמערכת שלכם וממתינות לאישור. הכשרות של שדרות ושל קריית גת לפי רישומי בד״ץ בית יוסף.</li>
         <li><b>בית הייצור:</b> המיקום שלו על המפה לפי רישום הבד״ץ, ואיש הקשר לעסקים ולרשתות עדיין חסר.</li>
-        <li><b>מוצרים:</b> השמות והמספרים (22 סוגי לחם ו־25 מאפים) לקוחים מאפליקציית ההזמנות. מחירים לא מוצגים.</li>
+        <li><b>מוצרים:</b> השמות והמספרים (22 סוגי לחם ו־25 מאפים) לקוחים מרשימת המוצרים שלכם וממתינים לאישור. מחירים לא מוצגים.</li>
         <li><b>תמונות הפיד:</b> עדיין מקומות שמורים, כי הן מייצגות פוסטים אמיתיים שלכם. ייכנסו אחרי אישור שימוש.</li>
         <li><b>פתקי הפיד:</b> ציטוטים מהכתוביות שלכם. באתר האמיתי נציג תמונות עם קישור לאינסטגרם, בלי הטמעה של אינסטגרם, כדי לא לטעון עוגיות של צד שלישי.</li>
         <li><b>טקסטים בקו מקווקו</b> הם פרטים חסרים או ממתינים לאישור.</li>
@@ -195,14 +194,13 @@ document.addEventListener('load', function (e) { var t = e.target; if (t.tagName
 </main>
 
 <template id="proto">
-<div class="proto pb" data-mode="light" data-order="soon">
+<div class="proto pb" data-mode="light">
   <a class="skip" href="#" data-jump="top">דילוג לתוכן</a>
   <header class="hd">
     <div class="in">
       <a class="mark" href="#" data-jump="top" aria-label="האופה, בוטיק לחם. לראש העמוד"><span class="mark-logo"><img class="for-light" src="assets/logo/haofe-logo-clean.svg" alt="" width="44" height="44"><img class="for-dark" src="assets/logo/haofe-logo-mono-cream.svg" alt="" width="44" height="44" loading="lazy" decoding="async"></span><b>האופה</b></a>
       <nav class="nav" aria-label="ראשי">
         <a href="#" data-jump="boxes">מה יש בקופסה</a>
-        <a href="#" data-jump="order">הזמנה אונליין<span class="chip-soon"><span class="when-soon">בקרוב</span><span class="when-live">חדש</span></span></a>
         <a href="#" data-jump="visit">סניפים</a>
         <a href="#" data-jump="feed">מהפיד</a>
         <a href="#" data-jump="b2b">לעסקים</a>
@@ -220,7 +218,7 @@ document.addEventListener('load', function (e) { var t = e.target; if (t.tagName
     </div>
     <nav class="menu paper" data-menu data-id="menu" hidden aria-label="תפריט נייד">
       <a href="#" data-jump="boxes">מה יש בקופסה</a>
-      <a href="#" data-jump="order">הזמנה אונליין · <span class="when-soon">בקרוב</span><span class="when-live">חדש</span></a>
+      <a href="#" data-jump="order">הזמנה בטלפון</a>
       <a href="#" data-jump="visit">סניפים</a>
       <a href="#" data-jump="feed">מהפיד</a>
       <a href="#" data-jump="b2b">לעסקים ולרשתות</a>
@@ -376,9 +374,8 @@ document.addEventListener('load', function (e) { var t = e.target; if (t.tagName
           <p>קו ההזמנות של האופה.</p>
         </div>
         <div class="acts">
-          <p class="order-status when-soon"><span class="st">בקרוב:</span> הזמנה אונליין לאיסוף מסניף נתיבות</p>
-          <p class="order-status when-live"><span class="st">חדש:</span> הזמנה אונליין לאיסוף מסניף נתיבות</p>
-          <a class="btn-b btn-b--main when-live" data-live-href="https://haofeapp.com/order" target="_blank" rel="noopener">להזמנה אונליין<span class="sr-only"> (נפתח בחלון חדש)</span></a>
+          <p class="order-status"><span class="st">הסניפים:</span> כתובות, טלפונים ושעות בהמשך העמוד</p>
+          <a class="btn-b" href="#" data-jump="visit">לסניפים</a>
         </div>
       </div>
     </div>
@@ -432,7 +429,7 @@ document.addEventListener('load', function (e) { var t = e.target; if (t.tagName
               <dt>כשרות</dt><dd><span aria-hidden="true">—</span><span class="sr-only">בבדיקה</span></dd>
               <dt>ניווט</dt><dd><a class="go" href="https://www.google.com/maps/search/?api=1&amp;query=%D7%94%D7%90%D7%95%D7%A4%D7%94+%D7%91%D7%95%D7%98%D7%99%D7%A7+%D7%9C%D7%97%D7%9D+%D7%A9%D7%93%D7%A8%D7%95%D7%AA+%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D+136+%D7%A0%D7%AA%D7%99%D7%91%D7%95%D7%AA&amp;query_place_id=ChIJsxSE1GR-AhURpDsRtfFQr6M" target="_blank" rel="noopener">Google Maps<span class="sr-only">, ניווט לסניף נתיבות (נפתח בחלון חדש)</span></a></dd>
             </dl>
-            <p class="lbl-note"><span class="tbd">בבדיקה: השעות (מהאפליקציה) והכשרות</span></p>
+            <p class="lbl-note"><span class="tbd">בבדיקה: השעות והכשרות</span></p>
           </li>
           <li class="place" data-place="sderot" data-section="sderot" data-rv>
             <h3><span class="pin-n" aria-hidden="true">2</span>שדרות</h3>

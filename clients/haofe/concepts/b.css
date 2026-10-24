@@ -5,8 +5,9 @@
    a chocolate sealing tape (the ticker), kraft boxes with a window and the product list printed
    on the face, a phone-order receipt, a to-scale map of the three ovens on the evening counter
    ("אנחנו כאן."), the feed's own captions pinned on a board, and a folded bag bottom as the
-   footer. Source: clients/haofe/plan/plan.md section 2.1, with the owner overrides O1-O6 (the
-   "הזמנה אונליין · בקרוב" nav chip and the order status line stay; supermarkets live on the map).
+   footer. Source: clients/haofe/plan/plan.md section 2.1, with the owner overrides O2-O6
+   (supermarkets live on the map). Ordering is by phone only: on 24.10.2026 the owner took the
+   ordering app out of the site, so there is no online-ordering nav item, chip, status or switch.
    3.1 answers the v3 rechecks (audit/a11y/recheck.md N1-N3, N7, N8 and audit/design/recheck.md
    2, 3, 6-9, 12-17): footer and receipt reflow, the map's labels in flow on a cropped frame, the
    tablet hero, the centred receipt, the footer edge, the reduced-motion tape.
@@ -16,8 +17,8 @@
      b.css                this file: tokens, layout and every static style of the prototype
      b-motion-hero.css    opening: logo sticker press + ink ring, hero text rise, evening dim
      b-motion-scroll.css  [data-rv] scroll reveals, ticker loop, section entrances
-     b-motion-micro.css   hover/press, theme toggle, order switch, menu
-     b.js                 PROTO.init: ticker pause, feed rail focus, order-live switch (no box lids)
+     b-motion-micro.css   hover/press, theme toggle, menu
+     b.js                 PROTO.init: ticker pause, feed rail focus (no box lids)
      b-motion-*.js        motion modules (window.ProtoModules), one per motion css file
      shell.js             mounts <template id="proto"> into every frame (loaded last)
    No animation, transition, :hover/:active movement or @keyframes belongs in this file;
@@ -37,17 +38,18 @@
      [kiryat-gat], the production-house label [b2b]) · feed [feed] · /main · footer.ft · nav.bar
      REMOVED in v3, do not target: .story .story-card .draft, .b2b .b2b-band .b2b-copy .b2b-facts
      .b2b-cta, .visit .labels .label .meta .row, .lid .lid-h .open .det, .note-hand, .logo-s,
-     .soon (pill and its dot), .btn-soon, .phone-line, .hero.paper, style="--i:n" on the boxes.
+     .soon (pill and its dot), .btn-soon, .phone-line, .hero.paper, style="--i:n" on the boxes;
+     3.2: .chip-soon, .when-soon / .when-live, [data-order], the live order button.
 
    HOOKS MOTION MODULES MAY RELY ON (keep names stable)
      root       .proto.pb   .anim (motion allowed) | .rm (reduced motion)   [data-mode="light|dark"]
-                [data-order="soon|live"]   .menu-open (set by Shell.menu)
+                .menu-open (set by Shell.menu)
                 containers: .pb is `container: pb`; .map-wrap is `container: map`. Inside .map-wrap
                 an unnamed @container query (and cqi/cqw) resolves against the map, so page-width
                 conditions there must say `@container pb (...)`.
                 tokens: --focus (ring), --band / --on-band / --band-accent (tape, bar), --map-* (the map
                 ground: the evening counter in both modes), --sec, --h-a, --h-b, --r-paper, --r-ctl
-     header     .hd  .mark (img, b)  .nav a  .chip-soon (.when-soon "בקרוב" / .when-live "חדש")
+     header     .hd  .mark (img, b)  .nav a
                 .theme-btn[data-theme-toggle][aria-pressed] (.sun, .moon)  .order (.order-n = the
                 number, visually hidden below 1180px)  .menu-btn[data-menu-btn][aria-expanded]
                 .menu[data-menu] (a, a.menu-small)
@@ -87,8 +89,7 @@
      order      .order-sec (no top padding right after .boxes: one --sec between shelf and slip)
                 .slip[data-rv] (a receipt, rotate: -1deg, centred in its band; ::before / ::after = torn
                 edges)  .slip-copy (h2, p.order-num > a[href^="tel:"] > bdi, p)  .acts (dotted divider)
-                .order-status.when-soon / .order-status.when-live (.st = "בקרוב:" / "חדש:")
-                a.btn-b.btn-b--main.when-live[data-live-href]   .when-soon / .when-live (by [data-order])
+                p.order-status (.st = "הסניפים:", stamped by the scroll module)  a.btn-b[data-jump=visit]
                 The display numbers (.order-num, .ft-num) scale with the width below 420px. As a last
                 resort (text spacing, zoom) their bdi wraps at the <wbr> after a hyphen; it never clips.
      map        .here[data-section="visit"] (--focus: --map-head)  .here-copy.sec-head[data-rv]
@@ -149,9 +150,9 @@
 
 /* ---------- 1 tokens ---------- */
 .pb {
-  /* palette from the logo (caramel ring and wheat, chocolate wordmark) and the haofeapp.com order app */
-  --bg: #F7F1E6;      /* app background */
-  --paper: #FFFCF6;   /* app cards */
+  /* palette from the logo (caramel ring and wheat, chocolate wordmark) and the bakery's existing digital brand */
+  --bg: #F7F1E6;      /* brand background */
+  --paper: #FFFCF6;   /* brand cards */
   --kraft: #EADBC2;   /* light kraft: the bag and the boxes, toned down */
   --kraft2: #FFFCF6;  /* box window */
   --lid: #F6E8D2;     /* app notice cream */
@@ -193,7 +194,7 @@
   --body: "Rubik", "Arial Hebrew", Arial, sans-serif;
   --hand: "Playpen Sans Hebrew", "Rubik", cursive;   /* weight 600 only (R10) */
 
-  /* motion tokens, from the bakery's own ordering app (haofeapp.com) */
+  /* motion tokens, from the bakery's existing digital brand */
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --ease-in: cubic-bezier(.4, 0, 1, 1);
   --ease-in-out: cubic-bezier(.65, 0, .35, 1);
@@ -323,8 +324,6 @@
 .pb .nav { display: none; gap: 2px; margin-inline: auto; }
 .pb .nav a { text-decoration: none; padding: 10px 12px; font-weight: 500; font-size: 15px; border-radius: 999px; white-space: nowrap; }
 .pb .nav a:hover { background: var(--lid); }
-.pb .nav .chip-soon { font: 600 11px/1 var(--body); color: var(--stamp); border: 1px solid color-mix(in srgb, var(--stamp) 55%, transparent); border-radius: 999px; padding: 3px 6px; margin-inline-start: 6px; }
-.pb[data-order="live"] .nav .chip-soon { background: var(--stamp); color: var(--on-stamp); border-color: var(--stamp); }
 .pb .hd-actions { display: flex; gap: 8px; align-items: center; margin-inline-start: auto; }
 .pb .theme-btn { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--line-strong); background: transparent; color: var(--ink); display: grid; place-items: center; cursor: pointer; }
 .pb .theme-btn svg { width: 22px; height: 22px; }
@@ -448,11 +447,9 @@
 .pb .ai-tag { font: 500 11px/1.2 var(--body); color: var(--ink2); }
 .pb .tag { font: 700 12px/1 var(--body); padding: 6px 9px; border-radius: 999px; background: var(--stamp); color: var(--on-stamp); transform: rotate(-3deg); }
 
-/* order receipt: what works today (the phone) leads; the app is the status line under it.
-   One switch (data-order="soon" | "live") flips it on launch day. The slip lies centred on the counter,
+/* order receipt: phone ordering, with a short line pointing to the branches. The slip lies centred on the counter,
    one --sec under the shelf: the band and the shelf share the cream ground, so there is no second
    section gap between them (design 9, and the empty gap under the products) */
-.pb:not([data-order="live"]) .when-live, .pb[data-order="live"] .when-soon { display: none !important; }
 .pb .boxes + .order-sec { padding-top: 0; }
 .pb .slip {
   position: relative; max-width: 520px; margin-inline: auto; rotate: -1deg;
