@@ -1,0 +1,3 @@
+# Preview: no address yet, so search engines are kept out (site.json "origin" is null).
+User-agent: *
+Disallow: /

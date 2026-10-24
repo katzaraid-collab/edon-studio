@@ -1,0 +1,1281 @@
+{
+ "research:social": {
+  "branches": [
+   {
+    "label": "האופה - בוטיק לחם, נתיבות (סניף ראשי / מרכז מסחרי טדי קולק)",
+    "city": "נתיבות",
+    "address": "שדרות ירושלים 136, נתיבות (לפי Google Maps זה בתוך 'מרכז מסחרי טדי קולק')",
+    "phone": "08-9752093",
+    "hours": "Sources disagree. (1) haofeapp.com/order, the owner's ordering app (not launched yet), viewed 24.10.2026: Sun-Thu 05:00–22:00, Fri 05:00–15:00, Motzei Shabbat 20:00–23:00, and 'לשעות פעילות בחגים יש לפנות לסניף'. (2) Google Maps limited view, 24.10.2026: Fri 5:00–16:00, Sat 21:00–0:00. Other days are not shown. (3) bakerias.com, which mirrors the Facebook page: Sun-Thu 06:00–22:00, Fri 06:00–14:00, Sat 18:30–22:00.",
+    "status": "active",
+    "notes": "Inference: the main Instagram account @haofe_bakery tags location id 895926247234370 on its posts. The Facebook page plugin for /p/...-100063691744585 resolves to that same page id, named 'האופה - בוטיק לחם' with 1,430 followers (viewed 24.10.2026), and netivotonline.com links to it. So the main brand page is the Netivot page. Google rating 4.7 (limited view, reviews hidden). netivotonline.com lists the email haofebutik@gmail.com. The ordering app is set up for pickup from this branch only. Not re-checked here: the Badatz Beit Yosef factory listing at הסוללים 1, Netivot.",
+    "evidence": [
+     {
+      "url": "https://www.instagram.com/p/DegS23RIAJ-/",
+      "source_type": "instagram_post (@haofe_bakery, collab with @haofe_kiryatgat and @haofe_sderot)",
+      "source_date": "2026-10-15",
+      "quote_or_observation": "\"האופה מחכה לכם בנתיבות, בשדרות ובקריית גת❤️ תבחרו את הסניף שלכם ובואו לבקר!\" Location tag: 'האופה - בוטיק לחם' (id 895926247234370). Read through the profile embed and web_profile_info JSON on 2026-10-24."
+     },
+     {
+      "url": "https://www.google.com/maps?cid=11794734948161764260",
+      "source_type": "google_maps",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "'\"האופה\" - בוטיק לחם', מאפייה, 'שדרות ירושלים 136, נתיבות, ישראל', 'נמצא בתוך: מרכז מסחרי טדי קולק', +972 8-975-2093, rating 4.7. Status 'המקום סגור · ייפתח בשעה 21:00' (on a Saturday). Fri 5:00–16:00, Sat 21:00–0:00. Not marked closed."
+     },
+     {
+      "url": "https://haofeapp.com/order",
+      "source_type": "owner_app (not launched yet, but publicly reachable)",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "Page title 'הזמנה מהאופה · נתיבות'. Text: 'לחם ומאפים מהתנור שלנו, לאיסוף מסניף נתיבות'. Branch panel: 'שדרות ירושלים 136, נתיבות · איסוף עצמי בלבד', 08-9752093, א׳–ה׳ 05:00–22:00, שישי 05:00–15:00, מוצאי שבת 20:00–23:00."
+     },
+     {
+      "url": "https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F100063691744585&tabs=timeline",
+      "source_type": "facebook_page_plugin",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "Rendered the name 'האופה - בוטיק לחם' and '1,430 עוקבים', with links to facebook.com/895926247234370. The timeline was hidden: 'אנא התחבר/י כדי לראות דף זה'."
+     },
+     {
+      "url": "https://www.bakerias.com/IL/Netivot/895926247234370/%D7%94%D7%90%D7%95%D7%A4%D7%94---%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%9C%D7%97%D7%9D",
+      "source_type": "facebook_mirror_directory",
+      "source_date": "posts 2025-11-26 to 2025-12-11; viewed 2026-10-24",
+      "quote_or_observation": "30/11/2025 post: 'סניף נתיבות הפצצתם! עונת הסופגניות נפתחה פה בענק'. 11/12/2025: 'מחר באופה בוטיק לחם | שדרות • נתיבות • קריית גת'. Address שדרות ירושליים 136, phone +97289752093."
+     },
+     {
+      "url": "https://netivotonline.com/haofe/",
+      "source_type": "local_directory (linked from haofeapp.com)",
+      "source_date": "undated; viewed 2026-10-24",
+      "quote_or_observation": "'שד’ ירושלים 136, נתיבות', 'טל: 08-9752093', email haofebutik@gmail.com, Facebook link facebook.com/האופה-בוטיק-לחם-895926247234370/."
+     }
+    ]
+   },
+   {
+    "label": "״האופה״ בוטיק לחם - שדרות",
+    "city": "שדרות",
+    "address": "יגאל אלון 4, שדרות",
+    "phone": "08-6491122",
+    "hours": "Google Maps limited view, 24.10.2026: Fri 5:00–16:00, Sat 20:00–0:00. Other days are not shown. zips.co.il says its hours are 'נכונות לינואר 2026': Sun-Thu 5:30–22:00, Fri 5:00–16:00, Sat 20:00–0:00.",
+    "status": "active",
+    "notes": "The branch has its own Instagram account, @haofe_sderot (id 30297405712, 'האופה בוטיק לחם שדרות', 54 followers, 31 posts on 24.10.2026). Its bio could not be read because of rate limits. The 7.10.2026 anniversary post says this branch took a direct hit, presumably during the war since Oct 2023. It is open again and inviting customers in Oct 2026. easy.co.il lists 'יגאל אלון 3' (search snippet only), which contradicts every other source saying יגאל אלון 4. Google rating 4.4. The Facebook page facebook.com/haofesderot is behind a login wall. Its search snippet gives יגאל אלון 4 and +972 8-649-1122.",
+    "evidence": [
+     {
+      "url": "https://www.instagram.com/p/DeghqXvtZje/",
+      "source_type": "instagram_post (@haofe_sderot)",
+      "source_date": "2026-10-15",
+      "quote_or_observation": "\"אצלנו לא מתקמצנים במילוי😍 מחכים לכם-יגאל אלון 4 שדרות❤️\" Location tag '״האופה״ בוטיק לחם - שדרות' (id 108724631041123). Read through the captioned embed on 2026-10-24."
+     },
+     {
+      "url": "https://www.instagram.com/p/DetORsxtzJW/",
+      "source_type": "instagram_post (@haofe_sderot)",
+      "source_date": "2026-10-20",
+      "quote_or_observation": "\"שדרות והסביבה!!!... המרפסת המושלמת שלנו... 📍 מחכים לכם בסניף האופה שדרות 🤎\""
+     },
+     {
+      "url": "https://www.instagram.com/p/DeL3jB-CK0u/",
+      "source_type": "instagram_post (@haofe_bakery, collab)",
+      "source_date": "2026-10-07",
+      "quote_or_observation": "\"הסניף שלנו בשדרות ספג פגיעה ישירה... היינו איתכם בשדרות. היינו איתכם בנתיבות. היינו איתכם בקריית גת ובבית שמש.\""
+     },
+     {
+      "url": "https://www.google.com/maps?cid=10594881781052471767",
+      "source_type": "google_maps",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "'״האופה״ -בוטיק לחם', מאפייה, 'יגאל אלון 4, שדרות, ישראל', +972 8-649-1122, rating 4.4. Status 'המקום סגור · ייפתח בשעה 20:00' (on a Saturday). Owner description: 'ברוכים הבאים למאפייה הכי יפה בעיר!... לשתות קפה במרפסת היפה שלנו... wifi חינם'. Not marked closed."
+     },
+     {
+      "url": "https://zips.co.il/%D7%A2%D7%A1%D7%A7%D7%99%D7%9D/%D7%A9%D7%93%D7%A8%D7%95%D7%AA/%D7%9E%D7%90%D7%A4%D7%99%D7%95%D7%AA/81389/%D7%94%D7%90%D7%95%D7%A4%D7%94-%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%9C%D7%97%D7%9D",
+      "source_type": "directory (Google reviews mirror)",
+      "source_date": "hours stated as of January 2026; viewed 2026-10-24",
+      "quote_or_observation": "יגאל אלון 4, שדרות; +972 8-649-1122; 'דירוג 4.4 מתוך 5 על סמך 122 ביקורות בגוגל'. Newest review snippet is dated 21.07.2023."
+     },
+     {
+      "url": "https://mumlazim.walla.co.il/item/3476827",
+      "source_type": "sponsored_article (linked from the @haofe_bakery bio)",
+      "source_date": "2021-12-14 (last updated)",
+      "quote_or_observation": "'יגאל אלון 4, שדרות' - 08-6491122."
+     }
+    ]
+   },
+   {
+    "label": "האופה קרית גת",
+    "city": "קריית גת",
+    "address": "הרימון 70, קריית גת",
+    "phone": "08-6669750 (from the branch's Instagram bio). Google Maps instead lists +972 1-700-552-255, which is the chain ordering line.",
+    "hours": "Google Maps limited view, 24.10.2026: Fri 5:00–14:30, Sat closed ('ייפתח ביום יום א׳ בשעה 6:00'). Other days are not shown.",
+    "status": "active",
+    "notes": "Own Instagram account @haofe_kiryatgat (id 26404668072, 'האופה קרית גת', 43 followers, 30 posts, no highlights on 24.10.2026). Two Facebook pages turn up in search: 'האופה בוטיק לחם- קרית גת' (facebook.com/p/...-100084744343511) and 'האופה קרית גת' (facebook.com/h.wph.qryt.gt). Both are behind a login wall. Search snippets say הרימון 70, bakery, outdoor seating, 0 reviews. No opening date found: Instagram pagination was blocked, so older posts could not be read. Google rating 4.6.",
+    "evidence": [
+     {
+      "url": "https://www.instagram.com/haofe_kiryatgat/",
+      "source_type": "instagram_bio (read from the web_profile_info JSON)",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "Bio: \"המאפיה הכי לוהטת בקרית גת והסביבה!\\nרח' הרימון 70 קרית גת\\n08-6669750\""
+     },
+     {
+      "url": "https://www.instagram.com/p/DeJXIltIyeh/",
+      "source_type": "instagram_post (@haofe_kiryatgat)",
+      "source_date": "2026-10-06",
+      "quote_or_observation": "\"קריית גת, אנחנו מחכים לכם 🤎 סניף האופה בקריית גת הוא המקום לעצור בו... ויש גם מקום נעים לשבת... 📍 הרימון 70, קריית גת\""
+     },
+     {
+      "url": "https://www.instagram.com/p/DegS23RIAJ-/",
+      "source_type": "instagram_post (@haofe_bakery, collab)",
+      "source_date": "2026-10-15",
+      "quote_or_observation": "\"האופה מחכה לכם בנתיבות, בשדרות ובקריית גת\""
+     },
+     {
+      "url": "https://www.google.com/maps?cid=4460162658001013556",
+      "source_type": "google_maps",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "'האופה בוטיק לחם', מאפייה, 'הרימון 70, קרית גת, ישראל', +972 1-700-552-255, rating 4.6, 'המקום סגור · ייפתח ביום יום א׳ בשעה 6:00'. Fri 5:00–14:30, Sat סגור. Not marked closed."
+     },
+     {
+      "url": "https://www.facebook.com/p/%D7%94%D7%90%D7%95%D7%A4%D7%94-%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%9C%D7%97%D7%9D-%D7%A7%D7%A8%D7%99%D7%AA-%D7%92%D7%AA-100084744343511/",
+      "source_type": "facebook_page (search snippet only; page is behind a login wall)",
+      "source_date": "snippet seen 2026-10-24",
+      "quote_or_observation": "Search snippet: address הרימון 70, Kiryat Gat; bakery; breads, pastries, birthday cakes, dairy products, coffee on the terrace (outdoor seating)."
+     }
+    ]
+   },
+   {
+    "label": "האופה בוטיק לחם בית שמש",
+    "city": "בית שמש",
+    "address": "שדרות האמוראים 12, בית שמש (from Google Maps)",
+    "phone": "+972 1-700-552-255 (on the Google listing; this is the chain ordering line)",
+    "hours": "",
+    "status": "closed",
+    "notes": "Google Maps marks this listing 'סגור לצמיתות'. The 7.10.2026 anniversary post speaks in the past tense ('היינו איתכם... בבית שמש'). Beit Shemesh is missing from the Instagram bio and from the 15.10.2026 branch list, which name only Sderot, Kiryat Gat and Netivot. Inference: a Beit Shemesh branch operated at some point between Oct 2023 and 2026 and has since closed. The opening and closing dates were not found. The same name and the same 1700 line suggest it is the same chain.",
+    "evidence": [
+     {
+      "url": "https://www.google.com/maps?cid=1648196331524428837",
+      "source_type": "google_maps",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "'האופה בוטיק לחם', rating 4.4, 'סגור לצמיתות', 'שדרות האמוראים 12, בית שמש, ישראל', +972 1-700-552-255. Owner description: 'בית מאפה וקונדטוריה עילית... ובכשרות מהודרת של הרב רובין'."
+     },
+     {
+      "url": "https://www.instagram.com/p/DeL3jB-CK0u/",
+      "source_type": "instagram_post (@haofe_bakery, collab)",
+      "source_date": "2026-10-07",
+      "quote_or_observation": "\"היינו איתכם בשדרות. היינו איתכם בנתיבות. היינו איתכם בקריית גת ובבית שמש.\""
+     }
+    ]
+   }
+  ],
+  "could_not_access": [
+   "Facebook timelines are behind a login wall for every page tried: facebook.com/haofesderot, facebook.com/100063691744585 (= 895926247234370), facebook.com/108724631041123, facebook.com/100084744343511 and facebook.com/h.wph.qryt.gt. Page plugin URLs either redirected to login, showed 'אנא התחבר/י כדי לראות דף זה' (Netivot: only the name and follower count rendered), or rendered empty. Plain fetches redirected to /login (2026-10-24).",
+   "Instagram web_profile_info for @haofe_sderot was rate-limited (401/429) on every try from 00:35 to 00:57 UTC on 2026-10-24, so the Sderot bio and its 12 latest posts were not read. Only its 6 profile-embed posts were seen.",
+   "Instagram timeline pagination (graphql query endpoint) returned 401 require_login. Only the latest 12 posts of @haofe_bakery (463 total) and @haofe_kiryatgat (30 total) were seen. Older opening or closing announcements (Kiryat Gat opening, Beit Shemesh closure) could not be found.",
+   "Instagram story highlights (6 on @haofe_bakery) and location pages need a login.",
+   "sderot-online.com/haofe/ returned Cloudflare error 1005 / 403. easy.co.il/page/10142008 returned 403. topisrael.co.il failed DNS. bakery-6194.business.site returned 404.",
+   "Google Maps served only a limited view: Friday and Saturday hours, no reviews, and 'האפשרות לפרסום תוכן מושבתת כרגע'. Full weekly hours and review text were not available.",
+   "Threads (@haofe_bakery) showed no content without a login. TikTok handles @haofe_sderot, @haofe_kiryatgat, @haofe.bakery and @haofebakery do not exist (statusCode 10221)."
+  ],
+  "other_findings": [
+   "Main Instagram bio (@haofe_bakery, id 6170989481, 1,610 followers, 463 posts), read from the web_profile_info JSON on 2026-10-24: \"רשת מאפיות ובית ייצור למאפים, לחמים ודברי פרימיום\\n📍שדרות • קריית גת • נתיבות\\n📞 להזמנות: 1700-55-22-55\". The bio link is https://mumlazim.walla.co.il/item/3476827 (Walla sponsored article, updated 14.12.2021). The bio does not mention haofeapp.com or any app. Google Maps lists the same 1700 number (+972 1-700-552-255) for the Kiryat Gat and the closed Beit Shemesh listings.",
+   "Branch Instagram accounts appear as collab co-authors on most main-account posts: @haofe_sderot (https://www.instagram.com/haofe_sderot/) and @haofe_kiryatgat (https://www.instagram.com/haofe_kiryatgat/). @haofe_netivot does not exist ('ייתכן שהקישור לא פעיל או שהפרופיל הוסר', 2026-10-24).",
+   "haofeapp.com/order already loads publicly (viewed 2026-10-24), although the owner says the app is not operating yet. Title 'הזמנה מהאופה · נתיבות'. Meta description: 'מזמינים לחמים ומאפים מהאופה ואוספים מסניף נתיבות. כל הזמנה נבדקת ומאושרת על ידי הצוות.' Ordering is in 3 steps; the product list has 22 breads, 25 pastries and 2 dry goods. Text: 'אחרי השליחה תקבלו קישור לעמוד מעקב, ועדכון בוואטסאפ כשההזמנה תאושר'; 'אין הזמנות רגילות ליום שישי. להזמנות גדולות ומיוחדות יש לפנות ישירות לסניף בטלפון 08-9752093'. The page links to netivotonline.com/haofe/, @haofe_bakery and Waze. The haofeapp.com root is a staff login page ('כניסה לצוות... הקוד בן 12 ספרות', footer 'האופה · נתיבות'). The manifest description is 'ניהול הזמנות, ייצור ואריזה למאפייה'. The app's JS mentions only the Netivot branch. Nothing was submitted.",
+   "No WhatsApp number for customers was found in any post or bio. A hiring post mirrored from Facebook (07/12/2025, bakerias.com) gives '📞 לפרטים ושליחת קורות חיים: 053-531-6790' with 'שדרות • נתיבות • קריית גת'.",
+   "Recent activity (Israel time, from taken_at timestamps that match the media-id dates): Sufganiyot/Hanukkah posts on 11.10, 18.10 and 20.10.2026. International Coffee Day post on 30.09.2026 tagged #נתיבות #שדרות #קריתגת. A Friday-closing joke video on 08.10.2026: 'בטח שנרצה לסגור ביום שישי'.",
+   "Walla article (updated 14.12.2021) says: 'הקמנו מפעל ייצור שממנו אנחנו משווקים למאפיות נוספות'. This fits the bio's 'בית ייצור'. I did not re-check the Badatz Netivot factory listing at הסוללים 1.",
+   "TikTok @haofe_bakery exists but shows 0 followers, 0 videos and no bio (2026-10-24), so it cannot be tied to the business. TikTok @haofe belongs to an unrelated person ('חגית אופק').",
+   "Unrelated businesses with similar names, to exclude: @pinate_haofe 'פינת האופה-קניון הנגב באר שבע' (053-311-4529), @haofe__bakery 'האופה לחם מן הארץ' (Kadima), @beit_haofe (Netanya), and the 'האופה מבגדד' chain.",
+   "Working files (Instagram JSON, Google Maps responses, app HTML) are saved under /tmp/claude-0/-home-user-edon-studio/39250604-ba72-5066-b62c-771f07ec61a3/scratchpad/agents/social/"
+  ]
+ },
+ "research:directories": {
+  "branches": [
+   {
+    "label": "האופה - בוטיק לחם, סניף נתיבות (חנות)",
+    "city": "נתיבות",
+    "address": "שדרות ירושלים 136, נתיבות",
+    "phone": "08-9752093",
+    "hours": "Google Maps, viewed 2026-10-24, shows only two days: Fri 30.10 05:00-16:00 and Sat 24.10 21:00-00:00. zips.co.il (it says its hours are 'correct as of January 2026'): Sun-Thu 05:30-22:00, Fri 05:00-16:00, Sat 20:00-23:30. bakerias.com (taken from the Facebook page, undated): Sun-Thu 06:00-22:00, Fri 06:00-14:00, Sat 18:30-22:00. haofeapp.com/order: Saturday-night pickup 20:00-23:00, Friday orders by phone only. The sources disagree, so check with the branch.",
+    "status": "active",
+    "notes": "Strong evidence that it is operating now. Google Maps shows normal hours and no 'סגור לצמיתות' or 'סגור זמנית' mark. The branch's Facebook posts (seen through the bakerias mirror) run to 11/12/2025, and zips shows Google reviews up to 11.11.2025. It is not in the b144, rest.co.il or d.co.il bakery lists for Netivot, and it is not on Wolt. The easy.co.il page (seen only as a search snippet) lists this address under 'Factories / מפעל'. facebook.com/895926247234370 redirects to facebook.com/p/האופה-בוטיק-לחם-100063691744585, so the page bakerias mirrors is the Netivot page.",
+    "evidence": [
+     {
+      "url": "https://www.google.com/maps/place/%22%D7%94%D7%90%D7%95%D7%A4%D7%94%22+-+%D7%91%D7%95%D7%98%D7%99%D7%A7+%D7%9C%D7%97%D7%9D%E2%80%AD/data=!4m7!3m6!1s0x15027e64d48414b3:0xa3af50f1b5113ba4!8m2!3d31.4182091!4d34.5857644!16s%2Fg%2F11gbxcq4bf!19sChIJsxSE1GR-AhURpDsRtfFQr6M",
+      "source_type": "Google Maps search result data (place_id ChIJsxSE1GR-AhURpDsRtfFQr6M)",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "Name '\"האופה\" - בוטיק לחם', address 'שדרות ירושלים 136, נתיבות, ישראל', phone '+972 8-975-2093', category מאפייה, rating 4.7. Status on Saturday: 'המקום סגור · ייפתח בשעה 21:00'. Fri 30.10: 5:00-16:00. No closure flag. Google Maps showed only a 'limited view', so the full detail panel did not open."
+     },
+     {
+      "url": "https://zips.co.il/%D7%A2%D7%A1%D7%A7%D7%99%D7%9D/%D7%A0%D7%AA%D7%99%D7%91%D7%95%D7%AA/%D7%9E%D7%90%D7%A4%D7%99%D7%95%D7%AA/55941/%D7%94%D7%90%D7%95%D7%A4%D7%94-%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%9C%D7%97%D7%9D",
+      "source_type": "Directory (zips.co.il, mirrors Google data)",
+      "source_date": "viewed 2026-10-24; page says hours 'נכונות לינואר 2026'",
+      "quote_or_observation": "'\"האופה\" - בוטיק לחם', שדרות ירושלים 136, נתיבות, +972 8-975-2093. Sun-Thu 5:30-22:00, Fri 5:00-16:00, Sat 20:00-23:30. Star counts 226/39/11/1/6 (283 reviews). Newest reviews shown are dated 11.11.2025, 01.11.2025 and 28.10.2025."
+     },
+     {
+      "url": "https://www.bakerias.com/IL/Netivot/895926247234370/%D7%94%D7%90%D7%95%D7%A4%D7%94---%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%9C%D7%97%D7%9D",
+      "source_type": "Directory that mirrors Facebook page 895926247234370",
+      "source_date": "viewed 2026-10-24; mirrored posts dated 26/11/2025-11/12/2025",
+      "quote_or_observation": "Address 'שדרות ירושליים 136, Netivot', phone +97289752093. Post of 30/11/2025: 'סניף נתיבות הפצצתם! עונת הסופגניות נפתחה פה בענק'. Post of 11/12/2025: 'מחר באופה בוטיק לחם | שדרות • נתיבות • קריית גת'."
+     },
+     {
+      "url": "https://haofeapp.com/order",
+      "source_type": "The business's own ordering page (viewed only, nothing submitted)",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "Title 'הזמנה מהאופה · נתיבות'. Page text: 'לחם ומאפים מהתנור שלנו, לאיסוף מסניף נתיבות' and 'להזמנות גדולות ומיוחדות יש לפנות ישירות לסניף בטלפון 08-9752093'. Saturday pickup window 20:00-23:00."
+     },
+     {
+      "url": "https://netivotonline.com/haofe/",
+      "source_type": "Local business card site (נתיבות אונליין)",
+      "source_date": "published 2019-11-23, modified 2024-11-05 (page metadata); viewed 2026-10-24",
+      "quote_or_observation": "'האופה בוטיק לחם ... שד' ירושלים 136, נתיבות טל: 08-9752093'."
+     },
+     {
+      "url": "https://mumlazim.walla.co.il/item/3476827",
+      "source_type": "Sponsored article (Walla מומלצים)",
+      "source_date": "last updated 14.12.2021",
+      "quote_or_observation": "Lists 'שדרות ירושלים 136, נתיבות - 08-9752093'. Mentions a production plant and exports of frozen pastries to the US."
+     },
+     {
+      "url": "https://easy.co.il/en/page/26451362",
+      "source_type": "Directory (easy.co.il). Seen only as a search-engine snippet; the page itself is blocked",
+      "source_date": "snippet seen 2026-10-24",
+      "quote_or_observation": "Title: 'The Baker - Sderot Yerushalayim 136 Netivot - Factories • Kosher Certificate'. The search engine's summary claims a rating of 9 from 301 reviews and phone 08-9752093. Not verified."
+     },
+     {
+      "url": "https://moovitapp.com/index/en/public_transit-%D7%94%D7%90%D7%95%D7%A4%D7%94_%D7%91%D7%95%D7%98%D7%99%D7%A7_%D7%9C%D7%97%D7%9D-Israel-site_165348453-1",
+      "source_type": "Moovit place page (search snippet only)",
+      "source_date": "snippet seen 2026-10-24",
+      "quote_or_observation": "Page 'How to Get to האופה - בוטיק לחם in נתיבות by Bus?', at Jerusalem Blvd 136, Netivot."
+     }
+    ]
+   },
+   {
+    "label": "״האופה״ בוטיק לחם, סניף שדרות",
+    "city": "שדרות",
+    "address": "יגאל אלון 4, שדרות",
+    "phone": "08-6491122",
+    "hours": "Google Maps, viewed 2026-10-24: Fri 30.10 05:00-16:00, Sat 24.10 20:00-00:00. zips.co.il ('as of January 2026'): Sun-Thu 05:30-22:00, Fri 05:00-16:00, Sat 20:00-00:00. d.co.il shows Sun-Thu 7:30-19:30, Fri 9:00-13:00, but the Kiryat Gat entry on d.co.il has exactly the same hours, so this looks like a stale or default value.",
+    "status": "active",
+    "notes": "Google Maps shows normal hours and no closure mark. Its Badatz Beit Yosef listing links to facebook.com/haofesderot. easy.co.il has two Sderot listings (page/10085048 at 'יגאל אלון 4' and page/10142008 at 'יגאל אלון 3'). I saw them only as search snippets, and they are probably a duplicate or an old address. The branch is not in the b144 bakery list for Sderot and not on Wolt. There is also a branch Instagram account, @haofe_sderot: the embed header shows 54 followers and 31 posts, and a DuckDuckGo snippet of the bio reads 'רח יגאל אלון 4,שדרות 08-6491122'.",
+    "evidence": [
+     {
+      "url": "https://www.google.com/maps/place/%D7%B4%D7%94%D7%90%D7%95%D7%A4%D7%94%D7%B4+-%D7%91%D7%95%D7%98%D7%99%D7%A7+%D7%9C%D7%97%D7%9D%E2%80%AD/data=!4m7!3m6!1s0x150281dbb8f45ea1:0x930894d884e3f9d7!8m2!3d31.5230457!4d34.5957709!16s%2Fg%2F11lh5p8kvh!19sChIJoV70uNuBAhUR1_njhNiUCJM",
+      "source_type": "Google Maps search result data (place_id ChIJoV70uNuBAhUR1_njhNiUCJM)",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "Name '״האופה״ -בוטיק לחם', address 'יגאל אלון 4, שדרות, ישראל', phone '+972 8-649-1122', rating 4.4. Status: 'המקום סגור · ייפתח בשעה 20:00'. Fri 30.10: 5:00-16:00. No closure flag."
+     },
+     {
+      "url": "https://zips.co.il/%D7%A2%D7%A1%D7%A7%D7%99%D7%9D/%D7%A9%D7%93%D7%A8%D7%95%D7%AA/%D7%9E%D7%90%D7%A4%D7%99%D7%95%D7%AA/81389/%D7%94%D7%90%D7%95%D7%A4%D7%94-%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%9C%D7%97%D7%9D",
+      "source_type": "Directory (zips.co.il, mirrors Google data)",
+      "source_date": "viewed 2026-10-24; hours 'נכונות לינואר 2026'",
+      "quote_or_observation": "'דירוג 4.4 מתוך 5 על סמך 122 ביקורות בגוגל'. Hours Sun-Thu 5:30-22:00, Fri 5:00-16:00, Sat 20:00-0:00. Newest reviews shown are dated 21.07.2023."
+     },
+     {
+      "url": "https://www.badatz.biz/biz/%d7%94%d7%90%d7%95%d7%a4%d7%94-%d7%91%d7%95%d7%98%d7%99%d7%a7-%d7%94%d7%9c%d7%97%d7%9d-%d7%a9%d7%93%d7%a8%d7%95%d7%aa/",
+      "source_type": "Kosher certifier listing (בד\"ץ בית יוסף)",
+      "source_date": "published 2021-05-02, modified 2022-12-11; viewed 2026-10-24",
+      "quote_or_observation": "'האופה בוטיק לחם – שדרות', למהדרין חלבי, למהדרין פרווה, בתי מאפה וקונדיטוריות. Address 'יגאל אלון 4, שדרות', phone '08-649-1122'. Website link: https://www.facebook.com/haofesderot/"
+     },
+     {
+      "url": "https://www.rest.co.il/rest/80331367/",
+      "source_type": "Directory (zap rest; same record as d.co.il/80331367/22620/)",
+      "source_date": "'עודכן בתאריך 16/12/2025 12:34'; viewed 2026-10-24",
+      "quote_or_observation": "'האופה, שדרות', יגאל אלון 4, phone 08-6491122. One review, dated 06/10/20."
+     },
+     {
+      "url": "https://www.d.co.il/80331367/22620/",
+      "source_type": "Directory (דפי זהב)",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "'האופה', יגאל אלון 4, שדרות, 08-6491122. Hours: 'ימים א' - ה' 7:30 - 19:30, יום ו' 9:00 - 13:00'."
+     },
+     {
+      "url": "https://www.facebook.com/haofesderot/",
+      "source_type": "Facebook page (login wall; only the title could be read)",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "Page title: '״האופה״ בוטיק לחם - שדרות | Sderot'. A DuckDuckGo snippet adds '501 followers · 11 were here'."
+     },
+     {
+      "url": "https://mumlazim.walla.co.il/item/3476827",
+      "source_type": "Sponsored article",
+      "source_date": "last updated 14.12.2021",
+      "quote_or_observation": "'יגאל אלון 4, שדרות - 08-6491122'."
+     },
+     {
+      "url": "https://easy.co.il/page/10142008",
+      "source_type": "Directory (easy.co.il). Search snippet only; the page is blocked",
+      "source_date": "snippet seen 2026-10-24",
+      "quote_or_observation": "Title 'האופה בוטיק לחם - יגאל אלון 3, שדרות - מאפיות וקונדיטוריות • כשר רבנות מקומית'. A second listing, https://easy.co.il/page/10085048, is titled '... יגאל אלון 4, שדרות ...'. Neither was verified."
+     }
+    ]
+   },
+   {
+    "label": "האופה בוטיק לחם, סניף קריית גת",
+    "city": "קריית גת",
+    "address": "הרימון 70, קרית גת (OSM places the pin in שכונת הפרחים)",
+    "phone": "1-700-552-255 on Google Maps and Badatz. rest.co.il and d.co.il show 054-4306123 instead.",
+    "hours": "Google Maps, viewed 2026-10-24: Fri 30.10 05:00-14:30, Sat 24.10 closed, opens Sunday 06:00. zips.co.il ('as of January 2026'): Sun-Thu 06:00-22:00, Fri 05:00-17:00, Sat 20:00-23:00. The two disagree on Friday and Saturday.",
+    "status": "active",
+    "notes": "Google Maps shows normal hours and no closure mark. The Google listing carries a 'claim this business' link, so it seems to be unclaimed (my inference). The rest.co.il and d.co.il entries give no street and a different mobile number. They were updated at 12:33 on 16/12/2025, one minute before the Sderot entry (12:34), so the same person probably submitted both (also my inference). Search snippets show two or three Facebook pages for Kiryat Gat. The 1-700-552-255 number matches the ordering line '1700-55-22-55' that a search engine quoted from the @haofe_bakery Instagram bio (snippet only).",
+    "evidence": [
+     {
+      "url": "https://www.google.com/maps/place/%D7%94%D7%90%D7%95%D7%A4%D7%94+%D7%91%D7%95%D7%98%D7%99%D7%A7+%D7%9C%D7%97%D7%9D%E2%80%AD/data=!4m7!3m6!1s0x15029191bed7e067:0x3de5ae4e769ccb34!8m2!3d31.6086063!4d34.7699476!16s%2Fg%2F11t7ngx3gn!19sChIJZ-DXvpGRAhURNMucdk6u5T0",
+      "source_type": "Google Maps search result data (place_id ChIJZ-DXvpGRAhURNMucdk6u5T0)",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "Name 'האופה בוטיק לחם', address 'הרימון 70, קרית גת, ישראל', phone '+972 1-700-552-255', rating 4.6. Status: 'המקום סגור · ייפתח ביום יום א׳ בשעה 6:00'. Fri 30.10: 5:00-14:30, Sat 'סגור'. The data includes a business.google.com 'claimbz' link."
+     },
+     {
+      "url": "https://www.badatz.biz/biz/%d7%91%d7%95%d7%98%d7%99%d7%a7-%d7%94%d7%90%d7%95%d7%a4%d7%94/",
+      "source_type": "Kosher certifier listing (בד\"ץ בית יוסף)",
+      "source_date": "published 2022-09-06, modified 2025-04-02; viewed 2026-10-24",
+      "quote_or_observation": "'האופה בוטיק לחם – קריית גת', סוג הכשרות 'למהדרין פרווה', בתי מאפה וקונדיטוריות. Address 'הרימון 70, קריית גת', phone '1700-552255'."
+     },
+     {
+      "url": "https://zips.co.il/%D7%A2%D7%A1%D7%A7%D7%99%D7%9D/%D7%A7%D7%A8%D7%99%D7%AA-%D7%92%D7%AA/%D7%9E%D7%90%D7%A4%D7%99%D7%95%D7%AA/83063/%D7%94%D7%90%D7%95%D7%A4%D7%94-%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%9C%D7%97%D7%9D",
+      "source_type": "Directory (zips.co.il, mirrors Google data)",
+      "source_date": "viewed 2026-10-24; hours 'נכונות לינואר 2026'",
+      "quote_or_observation": "'האופה בוטיק לחם', הרימון 70, קרית גת, +972 1-700-552-255. Star counts 28/5/1/1/0. Hours Sun-Thu 6:00-22:00, Fri 5:00-17:00, Sat 20:00-23:00. Newest reviews shown are dated 04.07.2025 and 20.05.2025."
+     },
+     {
+      "url": "https://www.rest.co.il/rest/80387053/",
+      "source_type": "Directory (zap rest; same record as d.co.il/80387053/22620/)",
+      "source_date": "'עודכן בתאריך 16/12/2025 12:33'; viewed 2026-10-24",
+      "quote_or_observation": "'האופה, קריית גת', no street address, 'טלפון ראשי 054-4306123'. No reviews."
+     },
+     {
+      "url": "https://www.facebook.com/p/%D7%94%D7%90%D7%95%D7%A4%D7%94-%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%9C%D7%97%D7%9D-%D7%A7%D7%A8%D7%99%D7%AA-%D7%92%D7%AA-100084744343511/",
+      "source_type": "Facebook page (login wall; title only)",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "Page title 'האופה בוטיק לחם- קרית גת | Kiryat Gat'. Search snippets also show https://www.facebook.com/h.wph.qryt.gt/ ('האופה קרית גת') and https://www.facebook.com/people/קרית-גת-מאפייה/61565181882777/ ('האופה קרית גת'). Neither was verified."
+     },
+     {
+      "url": "https://www.bakerias.com/IL/Netivot/895926247234370/%D7%94%D7%90%D7%95%D7%A4%D7%94---%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%9C%D7%97%D7%9D",
+      "source_type": "Mirror of the chain's Facebook posts",
+      "source_date": "posts 26/11/2025-11/12/2025; viewed 2026-10-24",
+      "quote_or_observation": "Posts are signed 'האופה – בוטיק לחם שדרות • נתיבות • קריית גת', and one says 'הפייבוריט של שדרות, נתיבות וקריית גת' (26/11/2025)."
+     }
+    ]
+   },
+   {
+    "label": "האופה בוטיק לחם, בית שמש (closed)",
+    "city": "בית שמש",
+    "address": "שדרות האמוראים 12, בית שמש (a Google review calls it 'האופה קניון נעימי')",
+    "phone": "1-700-552-255",
+    "hours": "Google Maps gives no hours. zips.co.il still shows old hours: Sun-Thu 05:30-22:00, Fri 05:30-17:00, Sat closed.",
+    "status": "closed",
+    "notes": "Google Maps marks this listing 'סגור לצמיתות'. I saw the label on the map pin and confirmed it in a screenshot, and the listing's business-status field reads 'סגור'. It is the same chain by my inference, not confirmed by the business: same name 'האופה בוטיק לחם', and the same 1-700-552-255 number as the Kiryat Gat Google and Badatz listings. Timeline, also inferred: the earliest Google photo is dated 2023-02-14. A review from 16.06.2023 refers to 'שבוע שבועיים מהפתיחה', which suggests it opened around spring 2023. The newest review I could see is from 01.09.2023. When it closed is unknown. A Google Maps search with no city does not show it; it appears only when the search is aimed at the Jerusalem or Beit Shemesh area.",
+    "evidence": [
+     {
+      "url": "https://www.google.com/maps/search/%D7%94%D7%90%D7%95%D7%A4%D7%94%20%D7%91%D7%95%D7%98%D7%99%D7%A7%20%D7%9C%D7%97%D7%9D%20%D7%91%D7%99%D7%AA%20%D7%A9%D7%9E%D7%A9?hl=iw",
+      "source_type": "Google Maps (map pin screenshot plus search-result data; place_id ChIJ61UT8QPDAhURJZSdvNSR3xY)",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "Map pin label 'האופה בוטיק לחם' with the red sub-label 'סגור לצמיתות'. Data: address 'שדרות האמוראים 12, בית שמש, ישראל', phone '+972 1-700-552-255', rating 4.4, status field 'סגור', no opening hours."
+     },
+     {
+      "url": "https://zips.co.il/%D7%A2%D7%A1%D7%A7%D7%99%D7%9D/%D7%91%D7%99%D7%AA-%D7%A9%D7%9E%D7%A9/%D7%9E%D7%90%D7%A4%D7%99%D7%95%D7%AA/8272/%D7%94%D7%90%D7%95%D7%A4%D7%94-%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%9C%D7%97%D7%9D",
+      "source_type": "Directory (zips.co.il, mirrors Google data; not updated for the closure)",
+      "source_date": "viewed 2026-10-24; reviews dated 16.06.2023-01.09.2023",
+      "quote_or_observation": "'האופה בוטיק לחם', שדרות האמוראים 12, בית שמש, +972 1-700-552-255, '4.3 כוכבים על בסיס 20 ביקורות'. Review of 02.08.2023: 'האופה קניון נעימי מאפיה טובה...'. Review of 16.06.2023: '...מתייחסים לשבוע שבועיים מהפתיחה...'."
+     }
+    ]
+   },
+   {
+    "label": "Production facility / factory (מפעל), Netivot industrial zone",
+    "city": "נתיבות",
+    "address": "הסוללים 1, אזור התעשייה, נתיבות",
+    "phone": "",
+    "hours": "",
+    "status": "unknown",
+    "notes": "This is a kosher-certified production site, not a retail branch. The Badatz page was last modified in Feb 2023, and I found no newer directory evidence that the site is operating at this address. Google Maps has no HaOfe listing there: searching 'האופה הסוללים נתיבות' returns only the שדרות ירושלים 136 store. The 2021 Walla article says the company built a production plant.",
+    "evidence": [
+     {
+      "url": "https://www.badatz.biz/biz/%d7%94%d7%90%d7%95%d7%a4%d7%94-%d7%91%d7%95%d7%98%d7%99%d7%a7-%d7%9c%d7%97%d7%9d-%d7%a0%d7%aa%d7%99%d7%91%d7%95%d7%aa/",
+      "source_type": "Kosher certifier listing (בד\"ץ בית יוסף)",
+      "source_date": "published 2023-02-23, modified 2023-02-26; viewed 2026-10-24",
+      "quote_or_observation": "'האופה בוטיק לחם – נתיבות', סוג הכשרות 'למהדרין חלבי, למהדרין פרווה', סיווג העסק 'מפעלים', כתובת 'הסוללים 1 א.ת, נתיבות'. Map pin at 31.4098, 34.5820."
+     },
+     {
+      "url": "https://mumlazim.walla.co.il/item/3476827",
+      "source_type": "Sponsored article",
+      "source_date": "last updated 14.12.2021",
+      "quote_or_observation": "'הקמנו מפעל ייצור שממנו אנחנו משווקים למאפיות נוספות'. No address given."
+     }
+    ]
+   }
+  ],
+  "could_not_access": [
+   "easy.co.il: every request was blocked by Cloudflare (403 or challenge) from Playwright, curl and WebFetch. Only search-engine snippets of pages 26451362, 10142008 and 10085048 were seen.",
+   "Google web search: it returned a 'sorry / unusual traffic' captcha, so no knowledge panels were available.",
+   "Google Maps place panels: only a 'limited view' rendered, so full weekly hours, review counts and review text were not readable on Google itself. I used the raw search-result data, map screenshots, and zips.co.il mirrors instead.",
+   "Waze: the live-map autocomplete API returned 403.",
+   "Facebook (haofesderot, 100063691744585 / 895926247234370, 100084744343511, h.wph.qryt.gt, 61565181882777): all login-walled, including the page plugin. Only page titles and search snippets were seen.",
+   "Tripadvisor: 403. cybo.com, restaurantguru.com and openinghours.co.il: blocked by Cloudflare challenges. sderot-online.com/haofe/: Cloudflare 1005 ban on the proxy's network.",
+   "10bis: not reachable without an address or login; a web search found nothing.",
+   "Moovit: seen only through a search snippet (Netivot page).",
+   "Municipal business listings for Sderot, Netivot and Kiryat Gat: none found or opened.",
+   "OpenStreetMap Overpass API: connection reset, so no OSM POI check (the Nominatim geocode did work).",
+   "DuckDuckGo: rate-limited after the first query.",
+   "The Instagram embeds for haofe_bakery and haofe_sderot showed only the header (follower and post counts), no posts, during this session.",
+   "b144 listing 401C0413417765554D1D0310 ('בוטיק האופה בע\"מ - ביגוד ואופנה קריית גת' in a search result) now redirects to the b144 homepage."
+  ],
+  "other_findings": [
+   "Google Maps (viewed 2026-10-24) has exactly four 'האופה בוטיק לחם' listings: Netivot, Sderot and Kiryat Gat show normal hours, and Beit Shemesh is marked 'סגור לצמיתות'. I ran searches aimed at about 25 other cities (Ashkelon, Ofakim, Be'er Sheva, Ashdod, Jerusalem, Rahat, Kiryat Malachi, Tel Aviv, Bnei Brak, Modiin Illit, Beitar, Rehovot, Dimona, Haifa, Elad, Yavne, Eilat and others) and found no further branch.",
+   "The b144 bakery category pages for Netivot (18 results), Sderot (8) and Kiryat Gat (16), with all results expanded, contain no HaOfe listing (viewed 2026-10-24).",
+   "Wolt has no HaOfe venue: API searches for 'האופה', 'בוטיק לחם' and 'haofe' near each branch returned nothing for this chain (2026-10-24). Victory supermarkets on Wolt (victory-kiryat-gat, victory-mevaseret) do sell 'חלת כדורי בריוש 450 גר' בוטיק האופה' and 'לחם בריוש 410 גר' בוטיק האופה'. Whether that 'בוטיק האופה' brand belongs to this chain's production house is unknown and unverified.",
+   "Job ads: a Facebook post of 07/12/2025, seen through the bakerias.com mirror, says 'האופה מגייסת עובדים לסניפים שלנו ... לפרטים ושליחת קורות חיים: 053-531-6790 ... שדרות • נתיבות • קריית גת'. Drushim and AllJobs show no HaOfe ads.",
+   "haofeapp.com root (viewed 2026-10-24, nothing entered) is a staff login: 'כניסה לצוות ... הקוד האישי שקיבלת ממנהל האופה ... האופה · נתיבות'. haofeapp.com/order is publicly reachable and shows a full order form with products and pickup dates, for Netivot-branch pickup only. The owner says ordering is not active yet, so they may want to know the form already loads for the public. I did not submit anything.",
+   "Unrelated businesses with similar names, not this chain: 'מאפיית האופה', שדרות ירושלים 2, באר שבע, 08-6651668; 'פינת האופה' in Be'er Sheva (קניון הנגב, and סניף רמות, יצחק מודעי 30) and in Arad; 'האופה מבגדד' in Tel Aviv, Petah Tikva and Azor; 'האופה בית שמש', מורדי הגטאות 6, 050-8871227 (a different listing from the closed שדרות האמוראים 12 one); 'אסף האופה - לחמי בוטיק' in Modiin; 'בית האופה' in Kadima; 'האופה לחם מן הארץ' in Kadima; 'האופה בעיר' in Tel Aviv on Wolt. The Calcalist article 'האופה משדרות' (10.12.23) is about Amos Huri of מאפיית איכות מהדרין, not HaOfe.",
+   "Hours disagree across sources (Google, zips 'as of Jan 2026', bakerias/Facebook, d.co.il). Google's Saturday data says Netivot opens at 21:00, Sderot at 20:00, and Kiryat Gat stays closed, while zips gives Kiryat Gat Saturday 20:00-23:00. Kiryat Gat also has two different phones: 1-700-552-255 (Google, Badatz) and 054-4306123 (rest.co.il, d.co.il).",
+   "Instagram embed headers viewed 2026-10-24: @haofe_bakery 'האוֹפה - בוטיק לחם' has 1,609 followers and 463 posts; @haofe_sderot 'האופה בוטיק לחם שדרות' has 54 followers and 31 posts.",
+   "Working files (scripts and raw dumps) are under /tmp/claude-0/-home-user-edon-studio/39250604-ba72-5066-b62c-771f07ec61a3/scratchpad/agents/dirs/. The screenshot of the Beit Shemesh 'סגור לצמיתות' pin is /tmp/claude-0/-home-user-edon-studio/39250604-ba72-5066-b62c-771f07ec61a3/scratchpad/agents/dirs/out/gm_bs_zoom.png"
+  ]
+ },
+ "research:kiryat-gat": {
+  "branches": [
+   {
+    "city": "קריית גת (Kiryat Gat)",
+    "label": "האופה בוטיק לחם – קריית גת",
+    "address": "הרימון 70, קריית גת. The opening post adds: \"בנין תיקשוב (ליד הארנונה, ישמח חתני, גני האחוזה)\". Google Plus Code JQ59+CX, coordinates 31.6086063, 34.7699476.",
+    "phone": "1-700-552-255 (1700-55-22-55). This is the chain's ordering line and the number on Google Maps, Badatz and zips. The @haofe_kiryatgat Instagram bio gives a different number, 08-6669750, and no other source has it, so it is unverified.",
+    "hours": "Sources disagree. Google Maps, seen 2026-10-24 in its limited logged-out view: Friday 5:00–14:30, Saturday closed, next opening Sunday 6:00. Google did not show Sun–Thu closing times. zips.co.il says its hours are \"נכונות לינואר 2026\": Sun–Thu 6:00–22:00, Fri 5:00–17:00, Sat 20:00–23:00. They conflict on Friday closing time and on Saturday night opening. Google is the more recent source, but this needs confirming with the owner.",
+    "status": "active",
+    "notes": "OPENED: the Kiryat Gat Facebook page posted \"קרית גת!! פתחנו!!\" on 22 Aug 2022 (data-utime 1661152263 = 10:11 Israel time). This is the opening date as the page itself announced it. The Walla article updated 14.12.2021 lists only Netivot and Sderot, which fits. KASHRUT: Badatz Beit Yosef lists it as \"למהדרין פרווה\" only, unlike Sderot and Netivot, which are dairy + pareve. Supervisor: הרב מרדכי סבג 053-4108079. The page shows no certificate dates. LOCATION TYPE: a street address in an office/commercial building (\"בנין תיקשוב\"). No source places it in a mall. The 6 Oct 2026 post says it has seating and serves coffee, pastries, cakes and sandwiches. Google Maps lists wheelchair-accessible parking. GOOGLE LISTING: rating 4.6, category מאפייה. My inference: the listing looks unclaimed, because it shows \"תביעת בעלות על עסק זה\" and \"הוספת אתר\" (no website). SOCIAL: IG @haofe_kiryatgat is active (43 followers, 30 posts, collab posts in Oct 2026). FB page 'האופה בוטיק לחם- קרית גת' (id 100084744343511, also 110513465103753); a search snippet shows 598 likes and 952 'were here'. A second IG account, @haofekiryatgat ('בוטיק האופה קרית גת'), now shows 'link may be inactive or profile removed'.",
+    "evidence": [
+     {
+      "url": "https://www.facebook.com/permalink.php?story_fbid=113688008119632&id=100084744343511",
+      "quote_or_observation": "Viewed via the public post plugin (https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2F110513465103753%2Fposts%2F113688008119632%2F). Page 'האופה בוטיק לחם- קרית גת': \"קרית גת!! פתחנו!! הרימון 70 בנין תיקשוב (ליד הארנונה, ישמח חתני, גני האחוזה)\". Timestamp tooltip: 'יום שני, 22 באוגוסט 2022'.",
+      "source_date": "2022-08-22 (viewed 2026-10-24)",
+      "source_type": "facebook_post"
+     },
+     {
+      "url": "https://www.instagram.com/p/DeJXIltIyeh/",
+      "quote_or_observation": "Post by @haofe_kiryatgat, location tag 'קרית גת': \"סניף האופה בקריית גת הוא המקום לעצור בו באמצע היום... ויש גם מקום נעים לשבת... 📍 הרימון 70, קריית גת\". I rendered it via /embed/captioned/.",
+      "source_date": "2026-10-06 (viewed 2026-10-24)",
+      "source_type": "instagram_post"
+     },
+     {
+      "url": "https://www.instagram.com/p/DegS23RIAJ-/",
+      "quote_or_observation": "@haofe_bakery, collab with @haofe_kiryatgat and @haofe_sderot: \"האופה מחכה לכם בנתיבות, בשדרות ובקריית גת❤️ תבחרו את הסניף שלכם ובואו לבקר!\"",
+      "source_date": "2026-10-15 (viewed 2026-10-24)",
+      "source_type": "instagram_post"
+     },
+     {
+      "url": "https://www.instagram.com/haofe_kiryatgat/",
+      "quote_or_observation": "Profile embed shows the name 'האופה קרית גת', 43 followers, 30 posts. The bio appears in a DuckDuckGo snippet and in profile JSON a sibling agent fetched at 00:30 UTC (my own API re-fetch got HTTP 429): \"המאפיה הכי לוהטת בקרית גת והסביבה! רח' הרימון 70 קרית גת 08-6669750\".",
+      "source_date": "viewed 2026-10-24",
+      "source_type": "instagram_profile"
+     },
+     {
+      "url": "https://www.google.com/maps?cid=4460162658001013556",
+      "quote_or_observation": "Listing 'האופה בוטיק לחם', מאפייה, rating 4.6. Address 'הרימון 70, קרית גת, ישראל', phone '+972 1-700-552-255', status 'המקום סגור · ייפתח ביום יום א׳ בשעה 6:00'. Hours data shows Friday '5:00–14:30' and Saturday 'סגור'. Shows 'תביעת בעלות על עסק זה' and 'הוספת אתר'. Accessibility: 'מגרש חניה נגיש לכיסאות גלגלים'. Not marked closed.",
+      "source_date": "viewed 2026-10-24 ~04:00 Israel time (Saturday)",
+      "source_type": "google_maps"
+     },
+     {
+      "url": "https://www.badatz.biz/biz/%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%94%D7%90%D7%95%D7%A4%D7%94/",
+      "quote_or_observation": "\"האופה בוטיק לחם – קריית גת\". כתובת: \"הרימון 70, קריית גת\". טלפון: \"1700-552255\". סוג הכשרות: \"למהדרין פרווה\". סיווג: \"בתי מאפה וקונדיטוריות\". מפקח כשרות: \"הרב מרדכי סבג שליט\"א 053-4108079\". No certificate validity dates on the page.",
+      "source_date": "viewed 2026-10-24",
+      "source_type": "kashrut_directory"
+     },
+     {
+      "url": "https://zips.co.il/%D7%A2%D7%A1%D7%A7%D7%99%D7%9D/%D7%A7%D7%A8%D7%99%D7%AA-%D7%92%D7%AA/%D7%9E%D7%90%D7%A4%D7%99%D7%95%D7%AA/83063/%D7%94%D7%90%D7%95%D7%A4%D7%94-%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%9C%D7%97%D7%9D",
+      "quote_or_observation": "Third-party directory built from Google Maps data. Address 'הרימון 70, קרית גת', phone '+972 1-700-552-255'. Hours: Sun–Thu 6:00–22:00, Fri 5:00–17:00, Sat 20:00–23:00, with the note 'שעות הפתיחה נכונות לינואר 2026'. Google reviews quoted are dated 01.09.2023 to 04.07.2025. Star breakdown: 28/5/1/1/0.",
+      "source_date": "hours stated as of Jan 2026 (viewed 2026-10-24)",
+      "source_type": "business_directory"
+     },
+     {
+      "url": "https://www.instagram.com/p/DAYEStOClkT/",
+      "quote_or_observation": "@haofe_bakery: \"מחכים לכם בסניפים: נתיבות - שד ירושליים 136, קרית גת - הרימון 70, בית שמש - קניון נעימי, בית שמש - האמוראים 12, שדרות - יגאל אלון 6\".",
+      "source_date": "2024-09-26 (date from the DDG snippet and decoded shortcode; viewed 2026-10-24)",
+      "source_type": "instagram_post"
+     },
+     {
+      "url": "https://mumlazim.walla.co.il/item/3476827",
+      "quote_or_observation": "Sponsored article lists only 'שדרות ירושלים 136, נתיבות' and 'יגאל אלון 4, שדרות', with expansion plans. No mention of Kiryat Gat. This fits a later Kiryat Gat opening.",
+      "source_date": "2021-12-14 (last updated; viewed 2026-10-24)",
+      "source_type": "news_sponsored"
+     }
+    ]
+   },
+   {
+    "city": "נתיבות (Netivot)",
+    "label": "האופה – בוטיק לחם, נתיבות (retail)",
+    "address": "שדרות ירושלים 136, נתיבות",
+    "phone": "Not re-checked here (earlier lead: 08-9752093). The chain line is 1-700-552-255.",
+    "hours": "Google Maps 2026-10-24 (Saturday): 'המקום סגור · ייפתח בשעה 21:00', i.e. opens Saturday night. Full hours not checked.",
+    "status": "active",
+    "notes": "Not my focus. Checked only briefly. Google rating 4.7.",
+    "evidence": [
+     {
+      "url": "https://www.google.com/maps?cid=11794734948161764260",
+      "quote_or_observation": "Listing '\"האופה\" - בוטיק לחם', מאפייה, 'שדרות ירושלים 136, נתיבות', rating 4.7, 'המקום סגור · ייפתח בשעה 21:00'. Not marked closed.",
+      "source_date": "viewed 2026-10-24",
+      "source_type": "google_maps"
+     },
+     {
+      "url": "https://www.instagram.com/p/DegS23RIAJ-/",
+      "quote_or_observation": "\"האופה מחכה לכם בנתיבות, בשדרות ובקריית גת\"",
+      "source_date": "2026-10-15",
+      "source_type": "instagram_post"
+     }
+    ]
+   },
+   {
+    "city": "שדרות (Sderot)",
+    "label": "״האופה״ - בוטיק לחם, שדרות",
+    "address": "יגאל אלון 4, שדרות (Google Maps and Badatz). The Sep 2024 Instagram post says 'יגאל אלון 6'. These conflict; check with the owner.",
+    "phone": "08-649-1122 (Badatz). The chain line is 1-700-552-255.",
+    "hours": "Google Maps 2026-10-24 (Saturday): 'המקום סגור · ייפתח בשעה 20:00'. Full hours not checked.",
+    "status": "active",
+    "notes": "Not my focus. Badatz kashrut: למהדרין חלבי + למהדרין פרווה, supervisor הרב ישראל חזות 058-4127060. The 7 Oct 2026 post says 'הסניף שלנו בשדרות ספג פגיעה ישירה' (on 7 Oct 2023). The 2026 posts show it operating.",
+    "evidence": [
+     {
+      "url": "https://www.google.com/maps?cid=10594881781052471767",
+      "quote_or_observation": "Listing '״האופה״ -בוטיק לחם', 'יגאל אלון 4, שדרות', 'המקום סגור · ייפתח בשעה 20:00'. Not marked closed.",
+      "source_date": "viewed 2026-10-24",
+      "source_type": "google_maps"
+     },
+     {
+      "url": "https://www.badatz.biz/biz/%d7%94%d7%90%d7%95%d7%a4%d7%94-%d7%91%d7%95%d7%98%d7%99%d7%a7-%d7%94%d7%9c%d7%97%d7%9d-%d7%a9%d7%93%d7%a8%d7%95%d7%aa/",
+      "quote_or_observation": "\"האופה בוטיק לחם – שדרות\", \"יגאל אלון 4, שדרות\", \"08-649-1122\", \"למהדרין חלבי\", \"למהדרין פרווה\".",
+      "source_date": "viewed 2026-10-24",
+      "source_type": "kashrut_directory"
+     },
+     {
+      "url": "https://www.instagram.com/p/DeL3jB-CK0u/",
+      "quote_or_observation": "\"הסניף שלנו בשדרות ספג פגיעה ישירה... היינו איתכם בשדרות. היינו איתכם בנתיבות. היינו איתכם בקריית גת ובבית שמש.\"",
+      "source_date": "2026-10-07 (viewed 2026-10-24)",
+      "source_type": "instagram_post"
+     }
+    ]
+   },
+   {
+    "city": "בית שמש (Beit Shemesh)",
+    "label": "האופה בוטיק לחם – שדרות האמוראים 12",
+    "address": "שדרות האמוראים 12, בית שמש (Plus Code PX4F+82)",
+    "phone": "+972 1-700-552-255 (on the Google listing)",
+    "hours": "N/A. Google marks it permanently closed.",
+    "status": "closed",
+    "notes": "Listed as a branch in the 26 Sep 2024 Instagram post. Google rating was 4.4. Closure date unknown. My inference: the 7 Oct 2026 post's past-tense 'היינו איתכם... בבית שמש' and the Oct 2026 list of only three cities fit a closure.",
+    "evidence": [
+     {
+      "url": "https://www.google.com/maps?cid=1648196331524428837",
+      "quote_or_observation": "Listing 'האופה בוטיק לחם', 4.4 stars, 'שדרות האמוראים 12, בית שמש, ישראל', status 'סגור לצמיתות', phone '+972 1-700-552-255'.",
+      "source_date": "viewed 2026-10-24",
+      "source_type": "google_maps"
+     },
+     {
+      "url": "https://www.instagram.com/p/DAYEStOClkT/",
+      "quote_or_observation": "\"בית שמש - האמוראים 12\" in the branch list.",
+      "source_date": "2024-09-26",
+      "source_type": "instagram_post"
+     }
+    ]
+   },
+   {
+    "city": "בית שמש (Beit Shemesh)",
+    "label": "האופה – קניון נעימי",
+    "address": "קניון נעימי, בית שמש (no unit given)",
+    "phone": "",
+    "hours": "",
+    "status": "unknown",
+    "notes": "The only source is the Sep 2024 Instagram post. No HaOfe listing appears in a Google Maps search for the Neimi mall (2026-10-24). It is missing from the 2026 branch lists ('נתיבות, שדרות, קריית גת') and from the @haofe_bakery bio ('שדרות • קריית גת • נתיבות'). My inference: probably closed, but I have no direct confirmation.",
+    "evidence": [
+     {
+      "url": "https://www.instagram.com/p/DAYEStOClkT/",
+      "quote_or_observation": "\"בית שמש - קניון נעימי\" in the branch list.",
+      "source_date": "2024-09-26",
+      "source_type": "instagram_post"
+     }
+    ]
+   },
+   {
+    "city": "נתיבות (Netivot) – production",
+    "label": "האופה בוטיק לחם – נתיבות (factory, not a retail branch)",
+    "address": "הסוללים 1 א.ת, נתיבות",
+    "phone": "054-8485620 (shown next to the kashrut supervisor's name on Badatz, not labelled as a business phone)",
+    "hours": "",
+    "status": "unknown",
+    "notes": "Badatz category: 'מפעלים'. Kashrut: למהדרין חלבי + למהדרין פרווה, supervisor הרב יקיר רומנו. The @haofe_bakery bio mentions 'בית ייצור', but I found no source confirming this address is the production house operating today.",
+    "evidence": [
+     {
+      "url": "https://www.badatz.biz/biz/%d7%94%d7%90%d7%95%d7%a4%d7%94-%d7%91%d7%95%d7%98%d7%99%d7%a7-%d7%9c%d7%97%d7%9d-%d7%a0%d7%aa%d7%99%d7%91%d7%95%d7%aa/",
+      "quote_or_observation": "\"האופה בוטיק לחם – נתיבות\", \"הסוללים 1 א.ת, נתיבות\", סיווג \"מפעלים\", \"למהדרין חלבי\", \"למהדרין פרווה\".",
+      "source_date": "viewed 2026-10-24",
+      "source_type": "kashrut_directory"
+     }
+    ]
+   }
+  ],
+  "could_not_access": [
+   "openinghours.co.il Kiryat Gat page: Cloudflare bot check (HTTP 403 to WebFetch; Playwright stuck on the challenge). A search snippet says it lists 1-700-552-255 and the HaRimon 70 address.",
+   "easy.co.il/page/27309263 (HaOfe, HaRimon 70): Cloudflare bot check / HTTP 403",
+   "mapneticly.co.il (38 reviews) and il.revieweuro.com (reviews from June–July 2023): Cloudflare / HTTP 403. Their contents are known only from search snippets.",
+   "Facebook: Kiryat Gat page 100084744343511, profile facebook.com/h.wph.qryt.gt (61565181882777) and the page plugin all redirect to login or render empty. Only the single opening post was readable, through the post plugin.",
+   "Instagram API (web_profile_info / feed) for @haofe_kiryatgat returned HTTP 429/401, so I could not page back to the account's oldest posts. The profile embed shows only the latest 6.",
+   "Google Maps logged-out 'limited view' shows only Friday and today's hours, not the full weekly schedule. The review list was not available.",
+   "Google Search returned a captcha (/sorry). DuckDuckGo html/lite/browser returned 'anomaly' rate-limit pages after the first two queries. Brave Search returned a captcha.",
+   "drushim.co.il job 38240562: HTTP 410 Gone. I found no HaOfe Kiryat Gat job postings or Kiryat Gat local-news articles about the opening, and no mall tenant list includes HaOfe Kiryat Gat."
+  ],
+  "other_findings": [
+   "The chain's ordering line 1-700-552-255 is the same number as 1700-55-22-55 in the @haofe_bakery bio: 'רשת מאפיות ובית ייצור למאפים, לחמים ודברי פרימיום 📍שדרות • קריית גת • נתיבות 📞 להזמנות: 1700-55-22-55'. Source: https://www.instagram.com/haofe_bakery/ (bio read from profile JSON on 2026-10-24).",
+   "My inference: the Kiryat Gat Google Maps listing appears unclaimed ('תביעת בעלות על עסק זה') and has no website ('הוספת אתר'). Claiming it and linking the new website, plus later haofeapp.com/order, would be a useful step.",
+   "Kashrut differs by branch on Badatz Beit Yosef: Kiryat Gat is listed 'למהדרין פרווה' only, while Sderot and the Netivot factory are 'חלבי + פרווה'. The website should not state a single kashrut level for all branches without checking with the owner. (Kiryat Gat page: https://www.badatz.biz/biz/%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%94%D7%90%D7%95%D7%A4%D7%94/, viewed 2026-10-24.)",
+   "Possibly unrelated: Google Maps has 'האופה בית שמש' (מאפייה) at מורדי הגטאות 6, בית שמש, phone +972 50-887-1227, 'ייפתח ביום א׳ בשעה 7:00' (https://www.google.com/maps?cid=8800572069878741314, viewed 2026-10-24). The phone and name format differ from the chain, so I don't treat it as a HaOfe branch.",
+   "Google Maps also has an uncategorized pin 'האופה, קרית גת' at 31.5866, 34.7894 with no details. The place page rendered empty, so it is unidentified and not treated as a branch.",
+   "Sderot street number conflict: the Sep 2024 Instagram post says 'יגאל אלון 6', while Google Maps, Badatz and Walla 2021 say 'יגאל אלון 4'.",
+   "Several other bakeries named 'האופה' are unrelated: Badatz lists האופה מבגדד, האופה מסמרקנד and קונדטוריית האופה מפריז."
+  ]
+ },
+ "research:kashrut": {
+  "branches": [
+   {
+    "label": "האופה בוטיק לחם – שדרות (retail bakery)",
+    "city": "שדרות",
+    "address": "יגאל אלון 4, שדרות",
+    "phone": "08-649-1122",
+    "hours": "Not on the kashrut record. Zips.co.il (data taken from Google Maps, marked 'correct for January 2026'): Sun–Thu 5:30–22:00, Fri 5:00–16:00, Sat 20:00–0:00.",
+    "status": "active",
+    "notes": "Kashrut: Badatz Beit Yosef, למהדרין חלבי + למהדרין פרווה. Category 'בתי מאפה וקונדיטוריות' (retail bakery, not the factory). Kashrut supervisor: הרב ישראל חזות שליט\"א 058-4127060. The listing's 'website' link goes to https://www.facebook.com/haofesderot/. WordPress post id 21579, published 2021-05-02, last modified 2022-12-11. The page shows no certificate validity dates. Badatz's own certificate-info page says the expiry date is printed only on the original certificate hanging in the store. Map pin 31.5230457, 34.5957709, the same coordinates as the Google Maps place on Zips. The listing image is the older round chef-hat logo reading 'כשר למהדרין' (uploaded 2021/05). Inference, not stated by the source: a live Badatz listing on 2026-10-24 suggests the certificate is current, but Badatz does not show a 'valid until' date online.",
+    "evidence": [
+     {
+      "url": "https://www.badatz.biz/biz/%d7%94%d7%90%d7%95%d7%a4%d7%94-%d7%91%d7%95%d7%98%d7%99%d7%a7-%d7%94%d7%9c%d7%97%d7%9d-%d7%a9%d7%93%d7%a8%d7%95%d7%aa/",
+      "source_type": "kashrut certifier listing (Badatz Beit Yosef)",
+      "source_date": "viewed 2026-10-24 (page dateModified 2022-12-11, datePublished 2021-05-02)",
+      "quote_or_observation": "\"האופה בוטיק לחם – שדרות\" | סוג הכשרות: למהדרין חלבי, למהדרין פרווה | סיווג העסק: בתי מאפה וקונדיטוריות | כתובת: יגאל אלון 4, שדרות | טלפון: 08-649-1122 | אתר: [facebook.com/haofesderot] | מפקח כשרות: הרב ישראל חזות שליט\"א 058-4127060"
+     },
+     {
+      "url": "https://www.badatz.biz/search/?qs=%D7%94%D7%90%D7%95%D7%A4%D7%94",
+      "source_type": "kashrut certifier search results",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "A Badatz search for 'האופה' returns three entries for this chain: נתיבות (הסוללים 1 א.ת), קריית גת (הרימון 70, 1700-552255), שדרות (יגאל אלון 4, 08-649-1122). Filtering by city=שדרות and class=בתי מאפה also lists it."
+     },
+     {
+      "url": "https://mumlazim.walla.co.il/item/3476827",
+      "source_type": "sponsored article (Walla Mumlazim, 'בשיתוף האופה')",
+      "source_date": "2021-12-14",
+      "quote_or_observation": "\"יגאל אלון 4, שדרות - 08-6491122\". Owner quote: the Sderot bakery opened 'בשיא הקורונה'. The article does not mention kashrut."
+     },
+     {
+      "url": "https://zips.co.il/%D7%A2%D7%A1%D7%A7%D7%99%D7%9D/%D7%A9%D7%93%D7%A8%D7%95%D7%AA/%D7%9E%D7%90%D7%A4%D7%99%D7%95%D7%AA/81389/%D7%94%D7%90%D7%95%D7%A4%D7%94-%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%9C%D7%97%D7%9D",
+      "source_type": "business directory built from Google Maps data",
+      "source_date": "viewed 2026-10-24; hours marked 'נכונות לינואר 2026'",
+      "quote_or_observation": "״האופה״ -בוטיק לחם, יגאל אלון 4, שדרות, +972 8-649-1122, Google rating 4.4 from 122 reviews. The newest review shown is dated 21.07.2023. The page has no kashrut details."
+     }
+    ]
+   },
+   {
+    "label": "האופה בוטיק לחם – קריית גת (retail bakery)",
+    "city": "קריית גת",
+    "address": "הרימון 70, קריית גת",
+    "phone": "1700-552255",
+    "hours": "Not shown on the kashrut record.",
+    "status": "active",
+    "notes": "Kashrut: Badatz Beit Yosef, למהדרין פרווה ONLY. Dairy (חלבי) is not listed here, unlike Sderot and the Netivot factory. Category 'בתי מאפה וקונדיטוריות' (retail bakery). Kashrut supervisor: הרב מרדכי סבג שליט\"א 053-4108079. Phone is 1700-552255, a national-style number. It may be the chain's central ordering line, but that is a guess, and no other source for the number was found. WordPress post id 23747, slug 'בוטיק-האופה', published 2022-09-06, last modified 2025-04-02. Map pin 31.6086063, 34.7699476. No validity dates are shown. The 634px listing image (uploads/2022/09/בוטיק-האופה.jpg) returns 404. This Badatz page is the only source found that gives a Kiryat Gat street address and phone. Inference: the listing date suggests Badatz certification began around September 2022.",
+    "evidence": [
+     {
+      "url": "https://www.badatz.biz/biz/%d7%91%d7%95%d7%98%d7%99%d7%a7-%d7%94%d7%90%d7%95%d7%a4%d7%94/",
+      "source_type": "kashrut certifier listing (Badatz Beit Yosef)",
+      "source_date": "viewed 2026-10-24 (page dateModified 2025-04-02, datePublished 2022-09-06)",
+      "quote_or_observation": "\"האופה בוטיק לחם – קריית גת\" | סוג הכשרות: למהדרין פרווה | סיווג העסק: בתי מאפה וקונדיטוריות | כתובת: הרימון 70, קריית גת | טלפון: 1700-552255 | מפקח כשרות: הרב מרדכי סבג שליט\"א 053-4108079"
+     },
+     {
+      "url": "https://www.badatz.biz/search/?qs=&qclass=29&qcity=68",
+      "source_type": "kashrut certifier search results (city=קריית גת, class=bakeries)",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "Lists 'האופה בוטיק לחם – קריית גת, הרימון 70, קריית גת, 1700-552255' among 10 Badatz-certified bakeries in Kiryat Gat."
+     },
+     {
+      "url": "https://www.instagram.com/haofe_bakery/embed/",
+      "source_type": "official Instagram (public embed)",
+      "source_date": "post DeeFAXKtwkH dated 2026-10-14 (viewed 2026-10-24)",
+      "quote_or_observation": "Caption: \"אז לא פספסתי נכון?😉#trend #bakery #נתיבות #שדרות #קריתגת\". The brand tags Kiryat Gat alongside its other cities. None of the six latest captions mention kashrut."
+     }
+    ]
+   },
+   {
+    "label": "האופה בוטיק לחם – נתיבות, factory / production house (industrial zone)",
+    "city": "נתיבות",
+    "address": "הסוללים 1, אזור התעשייה, נתיבות",
+    "phone": "",
+    "hours": "Not shown on the kashrut record.",
+    "status": "active",
+    "notes": "Kashrut: Badatz Beit Yosef, למהדרין חלבי + למהדרין פרווה. Category 'מפעלים' (factories), so this is the production plant, not a retail branch. No phone on the listing. Kashrut supervisor: הרב יקיר רומנו שליט\"א 054-8485620. His Badatz staff page says he covers 'נתיבות - אופקים'. WordPress post id 24114, published 2023-02-23, last modified 2023-02-26. Map pin 31.4098365, 34.5820385, about 1 km from the Sderot Yerushalayim 136 store pin (31.4182247, 34.585906), so these are two separate sites. This entry has no city tag, so it does NOT appear when Badatz search is filtered to city=נתיבות; it only comes up in a name search. The listing image is the newer framed wheat-stalk logo reading 'כשר למהדרין' (uploaded 2023/02). No validity dates are shown. The Walla 2021 article confirms the business runs a production plant that supplies other bakeries.",
+    "evidence": [
+     {
+      "url": "https://www.badatz.biz/biz/%d7%94%d7%90%d7%95%d7%a4%d7%94-%d7%91%d7%95%d7%98%d7%99%d7%a7-%d7%9c%d7%97%d7%9d-%d7%a0%d7%aa%d7%99%d7%91%d7%95%d7%aa/",
+      "source_type": "kashrut certifier listing (Badatz Beit Yosef)",
+      "source_date": "viewed 2026-10-24 (page dateModified 2023-02-26, datePublished 2023-02-23)",
+      "quote_or_observation": "\"האופה בוטיק לחם – נתיבות\" | סוג הכשרות: למהדרין חלבי, למהדרין פרווה | סיווג העסק: מפעלים | כתובת: הסוללים 1 א.ת, נתיבות | מפקח כשרות: הרב יקיר רומנו שליט\"א 054-8485620"
+     },
+     {
+      "url": "https://www.badatz.biz/staff/%d7%94%d7%a8%d7%91-%d7%93%d7%95%d7%93-%d7%a1%d7%a2%d7%93%d7%94-%d7%a9%d7%9c%d7%99%d7%98%d7%90/",
+      "source_type": "kashrut certifier staff page",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "\"הרב יקיר רומנו שליט\"א 054-8485620 | אזור/תחום פיקוח: נתיבות - אופקים | אחראי על הכשרות בנתיבות ואופקים\""
+     },
+     {
+      "url": "https://mumlazim.walla.co.il/item/3476827",
+      "source_type": "sponsored article (Walla Mumlazim)",
+      "source_date": "2021-12-14",
+      "quote_or_observation": "\"התרחבנו עוד יותר והקמנו מפעל ייצור שממנו אנחנו משווקים למאפיות נוספות\". The article gives no factory address."
+     }
+    ]
+   },
+   {
+    "label": "האופה בוטיק לחם – נתיבות, retail store (שדרות ירושלים)",
+    "city": "נתיבות",
+    "address": "שדרות ירושלים 136, נתיבות",
+    "phone": "08-9752093",
+    "hours": "Not on any kashrut record. Zips.co.il (Google Maps data, marked 'correct for January 2026'): Sun–Thu 5:30–22:00, Fri 5:00–16:00, Sat 20:00–23:30.",
+    "status": "active",
+    "notes": "NO kashrut certificate record was found for this address. Badatz Beit Yosef lists HaOfe Netivot only at the הסוללים 1 factory, and none of the three Badatz HaOfe entries uses this street. No local rabbinate (רבנות נתיבות) list could be reached online. The store's own pages and the Walla article do not name a hechsher. Zips carries a generic, apparently auto-written line ('המאפייה מוכרת בכשרות') that names no certifier, so it is not evidence of a certificate. Status 'active' is an inference: Zips shows Google reviews up to 11.11.2025 and hours 'correct for January 2026', and the 15.10.2026 Instagram post says the bakery awaits customers in Netivot. Because the Badatz Netivot entry is a factory, the retail Netivot presence is most likely this store, but that link is my inference. Whether the store holds its own certificate, and from whom, needs to be checked on site or with the owner.",
+    "evidence": [
+     {
+      "url": "https://zips.co.il/%D7%A2%D7%A1%D7%A7%D7%99%D7%9D/%D7%A0%D7%AA%D7%99%D7%91%D7%95%D7%AA/%D7%9E%D7%90%D7%A4%D7%99%D7%95%D7%AA/55941/%D7%94%D7%90%D7%95%D7%A4%D7%94-%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%9C%D7%97%D7%9D",
+      "source_type": "business directory built from Google Maps data",
+      "source_date": "viewed 2026-10-24; hours 'נכונות לינואר 2026'; newest review shown 11.11.2025",
+      "quote_or_observation": "\"האופה\" - בוטיק לחם, שדרות ירושלים 136, נתיבות, +972 8-975-2093. Google Maps place pin 31.4182247, 34.585906. FAQ: \"האם המאפייה כשרה? כן, המאפייה מוכרת בכשרות\" (no certifier named)."
+     },
+     {
+      "url": "https://netivotonline.com/haofe/",
+      "source_type": "local business card site (Netivot Online / KDIGITAL)",
+      "source_date": "page published 2019-11-23, modified 2024-11-05 (viewed 2026-10-24)",
+      "quote_or_observation": "\"שד׳ ירושלים 136, נתיבות | טל: 08-9752093 | לחמים. באגטים. פיתות. מאפים...\". No kashrut information."
+     },
+     {
+      "url": "https://mumlazim.walla.co.il/item/3476827",
+      "source_type": "sponsored article (Walla Mumlazim)",
+      "source_date": "2021-12-14",
+      "quote_or_observation": "\"שדרות ירושלים 136, נתיבות - 08-9752093\". The owner says the Netivot bakery opened about 5 years before the article. No kashrut mention."
+     },
+     {
+      "url": "https://www.badatz.biz/search/?qs=&qclass=29&qcity=64",
+      "source_type": "kashrut certifier search results (city=נתיבות, class=bakeries)",
+      "source_date": "viewed 2026-10-24",
+      "quote_or_observation": "The Badatz bakery list for Netivot (מאפה נאמן x2, אורן משי, ניחוחות חיים, נטורל קייקס) does NOT include HaOfe. A street search for 'שדרות ירושלים' returns only Ashkelon businesses."
+     }
+    ]
+   }
+  ],
+  "could_not_access": [
+   "Local rabbinate kashrut lists for נתיבות, שדרות and קריית גת: no online list was found through web search. www.netivot.muni.il returned a Cloudflare 'you have been blocked' page (curl and Playwright). www.qiryat-gat.muni.il showed a Cloudflare bot challenge. www.sderot.muni.il and www.kiryat-gat.muni.il / www.kiryatgat.muni.il could not be reached (proxy CONNECT 502, so the hostname may be wrong or blocked).",
+   "Chief Rabbinate national certificate lookup: no official online search tool could be located by web search, so it was not checked.",
+   "easy.co.il, which shows each business's kashrut type: blocked by Cloudflare (403 / 'Sorry, you have been blocked').",
+   "web.archive.org (to check whether older Badatz entries existed, e.g. a former Netivot retail entry): blocked by the egress proxy (connection reset; WebFetch refused).",
+   "Badatz WordPress REST API (wp-json): returns 401 'REST API access restricted for non-authenticated users'. The public HTML pages were used instead.",
+   "Facebook page plugin for facebook.com/haofesderot: rendered only a login wall.",
+   "Badatz listing image for Kiryat Gat (wp-content/uploads/2022/09/בוטיק-האופה.jpg): returns 404.",
+   "Physical certificates in the stores, which carry the validity dates, could not be checked. Badatz does not publish validity dates online."
+  ],
+  "other_findings": [
+   "As of 2026-10-24, Badatz Beit Yosef (badatz.biz) lists exactly three entries for this chain. Sderot (יגאל אלון 4): retail, מהדרין חלבי+פרווה. Kiryat Gat (הרימון 70): retail, מהדרין פרווה only. Netivot (הסוללים 1 א.ת): factory, מהדרין חלבי+פרווה. All three are under Badatz Beit Yosef. No other hechsher was found for any location. Source: https://www.badatz.biz/search/?qs=%D7%94%D7%90%D7%95%D7%A4%D7%94 (viewed 2026-10-24).",
+   "Badatz shows no certificate validity dates on its website. Its certificate page (https://www.badatz.biz/%D7%AA%D7%A2%D7%95%D7%93%D7%AA-%D7%9B%D7%A9%D7%A8%D7%95%D7%AA/, viewed 2026-10-24) says the original certificate in the store carries the place's name and address, a hologram and an expiry date ('יש לוודא שאכן התעודה היא בתוקף והתאריך הנקוב בה לא עבר'). It also says a photographed certificate is not valid proof. If the website shows a kashrut badge, the wording should match Badatz exactly: Sderot מהדרין חלבי+פרווה, Kiryat Gat מהדרין פרווה. It should not show a photo of a certificate.",
+   "A general site search on badatz.biz for 'האופה' (?s=) returned only business listings. No kashrut-update or revocation notice mentions HaOfe (viewed 2026-10-24).",
+   "Same-name businesses on Badatz that are NOT this chain: 'האופה מבגדד – מאפים ללא גלוטן' (המצדה 5, אזור), 'פיצה נווה יהושע – והאופה מסמרקנד' (רמת גן), 'קונדטוריית האופה מפריז' (הירמוך 5, יבנה), 'אופה אופה – נס ציונה' (הבנים 5).",
+   "The Badatz listing images are HaOfe logos, not certificates. The Sderot listing (2021) uses a round chef-hat and wheat logo with 'האופה בוטיק לחם' and 'כשר למהדרין'. The Netivot factory listing (2023) uses a framed three-wheat-stalk logo with 'האופה בוטיק לחם' and 'כשר למהדרין'. That suggests a rebrand around 2023 (inference). Files: https://www.badatz.biz/wp-content/uploads/2021/05/האופה.jpg and https://www.badatz.biz/wp-content/uploads/2023/02/האופה-בוטיק-הלחם.jpg",
+   "A WebSearch summary claimed 'update dates' of 29.11.2025, 18.12.2025 and 28.05.2026 for the Badatz pages. Those dates do NOT appear on the pages. The pages' own metadata reads dateModified 2022-12-11 (Sderot), 2025-04-02 (Kiryat Gat) and 2023-02-26 (Netivot). Do not use the search-engine dates.",
+   "Walla sponsored article, 14.12.2021 (https://mumlazim.walla.co.il/item/3476827): it names the owners as עמיר ועדיאל וקנין. It says the Netivot bakery opened about 5 years earlier as a continuation of a family bakery business (Amir's father ran a bakery in Ofakim in the 1980s). It also says Sderot opened during COVID, the business added a production plant supplying other bakeries and exports abroad, and it planned a pareve personal-desserts line for boutique events. No kashrut statement.",
+   "The phone on the Kiryat Gat Badatz listing, 1700-552255, did not turn up in any other indexed source (WebSearch, 2026-10-24). Check it with the owner before publishing; it may be the 'ordering line' mentioned in the Instagram bio.",
+   "Latest six Instagram embed posts (2026-10-10 to 2026-10-20, https://www.instagram.com/haofe_bakery/embed/, viewed 2026-10-24): no caption mentions kashrut or a hechsher. The profile shows 1,609 followers and 463 posts.",
+   "Raw downloads (Badatz HTML, Zips, Walla, Netivot Online, logo images) are saved under /tmp/claude-0/-home-user-edon-studio/39250604-ba72-5066-b62c-771f07ec61a3/scratchpad/agents/kashrut/dl and /tmp/claude-0/-home-user-edon-studio/39250604-ba72-5066-b62c-771f07ec61a3/scratchpad/agents/kashrut/img"
+  ]
+ },
+ "research:app-domain": {
+  "dns": "Checked 2026-10-24 at 01:17 UTC using DNS-over-HTTPS (https://dns.google/resolve) and local getent; dig is not installed.\n- NS: sofia.ns.cloudflare.com and steven.ns.cloudflare.com. The SOA is also Cloudflare.\n- A: 172.67.204.185 and 104.21.50.103. AAAA: 2606:4700:3032::6815:3267 and 2606:4700:3033::ac43:ccb9. All four are Cloudflare proxy (anycast) addresses, TTL 300.\n- MX: none. TXT: none. The apex has no CNAME.\n- www.haofeapp.com does not exist (NXDOMAIN, status 3). Requests to https://www.haofeapp.com/ fail.\n- getent resolves haofeapp.com to the same two IPv4 addresses.",
+  "registration": "Source: RDAP at https://rdap.org/domain/haofeapp.com, which redirected to https://rdap.verisign.com/com/v1/domain/haofeapp.com. Cross-checked against https://rdap.cloudflare.com/rdap/v1/domain/HAOFEAPP.COM. Viewed 2026-10-24.\n- Registrar: Cloudflare, Inc. (IANA ID 1910).\n- Registered: 2026-10-13T00:19:00Z. Expires: 2027-10-13T00:19:00Z.\n- Last changed: 2026-10-13 per Verisign; 2026-10-20T08:34:16Z per Cloudflare's own RDAP.\n- Status: client transfer prohibited. DNSSEC: not signed.\n- Registrant: name, street, city and postcode are \"DATA REDACTED\". Country is IL and the region field reads \"מחוז הדרום\" (Southern District).\n- Inference only: the domain is about 11 days old, and the Southern District fits the Netivot / Sderot / Kiryat Gat area. RDAP does not say who the registrant is.",
+  "root": {
+   "final_url": "https://haofeapp.com/",
+   "status": "HTTP/2 200 with no redirect, viewed 2026-10-24 01:17 UTC. Plain http://haofeapp.com/ also returns 200 directly; it is not redirected to HTTPS.",
+   "title": "הזמנות האופה",
+   "what_it_shows": "A staff login screen, not a public page.\n- Heading \"כניסה לצוות\", subtext \"הקוד האישי שקיבלת ממנהל האופה\", a 12-digit \"קוד אישי\" field and a \"כניסה\" button.\n- Note: \"הכניסה נשמרת במכשיר ל־30 יום. לקבלת קוד חדש פנה למנהל.\"\n- A link \"שחזור כניסת המנהל הראשי\" and the footer \"האופה · נתיבות\".\n- Meta description: \"ניהול הזמנות, ייצור ואריזה למאפייה\".\n- The PWA manifest (/manifest.webmanifest) has name \"האופה\", start_url \"/\" and display standalone.\n- Inference: this is the bakery's internal back-office app for orders, production and packing, installable as a home-screen app. I did not try to log in."
+  },
+  "order_path": {
+   "final_url": "https://haofeapp.com/order",
+   "status": "HTTP/2 200, viewed 2026-10-24 01:17-01:21 UTC. https://haofeapp.com/order/ (trailing slash) returns 308 to /order. The order API route /api/order-requests answers a plain GET with 405, which shows the route is deployed. I sent no POST.",
+   "title": "הזמנה מהאופה · נתיבות",
+   "what_it_shows": "IMPORTANT: this is not a 'coming soon' page. It looks like a complete, working public order form, and nothing visible says it is inactive. The owner says the app is not active yet. I cannot tell whether the server accepts or acts on orders, because submitting one is outside a read-only check.\n\nPage text, as seen 2026-10-24:\n- Meta description: \"מזמינים לחמים ומאפים מהאופה ואוספים מסניף נתיבות. כל הזמנה נבדקת ומאושרת על ידי הצוות.\"\n- Header: \"מזמינים מהאופה / לחם ומאפים מהתנור שלנו, לאיסוף מסניף נתיבות\".\n- Notice: \"ההזמנה תיבדק ותאושר על ידי הצוות. אחרי השליחה תקבלו קישור לעמוד מעקב, ועדכון בוואטסאפ כשההזמנה תאושר.\"\n\nThree steps:\n1. \"מה להכין\": a catalog of 49 products with quantity steppers and no prices. לחמים: 22 (רגיל / מלא / מוצרי שישי). מאפים: 25 (חלבי / פרווה, some sold by weight in kg). מוצרים יבשים: 2. Examples: באגט, ג׳בטה, חלה, פיתה, צמה ירושלמית, בורקס גבינה, רוגלאך, קוראסון שוקולד, בייגל רומני, גאלט.\n2. \"מתי אוספים\": pickup-only date and time picker. Fridays are disabled with the note \"אין הזמנות רגילות ליום שישי. להזמנות גדולות ומיוחדות יש לפנות ישירות לסניף בטלפון 08-9752093\". The JS rules say orders can be placed up to 30 days ahead and at least 2 hours before pickup.\n3. \"הפרטים שלכם\": name, Israeli mobile number (for WhatsApp confirmation), an optional note of up to 300 characters, and a hidden honeypot field named \"website\".\n\nBranch panel \"פרטי סניף נתיבות\":\n- \"האופה · בוטיק לחם נתיבות, שדרות ירושלים 136, נתיבות · איסוף עצמי בלבד\", phone 08-9752093 (tel:+97289752093).\n- Links: Waze, Instagram @haofe_bakery, and \"עמוד הסניף\" pointing to https://netivotonline.com/haofe/.\n- Hours: א׳–ה׳ 05:00–22:00, שישי 05:00–15:00, מוצאי שבת 20:00–23:00; \"לשעות פעילות בחגים יש לפנות לסניף.\"\n\nOnly the Netivot branch appears. Sderot and Kiryat Gat are not mentioned anywhere in the app.\n\nSearch-engine exposure: there is no robots meta tag, no X-Robots-Tag header and no canonical tag. https://haofeapp.com/robots.txt contains only Cloudflare's content-signals comment block, with no User-agent or Disallow lines. Inference: search engines may index /order once they discover it.\n\nInference: the hours and the 49-item catalog come from the owner's own app, which makes them a good lead for the marketing site. They should still be confirmed with the owner, because the app is unlaunched."
+  },
+  "tech_hints": "From response headers and HTML, viewed 2026-10-24.\n- CDN / proxy: Cloudflare. Headers include server: cloudflare, cf-ray (IAD/ORD) and NEL/report-to at a.nel.cloudflare.com. Domain, DNS and registrar are all at Cloudflare.\n- Framework: the Vary header lists X-Vinext-Interception-Context, X-Vinext-Mounted-Slots and X-Vinext-Rsc-Render-Mode, alongside Next.js RSC headers. Assets are under /_next/static/ and link tags carry data-precedence=\"vite-rsc/...\".\n- An inline startup-recovery script runs connectivity checks against https://workers.dev, one.one.one.one and 1.1.1.1. It also links to /diagnostics?from=startup, which returns 200.\n- Inference, not stated by the site: this is a React Server Components app built with \"vinext\", which as far as I know is Cloudflare's Vite-based reimplementation of the Next.js API. It most likely runs on Cloudflare Workers.\n- Security headers: x-frame-options: DENY (the app cannot be embedded in an iframe), referrer-policy: same-origin, x-content-type-options: nosniff, cache-control: private, no-store, no-transform. I saw no Strict-Transport-Security header, and HTTP on port 80 serves the page without redirecting to HTTPS.\n- Front end: Hebrew, RTL, Rubik Hebrew font self-hosted at /fonts/rubik-hebrew-wght-normal.woff2. Brand assets at /brand/logo-320.webp, /brand/icon-180.png, /brand/icon-192.png and /brand/icon-512.png. PWA manifest with theme colour #fbf7f0.\n- Order flow, read from public JS chunk public-order-DQZd5d0H.js: it POSTs JSON (name, phone, note, deliveryDate, pickupTime, lines) to /api/order-requests, then redirects to a tracking-token page with ?sent=1. It saves the customer's name and phone in localStorage.\n- The JS has a built-in empty state: \\\"אין כרגע מוצרים להזמנה דרך האתר. אפשר להזמין בטלפון.\\\" Inference: the app can probably be shown as closed by turning off web-orderable products. That is not verified.\n- No sitemap.xml (404).",
+  "public_mentions": [
+   {
+    "url": "https://netivotonline.com/haofe/",
+    "quote_or_observation": "This is the page the app links to as \"עמוד הסניף\" from /order. It is a local-directory business card titled \"האופה - נתיבות אונליין\" with the text \"האופה בוטיק לחם ... שד' ירושלים 136, נתיבות ... טל: 08-9752093\", plus a services list (לחמים, באגטים, פיתות, מאפים, עוגות, קייטרינג) and a club sign-up form that I did not submit. It does not mention haofeapp.com or online ordering.",
+    "source_date": "article:modified_time 2024-11-05; viewed 2026-10-24",
+    "source_type": "third-party local directory page (built by KDIGITAL), linked from the app"
+   },
+   {
+    "url": "https://www.instagram.com/haofe_bakery/embed/",
+    "quote_or_observation": "I rendered this with Playwright. The page HTML contains no occurrence of \"haofeapp\" and no ordering-app link. Its only links go back to the Instagram profile.",
+    "source_date": "viewed 2026-10-24",
+    "source_type": "official Instagram (public embed)"
+   },
+   {
+    "url": "WebSearch tool queries (no URL): haofeapp.com / \"haofeapp\" / \"האופה בוטיק לחם נתיבות הזמנה אונליין אפליקציה\"",
+    "quote_or_observation": "None of the three searches found any public page mentioning haofeapp.com or the ordering app. Results were unrelated (Häfele, Huawei, easy.co.il bakery lists). Inference: the app has not been announced publicly, which fits a domain registered on 2026-10-13.",
+    "source_date": "searched 2026-10-24",
+    "source_type": "web search (negative result)"
+   }
+  ],
+  "screenshots": [
+   "/tmp/claude-0/-home-user-edon-studio/39250604-ba72-5066-b62c-771f07ec61a3/scratchpad/agents/app/root-1280.png",
+   "/tmp/claude-0/-home-user-edon-studio/39250604-ba72-5066-b62c-771f07ec61a3/scratchpad/agents/app/root-1280-viewport.png",
+   "/tmp/claude-0/-home-user-edon-studio/39250604-ba72-5066-b62c-771f07ec61a3/scratchpad/agents/app/root-390.png",
+   "/tmp/claude-0/-home-user-edon-studio/39250604-ba72-5066-b62c-771f07ec61a3/scratchpad/agents/app/root-390-viewport.png",
+   "/tmp/claude-0/-home-user-edon-studio/39250604-ba72-5066-b62c-771f07ec61a3/scratchpad/agents/app/order-1280.png",
+   "/tmp/claude-0/-home-user-edon-studio/39250604-ba72-5066-b62c-771f07ec61a3/scratchpad/agents/app/order-1280-viewport.png",
+   "/tmp/claude-0/-home-user-edon-studio/39250604-ba72-5066-b62c-771f07ec61a3/scratchpad/agents/app/order-390.png",
+   "/tmp/claude-0/-home-user-edon-studio/39250604-ba72-5066-b62c-771f07ec61a3/scratchpad/agents/app/order-390-viewport.png"
+  ],
+  "integration_notes": "WHAT WAS FOUND (2026-10-24): https://haofeapp.com/order is already publicly reachable and returns 200. It shows a complete order form, its order API route is deployed, and nothing blocks search-engine indexing. The only things standing between the app and the public are that nobody knows the URL yet and that nobody may be watching incoming orders. The marketing site should therefore not expose the URL until the owner says the app is live.\n\nFLAG FOR THE OWNER (outside the marketing site): if the owner does not want orders yet, they should ask the app's developer to do one of two things:\n(a) Put the form into a closed state server-side. The app already has a built-in message, \\\"אין כרגע מוצרים להזמנה דרך האתר. אפשר להזמין בטלפון.\\\" (inference: shown when no products are open for web ordering).\n(b) Add X-Robots-Tag: noindex or Cloudflare Access to /order until launch.\nEither way, they should confirm that no stray orders have arrived. We did not test submission.\n\nHOW THE MARKETING SITE SHOULD LINK WHILE THE APP IS NOT LIVE:\n1. Keep one config value, e.g. orderApp = { status: 'soon' | 'live', url: 'https://haofeapp.com/order', branch: 'netivot' }. Every order call-to-action reads from it. Set it by hand. Do not detect status automatically: /order returns 200 whether or not the owner considers it live, so an HTTP check cannot tell the difference.\n2. While status is 'soon':\n   - Show a non-clickable badge such as \\\"הזמנה אונליין – בקרוב\\\". Use a span or a disabled button, not an <a href>.\n   - Put the URL nowhere: not in the HTML, sitemap, JSON-LD (no potentialAction/OrderAction), Open Graph tags or link previews. This keeps crawlers and customers from finding it through our site.\n   - Make the primary actions the ones that work today: phone tel:+97289752093 for Netivot, plus Waze.\n3. Optional, recommended: create a stable short link on the marketing domain, e.g. /order or /הזמנה, that shows a coming-soon page with the phone numbers. That link can go on flyers, QR codes and the Instagram bio now. At launch it becomes a 302 redirect to https://haofeapp.com/order, and rolling back means flipping it back. Nothing printed ever has to change.\n\nHOW TO SWITCH ON LATER:\n- Only after the owner confirms launch and has run a test order themselves (WhatsApp confirmation and staff dashboard working), set status to 'live'. The badge then becomes a real link to exactly https://haofeapp.com/order. Use https, no trailing slash (the slash form causes a 308 redirect), not www (no DNS record) and not the root URL (that is the staff login).\n- Link normally, in the same tab or with target=_blank rel=noopener. Never use an iframe: the app sends x-frame-options: DENY.\n- UTM parameters (e.g. ?utm_source=site&utm_medium=cta) are probably harmless, but check with the developer, because the app ends its referrer at same-origin and may not record them.\n- Add JSON-LD potentialAction (OrderAction, target https://haofeapp.com/order) to the Netivot Bakery/LocalBusiness entry only.\n\nSCOPE AND COPY RULES THAT MATCH THE APP:\n- The app covers Netivot only and pickup only (\\\"איסוף עצמי בלבד\\\"). Show the order button only on the Netivot branch card, labelled something like \\\"הזמנה לאיסוף מסניף נתיבות\\\". Sderot and Kiryat Gat cards keep phone-only contact. Kiryat Gat has no confirmed phone number, so do not invent one.\n- Do not promise delivery.\n- Friday orders are phone-only (08-9752093). Web orders run up to 30 days ahead and at least 2 hours before pickup.\n- The app lists Netivot hours (א׳–ה׳ 05:00–22:00, שישי 05:00–15:00, מוצאי שבת 20:00–23:00). Confirm them with the owner before publishing.\n- When the app expands to more branches, change the single branch value in the config to a list rather than hard-coding links.",
+  "could_not_access": [
+   "Certificate transparency at https://crt.sh/?q=%25.haofeapp.com&output=json timed out after 60 s, then returned 502 Bad Gateway (2026-10-24), so I could not list subdomains or certificate issue dates.",
+   "www.haofeapp.com has no DNS record (NXDOMAIN), so there was nothing to load.",
+   "By the read-only rules I did not submit a test order, POST to /api/order-requests, or log in at the staff screen. Whether the server currently accepts and processes public orders is therefore unknown.",
+   "The registrant's identity is redacted in RDAP; only country IL and region 'מחוז הדרום' are shown.",
+   "I did not check Google's index directly with a site: query; the WebSearch tool returned no results for haofeapp.",
+   "Instagram profile bio: only the public embed page was checked. The full profile and bio link need a login, so I did not open them."
+  ]
+ },
+ "research:ordering-law": {
+  "requirements": [
+   {
+    "topic": "1. Distance-sale disclosure before the order (section 14ג(א), Consumer Protection Law)",
+    "requirement": "WHAT THE SOURCE SAYS: In remote marketing (שיווק מרחוק) the business must disclose at least: (1) its name, ID/company number and address in Israel and abroad; (2) the main features of the goods; (3) the price and the available payment terms; (4) when and how the goods will be supplied; (5) how long the offer is valid; (6) warranty details; (7) details of the consumer's cancellation right under 14ג(ג) or 14ג1(ג). The definition of 'שיווק מרחוק' in 14ג(ו) covers an approach to a consumer by mail, telephone or any electronic communication, or through catalogues or ads, aimed at a transaction where the parties are not together in person. The Nevo consolidated text is current as of 30-09-2026; I viewed it on 2026-10-24 and read the full wording in the Wikisource copy. MY INFERENCE: the app/web ordering flow is distance marketing. Any phone or WhatsApp ordering line advertised today (the Instagram bio snippet mentions an ordering line) probably already triggers 14ג.",
+    "applies_when": "Before the order is placed, on the product, cart or checkout screens of haofeapp.com/order, and for any phone or WhatsApp ordering that is advertised.",
+    "source_url": "https://www.nevo.co.il/law_html/Law01/089_001.htm",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "1. Written confirmation after the order (14ג(ב)) and business identity (4ב)",
+    "requirement": "WHAT THE SOURCE SAYS: In a distance sale the business must give the consumer a written document, in Hebrew or in the language used for the marketing, no later than the time of supply. It must contain: identity and main features (per (א)(1)-(2)); the price and the payment terms that apply; how to exercise the cancellation right; the manufacturer's name and country of manufacture; warranty information; and other terms of the deal. Separately, section 4ב requires the business's name and ID number on order forms, offers, contracts, credit slips and tax invoices. MY INFERENCE: an order-confirmation email or SMS plus the receipt can carry these details. The legal entity (name and ח.פ.) behind the app has to be confirmed.",
+    "applies_when": "For every order made through the app or by phone, no later than delivery or pickup.",
+    "source_url": "https://www.nevo.co.il/law_html/Law01/089_001.htm",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "2. Cancellation right and the perishable-goods exemption (14ג(ג)-(ד))",
+    "requirement": "WHAT THE SOURCE SAYS: In a distance sale of goods, the consumer may cancel from the day of the deal until 14 days after receiving the goods or the 14ג(ב) document, whichever is later. Under 14ג(ד), that right (and the extended 4-month right in 14ג1(ג) for people with disabilities, senior citizens and new immigrants) does not apply to: (1) perishable goods (טובין פסידים); (4) goods made specially for the consumer following the deal; and some other categories that are not relevant here. MY INFERENCE: fresh bread and pastries are perishable, and custom or personalised cakes are 'made specially', so both are likely excluded. Shelf-stable or non-food items may not be excluded (see the open questions).",
+    "applies_when": "For all app orders. The exemption has to be assessed per product type.",
+    "source_url": "https://www.nevo.co.il/law_html/Law01/089_001.htm",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "2. תקנות הגנת הצרכן (ביטול עסקה), התשע\"א-2010: food exclusion and scope",
+    "requirement": "WHAT THE SOURCE SAYS: Regulation 6(א) excludes from the cancellation right, among other items, (4) food products (מוצרי מזון) and (6) perishable goods (טובין פסידים). 'Goods' means goods for which more than NIS 50 was paid (reg. 1). Nevo shows the text as current on 18-09-2023. The regulations were made under section 14ו, which covers specified goods and services. A Chamber of Commerce legal note (secondary, https://www.chamber.org.il/serviceslobby/legal/1857/106277/, seen only as a search snippet) says these regulations govern in-person store transactions, while distance-sale cancellation is governed by 14ג. MY INFERENCE: for app orders the operative exemption is 14ג(ד)(1). The regulations' food exclusion matters mainly for purchases made in the branches.",
+    "applies_when": "Mainly in-branch purchases. Cited for app orders only as background.",
+    "source_url": "https://www.nevo.co.il/law_html/law00/84257.htm",
+    "source_type": "official",
+    "confidence": "medium"
+   },
+   {
+    "topic": "2. Refunds and cancellation fees where cancellation is allowed (14ה)",
+    "requirement": "WHAT THE SOURCE SAYS: If a consumer cancels under 14ג(ג) because of a defect, a mismatch with the disclosed details, non-supply on the agreed date or another breach, the business must refund within 14 days of the cancellation notice, cancel the charge, and may not take any cancellation fee. If the consumer cancels for any other reason, the business must refund within 14 days and may keep a cancellation fee of no more than 5% of the price or NIS 100, whichever is lower. 'Cancellation fee' includes shipping and packing costs (14ה(ד)). MY INFERENCE: this matters only for items that are not perishable and not custom-made.",
+    "applies_when": "Non-exempt items sold through the app, e.g. possibly packaged shelf-stable goods, gift boxes, merchandise or vouchers (to be checked).",
+    "source_url": "https://www.nevo.co.il/law_html/Law01/089_001.htm",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "2. 'No cancellation' wording must be qualified (2(ב2)); return-policy sign (4ג)",
+    "requirement": "WHAT THE SOURCE SAYS: A business that announces in any way that the consumer has no right to cancel or to a refund must qualify the announcement so that it is clear it does not apply in cases set by law (2(ב2)). The in-store return-policy notice duty in 4ג does not apply to food products or perishable goods (4ג(ד)(1)). MY INFERENCE: app terms should not say only 'no cancellations'. They should name the excluded categories and carry the statutory qualification.",
+    "applies_when": "In the app's cancellation policy, terms of use (תקנון) and checkout text.",
+    "source_url": "https://www.nevo.co.il/law_html/Law01/089_001.htm",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "3. Price display: only the total price, in shekels, including delivery (17א, 17ב, 17ד, 14ג(ו))",
+    "requirement": "WHAT THE SOURCE SAYS: 'המחיר הכולל' (the total price) includes VAT, levies, and any other payment that comes with the purchase and that the consumer has no practical way to waive (17א). Goods offered or displayed must show only the total price, only in Israeli currency, visibly and legibly; the displayed price is binding even if checkout shows more (17ב). A business may not advertise or quote a price unless it is the total price in shekels (17ד). For distance sales, 'מחיר הנכס' is the total price including delivery fees and any other addition or expense the consumer will bear (14ג(ו)).",
+    "applies_when": "Every price shown in the app, on the marketing site, or in a coming-soon notice.",
+    "source_url": "https://www.nevo.co.il/law_html/Law01/089_001.htm",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "3. Unit price (per kg or per 100 g) in distance sales",
+    "requirement": "WHAT THE SOURCE SAYS: תקנות הגנת הצרכן (מחיר ליחידת מידה), התשס\"ח-2008 apply to all distance sales whatever the store size (reg. 6(א)). In a distance sale the unit price must appear right next to the item price (reg. 3(ב)). The duty covers goods sold in bulk and pre-packed goods that must state their quantity by law or official standard (reg. 2(א)). Packaged food under 1 kg is priced per 100 g (reg. 2(ב)). Exemptions in reg. 6(ב) include 'לחם לא ארוז לסוגיו' (unpackaged bread of all kinds), items weighing 100 g or less (unless made in several weights), mixed packs, and items whose unit price equals the total price. Nevo shows the text as current on 18-09-2023.",
+    "applies_when": "App listings of pre-packed items with a stated net weight, or items sold by weight. Unpackaged bread is exempt.",
+    "source_url": "https://www.nevo.co.il/law_html/Law01/500_007.htm",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "3. No minimum purchase for paying by card (12א)",
+    "requirement": "WHAT THE SOURCE SAYS: A business that accepts debit or credit cards may not make card payment conditional on a minimum purchase amount (section 12א, added in תשפ\"ה). I read this text in the Wikisource copy of the law. I did not check it separately on the Nevo page, which shows the consolidated law as current on 30-09-2026.",
+    "applies_when": "If the app sets a minimum order amount. Whether a payment-neutral minimum for delivery is allowed is an open question.",
+    "source_url": "https://he.wikisource.org/wiki/חוק_הגנת_הצרכן",
+    "source_type": "secondary",
+    "confidence": "medium"
+   },
+   {
+    "topic": "3. Delivery fees shown only at checkout: enforcement signal",
+    "requirement": "WHAT THE SOURCE SAYS: An ice.co.il article dated 12/5/2025 describes a class-action claim against a food chain alleging that the delivery or pickup fee appeared only at the virtual checkout. The claim relied on the total-price rule and on a 'הנחיית הממונה על הגנת הצרכן בנוגע להצגת מחירים בעסקאות מכר מרחוק' (Commissioner's directive on price display in distance sales). I could not find the text or date of that directive. MY INFERENCE: show delivery and packing fees early, at the latest when the first item goes into the cart.",
+    "applies_when": "App cart and checkout design.",
+    "source_url": "https://www.ice.co.il/law/news/article/1064327",
+    "source_type": "secondary",
+    "confidence": "low"
+   },
+   {
+    "topic": "4. Delivery and pickup timing disclosure",
+    "requirement": "WHAT THE SOURCE SAYS: Before the deal, the business must disclose when and how the goods will be supplied, and how long the offer is valid (14ג(א)(4)-(5)). Misleading the consumer about the supply date, or about the place where the goods will be supplied, is misleading on a material matter (2(א)(3), (3א)). If the consumer paid in advance and, for reasons the seller is responsible for, the goods are not supplied within two weeks of the agreed date (or within two months of payment if no date was agreed), the business owes interest (13(ב)). MY INFERENCE: give realistic delivery or pickup windows per branch. For perishable orders, cancellation and refund for late delivery rest on general contract law, because 14ג(ג) does not apply (lawyer to confirm).",
+    "applies_when": "Every app order with delivery or branch pickup.",
+    "source_url": "https://www.nevo.co.il/law_html/Law01/089_001.htm",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "4. Delivery-area policy (תקנות הגנת הצרכן (גילוי פרט מהותי לגבי אספקת נכס או שירות), התשע\"ח-2018)",
+    "requirement": "WHAT THE SOURCE SAYS: A business selling goods for which delivery is offered, even if the consumer can decline delivery, must disclose before the deal whether there are places it does not deliver to, and what restrictions apply to delivery there (reg. 2(א)). In a distance sale this must be disclosed at the marketing stage, in a prominent place, in clear and legible letters and figures (reg. 2(ג)(3)). Nevo shows the text as current on 18-09-2023. Note: the separate 2015 regulations on delivery services (גילוי פרט מהותי לגבי שירות משלוח טובין) apply only to a 'משלח' that ships goods from abroad into Israel, so they are not relevant here.",
+    "applies_when": "If the app offers delivery from the Netivot, Sderot or Kiryat Gat branches.",
+    "source_url": "https://www.nevo.co.il/law_html/law00/154745.htm",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "5. Ingredients and allergens: general duties under the Consumer Protection Law",
+    "requirement": "WHAT THE SOURCE SAYS: The ingredients (המרכיבים) of a product, and the risks of using it, are listed as material matters on which misleading is prohibited (2(א)(2), (4)). A business must disclose any feature of a product that requires special handling or use to prevent harm to the user (4(א)(2)). MY INFERENCE: wrong or missing allergen information in the app (e.g. 'nut-free' when there is cross-contact risk) can count as misleading. Section 4(א)(2) could arguably extend to known allergens. The second point is my interpretation, not a stated rule.",
+    "applies_when": "Any product description, ingredient list or allergen tag in the app.",
+    "source_url": "https://www.nevo.co.il/law_html/Law01/089_001.htm",
+    "source_type": "official",
+    "confidence": "medium"
+   },
+   {
+    "topic": "5. Food labelling regime: EU Regulation 1169/2011 adopted in Israel",
+    "requirement": "WHAT THE SOURCE SAYS: In a notice dated 19.2.2026, the Ministry of Health states that Regulation (EU) 1169/2011 (food information to consumers) was adopted by Amendment 10 to the Food Law (חוק הגנה על בריאות הציבור (מזון), התשע\"ו-2015) and appears as item 5 of Schedule 2א. It has applied voluntarily, subject to conditions, since 1 January 2025, and is expected to apply to all businesses from 1 January 2028. Food-specific local labelling rules, including those that refer to ת\"י 1145 (labelling of pre-packed food), continue to apply. The notice sets a temporary administrative enforcement policy from 18.2.2026.",
+    "applies_when": "Pre-packed products the bakery makes (the Netivot production plant) and sells online or in branches.",
+    "source_url": "https://www.gov.il/BlobFolder/policy/fcs-94419226/he/files_regulation_fcs_fcs-94419226.pdf",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "5. Food information in distance selling (Art. 14 of 1169/2011) and Israeli changes",
+    "requirement": "WHAT THE SOURCES SAY: Article 14 of 1169/2011 (EU text at https://eur-lex.europa.eu/eli/reg/2011/1169) requires that, for pre-packed food sold by distance communication, the mandatory food information (except the durability date) be available before the purchase is concluded; for non-pre-packed food it refers to the Article 44 particulars. In Israel, Schedule 2א item 5 to the Food Law (as transcribed on Wikisource) says Article 44(1)(a), the EU duty to give allergen information for non-pre-packed food, is not read in Israel for seven years from 1.1.2025 (a temporary provision). It also adds a mandatory fava-bean (פול) warning for G6PD deficiency. MY INFERENCE: until 2028, online allergen display for unpackaged baked goods has no specific statutory basis found. From 2028, pre-packed items sold online will probably need full label information before purchase. Showing allergens now is prudent.",
+    "applies_when": "App product pages, especially pre-packed items. Unpackaged items depend on how Art. 44 is read in Israel.",
+    "source_url": "https://he.wikisource.org/wiki/חוק_הגנה_על_בריאות_הציבור_(מזון)",
+    "source_type": "secondary",
+    "confidence": "medium"
+   },
+   {
+    "topic": "5. Nutrition 'red symbols' when selling pre-packed food online",
+    "requirement": "WHAT THE SOURCES SAY: תקנות הגנה על בריאות הציבור (מזון) (סימון תזונתי), התשע\"ח-2017 place the nutrition-labelling duty, including red symbols, on manufacturers and importers of pre-packed food. Their definition of pre-packed food excludes food prepared at the consumer's request at the time of sale. A Chamber of Commerce note dated 01/12/2019 reports that the Consumer Protection Commissioner treats product details as material in online sales and gave online retailers a transition period, attaching a guidance dated 25.12.19. I could not see the official guidance text. MY INFERENCE: if an app item carries red symbols on its pack, show them on the product page.",
+    "applies_when": "Pre-packed items with red symbols listed in the app.",
+    "source_url": "https://www.chamber.org.il/serviceslobby/legal/1857/104582/",
+    "source_type": "secondary",
+    "confidence": "low"
+   },
+   {
+    "topic": "6. Privacy: Amendment 13 and the notice duty (section 11)",
+    "requirement": "WHAT THE SOURCES SAY: Amendment 13 to חוק הגנת הפרטיות came into force on 14.8.2025 (Privacy Protection Authority guide). Any request to a person for personal information to be processed in a database must come with a notice stating: (1) whether there is a legal duty to provide the information or it depends on the person's consent, and what happens if they refuse; (2) the purpose; (2א) the name and contact details of the database controller; (3) to whom the information will be passed and for what purposes; (4) the right to inspect (s.13) and to request correction (s.14). Nevo shows the law as current on 11-10-2026. The PPA's position paper (https://www.gov.il/BlobFolder/legalinfo/duty_to_notify/he/notify13.pdf) says the duty applies to every channel, including online and oral, and also when data is collected because the person asked for a service.",
+    "applies_when": "App sign-up and checkout, and any 'notify me' form on a coming-soon page.",
+    "source_url": "https://www.nevo.co.il/law_html/law00/71631.htm",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "6. Database registration and notice thresholds after Amendment 13 (8א)",
+    "requirement": "WHAT THE SOURCE SAYS: Registration is required only if (a) the database's main purpose is collecting personal data to pass to others as a business or for payment (including direct-mail services) and it holds data on more than 10,000 people, or (b) the controller is a public body. A controller of a database that does not need registration must notify the Authority within 30 days once it holds especially sensitive information (מידע בעל רגישות מיוחדת) on more than 100,000 people. Under the definition of 'מאגר מידע', a collection holding only name, address and contact details of up to 100,000 people is not a database, provided it reveals no other personal data and the owner holds no other collection with further details on the same people. MY INFERENCE: a bakery customer database will probably not need registration, but the section 11 notice and the data-security duties still apply.",
+    "applies_when": "The customer database behind the app.",
+    "source_url": "https://www.nevo.co.il/law_html/law00/71631.htm",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "6. Especially sensitive information: allergy and health notes",
+    "requirement": "WHAT THE SOURCE SAYS: 'מידע בעל רגישות מיוחדת' includes personal information about a person's health and information about their financial activity, among other categories. MY INFERENCE: a free-text order note such as 'my son has a nut allergy', or saved dietary or medical preferences, is health information. Collecting it raises the stakes (higher penalties apply where sensitive data is involved) and calls for minimisation and suitable security.",
+    "applies_when": "If the app lets customers record allergies or dietary needs, or stores payment data itself.",
+    "source_url": "https://www.nevo.co.il/law_html/law00/71631.htm",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "6. Amendment 13 penalties and damages without proof of harm",
+    "requirement": "WHAT THE SOURCE SAYS (PPA guide, May 2025, viewed 2026-10-24): For collecting data without a proper section 11 notice, the administrative fine is NIS 50 per person approached, or NIS 100 per person where especially sensitive data is involved. The guide also states a NIS 30,000 minimum per breach; its layout leaves it unclear whether that minimum covers both cases. The guide's example: 5,000 people approached for sensitive data without notice gives NIS 500,000. Courts may award up to NIS 10,000 without proof of damage, for example for collecting data without the section 11 notice. Total fines are capped at 5% of annual turnover. Breaches of the Information Security Regulations (2017) also carry fines.",
+    "applies_when": "Risk assessment for the app and for any coming-soon signup form.",
+    "source_url": "https://www.gov.il/BlobFolder/reports/guide_tikon13_professional/he/tikun%2013%20_170825.pdf",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "6. Valid consent and marketing opt-in: PPA opinion of 25.2.2026",
+    "requirement": "WHAT THE SOURCE SAYS: The Authority's opinion on consent (גילוי דעת בנושא הסכמה, 25.2.2026) says: silence or lack of objection is not valid consent; consent to one purpose does not allow use for another purpose without new consent; for direct-mail services and for marketing uses unrelated to the purpose of the deal, consent must be a separate active opt-in, not opt-out; documenting consent is recommended.",
+    "applies_when": "Any marketing use of app or signup data.",
+    "source_url": "https://www.gov.il/BlobFolder/legalinfo/consent-2026/he/cpncent-2025.pdf",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "6. Spam law: section 30א of חוק התקשורת (בזק ושידורים)",
+    "requirement": "WHAT THE SOURCE SAYS: Advertising by email, SMS, fax or auto-dialler requires the recipient's explicit prior consent, in writing (an electronic message or recorded call counts) (30א(ב)). Exception (30א(ג)): the recipient gave their details during a purchase or negotiation, was told the details would be used for advertising, was given a chance to refuse and did not, and the ad concerns similar products. The recipient may refuse at any time, free of charge (30א(ד)). Each ad must clearly show: the word 'פרסומת' at its start, and in the subject line of an email; the advertiser's name, address and contact details; and the right to opt out, with a simple way to do it (for email, a valid address for opting out) (30א(ה)). Courts may award up to NIS 1,000 per message without proof of damage, and knowledge is presumed (30א(י)). I read the full text on Wikisource (https://he.wikisource.org/wiki/חוק_התקשורת_(בזק_ושידורים)); the Nevo page lists amendments up to Amendment 83 of 28.7.2026, but I did not see section 30א's body there.",
+    "applies_when": "Launch-announcement emails or SMS, newsletters, promotional SMS from the app.",
+    "source_url": "https://www.nevo.co.il/law_html/Law01/032_002.htm",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "6. Direct-mail approaches (17ו) and DPO duty (17ב1)",
+    "requirement": "WHAT THE SOURCE SAYS: 'דיוור ישיר' means a personal approach to someone based on their belonging to a group defined by one or more characteristics of the people in a database. Every direct-mail approach must clearly state that it is direct mail, together with the registration number of the database used for direct-mail services, the right to be deleted, and the controller's identity and data sources (17ו). The PPA guide lists breaches of 17ו(א) as subject to fines. Appointing a privacy officer (DPO) is mandatory for public bodies, data brokers over 10,000 people, large-scale systematic monitoring, and large-scale processing of sensitive data (17ב1). MY INFERENCE: a bakery is probably not required to appoint a DPO. How 17ו applies to the bakery's own segmented marketing from a database that does not need registration is unclear.",
+    "applies_when": "Segmented marketing, e.g. by branch or purchase history.",
+    "source_url": "https://www.nevo.co.il/law_html/law00/71631.htm",
+    "source_type": "official",
+    "confidence": "medium"
+   },
+   {
+    "topic": "7. Accessibility of the website and online ordering (regs 35, 35א)",
+    "requirement": "WHAT THE SOURCE SAYS: 'שירות אינטרנט' covers content of any format delivered over the internet through websites, documents or applications that provide a service to the public or information about it (reg. 35). A service provider must make its internet services accessible under ת\"י 5568 (the Israeli web accessibility standard, 'as amended from time to time') at level AA (reg. 35א(א)). Forms used to receive a service must comply (35א(ג)(2)). A deviation is treated as a breach only if the business was notified and did not fix it within a reasonable time, at most 60 days, and alternative access must be given in the meantime (35א(ד)). Third-party content is exempt, but the platform must be accessible (35ב).",
+    "applies_when": "The marketing site, the coming-soon notice, and haofeapp.com/order, unless an exemption applies.",
+    "source_url": "https://www.nevo.co.il/law_html/law01/500_865.htm",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "7. Mobile apps (35ג), accessibility statement (35ה) and exemptions (35ו)",
+    "requirement": "WHAT THE SOURCE SAYS: Apps for smartphones and tablets must meet an Israeli app standard if one exists. If none exists, they must meet the relevant success criteria of the web standard as far as the operating system allows, on at least two common operating systems (35ג(ב)). An app is exempt if an identical service runs on an accessible mobile-adapted website, and the app links to it (35ג(ג)). The website and the app must each show, in a prominent place, an accessibility statement: the adjustments made, the accessibility coordinator's details if one is required, and contact details for reporting problems (35ה). Exempt: an עוסק פטור (VAT-exempt dealer), or a business whose average annual turnover is no more than NIS 100,000 (35ו(ז)). A technical-infeasibility exemption is available through an accessibility officer and must be published in the statement (35ו(א)-(ג)).",
+    "applies_when": "If a native app is released, and for the accessibility statement on the site and the app.",
+    "source_url": "https://www.nevo.co.il/law_html/law01/500_865.htm",
+    "source_type": "official",
+    "confidence": "high"
+   },
+   {
+    "topic": "7. Current edition of ת\"י 5568",
+    "requirement": "WHAT THE SOURCE SAYS: The Standards Institution page lists ת\"י 5568 part 1, 'קווים מנחים לנגישות תכנים באינטרנט: נגישות אתרי אינטרנט', published 28/09/2023 (Reshumot publication 22/10/2023), replacing the 2021 part 1. The page does not say which WCAG version it is based on. Downloadable digital documents are covered by part 2. MY INFERENCE: because reg. 35 refers to the standard 'as amended from time to time', the 2023 edition is the benchmark.",
+    "applies_when": "Design and audit of the site and the app.",
+    "source_url": "https://www.sii.org.il/he/lobby/standardization/standard-page?id=6751",
+    "source_type": "official",
+    "confidence": "medium"
+   },
+   {
+    "topic": "7. Damages without proof of harm for accessibility breaches",
+    "requirement": "WHAT THE SOURCE SAYS: Section 19נא of חוק שוויון זכויות לאנשים עם מוגבלות makes breaches of the accessibility provisions a civil wrong. Courts may award up to NIS 50,000 without proof of damage for listed breaches, with defences such as an existing accessibility order or undertaking. I did not confirm which listed section covers the internet-service regulations; I read the text on Wikisource.",
+    "applies_when": "Risk assessment if the site or app is not accessible.",
+    "source_url": "https://he.wikisource.org/wiki/חוק_שוויון_זכויות_לאנשים_עם_מוגבלות",
+    "source_type": "secondary",
+    "confidence": "medium"
+   },
+   {
+    "topic": "Coming soon: misleading-advertising rules (sections 2 and 7)",
+    "requirement": "WHAT THE SOURCE SAYS: A business may not do anything, by act or omission, in writing, orally or otherwise, that may mislead a consumer on a material matter. Material matters include the supply date, the place of supply, the price usually charged, and cancellation terms (2(א)(3), (3א), (13), (21)). Whoever the advertising is made for is liable for misleading advertising (7(א)). The Commissioner may demand evidence for factual claims in an ad, and failing to provide it is prima facie evidence that the ad misled (7(ב)). MY INFERENCE: a 'coming soon' notice is advertising, so launch dates, prices, promotions, delivery areas and features stated in it must be true and supportable.",
+    "applies_when": "Coming-soon banners, posts and the haofeapp.com/order placeholder page.",
+    "source_url": "https://www.nevo.co.il/law_html/Law01/089_001.htm",
+    "source_type": "official",
+    "confidence": "high"
+   }
+  ],
+  "coming_soon_guidance": [
+   "Say plainly that ordering in the app is not open yet, for example: 'בקרוב: הזמנות אונליין באפליקציה של האופה. האפליקציה עדיין לא פעילה ולא ניתן להזמין בה כרגע.' This is my inference from section 2: implying a live service is misleading. Draft wording, for lawyer review.",
+   "Do not promise a launch date ('next week', 'November 1') unless it is firm. The supply or service date is a material matter under 2(א)(3), and 7(ב) lets the Commissioner demand proof of advertised facts. If the owner wants a timeframe, a lawyer should approve the wording.",
+   "Do not show prices, 'launch discounts' or 'regular price X, now Y' claims for the app. Any price that is shown must be the total price in NIS, including VAT and any unavoidable fee (17א, 17ד), and the business must be ready to honour it. A reference price is a material matter (2(א)(13)). Safest: no prices on the coming-soon notice.",
+   "Do not take orders, payments, deposits or pre-orders through the placeholder, and do not show 'order now' buttons that look active. Any real pre-order would be a distance sale with full 14ג disclosures, and paid deposits can trigger interest under 13(ב). Disable or hide the /order route until it is live, or show only the notice there.",
+   "Do not state delivery areas, delivery times or branch coverage (for example 'delivery to all of Netivot, Sderot and Kiryat Gat') unless confirmed. The place and date of supply are material matters (2(א)(3), (3א)), and the 2018 regulations require disclosure of areas not covered once delivery is offered.",
+   "Do not advertise app features that may not exist at launch, such as allergen filters, 'kosher lemehadrin at all branches', loyalty points or app-store availability. Show App Store or Google Play badges only once the app is actually published there. This is my inference from sections 2 and 7. Kashrut claims per branch also need checking against the certificates (see the open questions).",
+   "If the notice points people to current ordering channels (for example a branch phone or WhatsApp), remember those are themselves distance sales. The 14ג(א) disclosures (identity, price, supply time and method, cancellation details with the 2(ב2) qualification) already apply to them.",
+   "A 'notify me when it launches' form is optional. If used, collect the minimum (one contact field) and show a section 11 notice next to it. Draft wording for lawyer review: 'מסירת הפרטים אינה חובה ותלויה בהסכמתך; בלי הפרטים לא נוכל לעדכן אותך. הפרטים ישמשו רק כדי להודיע לך שהאפליקציה עלתה. בעל השליטה במאגר: [שם משפטי, ח.פ., כתובת, דוא\"ל]. הפרטים יועברו ל[ספק הדיוור] לצורך המשלוח בלבד. יש לך זכות לעיין במידע ולבקש לתקנו (סעיפים 13-14 לחוק הגנת הפרטיות).' Link to a full privacy policy. Do not collect allergy or health details at this stage.",
+   "Treat the launch-announcement message itself as advertising under 30א. Get explicit prior consent through an unticked checkbox, for example 'אני מסכים/ה לקבל מהאופה הודעה על השקת האפליקציה ודברי פרסומת בדוא\"ל/SMS'. Keep that checkbox separate from any terms acceptance (PPA opinion 25.2.2026: separate opt-in; consent for one purpose does not cover another). In the message, put 'פרסומת' at the start or in the subject line, give the sender's name, address and contact details, and include a working opt-out. Log each consent with its date and the text shown.",
+   "Use signup data only for the stated purpose. Using it later for general marketing, profiling or passing it to a franchisee or platform needs its own notice and consent (s.11; s.8(ב) purpose limitation; PPA consent opinion).",
+   "Analytics or ad pixels on the coming-soon page: I found no Israeli statute specific to cookies. The PPA opinion says silence or continued use is not valid consent, and secondary sources read it as requiring consent for non-essential tracking. Keep the placeholder free of non-essential trackers, or get a lawyer's view first.",
+   "The coming-soon notice is part of the website, so it must meet ת\"י 5568 level AA (reg. 35א): real text rather than text baked into an image, sufficient contrast, alt text, a keyboard-usable and labelled signup form, and readable RTL Hebrew. The site needs an accessibility statement (35ה), unless the business is an עוסק פטור or its average turnover is no more than NIS 100,000 (35ו(ז)).",
+   "Keep a dated copy of what the coming-soon notice and any signup form said, and when. This is my inference: it supports the evidential burden under 7(ב) and lets you show the consent text if a 30א claim is made."
+  ],
+  "open_questions_for_lawyer": [
+   "Which bakery items fall outside the 14ג(ד) exemptions (perishable; made specially for the consumer)? For example: shelf-stable packaged cookies or crackers, gift boxes, merchandise, gift cards or vouchers, and catering trays ordered days ahead. Those items would carry a 14-day cancellation right with a fee capped at the lower of 5% or NIS 100 (14ה).",
+   "Is an order placed in the app but picked up at a branch a 'עסקת מכר מרחוק'? (I infer yes, because the contract is formed remotely.) Should the app allow voluntary cancellation before the order is prepared, and on what terms, given 14ג(ג) does not apply to perishables?",
+   "For perishable orders that arrive late or not at all, what remedies apply and what refund timing should the policy promise, given that 14ה(א) refers to cancellation under 14ג(ג), which is excluded for perishables?",
+   "Does a minimum order amount for delivery that applies to every payment method conflict with section 12א (ban on a minimum purchase for card payment)?",
+   "Please obtain the text and date of the Consumer Protection Commissioner's directive on price display in distance sales (cited in the May 2025 class action reported by ice.co.il). In particular: must delivery or packing fees appear on product pages, or is the first cart view enough?",
+   "Unit pricing: which of the bakery's online items are 'pre-packed goods that must state quantity'? Does the exemption for 'לחם לא ארוז לסוגיו' cover unpackaged pastries, rolls and cakes, or only bread?",
+   "Allergens: is there any current Israeli duty to show allergens online for non-pre-packed bakery goods? Wikisource's copy of Food Law Schedule 2א item 5 says Art. 44(1)(a) of 1169/2011 is 'not read' for seven years from 1.1.2025; please confirm against the official text and the Ministry of Health's Hebrew translation. What exactly will Art. 14 (distance selling) require from 1.1.2028 for the bakery's pre-packed products?",
+   "Is the bakery the licensed manufacturer (the Netivot plant at הסוללים 1 appears in the Badatz Beit Yosef listing as a factory), and are its packaged products labelled under ת\"י 1145 or 1169/2011? This decides what the app must reproduce on product pages, including red symbols.",
+   "Kashrut: under חוק איסור הונאה בכשרות, what kashrut statements may the app make per branch and per product? The Badatz listing found earlier covers the Netivot factory; whether the Sderot and Kiryat Gat branches hold certificates was not checked.",
+   "Who is the legal entity that operates the app (name, ח.פ./ID, address) across the three branches? Are any branches franchises? This affects identity disclosure (14ג(א)(1), 4ב), where refunds are made, and who the database controller is.",
+   "Privacy setup: Is the customer database a 'מאגר מידע' in light of the 100,000 contact-only exception and any other customer data held? Which security level applies under תקנות הגנת הפרטיות (אבטחת מידע), 2017? What processor ('מחזיק') agreement is needed with the ordering platform, payment provider and SMS/email vendor? Should allergy notes be collected at all?",
+   "Does 17ו (direct-mail disclosures, including a registration number) apply to the bakery's own segmented marketing from a database that does not need registration after Amendment 13?",
+   "Are app push notifications and WhatsApp marketing messages 'electronic messages' under 30א? What consent flow does the app need for them?",
+   "Accessibility: confirm the business is not exempt under 35ו(ז) (עוסק פטור or average turnover up to NIS 100,000). Is an accessibility coordinator required (the size threshold was not checked)? Which ת\"י 5568 edition and WCAG version will an auditor apply? Does 19נא statutory compensation reach the internet-service regulations?",
+   "Can the app terms (תקנון) include limitation or arbitration clauses, given חוק החוזים האחידים and the font-size rules under section 4א? I did not research these.",
+   "Could not access or verify (all viewed 2026-10-24): gov.il HTML pages returned HTTP 403 to the fetch tool (Commission for Equal Rights guide, PPA service page on notice-obligation), so I used gov.il PDFs only. Nevo pages could not be downloaded directly (403, IP blocked); I read them through the fetch tool only, which returned summaries rather than full verbatim text. Full statutory wording was therefore read from Wikisource copies (secondary) and cross-checked against Nevo summaries. Knesset PDFs (fs.knesset.gov.il) and the Consumer Protection Authority brochure PDF were blocked. kolzchut.org.il returned 403. I could not locate the Commissioner's distance-sale price-display directive or the official text of the 25.12.2019 red-symbol online guidance. I did not see the body of section 30א on Nevo, only on Wikisource. Raw downloads are in /tmp/claude-0/-home-user-edon-studio/39250604-ba72-5066-b62c-771f07ec61a3/scratchpad/agents/law/dl"
+  ]
+ },
+ "verify:branches": {
+  "branches": [
+   {
+    "city": "נתיבות",
+    "address": "שדרות ירושלים 136, נתיבות (Google Maps says it is inside מרכז מסחרי טדי קולק)",
+    "phone": "08-9752093",
+    "hours": "NOT CONFIRMED, sources disagree. The owner's own ordering page (haofeapp.com/order, viewed 2026-10-24, not launched) says: Sun-Thu 05:00-22:00, Fri 05:00-15:00, Motzei Shabbat 20:00-23:00, holiday hours by phone. Google Maps (limited view, 2026-10-24) shows Fri 05:00-16:00 and Sat 21:00-00:00 only. zips.co.il ('נכונות לינואר 2026') says Sun-Thu 05:30-22:00, Fri 05:00-16:00, Sat 20:00-23:30. bakerias (undated Facebook mirror) says Sun-Thu 06:00-22:00, Fri 06:00-14:00, Sat 18:30-22:00.",
+    "status": "active",
+    "confidence": "high",
+    "ok_to_show_as_active": true,
+    "supporting_sources": [
+     "https://www.instagram.com/p/DegS23RIAJ-/ (own post 2026-10-15; I re-rendered the caption and decoded the date from the shortcode on 2026-10-24): 'האופה מחכה לכם בנתיבות, בשדרות ובקריית גת'",
+     "https://haofeapp.com/order (owner's app, viewed 2026-10-24, nothing submitted): 'לאיסוף מסניף נתיבות', 'שדרות ירושלים 136, נתיבות · איסוף עצמי בלבד', 08-9752093",
+     "https://www.google.com/maps?cid=11794734948161764260 (viewed 2026-10-24; raw data re-checked): שדרות ירושלים 136, +972 8-975-2093, 'המקום סגור · ייפתח בשעה 21:00', no closure flag",
+     "https://zips.co.il/%D7%A2%D7%A1%D7%A7%D7%99%D7%9D/%D7%A0%D7%AA%D7%99%D7%91%D7%95%D7%AA/%D7%9E%D7%90%D7%A4%D7%99%D7%95%D7%AA/55941/%D7%94%D7%90%D7%95%D7%A4%D7%94-%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%9C%D7%97%D7%9D (hours as of Jan 2026; reviews up to 11.11.2025)",
+     "https://www.bakerias.com/IL/Netivot/895926247234370/%D7%94%D7%90%D7%95%D7%A4%D7%94---%D7%91%D7%95%D7%98%D7%99%D7%A7-%D7%9C%D7%97%D7%9D (mirrored Facebook post 30/11/2025: 'סניף נתיבות הפצצתם!')",
+     "https://netivotonline.com/haofe/ (modified 2024-11-05)"
+    ],
+    "conflicts": [
+     "Opening hours differ across four sources (listed in hours).",
+     "The phone was confirmed on the owner's own page today, but the chain's ordering line in the Instagram bio is 1700-55-22-55. The site should state which number to show for this branch."
+    ],
+    "needs_owner_confirmation": [
+     "Weekly opening hours, including Friday closing (15:00 / 16:00 / 14:00) and Motzei Shabbat opening (20:00 / 21:00 / 18:30)",
+     "Which phone to show: the branch line 08-9752093 or the chain ordering line 1700-55-22-55",
+     "Kashrut: Badatz Beit Yosef has NO record at שדרות ירושלים 136. Its Netivot entry is the factory at הסוללים 1. Do not show a kashrut badge for this store until the owner gives the certifier",
+     "Calling this the 'main/flagship' branch is an inference from the Facebook and Instagram location ids, not something the owner has stated"
+    ]
+   },
+   {
+    "city": "שדרות",
+    "address": "יגאל אלון 4, שדרות",
+    "phone": "08-6491122",
+    "hours": "NOT CONFIRMED. Google Maps (limited view, 2026-10-24) shows Fri 05:00-16:00 and Sat 20:00-00:00 only. zips.co.il ('נכונות לינואר 2026') says Sun-Thu 05:30-22:00, Fri 05:00-16:00, Sat 20:00-00:00. d.co.il says Sun-Thu 7:30-19:30, Fri 9:00-13:00, but this looks like a default value, since the Kiryat Gat entry is identical. Do not use it.",
+    "status": "active",
+    "confidence": "high",
+    "ok_to_show_as_active": true,
+    "supporting_sources": [
+     "https://www.instagram.com/p/DeghqXvtZje/ (@haofe_sderot, 2026-10-15; I checked the caption in the saved embed and decoded the date): 'מחכים לכם-יגאל אלון 4 שדרות'",
+     "https://www.instagram.com/p/DetORsxtzJW/ (@haofe_sderot, 2026-10-20): 'מחכים לכם בסניף האופה שדרות'",
+     "https://www.instagram.com/p/DegS23RIAJ-/ (own post 2026-10-15) names שדרות",
+     "https://www.instagram.com/p/DeL3jB-CK0u/ (2026-10-07): the Sderot branch took a direct hit and the business carried on",
+     "https://www.google.com/maps?cid=10594881781052471767 (viewed 2026-10-24; raw data re-checked): יגאל אלון 4, +972 8-649-1122, 'המקום סגור · ייפתח בשעה 20:00', no closure flag",
+     "https://www.badatz.biz/search/?qs=%D7%94%D7%90%D7%95%D7%A4%D7%94 (I re-fetched it 2026-10-24): 'האופה בוטיק לחם – שדרות, יגאל אלון 4, 08-649-1122'",
+     "https://www.badatz.biz/biz/%d7%94%d7%90%d7%95%d7%a4%d7%94-%d7%91%d7%95%d7%98%d7%99%d7%a7-%d7%94%d7%9c%d7%97%d7%9d-%d7%a9%d7%93%d7%a8%d7%95%d7%aa/ (modified 2022-12-11): למהדרין חלבי + פרווה"
+    ],
+    "conflicts": [
+     "The street number appears as 6 in the 2024-09-26 Instagram post (DAYEStOClkT, re-rendered today: 'שדרות - יגאל אלון 6') and as 3 in an easy.co.il search snippet. The branch's own 2026-10-15 post, Google Maps and Badatz all say 4. I am keeping 4.",
+     "Opening hours differ (Google vs zips vs d.co.il)."
+    ],
+    "needs_owner_confirmation": [
+     "The phone 08-6491122 appears on Google Maps, Badatz (page last modified 2022) and in an unverified snippet of the @haofe_sderot bio. No 2026 post of the business's own shows it",
+     "Weekly opening hours",
+     "Street number 4 (vs 6 in the 2024 post)",
+     "Kashrut wording: Badatz lists למהדרין חלבי + למהדרין פרווה. It shows no expiry date online"
+    ]
+   },
+   {
+    "city": "קריית גת",
+    "address": "הרימון 70, קריית גת (the opening post adds 'בנין תיקשוב, ליד הארנונה')",
+    "phone": "UNRESOLVED: 08-6669750 (branch Instagram bio) / 1700-55-22-55 (chain ordering line; also on Google Maps and Badatz) / 054-4306123 (rest.co.il and d.co.il)",
+    "hours": "NOT CONFIRMED. Google Maps (limited view, 2026-10-24) shows Fri 05:00-14:30, Sat closed, opens Sun 06:00. zips.co.il ('נכונות לינואר 2026') says Sun-Thu 06:00-22:00, Fri 05:00-17:00, Sat 20:00-23:00. The two conflict on Friday and on Motzei Shabbat.",
+    "status": "active",
+    "confidence": "high",
+    "ok_to_show_as_active": true,
+    "supporting_sources": [
+     "https://www.instagram.com/p/DeJXIltIyeh/ (@haofe_kiryatgat, 2026-10-06; caption checked, date decoded): 'סניף האופה בקריית גת ... 📍 הרימון 70, קריית גת'",
+     "https://www.instagram.com/p/DegS23RIAJ-/ (own post 2026-10-15) names קריית גת",
+     "https://www.instagram.com/haofe_kiryatgat/ (bio in the saved profile JSON, 2026-10-24): 'רח' הרימון 70 קרית גת 08-6669750'",
+     "https://www.google.com/maps?cid=4460162658001013556 (viewed 2026-10-24; raw data re-checked): הרימון 70, +972 1-700-552-255, 'המקום סגור · ייפתח ביום יום א׳', no closure flag",
+     "https://www.badatz.biz/search/?qs=%D7%94%D7%90%D7%95%D7%A4%D7%94 (I re-fetched it 2026-10-24): 'האופה בוטיק לחם – קריית גת, הרימון 70, 1700-552255'",
+     "https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2F110513465103753%2Fposts%2F113688008119632%2F (I re-rendered it 2026-10-24): 'קרית גת!! פתחנו!! הרימון 70 בנין תיקשוב' (post of 2022-08-22)"
+    ],
+    "conflicts": [
+     "Three different phone numbers (see phone).",
+     "Hours conflict between Google and zips on Friday closing and on whether it opens on Motzei Shabbat."
+    ],
+    "needs_owner_confirmation": [
+     "Which phone to publish: 08-6669750, 1700-55-22-55 or 054-4306123",
+     "Weekly hours, especially whether the branch opens on Motzei Shabbat",
+     "Kashrut: Badatz lists ONLY למהדרין פרווה for this branch, unlike Sderot (חלבי + פרווה). Do not show a single chain-wide kashrut level",
+     "The Google listing seems unclaimed ('תביעת בעלות'). That is an inference; the owner may want to claim it"
+    ]
+   },
+   {
+    "city": "בית שמש",
+    "address": "שדרות האמוראים 12, בית שמש",
+    "phone": "1-700-552-255 (on the closed Google listing)",
+    "hours": "",
+    "status": "closed",
+    "confidence": "high",
+    "ok_to_show_as_active": false,
+    "supporting_sources": [
+     "https://www.google.com/maps/search/%D7%94%D7%90%D7%95%D7%A4%D7%94%20%D7%91%D7%95%D7%98%D7%99%D7%A7%20%D7%9C%D7%97%D7%9D%20%D7%91%D7%99%D7%AA%20%D7%A9%D7%9E%D7%A9?hl=iw (viewed 2026-10-24): the map pin reads 'האופה בוטיק לחם · סגור לצמיתות'. I checked the screenshot /tmp/claude-0/-home-user-edon-studio/39250604-ba72-5066-b62c-771f07ec61a3/scratchpad/agents/dirs/out/gm_bs_zoom.png myself",
+     "https://www.google.com/maps?cid=1648196331524428837",
+     "https://www.instagram.com/p/DAYEStOClkT/ (2024-09-26): listed then as 'בית שמש - האמוראים 12'",
+     "https://www.instagram.com/p/DeL3jB-CK0u/ (2026-10-07): past tense, 'היינו איתכם ... בבית שמש'. The 2026-10-15 branch list leaves Beit Shemesh out"
+    ],
+    "conflicts": [
+     "zips.co.il still shows opening hours for this listing; it was not updated after the closure.",
+     "The raw Google data contains the string 'סגור זמנית', but it belongs to the menu item 'סימון כסגור זמנית או הסרת המקום', not the listing's status. The status is permanently closed."
+    ],
+    "needs_owner_confirmation": [
+     "When it closed (unknown). Optional: whether the site should mention past branches at all"
+    ]
+   },
+   {
+    "city": "בית שמש",
+    "address": "קניון נעימי, בית שמש (no unit number)",
+    "phone": "",
+    "hours": "",
+    "status": "unknown",
+    "confidence": "low",
+    "ok_to_show_as_active": false,
+    "supporting_sources": [
+     "https://www.instagram.com/p/DAYEStOClkT/ (2024-09-26; I re-rendered it 2026-10-24): 'בית שמש - קניון נעימי'. This is the only source",
+     "zips.co.il Beit Shemesh review of 02.08.2023 mentions 'האופה קניון נעימי'. This may be the same place as האמוראים 12, which suggests the two may be a single location (my inference)"
+    ],
+    "conflicts": [
+     "Possibly the same physical location as שדרות האמוראים 12, listed twice in the 2024 post. Unresolved.",
+     "It is missing from every 2026 branch list and from the Instagram bio ('שדרות • קריית גת • נתיבות'), and Google Maps has no live listing for it."
+    ],
+    "needs_owner_confirmation": [
+     "Whether a separate קניון נעימי branch existed, and whether it has closed (probably closed, by inference)"
+    ]
+   }
+  ],
+  "production_site": "הסוללים 1, אזור התעשייה, נתיבות. The source is Badatz Beit Yosef: 'האופה בוטיק לחם – נתיבות', category 'מפעלים', למהדרין חלבי + פרווה. I re-confirmed it in the Badatz search on 2026-10-24; the page was last modified 2023-02-26. It is a production plant, not a retail branch, and it has no public phone or hours. The Instagram bio ('רשת מאפיות ובית ייצור') and the Walla article of 14.12.2021 ('הקמנו מפעל ייצור') confirm that a production house exists, but no 2025-2026 source ties it to this address. The owner must confirm it before it is shown, and it should not be listed as a place customers can visit.",
+  "rejected_claims": [
+   {
+    "claim": "Sderot branch is at יגאל אלון 6",
+    "reason": "Only the 2024-09-26 Instagram post says 6. The branch's own post of 2026-10-15 (DeghqXvtZje), Google Maps (viewed 2026-10-24) and Badatz all say יגאל אלון 4."
+   },
+   {
+    "claim": "Sderot branch is at יגאל אלון 3 (easy.co.il/page/10142008)",
+    "reason": "Seen only as a search snippet; the page is blocked by Cloudflare. Every primary source contradicts it."
+   },
+   {
+    "claim": "Sderot hours Sun-Thu 7:30-19:30, Fri 9:00-13:00 (d.co.il)",
+    "reason": "The Kiryat Gat d.co.il entry has identical hours, so this looks like a default value. It contradicts Google and zips (2026). Do not publish."
+   },
+   {
+    "claim": "Beit Shemesh listing is 'סגור זמנית' (temporarily closed)",
+    "reason": "That string in the Google data is the menu label 'סימון כסגור זמנית או הסרת המקום'. The pin shows 'סגור לצמיתות' (screenshot checked)."
+   },
+   {
+    "claim": "Any Beit Shemesh branch is active",
+    "reason": "Google marks האמוראים 12 'סגור לצמיתות'. The 2026-10-07 post uses the past tense, and the 2026-10-15 post and the bio list only Netivot, Sderot and Kiryat Gat."
+   },
+   {
+    "claim": "Ordering is available online at haofeapp.com/order",
+    "reason": "The owner says it is not active yet. Show it as 'coming soon' only, with no working order link or button. Note: the page already loads publicly with a full order form (viewed 2026-10-24, nothing submitted), so the owner may want to hide it until launch."
+   },
+   {
+    "claim": "Badatz pages were updated 29.11.2025 / 18.12.2025 / 28.05.2026",
+    "reason": "These dates came from a search-engine summary and are not on the pages. The page metadata says modified 2022-12-11 (Sderot), 2025-04-02 (Kiryat Gat) and 2023-02-26 (factory)."
+   },
+   {
+    "claim": "The whole chain (all branches) is certified 'מהדרין חלבי + פרווה' by Badatz",
+    "reason": "Kiryat Gat is listed as למהדרין פרווה only, and the Netivot retail store (שדרות ירושלים 136) has no Badatz record. zips' generic line 'המאפייה מוכרת בכשרות' names no certifier and is not evidence."
+   },
+   {
+    "claim": "'האופה בית שמש', מורדי הגטאות 6, 050-8871227 is a HaOfe branch",
+    "reason": "Different name format and phone, and no link to the chain. Treated as unrelated."
+   },
+   {
+    "claim": "Google pin 'האופה, קרית גת' at 31.5866, 34.7894 is a second Kiryat Gat branch",
+    "reason": "The pin has no details and its place page rendered empty. It is unidentified and has no supporting source."
+   },
+   {
+    "claim": "The 'בוטיק האופה' bread sold at Victory supermarkets comes from this chain's production house",
+    "reason": "Unverified, with no source linking the brand to this business. Do not claim retail distribution."
+   },
+   {
+    "claim": "Calcalist 'האופה משדרות' (10.12.23) is about this business",
+    "reason": "The article is about Amos Huri of מאפיית איכות מהדרין, not HaOfe."
+   },
+   {
+    "claim": "Businesses named 'האופה לחם מן הארץ' (@haofe__bakery, Kadima), 'האופה מבגדד', 'פינת האופה' (Be'er Sheva/Arad), 'מאפיית האופה' (Be'er Sheva), 'האופה מסמרקנד', 'קונדטוריית האופה מפריז', 'בית האופה' and 'האופה בעיר' are part of the chain",
+    "reason": "Different names, cities, phones and accounts. They are unrelated and must be excluded."
+   },
+   {
+    "claim": "Kiryat Gat phone 054-4306123 (rest.co.il and d.co.il, updated 16/12/2025)",
+    "reason": "Not rejected outright, but not published either. Its origin is unknown, and it conflicts with the branch's own Instagram bio (08-6669750) and with Google and Badatz (1700-55-22-55). It stays in needs_owner_confirmation."
+   }
+  ],
+  "summary": "Verdict on 2026-10-24: three branches are confirmed active and can be shown. I tried to refute each one and could not.\n\n**Active branches**\n- **Netivot**, שדרות ירושלים 136, 08-9752093. Evidence: the chain's own post of 2026-10-15 names the city, and the owner's own ordering page confirms the address and phone. Google Maps shows normal hours with no closure flag.\n- **Sderot**, יגאל אלון 4. Evidence: the branch's own posts of 2026-10-15 and 2026-10-20 state that address. Google and Badatz also list it.\n- **Kiryat Gat**, הרימון 70. Evidence: the branch's own post of 2026-10-06 and its Instagram bio. Google and Badatz also list it. The Facebook post announcing the opening is dated 2022-08-22.\n\n**How I checked**\n- I re-rendered the key Instagram posts myself and decoded each post's date from its shortcode; every date matched what the agents reported.\n- I re-fetched the Badatz search (it shows three HaOfe entries) and re-read the saved Google Maps data.\n- I re-rendered the Kiryat Gat opening post on Facebook and re-opened haofeapp.com/order. I submitted nothing.\n\n**Not to be shown as active**\n- **Beit Shemesh, שדרות האמוראים 12:** closed. Google shows 'סגור לצמיתות' and I confirmed it in the screenshot. The string 'סגור זמנית' in the raw data is only a menu label.\n- **Beit Shemesh, קניון נעימי:** status unknown, probably closed. The only source is a 2024 post.\n- **Netivot factory, הסוללים 1 א.ת:** a production site, not a branch for customers. The newest evidence is the Badatz page from 2023.\n\n**Unresolved, for the owner to confirm**\n- **Opening hours:** they disagree across Google, zips (stated as of January 2026), the owner's own app and the Facebook mirror. Every branch needs them confirmed.\n- **Kiryat Gat phone:** three different numbers: 08-6669750 from the branch's Instagram bio, 1700-55-22-55 the chain ordering line, 054-4306123 from directories.\n- **Sderot phone:** 08-6491122 appears in no 2026 post of the business's own.\n- **Kashrut differs by branch:**\n  - Sderot is מהדרין חלבי + פרווה.\n  - Kiryat Gat is מהדרין פרווה only.\n  - The Netivot store has no Badatz record.\n\n  So the site must not show one kashrut level for the whole chain.\n\n**Ordering app**\nhaofeapp.com/order is not active, according to the owner. The site should show it only as 'coming soon', for pickup from the Netivot branch, with no working link. The page already loads publicly with a full order form, which the owner may want to know about.\n\n**Could not access**\nrest.co.il returned no readable content when I re-fetched it, so its 16/12/2025 update stamp rests on the earlier agent's reading. Facebook timelines, easy.co.il and Google's full weekly hours stayed blocked, as the agents reported.\n\nMy verification files are in /tmp/claude-0/-home-user-edon-studio/39250604-ba72-5066-b62c-771f07ec61a3/scratchpad/agents/verify/."
+ }
+}

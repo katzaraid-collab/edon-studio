@@ -1,0 +1,324 @@
+{
+  "_readme": "Per-page <head> values for the production site. Replace https://haofe.example. og:image is one shared brand card until real per-branch photos exist (see plan.md section 4). Generated from meta.py; lengths checked: title <= 60, description <= 155.",
+  "pages": {
+    "/": {
+      "publish_when": "launch day",
+      "title": "האופה - בוטיק לחם | מאפייה בנתיבות, שדרות וקריית גת",
+      "meta_description": "לחמים, חלות לשישי, פרנה, בורקס ורוגלאך מהתנור של האופה. שלושה סניפים: שדרות ירושלים 136 נתיבות, יגאל אלון 4 שדרות והרימון 70 קריית גת.",
+      "canonical": "https://haofe.example/",
+      "robots": "index, follow",
+      "og": {
+        "og:type": "website",
+        "og:site_name": "האופה - בוטיק לחם",
+        "og:locale": "he_IL",
+        "og:url": "https://haofe.example/",
+        "og:title": "האופה - בוטיק לחם",
+        "og:description": "האופה מחכה לכם בנתיבות, בשדרות ובקריית גת. תבחרו את הסניף שלכם ובואו לבקר!",
+        "og:image": "https://haofe.example/og/haofe-1200x630.png",
+        "og:image:width": "1200",
+        "og:image:height": "630",
+        "og:image:alt": "הלוגו של האופה - בוטיק לחם על רקע שמנת, ומתחתיו: נתיבות · שדרות · קריית גת"
+      },
+      "twitter": {
+        "twitter:card": "summary_large_image",
+        "twitter:title": "האופה - בוטיק לחם",
+        "twitter:description": "האופה מחכה לכם בנתיבות, בשדרות ובקריית גת. תבחרו את הסניף שלכם ובואו לבקר!",
+        "twitter:image": "https://haofe.example/og/haofe-1200x630.png"
+      },
+      "lengths": {
+        "title": 51,
+        "meta_description": 134
+      }
+    },
+    "/branches": {
+      "publish_when": "launch day",
+      "title": "סניפי האופה - בוטיק לחם: נתיבות, שדרות וקריית גת",
+      "meta_description": "שלושה סניפים של האופה - בוטיק לחם: שדרות ירושלים 136 בנתיבות, יגאל אלון 4 בשדרות והרימון 70 בקריית גת. כתובת וניווט לכל סניף.",
+      "canonical": "https://haofe.example/branches",
+      "robots": "index, follow",
+      "og": {
+        "og:type": "website",
+        "og:site_name": "האופה - בוטיק לחם",
+        "og:locale": "he_IL",
+        "og:url": "https://haofe.example/branches",
+        "og:title": "סניפי האופה: נתיבות, שדרות וקריית גת",
+        "og:description": "תבחרו את הסניף שלכם ובואו לבקר! כתובת וניווט לכל אחד משלושת הסניפים.",
+        "og:image": "https://haofe.example/og/haofe-1200x630.png",
+        "og:image:width": "1200",
+        "og:image:height": "630",
+        "og:image:alt": "הלוגו של האופה - בוטיק לחם על רקע שמנת, ומתחתיו: נתיבות · שדרות · קריית גת"
+      },
+      "twitter": {
+        "twitter:card": "summary_large_image",
+        "twitter:title": "סניפי האופה: נתיבות, שדרות וקריית גת",
+        "twitter:description": "תבחרו את הסניף שלכם ובואו לבקר! כתובת וניווט לכל אחד משלושת הסניפים.",
+        "twitter:image": "https://haofe.example/og/haofe-1200x630.png"
+      },
+      "lengths": {
+        "title": 48,
+        "meta_description": 125
+      }
+    },
+    "/branches/netivot": {
+      "publish_when": "launch day",
+      "title": "מאפייה בנתיבות: האופה - בוטיק לחם, שדרות ירושלים 136",
+      "meta_description": "סניף האופה בנתיבות, שדרות ירושלים 136: לחמים, חלות ומאפים חלביים ופרווה מהתנור שלנו. טלפון לסניף 08-9752093. כתובת, ניווט ופרטי הסניף.",
+      "canonical": "https://haofe.example/branches/netivot",
+      "robots": "index, follow",
+      "og": {
+        "og:type": "website",
+        "og:site_name": "האופה - בוטיק לחם",
+        "og:locale": "he_IL",
+        "og:url": "https://haofe.example/branches/netivot",
+        "og:title": "האופה בנתיבות · שדרות ירושלים 136",
+        "og:description": "לחמים, חלות ומאפים מהתנור שלנו. שדרות ירושלים 136, נתיבות · 08-9752093",
+        "og:image": "https://haofe.example/og/haofe-1200x630.png",
+        "og:image:width": "1200",
+        "og:image:height": "630",
+        "og:image:alt": "הלוגו של האופה - בוטיק לחם על רקע שמנת, ומתחתיו: נתיבות · שדרות · קריית גת"
+      },
+      "twitter": {
+        "twitter:card": "summary_large_image",
+        "twitter:title": "האופה בנתיבות · שדרות ירושלים 136",
+        "twitter:description": "לחמים, חלות ומאפים מהתנור שלנו. שדרות ירושלים 136, נתיבות · 08-9752093",
+        "twitter:image": "https://haofe.example/og/haofe-1200x630.png"
+      },
+      "lengths": {
+        "title": 52,
+        "meta_description": 134
+      }
+    },
+    "/branches/sderot": {
+      "publish_when": "when the owner confirms the Sderot phone; until then link to /branches#sderot",
+      "title": "מאפייה בשדרות: האופה - בוטיק לחם, יגאל אלון 4",
+      "meta_description": "סניף האופה בשדרות, ברחוב יגאל אלון 4: מאפים וקפה במרפסת של הסניף. כתובת, ניווט ופרטי הסניף, ועדכונים מהסניף באינסטגרם @haofe_sderot.",
+      "canonical": "https://haofe.example/branches/sderot",
+      "robots": "index, follow",
+      "og": {
+        "og:type": "website",
+        "og:site_name": "האופה - בוטיק לחם",
+        "og:locale": "he_IL",
+        "og:url": "https://haofe.example/branches/sderot",
+        "og:title": "האופה בשדרות · יגאל אלון 4",
+        "og:description": "מחכים לכם ביגאל אלון 4, שדרות. מאפים, קפה והמרפסת שלנו.",
+        "og:image": "https://haofe.example/og/haofe-1200x630.png",
+        "og:image:width": "1200",
+        "og:image:height": "630",
+        "og:image:alt": "הלוגו של האופה - בוטיק לחם על רקע שמנת, ומתחתיו: נתיבות · שדרות · קריית גת"
+      },
+      "twitter": {
+        "twitter:card": "summary_large_image",
+        "twitter:title": "האופה בשדרות · יגאל אלון 4",
+        "twitter:description": "מחכים לכם ביגאל אלון 4, שדרות. מאפים, קפה והמרפסת שלנו.",
+        "twitter:image": "https://haofe.example/og/haofe-1200x630.png"
+      },
+      "lengths": {
+        "title": 45,
+        "meta_description": 132
+      }
+    },
+    "/branches/kiryat-gat": {
+      "publish_when": "when the owner picks the Kiryat Gat phone; until then link to /branches#kiryat-gat",
+      "title": "מאפייה בקריית גת: האופה - בוטיק לחם, הרימון 70",
+      "meta_description": "סניף האופה בקריית גת, הרימון 70: מקום לעצור בו באמצע היום, עם ישיבה במקום, קפה, מאפים, עוגות וכריכים. כתובת, ניווט ופרטי הסניף.",
+      "canonical": "https://haofe.example/branches/kiryat-gat",
+      "robots": "index, follow",
+      "og": {
+        "og:type": "website",
+        "og:site_name": "האופה - בוטיק לחם",
+        "og:locale": "he_IL",
+        "og:url": "https://haofe.example/branches/kiryat-gat",
+        "og:title": "האופה בקריית גת · הרימון 70",
+        "og:description": "קריית גת, אנחנו מחכים לכם: קפה, מאפים ומקום נעים לשבת. הרימון 70.",
+        "og:image": "https://haofe.example/og/haofe-1200x630.png",
+        "og:image:width": "1200",
+        "og:image:height": "630",
+        "og:image:alt": "הלוגו של האופה - בוטיק לחם על רקע שמנת, ומתחתיו: נתיבות · שדרות · קריית גת"
+      },
+      "twitter": {
+        "twitter:card": "summary_large_image",
+        "twitter:title": "האופה בקריית גת · הרימון 70",
+        "twitter:description": "קריית גת, אנחנו מחכים לכם: קפה, מאפים ומקום נעים לשבת. הרימון 70.",
+        "twitter:image": "https://haofe.example/og/haofe-1200x630.png"
+      },
+      "lengths": {
+        "title": 46,
+        "meta_description": 127
+      }
+    },
+    "/products": {
+      "publish_when": "when the owner approves the product list",
+      "title": "לחמים, חלות ומאפים | האופה - בוטיק לחם",
+      "meta_description": "מה אופים בהאופה: באגט, ג׳בטה ופיתה, חלות וצמה ירושלמית לשישי, פרנה, מאפים חלביים ופרווה כמו בורקס גבינה ורוגלאך, וסופגניות בעונה.",
+      "canonical": "https://haofe.example/products",
+      "robots": "index, follow",
+      "og": {
+        "og:type": "website",
+        "og:site_name": "האופה - בוטיק לחם",
+        "og:locale": "he_IL",
+        "og:url": "https://haofe.example/products",
+        "og:title": "מה יש בקופסה · האופה - בוטיק לחם",
+        "og:description": "לחמים, חלות לשישי, פרנה, בורקס, רוגלאך וסופגניות בעונה. מהתנור של האופה.",
+        "og:image": "https://haofe.example/og/haofe-1200x630.png",
+        "og:image:width": "1200",
+        "og:image:height": "630",
+        "og:image:alt": "הלוגו של האופה - בוטיק לחם על רקע שמנת, ומתחתיו: נתיבות · שדרות · קריית גת"
+      },
+      "twitter": {
+        "twitter:card": "summary_large_image",
+        "twitter:title": "מה יש בקופסה · האופה - בוטיק לחם",
+        "twitter:description": "לחמים, חלות לשישי, פרנה, בורקס, רוגלאך וסופגניות בעונה. מהתנור של האופה.",
+        "twitter:image": "https://haofe.example/og/haofe-1200x630.png"
+      },
+      "lengths": {
+        "title": 38,
+        "meta_description": 129
+      }
+    },
+    "/about": {
+      "publish_when": "when the owner approves the story",
+      "title": "הסיפור שלנו | האופה - בוטיק לחם",
+      "meta_description": "איך מאפייה אחת בנתיבות הפכה לשלושה סניפים ולבית ייצור: הסיפור של האופה - בוטיק לחם, מנתיבות דרך שדרות ועד קריית גת.",
+      "canonical": "https://haofe.example/about",
+      "robots": "index, follow",
+      "og": {
+        "og:type": "website",
+        "og:site_name": "האופה - בוטיק לחם",
+        "og:locale": "he_IL",
+        "og:url": "https://haofe.example/about",
+        "og:title": "הסיפור של האופה",
+        "og:description": "מאפייה אחת בנתיבות, שלושה סניפים ובית ייצור.",
+        "og:image": "https://haofe.example/og/haofe-1200x630.png",
+        "og:image:width": "1200",
+        "og:image:height": "630",
+        "og:image:alt": "הלוגו של האופה - בוטיק לחם על רקע שמנת, ומתחתיו: נתיבות · שדרות · קריית גת"
+      },
+      "twitter": {
+        "twitter:card": "summary_large_image",
+        "twitter:title": "הסיפור של האופה",
+        "twitter:description": "מאפייה אחת בנתיבות, שלושה סניפים ובית ייצור.",
+        "twitter:image": "https://haofe.example/og/haofe-1200x630.png"
+      },
+      "lengths": {
+        "title": 31,
+        "meta_description": 115
+      }
+    },
+    "/business": {
+      "publish_when": "when the owner approves the wording and a business contact",
+      "title": "לחם לסופרמרקטים ולעסקים | האופה - בוטיק לחם",
+      "meta_description": "בית הייצור של האופה - בוטיק לחם מספק לחמים לסופרמרקטים ברחבי הארץ. מידע לסופרים, לרשתות ולעסקים שרוצים את הלחם שלנו על המדף.",
+      "canonical": "https://haofe.example/business",
+      "robots": "index, follow",
+      "og": {
+        "og:type": "website",
+        "og:site_name": "האופה - בוטיק לחם",
+        "og:locale": "he_IL",
+        "og:url": "https://haofe.example/business",
+        "og:title": "הלחם של האופה, גם על המדף בסופר",
+        "og:description": "בית הייצור של האופה מספק לחמים לסופרמרקטים ברחבי הארץ.",
+        "og:image": "https://haofe.example/og/haofe-1200x630.png",
+        "og:image:width": "1200",
+        "og:image:height": "630",
+        "og:image:alt": "הלוגו של האופה - בוטיק לחם על רקע שמנת, ומתחתיו: נתיבות · שדרות · קריית גת"
+      },
+      "twitter": {
+        "twitter:card": "summary_large_image",
+        "twitter:title": "הלחם של האופה, גם על המדף בסופר",
+        "twitter:description": "בית הייצור של האופה מספק לחמים לסופרמרקטים ברחבי הארץ.",
+        "twitter:image": "https://haofe.example/og/haofe-1200x630.png"
+      },
+      "lengths": {
+        "title": 43,
+        "meta_description": 124
+      }
+    },
+    "/accessibility": {
+      "publish_when": "launch day",
+      "title": "הצהרת נגישות | האופה - בוטיק לחם",
+      "meta_description": "הצהרת הנגישות של אתר האופה - בוטיק לחם: מה הונגש באתר, מה עוד בטיפול, ואיך פונים אלינו בנושא נגישות.",
+      "canonical": "https://haofe.example/accessibility",
+      "robots": "index, follow",
+      "og": {
+        "og:type": "website",
+        "og:site_name": "האופה - בוטיק לחם",
+        "og:locale": "he_IL",
+        "og:url": "https://haofe.example/accessibility",
+        "og:title": "הצהרת נגישות · האופה",
+        "og:description": "מה הונגש באתר האופה ואיך פונים אלינו בנושא נגישות.",
+        "og:image": "https://haofe.example/og/haofe-1200x630.png",
+        "og:image:width": "1200",
+        "og:image:height": "630",
+        "og:image:alt": "הלוגו של האופה - בוטיק לחם על רקע שמנת, ומתחתיו: נתיבות · שדרות · קריית גת"
+      },
+      "twitter": {
+        "twitter:card": "summary_large_image",
+        "twitter:title": "הצהרת נגישות · האופה",
+        "twitter:description": "מה הונגש באתר האופה ואיך פונים אלינו בנושא נגישות.",
+        "twitter:image": "https://haofe.example/og/haofe-1200x630.png"
+      },
+      "lengths": {
+        "title": 32,
+        "meta_description": 100
+      }
+    },
+    "/privacy": {
+      "publish_when": "launch day",
+      "title": "מדיניות פרטיות | האופה - בוטיק לחם",
+      "meta_description": "מדיניות הפרטיות של אתר האופה - בוטיק לחם: איזה מידע האתר אוסף, למה, ואיך מבקשים לעיין בו או לתקן אותו.",
+      "canonical": "https://haofe.example/privacy",
+      "robots": "index, follow",
+      "og": {
+        "og:type": "website",
+        "og:site_name": "האופה - בוטיק לחם",
+        "og:locale": "he_IL",
+        "og:url": "https://haofe.example/privacy",
+        "og:title": "מדיניות פרטיות · האופה",
+        "og:description": "איזה מידע אתר האופה אוסף ולמה.",
+        "og:image": "https://haofe.example/og/haofe-1200x630.png",
+        "og:image:width": "1200",
+        "og:image:height": "630",
+        "og:image:alt": "הלוגו של האופה - בוטיק לחם על רקע שמנת, ומתחתיו: נתיבות · שדרות · קריית גת"
+      },
+      "twitter": {
+        "twitter:card": "summary_large_image",
+        "twitter:title": "מדיניות פרטיות · האופה",
+        "twitter:description": "איזה מידע אתר האופה אוסף ולמה.",
+        "twitter:image": "https://haofe.example/og/haofe-1200x630.png"
+      },
+      "lengths": {
+        "title": 34,
+        "meta_description": 102
+      }
+    },
+    "404": {
+      "publish_when": "launch day; served with HTTP 404",
+      "title": "העמוד לא נמצא | האופה - בוטיק לחם",
+      "meta_description": "העמוד שחיפשתם לא נמצא. אפשר לחזור לדף הבית או לבחור סניף: נתיבות, שדרות או קריית גת.",
+      "canonical": null,
+      "robots": "noindex",
+      "og": {
+        "og:type": "website",
+        "og:site_name": "האופה - בוטיק לחם",
+        "og:locale": "he_IL",
+        "og:url": null,
+        "og:title": "העמוד לא נמצא",
+        "og:description": "אפשר לחזור לדף הבית או לבחור סניף.",
+        "og:image": "https://haofe.example/og/haofe-1200x630.png",
+        "og:image:width": "1200",
+        "og:image:height": "630",
+        "og:image:alt": "הלוגו של האופה - בוטיק לחם על רקע שמנת, ומתחתיו: נתיבות · שדרות · קריית גת"
+      },
+      "twitter": {
+        "twitter:card": "summary_large_image",
+        "twitter:title": "העמוד לא נמצא",
+        "twitter:description": "אפשר לחזור לדף הבית או לבחור סניף.",
+        "twitter:image": "https://haofe.example/og/haofe-1200x630.png"
+      },
+      "lengths": {
+        "title": 33,
+        "meta_description": 84
+      }
+    }
+  }
+}
