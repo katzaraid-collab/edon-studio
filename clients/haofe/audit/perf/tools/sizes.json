@@ -1,0 +1,254 @@
+[
+ {
+  "vw": 360,
+  "inner": 360,
+  "container": 360,
+  "sc-plate": 360,
+  "plateDrawn": 705,
+  "plateBox": [
+   360,
+   396
+  ],
+  "sc-bag-img": 166,
+  "sc-wheat": 122,
+  "prod": 267,
+  "sc-plate:sizes": 360,
+  "sc-bag-img:sizes": 165.6,
+  "sc-wheat:sizes": 122.4,
+  "prod:sizes": 266.4
+ },
+ {
+  "vw": 390,
+  "inner": 390,
+  "container": 390,
+  "sc-plate": 390,
+  "plateDrawn": 763,
+  "plateBox": [
+   390,
+   429
+  ],
+  "sc-bag-img": 179,
+  "sc-wheat": 133,
+  "prod": 292,
+  "sc-plate:sizes": 390,
+  "sc-bag-img:sizes": 179.4,
+  "sc-wheat:sizes": 132.6,
+  "prod:sizes": 291.6
+ },
+ {
+  "vw": 414,
+  "inner": 414,
+  "container": 414,
+  "sc-plate": 414,
+  "plateDrawn": 810,
+  "plateBox": [
+   414,
+   455
+  ],
+  "sc-bag-img": 190,
+  "sc-wheat": 141,
+  "prod": 312,
+  "sc-plate:sizes": 414,
+  "sc-bag-img:sizes": 190.4,
+  "sc-wheat:sizes": 140.8,
+  "prod:sizes": 311.8
+ },
+ {
+  "vw": 600,
+  "inner": 600,
+  "container": 600,
+  "sc-plate": 600,
+  "plateDrawn": 1174,
+  "plateBox": [
+   600,
+   660
+  ],
+  "sc-bag-img": 276,
+  "sc-wheat": 204,
+  "prod": 469,
+  "sc-plate:sizes": 600,
+  "sc-bag-img:sizes": 276,
+  "sc-wheat:sizes": 204,
+  "prod:sizes": 468
+ },
+ {
+  "vw": 768,
+  "inner": 768,
+  "container": 768,
+  "sc-plate": 768,
+  "plateDrawn": 1504,
+  "plateBox": [
+   768,
+   845
+  ],
+  "sc-bag-img": 353,
+  "sc-wheat": 261,
+  "prod": 295,
+  "sc-plate:sizes": 768,
+  "sc-bag-img:sizes": 353.3,
+  "sc-wheat:sizes": 261.1,
+  "prod:sizes": 293.6
+ },
+ {
+  "vw": 820,
+  "inner": 820,
+  "container": 820,
+  "sc-plate": 820,
+  "plateDrawn": 1605,
+  "plateBox": [
+   820,
+   902
+  ],
+  "sc-bag-img": 377,
+  "sc-wheat": 279,
+  "prod": 317,
+  "sc-plate:sizes": 820,
+  "sc-bag-img:sizes": 377.2,
+  "sc-wheat:sizes": 278.8,
+  "prod:sizes": 315.4
+ },
+ {
+  "vw": 999,
+  "inner": 999,
+  "container": 999,
+  "sc-plate": 999,
+  "plateDrawn": 1956,
+  "plateBox": [
+   999,
+   1099
+  ],
+  "sc-bag-img": 460,
+  "sc-wheat": 340,
+  "prod": 392,
+  "sc-plate:sizes": 999,
+  "sc-bag-img:sizes": 459.5,
+  "sc-wheat:sizes": 339.7,
+  "prod:sizes": 390.6
+ },
+ {
+  "vw": 1000,
+  "inner": 1000,
+  "container": 1000,
+  "sc-plate": 1000,
+  "plateDrawn": 1002,
+  "plateBox": [
+   1000,
+   563
+  ],
+  "sc-bag-img": 250,
+  "sc-wheat": 240,
+  "prod": 239,
+  "sc-plate:sizes": 1000,
+  "sc-bag-img:sizes": 250,
+  "sc-wheat:sizes": 240,
+  "prod:sizes": 238
+ },
+ {
+  "vw": 1024,
+  "inner": 1024,
+  "container": 1024,
+  "sc-plate": 1024,
+  "plateDrawn": 1025,
+  "plateBox": [
+   1024,
+   576
+  ],
+  "sc-bag-img": 256,
+  "sc-wheat": 246,
+  "prod": 246,
+  "sc-plate:sizes": 1024,
+  "sc-bag-img:sizes": 256,
+  "sc-wheat:sizes": 245.8,
+  "prod:sizes": 244.7
+ },
+ {
+  "vw": 1180,
+  "inner": 1180,
+  "container": 1180,
+  "sc-plate": 1180,
+  "plateDrawn": 1182,
+  "plateBox": [
+   1180,
+   664
+  ],
+  "sc-bag-img": 295,
+  "sc-wheat": 283,
+  "prod": 290,
+  "sc-plate:sizes": 1180,
+  "sc-bag-img:sizes": 295,
+  "sc-wheat:sizes": 283.2,
+  "prod:sizes": 288.4
+ },
+ {
+  "vw": 1280,
+  "inner": 1280,
+  "container": 1280,
+  "sc-plate": 1280,
+  "plateDrawn": 1281,
+  "plateBox": [
+   1280,
+   720
+  ],
+  "sc-bag-img": 320,
+  "sc-wheat": 307,
+  "prod": 306,
+  "sc-plate:sizes": 1280,
+  "sc-bag-img:sizes": 320,
+  "sc-wheat:sizes": 307.2,
+  "prod:sizes": 306
+ },
+ {
+  "vw": 1366,
+  "inner": 1366,
+  "container": 1366,
+  "sc-plate": 1366,
+  "plateDrawn": 1367,
+  "plateBox": [
+   1366,
+   768
+  ],
+  "sc-bag-img": 342,
+  "sc-wheat": 328,
+  "prod": 306,
+  "sc-plate:sizes": 1366,
+  "sc-bag-img:sizes": 341.5,
+  "sc-wheat:sizes": 327.8,
+  "prod:sizes": 306
+ },
+ {
+  "vw": 1440,
+  "inner": 1440,
+  "container": 1440,
+  "sc-plate": 1440,
+  "plateDrawn": 1441,
+  "plateBox": [
+   1440,
+   810
+  ],
+  "sc-bag-img": 360,
+  "sc-wheat": 346,
+  "prod": 306,
+  "sc-plate:sizes": 1440,
+  "sc-bag-img:sizes": 360,
+  "sc-wheat:sizes": 345.6,
+  "prod:sizes": 306
+ },
+ {
+  "vw": 1920,
+  "inner": 1920,
+  "container": 1920,
+  "sc-plate": 1920,
+  "plateDrawn": 1922,
+  "plateBox": [
+   1920,
+   1080
+  ],
+  "sc-bag-img": 480,
+  "sc-wheat": 461,
+  "prod": 306,
+  "sc-plate:sizes": 1920,
+  "sc-bag-img:sizes": 480,
+  "sc-wheat:sizes": 460.8,
+  "prod:sizes": 306
+ }
+]

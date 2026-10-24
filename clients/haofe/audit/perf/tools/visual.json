@@ -1,0 +1,65 @@
+[
+ {
+  "key": "1280 px, light",
+  "variant": "images only",
+  "hA": 4281,
+  "hB": 4281,
+  "pct": 0.021
+ },
+ {
+  "key": "1280 px, light",
+  "variant": "option A (no LQIP)",
+  "hA": 4281,
+  "hB": 4281,
+  "pct": 0.115
+ },
+ {
+  "key": "1280 px, light",
+  "variant": "option B",
+  "hA": 4281,
+  "hB": 4281,
+  "pct": 0.56
+ },
+ {
+  "key": "390 px, light",
+  "variant": "images only",
+  "hA": 8080,
+  "hB": 8080,
+  "pct": 0.0
+ },
+ {
+  "key": "390 px, light",
+  "variant": "option A (no LQIP)",
+  "hA": 8080,
+  "hB": 8053,
+  "pct": 9.517
+ },
+ {
+  "key": "390 px, light",
+  "variant": "option B",
+  "hA": 8080,
+  "hB": 8053,
+  "pct": 9.598
+ },
+ {
+  "key": "1280 px, dark",
+  "variant": "images only",
+  "hA": 4281,
+  "hB": 4281,
+  "pct": 0.015
+ },
+ {
+  "key": "1280 px, dark",
+  "variant": "option A (no LQIP)",
+  "hA": 4281,
+  "hB": 4281,
+  "pct": 0.113
+ },
+ {
+  "key": "1280 px, dark",
+  "variant": "option B",
+  "hA": 4281,
+  "hB": 4281,
+  "pct": 0.56
+ }
+]

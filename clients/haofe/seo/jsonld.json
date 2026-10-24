@@ -1,0 +1,593 @@
+{
+  "_readme": [
+    "JSON-LD for האופה - בוטיק לחם. Draft 2026-10-24 by the SEO step. Every value below comes from research.json (verify:branches and research:*) or the owner's own accounts; sources are in _sources.",
+    "Placeholder origin https://haofe.example must be replaced everywhere before deploy (.example is reserved, so a missed one is obvious).",
+    "pages: paste each page's jsonld object into that page as <script type=\"application/ld+json\"> ... </script>, rendered in the HTML on the server (not injected by client JS).",
+    "pending_owner_confirmation: values that exist but are not confirmed, or are MISSING. Merge only after confirmation.",
+    "after_app_launch: add only when the ordering app is live. While orderApp.status is 'soon', the string haofeapp must not appear in any built page, sitemap or JSON-LD.",
+    "Not marked up on purpose: Beit Shemesh (closed / unknown), the production plant at הסוללים 1 (not a customer location, last confirmed 2023), aggregateRating/review (self-serving reviews are not eligible), priceRange (no prices published), servesCuisine.",
+    "If a JS framework serializes this, escape every < as \\u003c."
+  ],
+  "_placeholder_origin": "https://haofe.example",
+  "_id_map_from_earlier_draft": {
+    "https://haofe.example/#bakery-netivot": "https://haofe.example/branches/netivot#bakery",
+    "https://haofe.example/#bakery-sderot": "https://haofe.example/branches/sderot#bakery",
+    "https://haofe.example/#bakery-kiryat-gat": "https://haofe.example/branches/kiryat-gat#bakery",
+    "_why": "the site now has a page per branch (plan.md section 2); ids follow the page that owns each node. The earlier draft is /home/user/edon-studio/clients/haofe/research/schema.md"
+  },
+  "_sources": {
+    "Organization.name": "TikTok @haofe_bakery1 nickname (saved fetch 2026-10-24 01:47 UTC); Instagram @haofe_bakery display name; Facebook brand page name (research:social, 2026-10-24)",
+    "Organization.alternateName": "logo wordmark; haofeapp.com PWA manifest name (research:app-domain)",
+    "Organization.description": "Instagram @haofe_bakery bio, word for word: 'רשת מאפיות ובית ייצור למאפים, לחמים ודברי פרימיום' (research:social other_findings, 2026-10-24)",
+    "Organization.contactPoint": "Instagram and TikTok bios: 'להזמנות: 1700-55-22-55'; same number on Google (Kiryat Gat) and Badatz (research:kiryat-gat other_findings)",
+    "Organization.sameAs": "own accounts: @haofe_bakery (owner confirmed as the verified account), @haofe_bakery1 (link sent by the owner; bio lists the three branch cities and the 1700 line)",
+    "Organization.logo": "/home/user/edon-studio/clients/haofe/brand/png/haofe-logo-512.png, traced from haofeapp.com/brand/icon-512.png; must be hosted at /brand/haofe-logo-512.png",
+    "Netivot": "address + phone: haofeapp.com/order branch panel (owner's own page, viewed 2026-10-24) and Google cid 11794734948161764260; alternateName: the app's branch panel 'האופה · בוטיק לחם נתיבות'",
+    "Sderot": "address: branch post https://www.instagram.com/p/DeghqXvtZje/ (2026-10-15), Google cid 10594881781052471767, Badatz; alternateName: @haofe_sderot display name; sameAs: account that published DeghqXvtZje and DetORsxtzJW",
+    "Kiryat Gat": "address: branch post https://www.instagram.com/p/DeJXIltIyeh/ (2026-10-06), branch bio, Google cid 4460162658001013556, Badatz; alternateName and sameAs: @haofe_kiryatgat profile",
+    "hasMap": "Google Maps cid URL of each listing, viewed 2026-10-24, none flagged closed"
+  },
+  "pages": {
+    "/": {
+      "when": "now (launch day)",
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://haofe.example/#organization",
+            "name": "האופה - בוטיק לחם",
+            "alternateName": "האופה",
+            "url": "https://haofe.example/",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://haofe.example/brand/haofe-logo-512.png",
+              "width": 512,
+              "height": 512
+            },
+            "description": "רשת מאפיות ובית ייצור למאפים, לחמים ודברי פרימיום",
+            "sameAs": [
+              "https://www.instagram.com/haofe_bakery/",
+              "https://www.tiktok.com/@haofe_bakery1"
+            ],
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "telephone": "+972-1700-55-22-55",
+              "contactType": "orders",
+              "availableLanguage": "he",
+              "areaServed": "IL"
+            },
+            "subOrganization": [
+              {
+                "@id": "https://haofe.example/branches/netivot#bakery"
+              },
+              {
+                "@id": "https://haofe.example/branches/sderot#bakery"
+              },
+              {
+                "@id": "https://haofe.example/branches/kiryat-gat#bakery"
+              }
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://haofe.example/#website",
+            "name": "האופה - בוטיק לחם",
+            "alternateName": "האופה",
+            "url": "https://haofe.example/",
+            "inLanguage": "he",
+            "publisher": {
+              "@id": "https://haofe.example/#organization"
+            }
+          }
+        ]
+      }
+    },
+    "/branches": {
+      "when": "now. Carries all three branches, because the branch cards are visible here. Sderot and Kiryat Gat keep url /branches#<slug> until their own pages go live",
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://haofe.example/#organization",
+            "name": "האופה - בוטיק לחם",
+            "url": "https://haofe.example/"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://haofe.example/branches#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "דף הבית",
+                "item": "https://haofe.example/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "סניפים",
+                "item": "https://haofe.example/branches"
+              }
+            ]
+          },
+          {
+            "@type": "Bakery",
+            "@id": "https://haofe.example/branches/netivot#bakery",
+            "name": "האופה - בוטיק לחם",
+            "alternateName": "האופה · בוטיק לחם נתיבות",
+            "url": "https://haofe.example/branches/netivot",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "שדרות ירושלים 136",
+              "addressLocality": "נתיבות",
+              "addressCountry": "IL"
+            },
+            "telephone": "+972-8-975-2093",
+            "hasMap": "https://www.google.com/maps?cid=11794734948161764260",
+            "parentOrganization": {
+              "@id": "https://haofe.example/#organization"
+            }
+          },
+          {
+            "@type": "Bakery",
+            "@id": "https://haofe.example/branches/sderot#bakery",
+            "name": "האופה - בוטיק לחם",
+            "alternateName": "האופה בוטיק לחם שדרות",
+            "url": "https://haofe.example/branches#sderot",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "יגאל אלון 4",
+              "addressLocality": "שדרות",
+              "addressCountry": "IL"
+            },
+            "hasMap": "https://www.google.com/maps?cid=10594881781052471767",
+            "sameAs": [
+              "https://www.instagram.com/haofe_sderot/"
+            ],
+            "parentOrganization": {
+              "@id": "https://haofe.example/#organization"
+            }
+          },
+          {
+            "@type": "Bakery",
+            "@id": "https://haofe.example/branches/kiryat-gat#bakery",
+            "name": "האופה - בוטיק לחם",
+            "alternateName": "האופה קרית גת",
+            "url": "https://haofe.example/branches#kiryat-gat",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "הרימון 70",
+              "addressLocality": "קריית גת",
+              "addressCountry": "IL"
+            },
+            "hasMap": "https://www.google.com/maps?cid=4460162658001013556",
+            "sameAs": [
+              "https://www.instagram.com/haofe_kiryatgat/"
+            ],
+            "parentOrganization": {
+              "@id": "https://haofe.example/#organization"
+            }
+          }
+        ]
+      }
+    },
+    "/branches/netivot": {
+      "when": "now: address and phone are confirmed by the owner's own ordering page and by Google",
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://haofe.example/#organization",
+            "name": "האופה - בוטיק לחם",
+            "url": "https://haofe.example/"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://haofe.example/branches/netivot#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "דף הבית",
+                "item": "https://haofe.example/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "סניפים",
+                "item": "https://haofe.example/branches"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "סניף נתיבות",
+                "item": "https://haofe.example/branches/netivot"
+              }
+            ]
+          },
+          {
+            "@type": "Bakery",
+            "@id": "https://haofe.example/branches/netivot#bakery",
+            "name": "האופה - בוטיק לחם",
+            "alternateName": "האופה · בוטיק לחם נתיבות",
+            "url": "https://haofe.example/branches/netivot",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "שדרות ירושלים 136",
+              "addressLocality": "נתיבות",
+              "addressCountry": "IL"
+            },
+            "telephone": "+972-8-975-2093",
+            "hasMap": "https://www.google.com/maps?cid=11794734948161764260",
+            "parentOrganization": {
+              "@id": "https://haofe.example/#organization"
+            }
+          }
+        ]
+      }
+    },
+    "/branches/sderot": {
+      "when": "only when /branches/sderot goes live (owner confirms the phone). Then also change url on the Sderot node in /branches to the same page URL",
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://haofe.example/#organization",
+            "name": "האופה - בוטיק לחם",
+            "url": "https://haofe.example/"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://haofe.example/branches/sderot#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "דף הבית",
+                "item": "https://haofe.example/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "סניפים",
+                "item": "https://haofe.example/branches"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "סניף שדרות",
+                "item": "https://haofe.example/branches/sderot"
+              }
+            ]
+          },
+          {
+            "@type": "Bakery",
+            "@id": "https://haofe.example/branches/sderot#bakery",
+            "name": "האופה - בוטיק לחם",
+            "alternateName": "האופה בוטיק לחם שדרות",
+            "url": "https://haofe.example/branches/sderot",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "יגאל אלון 4",
+              "addressLocality": "שדרות",
+              "addressCountry": "IL"
+            },
+            "hasMap": "https://www.google.com/maps?cid=10594881781052471767",
+            "sameAs": [
+              "https://www.instagram.com/haofe_sderot/"
+            ],
+            "parentOrganization": {
+              "@id": "https://haofe.example/#organization"
+            }
+          }
+        ]
+      }
+    },
+    "/branches/kiryat-gat": {
+      "when": "only when /branches/kiryat-gat goes live (owner picks the phone). Then also change url on the Kiryat Gat node in /branches",
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://haofe.example/#organization",
+            "name": "האופה - בוטיק לחם",
+            "url": "https://haofe.example/"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://haofe.example/branches/kiryat-gat#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "דף הבית",
+                "item": "https://haofe.example/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "סניפים",
+                "item": "https://haofe.example/branches"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "סניף קריית גת",
+                "item": "https://haofe.example/branches/kiryat-gat"
+              }
+            ]
+          },
+          {
+            "@type": "Bakery",
+            "@id": "https://haofe.example/branches/kiryat-gat#bakery",
+            "name": "האופה - בוטיק לחם",
+            "alternateName": "האופה קרית גת",
+            "url": "https://haofe.example/branches/kiryat-gat",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "הרימון 70",
+              "addressLocality": "קריית גת",
+              "addressCountry": "IL"
+            },
+            "hasMap": "https://www.google.com/maps?cid=4460162658001013556",
+            "sameAs": [
+              "https://www.instagram.com/haofe_kiryatgat/"
+            ],
+            "parentOrganization": {
+              "@id": "https://haofe.example/#organization"
+            }
+          }
+        ]
+      }
+    },
+    "/products": {
+      "when": "when /products goes live",
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://haofe.example/#organization",
+            "name": "האופה - בוטיק לחם",
+            "url": "https://haofe.example/"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://haofe.example/products#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "דף הבית",
+                "item": "https://haofe.example/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "מה יש בקופסה",
+                "item": "https://haofe.example/products"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "/business": {
+      "when": "when /business goes live",
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://haofe.example/#organization",
+            "name": "האופה - בוטיק לחם",
+            "url": "https://haofe.example/"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://haofe.example/business#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "דף הבית",
+                "item": "https://haofe.example/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "לעסקים",
+                "item": "https://haofe.example/business"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "/about": {
+      "when": "when /about goes live (story approved)",
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://haofe.example/#organization",
+            "name": "האופה - בוטיק לחם",
+            "url": "https://haofe.example/"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://haofe.example/about#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "דף הבית",
+                "item": "https://haofe.example/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "הסיפור שלנו",
+                "item": "https://haofe.example/about"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "pending_owner_confirmation": {
+    "_how": "Each entry is ready to merge into the node with that @id once the owner confirms the value. Do not merge anything here before that. Values marked MISSING have no verified value at all.",
+    "sderot_telephone": {
+      "merge_into": "https://haofe.example/branches/sderot#bakery",
+      "add": {
+        "telephone": "+972-8-649-1122"
+      },
+      "status": "awaiting owner confirmation",
+      "sources": "Google Maps cid 10594881781052471767 (viewed 2026-10-24); Badatz listing (page modified 2022-12-11); rest.co.il/rest/80331367 (updated 16/12/2025); Walla 2021-12-14. No 2026 post of the business's own shows it (research.json verify:branches)"
+    },
+    "kiryat_gat_telephone": {
+      "merge_into": "https://haofe.example/branches/kiryat-gat#bakery",
+      "add": {
+        "telephone": "MISSING: owner picks one of +972-8-666-9750 (branch Instagram bio), +972-1700-55-22-55 (Google, Badatz), +972-54-430-6123 (rest.co.il, d.co.il)"
+      },
+      "status": "unresolved: three conflicting numbers"
+    },
+    "opening_hours_all_branches": {
+      "merge_into": [
+        "https://haofe.example/branches/netivot#bakery",
+        "https://haofe.example/branches/sderot#bakery",
+        "https://haofe.example/branches/kiryat-gat#bakery"
+      ],
+      "template": {
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "https://schema.org/Sunday",
+              "https://schema.org/Monday",
+              "https://schema.org/Tuesday",
+              "https://schema.org/Wednesday",
+              "https://schema.org/Thursday"
+            ],
+            "opens": "MISSING",
+            "closes": "MISSING"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "https://schema.org/Friday",
+            "opens": "MISSING",
+            "closes": "MISSING"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "https://schema.org/Saturday",
+            "opens": "MISSING (Motzei Shabbat only)",
+            "closes": "MISSING"
+          }
+        ]
+      },
+      "status": "MISSING: four sources disagree for every branch (owner app, Google, zips.co.il, bakerias). A closing time after midnight is written as closes 00:00 or later per schema.org; holidays go in specialOpeningHoursSpecification"
+    },
+    "geo": {
+      "status": "add after the owner confirms each pin in its Google Business Profile",
+      "netivot": {
+        "merge_into": "https://haofe.example/branches/netivot#bakery",
+        "add": {
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 31.4182091,
+            "longitude": 34.5857644
+          }
+        },
+        "source": "Google Maps place data ChIJsxSE1GR-AhURpDsRtfFQr6M (viewed 2026-10-24)"
+      },
+      "sderot": {
+        "merge_into": "https://haofe.example/branches/sderot#bakery",
+        "add": {
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 31.5230457,
+            "longitude": 34.5957709
+          }
+        },
+        "source": "Google Maps place data ChIJoV70uNuBAhUR1_njhNiUCJM and the Badatz map pin, identical (viewed 2026-10-24)"
+      },
+      "kiryat_gat": {
+        "merge_into": "https://haofe.example/branches/kiryat-gat#bakery",
+        "add": {
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 31.6086063,
+            "longitude": 34.7699476
+          }
+        },
+        "source": "Google Maps place data ChIJZ-DXvpGRAhURNMucdk6u5T0 and the Badatz map pin, identical (viewed 2026-10-24)"
+      }
+    },
+    "founders_and_story": {
+      "merge_into": "https://haofe.example/#organization",
+      "add": {
+        "founder": [
+          {
+            "@type": "Person",
+            "name": "עמיר וקנין"
+          },
+          {
+            "@type": "Person",
+            "name": "עדיאל וקנין"
+          }
+        ]
+      },
+      "status": "only after the /about story is approved and published, so the markup matches visible text",
+      "source": "Walla sponsored article https://mumlazim.walla.co.il/item/3476827 (updated 2021-12-14); the owner confirmed the article is about them (research page, 2026-10-24)"
+    },
+    "facebook_sameAs": {
+      "status": "MISSING: login-walled; the owner must say which Facebook pages are official (brand page id 100063691744585 / 895926247234370, facebook.com/haofesderot, and up to three Kiryat Gat pages)"
+    },
+    "images": {
+      "status": "MISSING: no real photos yet. AI renders must never be used as image on a LocalBusiness node. Add one real exterior or interior photo URL per branch when it exists"
+    },
+    "kashrut": {
+      "status": "no schema property. Show it as visible text on each branch page, worded exactly as the certificate the owner provides (Badatz online, 2026-10-24: Sderot למהדרין חלבי + פרווה; Kiryat Gat למהדרין פרווה; Netivot store: no record)"
+    }
+  },
+  "after_app_launch": {
+    "_conditions": [
+      "The owner confirms in writing that online ordering is live and has placed a test order (WhatsApp confirmation and staff dashboard working).",
+      "The site's orderApp.status is switched to 'live' in the build config.",
+      "The URL is exactly https://haofeapp.com/order (https, no trailing slash, no www, never the root, which is the staff login).",
+      "Merge into the Netivot node only (same @id). Sderot and Kiryat Gat get nothing: the app covers Netivot pickup only."
+    ],
+    "_note": "Google does not document OrderAction, so this creates no order button in Search. It describes the action for other consumers (AI agents). In the Rich Results Test only check that it adds no errors.",
+    "merge_into": "https://haofe.example/branches/netivot#bakery",
+    "jsonld": {
+      "@context": "https://schema.org",
+      "@type": "Bakery",
+      "@id": "https://haofe.example/branches/netivot#bakery",
+      "potentialAction": {
+        "@type": "OrderAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://haofeapp.com/order",
+          "inLanguage": "he",
+          "actionPlatform": [
+            "https://schema.org/DesktopWebPlatform",
+            "https://schema.org/MobileWebPlatform"
+          ]
+        },
+        "deliveryMethod": "https://schema.org/OnSitePickup"
+      }
+    },
+    "optional_hasMenu": {
+      "hasMenu": "https://haofeapp.com/order",
+      "note": "Only if the owner is happy for the order page (49 items, no prices) to act as the menu. Use hasMenu or menu, not both."
+    }
+  }
+}

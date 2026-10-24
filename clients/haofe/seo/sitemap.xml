@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  sitemap.xml · האופה - בוטיק לחם · draft 2026-10-24
+  - Replace https://haofe.example with the real canonical origin (https, one host, no trailing slash on paths).
+  - List only canonical, indexable URLs that return 200. Generate it at build time from the same page list the site uses.
+  - lastmod = the date that page's content last changed (from the build), not the deploy date of every page.
+  - Never listed: /order (noindex while ordering is "soon"; it becomes a 302 to the app at launch),
+    any URL on the ordering app's domain, the 404 page, UTM-tagged URLs, staging hosts, /assets/ai/ images.
+  - changefreq and priority are left out on purpose: Google ignores them.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- launch day -->
+  <url><loc>https://haofe.example/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://haofe.example/branches</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://haofe.example/branches/netivot</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://haofe.example/accessibility</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://haofe.example/privacy</loc><lastmod>2026-10-24</lastmod></url>
+
+  <!-- add each line on the day that page goes live (condition in brackets) -->
+  <!-- <url><loc>https://haofe.example/branches/sderot</loc><lastmod>YYYY-MM-DD</lastmod></url>      [owner confirms Sderot phone] -->
+  <!-- <url><loc>https://haofe.example/branches/kiryat-gat</loc><lastmod>YYYY-MM-DD</lastmod></url>  [owner picks Kiryat Gat phone] -->
+  <!-- <url><loc>https://haofe.example/products</loc><lastmod>YYYY-MM-DD</lastmod></url>            [owner approves the product list] -->
+  <!-- <url><loc>https://haofe.example/business</loc><lastmod>YYYY-MM-DD</lastmod></url>            [owner approves wording and a business contact] -->
+  <!-- <url><loc>https://haofe.example/about</loc><lastmod>YYYY-MM-DD</lastmod></url>               [owner approves the story] -->
+</urlset>
