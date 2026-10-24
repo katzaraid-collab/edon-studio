@@ -29,7 +29,9 @@
   --wood: #5D3B23;    /* coffered ceiling, sampled */
   --on-wood: #F6EBDD;
   --tile: #A64E28;    /* floor tile, deepened for text contrast */
-  --tile2: #E9DFCE;   /* cream floor tile */
+  --tile2: #E9DFCE;   /* cream accent surface */
+  --floor-a: #161616; /* checker floor: black */
+  --floor-b: #F4F2EE; /* checker floor: white */
   --on-tile: #FFF8EF;
   --glow: rgba(255, 190, 110, .55);
   --line: #DCCFBD;
@@ -47,6 +49,8 @@
   --on-wood: #F3E8D8;
   --tile: #E0804F;
   --tile2: #2D2119;
+  --floor-a: #0A0A0A;
+  --floor-b: #CFCBC4;  /* white tile under evening light */
   --on-tile: #1B0F08;
   --glow: rgba(255, 176, 84, .8);
   --line: #3E2F24;
@@ -176,8 +180,8 @@
   display: grid; grid-auto-flow: column; grid-template-rows: repeat(2, 30px); grid-auto-columns: 30px;
   overflow: hidden; height: 60px;
 }
-.pa .floor span { background: var(--tile2); }
-.pa .floor span.t { background: var(--tile); }
+.pa .floor span { background: var(--floor-b); }
+.pa .floor span.t { background: var(--floor-a); }
 
 
 /* ===== 6. Shelf: section head, tabs, product grid ===== */

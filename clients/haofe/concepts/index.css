@@ -101,7 +101,7 @@ html { direction: rtl; }
 .prev-a {
   background:
     linear-gradient(180deg, #5D3B23 0 26%, #F2ECE2 26% 74%, transparent 74%),
-    repeating-conic-gradient(#A64E28 0 25%, #E9DFCE 0 50%) 0 100% / 26px 26px;
+    repeating-conic-gradient(#161616 0 25%, #F4F2EE 0 50%) 0 100% / 26px 26px;
   color: #2A1C14; align-content: center; padding-top: 40px;
 }
 .prev-a span { font: 400 40px/1 "Suez One", serif; }

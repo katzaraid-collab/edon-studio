@@ -321,7 +321,7 @@ td code, .mono { font: 12.5px/1.5 var(--mono); direction: ltr; unicode-bidi: iso
 /* the shop's checkered floor, tilted back in perspective */
 .ph--shop::before {
   content: ""; position: absolute; inset: 64% 0 0; z-index: -2;
-  background: repeating-conic-gradient(#A8552E 0 25%, #EAE1D2 0 50%) 0 0 / 40px 40px;
+  background: repeating-conic-gradient(#161616 0 25%, #F4F2EE 0 50%) 0 0 / 40px 40px;
   transform: perspective(300px) rotateX(38deg); transform-origin: top;
 }
 .ph--rack {
