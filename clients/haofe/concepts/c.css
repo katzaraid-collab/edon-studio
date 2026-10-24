@@ -1,0 +1,297 @@
+/* ===== Direction C · המדף החם — prototype styles =====
+   Documentary: full-bleed close-ups of crust and char, tall condensed type like rack
+   labels, a horizontal rack of products, the process in four real steps, and the
+   branches as a schedule board. Everything is scoped to the prototype root (.pc); the
+   shared photo placeholders (.ph*) and the .tbd marker come from shell.css.
+
+   Sections:
+     1. Tokens (light, then dark)
+     2. Base
+     3. Header and mobile menu
+     4. Hero: photo, headline, intro and buttons
+     5. Rack: section head, controls, track, progress bar
+     6. Process: steps and reel
+     7. Visit: the branch board
+     8. Footer
+     9. Mobile action bar
+    10. Motion (only when the root has .anim)
+    11. Wider containers (700px, 1000px)
+    12. Reduced motion */
+
+
+/* ===== 1. Tokens ===== */
+.pc {
+  --bg: #F4F4F1;      /* white production tile */
+  --surface: #FFFFFF;
+  --ink: #151311;     /* char */
+  --ink2: #565C61;    /* steel */
+  --ember: #B4441A;   /* the oven's orange, deepened for text */
+  --on-ember: #FFFFFF;
+  --steel: #C9CED1;
+  --scrim: rgba(12, 9, 7, .62);
+  --display: "Karantina", "Arial Narrow", "Arial Hebrew", sans-serif;
+  --body: "IBM Plex Sans Hebrew", "Arial Hebrew", Arial, sans-serif;
+  --ease: cubic-bezier(.16, 1, .3, 1);
+}
+.pc[data-mode="dark"] {
+  --bg: #121110;
+  --surface: #1B1A18;
+  --ink: #EEEBE6;
+  --ink2: #A3A9AD;
+  --ember: #FF8A4C;
+  --on-ember: #1A0B03;
+  --steel: #34322F;
+  --scrim: rgba(0, 0, 0, .7);
+}
+
+
+/* ===== 2. Base ===== */
+.pc {
+  container-type: inline-size; min-height: 100%;
+  background: var(--bg); color: var(--ink); font: 400 16.5px/1.65 var(--body);
+  transition: background-color .3s var(--ease), color .3s var(--ease);
+}
+.pc *, .pc *::before, .pc *::after { box-sizing: border-box; }
+.pc a { color: inherit; }
+.pc :focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; }
+.pc h1, .pc h2, .pc h3 { font-family: var(--display); font-weight: 700; line-height: .92; margin: 0; letter-spacing: .005em; }
+.pc p { margin: 0; }
+.pc .in { padding-inline: 20px; max-width: 1280px; margin-inline: auto; }
+/* sections receive focus after an in-prototype jump; the jump itself is the cue */
+.pc [data-section]:focus { outline: none; }
+.pc[data-mode="dark"] .ph { filter: brightness(.8) contrast(1.08); }
+/* small spaced-out label above a section title */
+.pc .lbl { font: 500 12px/1 var(--body); letter-spacing: .12em; color: var(--ink2); }
+
+
+/* ===== 3. Header and mobile menu ===== */
+.pc .hd { position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--steel); }
+.pc .hd .in { display: flex; align-items: center; gap: 14px; min-height: 58px; }
+
+.pc .mark { text-decoration: none; display: flex; align-items: baseline; gap: 10px; }
+.pc .mark b { font: 700 38px/1 var(--display); }
+.pc .mark span { font-size: 12px; letter-spacing: .1em; color: var(--ink2); }
+
+/* nav links: an ember underline grows from the right on hover */
+.pc .nav { display: none; gap: 26px; margin-inline: auto; }
+.pc .nav a {
+  text-decoration: none; font-weight: 500; font-size: 15px; padding: 10px 0;
+  background: linear-gradient(var(--ember), var(--ember)) right bottom / 0 2px no-repeat;
+  transition: background-size .4s var(--ease);
+}
+.pc .nav a:hover { background-size: 100% 2px; }
+
+.pc .hd-actions { display: flex; gap: 8px; align-items: center; margin-inline-start: auto; }
+
+/* dark-mode switch: a small track (i) whose knob slides when pressed */
+.pc .tg {
+  font: 500 14px var(--body); color: var(--ink); background: transparent; border: 1px solid var(--steel);
+  min-height: 44px; padding: 0 12px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+}
+.pc .tg i { width: 30px; height: 16px; border-radius: 999px; background: var(--steel); position: relative; }
+.pc .tg i::after {
+  content: ""; position: absolute; top: 2px; right: 2px; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--ink); transition: transform .35s var(--ease), background-color .3s;
+}
+.pc .tg[aria-pressed="true"] i::after { transform: translateX(-14px); background: var(--ember); }
+
+.pc .cta {
+  display: none; text-decoration: none; background: var(--ember); color: var(--on-ember);
+  font-weight: 600; font-size: 15px; padding: 0 18px; min-height: 44px; align-items: center;
+}
+
+.pc .menu-btn {
+  width: 44px; height: 44px; border: 1px solid var(--steel); background: transparent; color: var(--ink);
+  display: grid; place-items: center; cursor: pointer;
+}
+.pc .menu-btn svg { width: 22px; height: 22px; }
+.pc .menu { position: absolute; inset: 100% 0 auto; background: var(--ink); color: var(--bg); padding: 6px 20px 22px; display: grid; }
+.pc .menu a { text-decoration: none; font: 700 44px/1.1 var(--display); padding: 6px 0; border-bottom: 1px solid rgba(128,128,128,.3); }
+
+
+/* ===== 4. Hero: photo, headline, intro and buttons ===== */
+.pc .hero { position: relative; }
+.pc .hero .ph { width: 100%; aspect-ratio: 4 / 5; padding: 14px 20px; justify-content: flex-start; align-items: flex-start; }
+
+/* the headline sits on the photo over a dark scrim; each line (.ln) is a mask for its text */
+.pc .hero-type { position: absolute; inset: auto 0 0; padding: 0 20px 22px; color: #fff; background: linear-gradient(0deg, var(--scrim) 30%, transparent); }
+.pc .hero h1 { font-size: 104px; display: grid; }
+.pc .hero h1 .ln { display: block; overflow: hidden; padding-bottom: 6px; }
+.pc .hero h1 .ln span { display: block; }
+.pc .hero h1 .ln:nth-child(2) { color: #FFB27F; }
+
+.pc .hero-meta { display: grid; gap: 16px; padding-block: 20px 26px; border-bottom: 1px solid var(--steel); }
+.pc .hero-meta p { font-size: 18px; max-width: 46ch; }
+
+.pc .ctas { display: flex; flex-wrap: wrap; gap: 10px; }
+.pc .btn-c {
+  text-decoration: none; font-weight: 600; font-size: 16px; min-height: 50px; padding: 0 22px;
+  display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--ink);
+  transition: background-color .3s var(--ease), color .3s var(--ease);
+}
+.pc .btn-c svg { width: 18px; height: 18px; transition: transform .4s var(--ease); }
+.pc .btn-c:hover svg { transform: translateX(-4px); }
+.pc .btn-c--fill { background: var(--ink); color: var(--bg); }
+.pc .btn-c--fill:hover { background: var(--ember); border-color: var(--ember); color: var(--on-ember); }
+.pc .btn-c:not(.btn-c--fill):hover { background: var(--ink); color: var(--bg); }
+
+
+/* ===== 5. Rack: section head, controls, track, progress bar ===== */
+.pc .rack { padding-block: 44px 36px; }
+
+/* section head (also used by Visit) */
+.pc .sec-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 14px 24px; margin-bottom: 20px; }
+.pc .sec-head h2 { font-size: 72px; }
+.pc .sec-head p { color: var(--ink2); max-width: 44ch; }
+
+/* previous / next buttons: the alternative to dragging the rack (WCAG 2.5.7) */
+.pc .rack-ctrl { display: flex; gap: 8px; align-items: center; }
+.pc .rbtn {
+  width: 48px; height: 48px; border: 1px solid var(--ink); background: transparent; color: var(--ink);
+  display: grid; place-items: center; cursor: pointer; transition: background-color .25s, color .25s;
+}
+.pc .rbtn:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+.pc .rbtn:disabled { opacity: .35; cursor: default; }
+.pc .rbtn svg { width: 20px; height: 20px; }
+
+/* the track scrolls sideways and snaps to each item; it bleeds to the frame's edges */
+.pc .track {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 78%; gap: 14px;
+  overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+  padding: 4px 20px 18px; margin-inline: -20px; scrollbar-width: none;
+}
+.pc .track::-webkit-scrollbar { display: none; }
+.pc .item { scroll-snap-align: start; display: grid; gap: 12px; align-content: start; }
+.pc .item .shot { overflow: hidden; }
+.pc .item .ph { aspect-ratio: 3 / 4; transition: transform .8s var(--ease); }
+.pc .item:hover .ph { transform: scale(1.04); }
+.pc .item h3 { font-size: 54px; display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.pc .item h3 small { font: 600 12px/1 var(--body); letter-spacing: .08em; color: var(--ember); border: 1px solid var(--ember); padding: 5px 7px; }
+.pc .item p { color: var(--ink2); font-size: 15px; border-top: 1px solid var(--steel); padding-top: 10px; }
+
+/* progress bar: c.js sets --p (0–1) from the track's scroll position */
+.pc .progress { height: 2px; background: var(--steel); position: relative; margin-top: 6px; }
+.pc .progress i {
+  position: absolute; inset: 0 0 0 auto; width: 100%; background: var(--ember);
+  transform-origin: right; transform: scaleX(var(--p, .2)); transition: transform .2s linear;
+}
+
+
+/* ===== 6. Process: steps and reel ===== */
+.pc .process { background: var(--ink); color: var(--bg); padding-block: 48px; }
+.pc[data-mode="dark"] .process { background: #1B1A18; color: var(--ink); }
+.pc .process .lbl { color: var(--steel); }
+.pc .process .in { display: grid; gap: 28px; }
+.pc .process h2 { font-size: 72px; }
+
+/* the step nearest the middle of the viewport gets .on from c.js; the rest stay dimmed */
+.pc .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.pc .step {
+  display: grid; grid-template-columns: 56px 1fr; gap: 4px 14px; padding-block: 18px;
+  border-top: 1px solid rgba(160, 160, 160, .35); opacity: .5; transition: opacity .4s var(--ease);
+}
+.pc .step.on, .pc.rm .step { opacity: 1; }
+.pc .step b { font: 700 48px/1 var(--display); color: #FF9A62; grid-row: span 2; }
+.pc .step h3 { font-size: 42px; }
+.pc .step p { font-size: 15px; opacity: .85; }
+
+.pc .reel { position: relative; }
+.pc .reel .ph { aspect-ratio: 9 / 12; width: 100%; }
+.pc .reel .cap { position: absolute; inset: auto 12px 12px; font-size: 13px; background: rgba(0,0,0,.6); color: #fff; padding: 6px 9px; }
+
+
+/* ===== 7. Visit: the branch board ===== */
+.pc .visit { padding-block: 48px; }
+.pc .board { border-top: 2px solid var(--ink); }
+.pc .brow {
+  display: grid; gap: 8px 20px; padding-block: 20px; border-bottom: 1px solid var(--steel);
+  grid-template-columns: minmax(0, 1fr); align-items: center;
+}
+.pc .brow h3 { font-size: 64px; }
+.pc .brow dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 14px; font-size: 15px; }
+.pc .brow dt { color: var(--ink2); }
+.pc .brow dd { margin: 0; font-weight: 500; }
+.pc .brow dd[dir="ltr"] { text-align: right; } /* phone numbers: LTR digits, still aligned with the Hebrew */
+.pc .brow .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.pc .brow .acts a {
+  text-decoration: none; font-weight: 600; font-size: 15px; min-height: 44px; padding: 0 16px;
+  border: 1px solid var(--ink); display: inline-flex; align-items: center;
+}
+.pc .brow .acts a:first-child { background: var(--ink); color: var(--bg); }
+
+
+/* ===== 8. Footer ===== */
+.pc .ft .in { padding-block: 22px 28px; display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 14px; color: var(--ink2); }
+.pc .ft a { color: var(--ink); }
+
+
+/* ===== 9. Mobile action bar (hidden from 1000px; same colours in both modes) ===== */
+.pc .bar { position: sticky; bottom: 0; z-index: 9; display: grid; grid-template-columns: repeat(3, 1fr); background: #151311; color: #F4F4F1; }
+.pc .bar a { text-decoration: none; display: grid; justify-items: center; gap: 2px; padding: 9px 4px 11px; font-size: 13px; font-weight: 600; min-height: 56px; }
+.pc .bar svg { width: 22px; height: 22px; color: #FF9A62; }
+
+
+/* ===== 10. Motion (only when the root has .anim) =====
+   Precise and cinematic: one sharp ease-out curve (--ease), long-ish durations, no bounce. */
+
+/* intro: the headline lines rise out of their masks, the photo warms up */
+.pc.anim .hero h1 .ln span { animation: c-up .9s var(--ease) both; }
+.pc.anim .hero h1 .ln:nth-child(2) span { animation-delay: .09s; }
+.pc.anim .hero h1 .ln:nth-child(3) span { animation-delay: .18s; }
+.pc.anim .hero .ph { animation: c-zoom 1.6s var(--ease) both; }
+
+/* scroll reveals: shell.js adds .rv-in the first time a [data-rv] scrolls into view */
+.pc.anim [data-rv] { transition: clip-path .9s var(--ease), opacity .6s var(--ease), transform .9s var(--ease); }
+.pc.anim [data-rv]:not(.rv-in) { opacity: 0; transform: translateY(24px); }
+
+/* images are wiped in from the top instead of fading. The mask sits on the image
+   inside the observed box: a fully clipped target never reports an intersection. */
+.pc.anim .shot[data-rv]:not(.rv-in), .pc.anim .reel[data-rv]:not(.rv-in) { opacity: 1; transform: none; }
+.pc.anim .shot .ph, .pc.anim .reel .ph { transition: clip-path .9s var(--ease), transform .8s var(--ease); clip-path: inset(0 0 0 0); }
+.pc.anim .shot[data-rv]:not(.rv-in) .ph, .pc.anim .reel[data-rv]:not(.rv-in) .ph { clip-path: inset(0 0 100% 0); }
+
+@keyframes c-up { from { transform: translateY(105%); } to { transform: none; } }
+@keyframes c-zoom { from { background-size: 112% 112%; filter: saturate(.6); } to { filter: none; } }
+
+
+/* ===== 11. Wider containers ===== */
+@container (min-width: 700px) {
+  .pc .cta { display: inline-flex; }
+  .pc .track { grid-auto-columns: 42%; }
+  .pc .brow { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
+  .pc .brow .acts { grid-column: 2; }
+}
+
+@container (min-width: 1000px) {
+  .pc .in { padding-inline: 48px; }
+
+  /* header: full nav, no menu button, no bottom bar */
+  .pc .nav { display: flex; }
+  .pc .menu-btn, .pc .menu, .pc .bar { display: none !important; }
+
+  /* hero: a wide letterbox photo, the headline on one line */
+  .pc .hero .ph { aspect-ratio: 16 / 7.4; padding: 18px 48px; }
+  .pc .hero-type { padding: 0 48px 26px; }
+  .pc .hero h1 { font-size: 196px; grid-auto-flow: column; justify-content: start; gap: 28px; }
+  .pc .hero-meta { grid-template-columns: minmax(0, 1fr) auto; align-items: center; padding-block: 24px; }
+
+  /* rack: 4.3 items in view, so the next one peeks in */
+  .pc .track { grid-auto-columns: calc((100% - 3 * 14px) / 4.3); padding-inline: 48px; margin-inline: -48px; }
+  .pc .sec-head h2, .pc .process h2 { font-size: 104px; }
+
+  /* process: steps beside a sticky reel */
+  .pc .process .in { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: start; gap: 56px; }
+  .pc .process .head { grid-column: 1 / -1; }
+  .pc .reel { position: sticky; top: 90px; }
+
+  /* board: name, details and actions in one row */
+  .pc .brow { grid-template-columns: 260px minmax(0, 1fr) auto; }
+  .pc .brow .acts { grid-column: auto; }
+  .pc .brow h3 { font-size: 80px; }
+}
+
+
+/* ===== 12. Reduced motion =====
+   The root gets .rm from the system setting or the page's "הדמיית הפחתת תנועה" checkbox.
+   (The process steps are all fully lit in this mode, see section 6.) */
+.pc.rm *, .pc.rm *::before, .pc.rm *::after { animation: none !important; transition-duration: .01s !important; }
