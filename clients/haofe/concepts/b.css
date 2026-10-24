@@ -32,7 +32,7 @@
      hero       .hero[data-section="top"]  .scene > .sc-plane (.sc-back .sc-light .sc-subject .sc-front)
                 .sc-plate  .sc-bag (.sc-shadow .sc-bag-img .sc-sticker)  .sc-wheat  .ai-note
                 .hero-text  .hero h1 (em)  .sub  .ctas
-                planes read --px/--py (pointer, -1..1) and --hp (hero scroll progress, 0..1) if a module sets them
+                the hero module drives the plane transforms directly (scroll timeline + pointer lean)
                 .btn-b  .btn-b--main  .note-hand (svg path, span)
      ticker     .ticker[data-ticker] (.paused)  .tk-pause (.pause, .play)  .tk-view  .tk-track
                 .tk-list (first one is the real list, the rest are aria-hidden copies)  li
@@ -86,10 +86,6 @@
   --press-scale: .97;
   --press-scale-soft: .985;
   --stagger: 40ms;
-  /* legacy curves still used by the current motion rules (kept at their original values so nothing
-     changes yet); motion modules should move to the tokens above and then delete these two */
-  --spring: cubic-bezier(.34, 1.56, .64, 1);
-  --ease: cubic-bezier(.25, .8, .25, 1);
 }
 .pb[data-mode="dark"] {
   --bg: #17100B;      /* chocolate counter at night */
@@ -144,7 +140,7 @@
 /* ---------- 4 components, in page order ---------- */
 
 /* header */
-.pb .hd { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--paper) 94%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.pb .hd { position: sticky; top: 0; z-index: 10; background: var(--paper); border-bottom: 1px solid var(--line); }  /* solid: a backdrop blur repainted on every scrolled frame */
 .pb .hd .in { display: flex; align-items: center; gap: 14px; min-height: 62px; }
 .pb .mark { text-decoration: none; display: flex; align-items: center; gap: 10px; }
 .pb .mark-logo { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: #FFFFFF; box-shadow: 0 0 0 1px var(--line); }
@@ -188,7 +184,7 @@
 /* the real logo, stuck on the blank front panel of the bag */
 .pb .sc-sticker { position: absolute; left: 50%; top: 62%; width: 40%; height: auto; translate: -50% -50%; rotate: -6deg; border-radius: 50%; filter: drop-shadow(0 2px 2px rgba(60, 35, 12, .28)); }
 .pb .sc-shadow { position: absolute; left: -6%; right: -10%; bottom: -3%; height: 9%; border-radius: 50%; background: radial-gradient(closest-side, rgba(70, 40, 15, .45), transparent); }
-.pb .sc-wheat { position: absolute; width: 34%; right: -6%; bottom: -10%; rotate: -14deg; }
+.pb .sc-wheat { position: absolute; width: 40%; height: auto; right: -8%; bottom: -12%; rotate: -14deg; }
 .pb .ai-note { position: absolute; z-index: 3; bottom: 10px; left: 12px; font: 600 11px/1 var(--body); color: #fff; background: rgba(36, 24, 15, .66); border: 1px dashed rgba(255, 255, 255, .7); padding: 6px 9px; border-radius: 999px; }
 /* evening: the morning light becomes lamp light */
 .pb[data-mode="dark"] .sc-plate { filter: brightness(.48) saturate(.85) sepia(.15); }
@@ -327,7 +323,7 @@
   .pb .hero .in { height: 100%; align-content: center; padding-block: 0 9%; }
   .pb .hero-text { gap: 20px; width: min(560px, 46%); }
   .pb .sc-bag { left: 27%; bottom: calc(31% - 7%); width: 25%; }
-  .pb .sc-wheat { width: 24%; right: auto; left: -4%; bottom: -14%; rotate: 8deg; }
+  .pb .sc-wheat { width: 30%; right: auto; left: -5%; bottom: -10%; rotate: 8deg; }
   .pb .ai-note { bottom: 16px; left: 18px; }
   .pb .hero h1 { font-size: 84px; }
   .pb .note-hand { font-size: 28px; }

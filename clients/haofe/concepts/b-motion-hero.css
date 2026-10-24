@@ -1,35 +1,220 @@
 /* ==========================================================================
-   Direction B · השקית — motion: the opening (hero)
-   Owner: hero motion module (pairs with b-motion-hero.js).
+   Direction B · השקית — motion: the hero scene
+   Owner: hero motion module (pairs with b-motion-hero.js). Everything here lives inside .hero.
 
    OWNS
-     - logo sticker press: .stamp lands from 160% onto its -7deg tilt
-     - caramel ink ring spreading from the sticker (.stamp::after)
-     - hero text rise: .hero h1, .sub, .ctas, staggered
-     - handwritten note: .note-hand span writes on, its arrow path draws
+     1 the evening look: the plate dims to lamp light, the morning beam gives way to a lamp glow
+       (static, so it holds with motion off too; the 600ms cross-fade itself is .anim only)
+     2 the opening, done by ~1.4s: plate settles from a push-in, morning beam sweeps in from the
+       right, the bag rises onto the counter as its contact shadow grows, the logo sticker is
+       pressed on (the bag gives a little, a caramel ring spreads), the wheat swings in and sways
+       to rest, the headline lines rise out of a mask, the note writes itself right to left and
+       its arrow draws up toward the main button
+     3 the wheat's ambient sway at rest
+     4 static hooks the module script drives: plane pivots, the flour-dust canvas (.b-motes),
+       the word masks (.b-w / .b-wi), .b-hold (scene waits for its images), .b-off (offscreen)
+
+   WHO MOVES WHAT (one owner per property, so nothing fights)
+     .sc-back .sc-light .sc-subject .sc-front .b-motes .hero-text
+                    transform  = hero scroll progress (b-motion-hero.js, Web Animations on a
+                                 ScrollTimeline of ctx.scroller; per-frame fallback without one)
+                    translate  = pointer lean / sunlight shift (b-motion-hero.js, fine pointers)
+     .sc-plate, .sc-bag-img, .sc-shadow, .sc-sticker, .sc-wheat, .sc-light::before/::after,
+     h1 .b-wi, .sub, .ctas, .note-hand
+                    the opening and the sway below (CSS only, so it plays even if the script fails)
 
    RULES
-     - every rule is scoped to .pb.anim, so reduced motion (.rm) gets the static page from b.css
-     - keyframes in this file are prefixed b-hero-
-     - use the motion tokens defined on .pb in b.css (--ease-*, --spring-*, --dur-*, --stagger);
-       --spring / --ease are the legacy curves the current rules were written with
-     - hooks: see "hooks motion modules may rely on" at the top of b.css
+     - motion is scoped to .pb.anim; the b.css safety net (.pb.rm) zeroes it under reduced motion
+     - keyframes are prefixed b-hero-; motion tokens from .pb (b.css section 1) only
+     - the "הדמיית AI" label (.ai-note) is never hidden or animated
    ========================================================================== */
 
-/* logo sticker press + ink ring */
-.pb.anim .stamp { animation: b-hero-stamp .55s .1s var(--spring) both; }
-@keyframes b-hero-stamp { 0% { opacity: 0; transform: scale(1.6) rotate(6deg); } 60% { opacity: 1; } 100% { transform: rotate(-7deg); } }
-.pb.anim .stamp::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 3px solid var(--caramel); animation: b-hero-ink .7s .5s ease-out both; }
-@keyframes b-hero-ink { from { transform: scale(1); opacity: .7; } to { transform: scale(1.35); opacity: 0; } }
 
-/* hero text rise */
-.pb.anim .hero h1, .pb.anim .hero .sub, .pb.anim .hero .ctas { animation: b-hero-up .5s var(--spring) both; }
-.pb.anim .hero .sub { animation-delay: .08s; }
-.pb.anim .hero .ctas { animation-delay: .16s; }
-@keyframes b-hero-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+/* ---------- 0 scene geometry (matches b.css: the bag's contact point on the counter) ---------- */
+.pb .hero {
+  --b-pivot: 50% 75%;   /* phone: bag centred, standing 25% above the scene's bottom edge */
+  --b-pivot-o: 50% 74.27%;  /* the same point in the back plane when it overhangs by 1.5% */
+  --b-pivot-l: 50% 71.55%;  /* ...and in the light layer, which overhangs by 8% */
+  --b-lamp: 50% 24%;    /* where the evening lamp hangs */
+  --b-lamp-l: 50% 27.6%;  /* the same point in the light layer, which overhangs the scene by 8% */
+}
+@container (min-width: 1000px) {
+  .pb .hero { --b-pivot: 27% 76%; --b-pivot-o: 27.67% 75.24%; --b-pivot-l: 30.17% 72.41%; --b-lamp: 27% 22%; --b-lamp-l: 30.2% 25.9%; }
+}
 
-/* handwritten note: the words write on right to left, then the arrow is drawn */
-.pb.anim .note-hand span { animation: b-hero-write .7s .45s steps(14, end) both; }
-@keyframes b-hero-write { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0 0 0 0); } }
-.pb.anim .note-hand path { stroke-dasharray: 120; animation: b-hero-draw .5s .9s ease-out both; }
-@keyframes b-hero-draw { from { stroke-dashoffset: 120; } to { stroke-dashoffset: 0; } }
+
+/* ---------- 1 morning and evening (static, both motion settings) ---------- */
+/* the plate keeps its colour; evening is a dim layer over it instead of a filter on a full-bleed image
+   (::after, so it paints above the plate even while the plate is being animated) */
+.pb .hero .sc-plate { filter: none; }
+.pb .hero .sc-back::after {
+  content: ""; position: absolute; inset: 0; opacity: 0;
+  background: radial-gradient(ellipse 58% 78% at var(--b-lamp), rgba(30, 15, 6, .3), rgba(19, 10, 4, .6) 58%, rgba(12, 6, 2, .76));
+}
+/* one light layer: the morning beam by day, the lamp glow by night. Plain alpha (no blend mode):
+   warm white over the wall lightens it the way screen would, without a render surface that has to
+   be recomposited whenever the dust or the wheat moves. It overhangs the scene by 8% so the
+   sunlight shift never shows its edge */
+.pb .hero .sc-light { inset: -8%; background: none; mix-blend-mode: normal; }
+.pb .hero .sc-light::before, .pb .hero .sc-light::after { content: ""; position: absolute; inset: 0; }
+.pb .hero .sc-light::before {
+  background:
+    radial-gradient(ellipse 30% 40% at 84% 10%, rgba(255, 240, 212, .14), transparent 70%),
+    linear-gradient(122deg, transparent 40%, rgba(255, 230, 186, .06) 52%, rgba(255, 238, 210, .17) 63%, rgba(255, 242, 220, .08) 76%, transparent 88%);
+}
+.pb .hero .sc-light::after {
+  opacity: 0;
+  background: radial-gradient(ellipse 31% 45% at var(--b-lamp-l), rgba(255, 186, 110, .34), rgba(255, 160, 84, .1) 50%, transparent 76%);
+}
+.pb[data-mode="dark"] .hero .sc-back::after, .pb[data-mode="dark"] .hero .sc-light::after { opacity: 1; }
+.pb[data-mode="dark"] .hero .sc-light::before { opacity: 0; }
+
+/* the day-to-evening change, ~600ms: the sun fades, then the lamp comes up. The dim leads
+   (ease-out) because the text flips colour almost at once and needs the wall behind it to follow */
+.pb.anim .hero .sc-light::before, .pb.anim .hero .sc-light::after { transition: opacity .6s var(--ease-in-out); }
+.pb.anim .hero .sc-back::after { transition: opacity .6s var(--ease-out); }
+.pb.anim[data-mode="dark"] .hero .sc-light::after { transition-delay: .12s; }
+.pb.anim[data-mode="light"] .hero .sc-light::before { transition-delay: .12s; }
+.pb.anim .hero .sc-bag-img, .pb.anim .hero .sc-wheat { transition: filter .6s var(--ease-in-out); }
+
+
+/* ---------- 2 hooks the script drives ---------- */
+/* every plane scales about the bag's contact point, so the bag never slides off the counter */
+.pb.anim .hero .sc-plane { transform-origin: var(--b-pivot); }
+.pb.anim .hero .sc-light { transform-origin: var(--b-pivot-l); }
+/* the wall overhangs a little where the pointer can lean it, so its edge never shows (inset, not
+   scale: at rest the plate stays at an identity transform and is composited without resampling) */
+@media (hover: hover) and (pointer: fine) {
+  .pb.anim .hero .sc-back { inset: -1.5%; transform-origin: var(--b-pivot-o); }
+}
+.pb.anim .hero .hero-text { transform-origin: 50% 0; }
+/* flour dust: one small canvas between the bag and the wheat, injected by the script */
+.pb .hero .b-motes { position: absolute; left: 0; top: 0; width: 100%; height: 82%; pointer-events: none; transform-origin: 50% 91%; }
+.pb.anim .hero .b-motes { animation: b-hero-fade 1.2s .45s linear both; }
+@container (min-width: 1000px) {
+  .pb.anim .hero .hero-text { transform-origin: 100% 45%; }
+  .pb .hero .b-motes { left: 30%; width: 70%; transform-origin: -4% 93%; }
+}
+/* per-frame fallback only (no ScrollTimeline): layers exist while the hero is on screen */
+.pb.anim .hero.b-live .sc-plane, .pb.anim .hero.b-live .b-motes, .pb.anim .hero.b-live .hero-text { will-change: transform; }
+/* headline word masks: clip-path (not overflow) so the words keep their text baseline */
+.pb .hero h1 .b-w { display: inline-block; clip-path: inset(-.3em -.14em -.34em); }
+.pb .hero h1 .b-wi { display: inline-block; }
+
+
+/* ---------- 3 the opening ---------- */
+@keyframes b-hero-fade { from { opacity: 0; } }
+@keyframes b-hero-up { from { transform: translateY(14px); } }
+
+/* the plate settles from a slight push-in */
+.pb.anim .hero .sc-plate { transform-origin: 40% 62%; animation: b-hero-push 1.35s var(--ease-out) both, b-hero-fade .32s linear both; }
+@keyframes b-hero-push { from { transform: scale(1.07); } }
+
+/* morning light sweeps in from the right; in the evening the lamp glow spreads instead */
+.pb.anim .hero .sc-light::before { animation: b-hero-beam 1s .1s var(--ease-out) both; }
+@keyframes b-hero-beam { from { translate: 40% 0; } }
+.pb.anim .hero .sc-light::after { transform-origin: var(--b-lamp-l); animation: b-hero-lamp 1s .1s var(--ease-out) both; }
+@keyframes b-hero-lamp { from { scale: .55; } }
+
+/* the bag rises onto the counter; its contact shadow grows under it */
+.pb.anim .hero .sc-bag-img {
+  transform-origin: 50% 99%;
+  animation: b-hero-rise .8s .12s var(--spring-settle) both, b-hero-fade .22s .12s linear both, b-hero-give .34s .8s var(--ease-out) both;
+}
+@keyframes b-hero-rise { from { transform: translateY(6%) scale(.965); } }
+/* ...and gives a little when the sticker lands on it (the app's soft press scale) */
+@keyframes b-hero-give { 0%, 100% { scale: 1 1; } 30% { scale: 1.008 var(--press-scale-soft); } }
+.pb.anim .hero .sc-shadow { animation: b-hero-contact .75s .16s var(--ease-out) both; }
+@keyframes b-hero-contact { from { opacity: 0; transform: scale(.4, .5); } }
+
+/* the logo sticker is pressed on: it comes down from the viewer, the spring's overshoot is the
+   squash on impact (~.18s in), its shadow tightens as it meets the bag, it settles at b.css's -6deg */
+.pb.anim .hero .sc-sticker {
+  animation: b-hero-press var(--dur-spring-bounce) .62s var(--spring-bounce) both, b-hero-fade .12s .62s linear both, b-hero-lift .22s .62s var(--ease-in) both;
+}
+@keyframes b-hero-press { from { transform: translateY(-12%) rotate(16deg) scale(1.6); } }
+@keyframes b-hero-lift {
+  from { filter: drop-shadow(0 22px 16px rgba(60, 35, 12, .2)); }
+  to { filter: drop-shadow(0 2px 2px rgba(60, 35, 12, .28)); }
+}
+/* the caramel ring spreading from the sticker at the moment it lands */
+.pb.anim .hero .sc-bag::after {
+  content: ""; position: absolute; left: 50%; top: 62%; width: 40%; aspect-ratio: 1; translate: -50% -50%;
+  border-radius: 50%; border: 2px solid var(--caramel); opacity: 0; pointer-events: none;
+  animation: b-hero-ring .58s .8s var(--ease-out) both;
+}
+@keyframes b-hero-ring { 0% { opacity: 0; transform: scale(.94); } 10% { opacity: .9; } 100% { opacity: 0; transform: scale(1.75); } }
+
+/* the wheat swings in about its stalks, overshoots, sways to rest, then stirs now and then.
+   Literal keyframes per side (no var() inside), so the browser can run them on the compositor:
+   -r swings in from the right (phone), -l from the left (desktop) */
+.pb.anim .hero .sc-wheat {
+  transform-origin: 4% 100%;
+  animation: b-hero-wheat-r 1.1s .28s both, b-hero-sway-r 8s 1.38s var(--ease-in-out) infinite;
+}
+@container (min-width: 1000px) {
+  .pb.anim .hero .sc-wheat { animation-name: b-hero-wheat-l, b-hero-sway-l; }
+}
+@keyframes b-hero-wheat-r {
+  0% { transform: translateX(10%) rotate(34deg); animation-timing-function: var(--ease-out); }
+  52% { transform: rotate(-2.6deg); animation-timing-function: var(--ease-in-out); }
+  77% { transform: rotate(1deg); animation-timing-function: var(--ease-in-out); }
+  100% { transform: none; }
+}
+@keyframes b-hero-wheat-l {
+  0% { transform: translateX(-10%) rotate(-34deg); animation-timing-function: var(--ease-out); }
+  52% { transform: rotate(2.6deg); animation-timing-function: var(--ease-in-out); }
+  77% { transform: rotate(-1deg); animation-timing-function: var(--ease-in-out); }
+  100% { transform: none; }
+}
+/* a breeze in gusts: it stirs, settles back, and rests for most of the cycle (nothing to
+   composite while it rests) */
+@keyframes b-hero-sway-r {
+  0%, 46%, 100% { transform: none; }
+  12% { transform: rotate(-.7deg); }
+  25% { transform: rotate(.28deg); }
+  36% { transform: rotate(-.1deg); }
+}
+@keyframes b-hero-sway-l {
+  0%, 46%, 100% { transform: none; }
+  12% { transform: rotate(.7deg); }
+  25% { transform: rotate(-.28deg); }
+  36% { transform: rotate(.1deg); }
+}
+
+/* the headline lines rise out of their masks, line by line, in reading order */
+.pb.anim .hero h1.b-split .b-wi {
+  animation: b-hero-word .62s calc(.04s + var(--l, 0) * .08s + var(--wi, 0) * var(--stagger) * .5) var(--ease-out) both;
+}
+@keyframes b-hero-word { from { transform: translateY(135%); } }
+/* without the script there are no word masks: the headline rises as one */
+.pb.anim .hero h1:not(.b-split) { animation: b-hero-up .62s .04s var(--ease-out) both, b-hero-fade .3s .04s linear both; }
+.pb.anim .hero .sub { animation: b-hero-up .5s .16s var(--ease-out) both, b-hero-fade .4s .16s linear both; }
+.pb.anim .hero .ctas { animation: b-hero-up .55s .24s var(--ease-spring) both, b-hero-fade .35s .24s linear both; }
+
+/* the note writes itself right to left with a soft ink edge, then its arrow is drawn tail first
+   (the curve runs right to left, so a right-to-left reveal follows the pen) */
+.pb.anim .hero .note-hand span { animation: b-hero-write .55s .7s var(--ease-in-out) backwards; }
+@keyframes b-hero-write {
+  from {
+    -webkit-mask: linear-gradient(to left, #000 40%, transparent 60%) 0 0 / 250% 100% no-repeat;
+    mask: linear-gradient(to left, #000 40%, transparent 60%) 0 0 / 250% 100% no-repeat;
+  }
+  to {
+    -webkit-mask: linear-gradient(to left, #000 40%, transparent 60%) 100% 0 / 250% 100% no-repeat;
+    mask: linear-gradient(to left, #000 40%, transparent 60%) 100% 0 / 250% 100% no-repeat;
+  }
+}
+.pb.anim .hero .note-hand svg { animation: b-hero-draw .32s 1.06s var(--ease-in-out) backwards; }
+@keyframes b-hero-draw {
+  from { clip-path: inset(-12% -12% -12% 100%); }
+  to { clip-path: inset(-12% -12% -12% -12%); }
+}
+
+
+/* ---------- 4 states set by the script ---------- */
+/* the scene waits (at most ~0.9s) until its images are decoded, so it never builds half-loaded;
+   the headline does not wait */
+.pb.anim .hero.b-hold .scene *, .pb.anim .hero.b-hold .scene *::before, .pb.anim .hero.b-hold .scene *::after { animation-play-state: paused; }
+/* offscreen (or behind the full-screen overlay): the ambient sway stops */
+.pb.anim .hero.b-off .sc-wheat { animation-play-state: paused; }

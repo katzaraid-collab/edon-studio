@@ -1,28 +1,154 @@
 /* ==========================================================================
-   Direction B · השקית — motion: scroll (reveals, ticker, section entrances)
+   Direction B · השקית — motion: scroll (the peak, entrances, ticker, product drift)
    Owner: scroll motion module (pairs with b-motion-scroll.js).
 
+   THE STORY  "It's the site where the bread jumps out of the bag into the boxes."
+
    OWNS
-     - [data-rv] scroll reveals: hidden until Shell.reveal adds .rv-in, boxes staggered by --i
-     - section entrances (none beyond the reveals yet)
-     - the ticker loop: .tk-track slides left to right (the Hebrew reading direction),
-       paused by .ticker.paused (the pause button in b.js) and on hover
+     - THE PEAK: when the boxes come into view, the frena, challah and baguette leap out of the
+       hero bag (.sc-bag) along an arc into their boxes and land with --spring-bounce while the box
+       rocks (bag far away: they fall in through their own box's rim instead); dairy, rugelach and
+       sufganiyot drop into theirs from above and plop (--spring-settle).
+       The lid label never hides or moves more than a hair; every "הדמיית AI" tag stays put.
+     - entrances for every [data-rv], one device per section, never the same twice in a row:
+         boxes heading   rises out of a mask          (.sec-head)
+         boxes           the peak above               (.box)
+         order slip      prints downward like a receipt, then the logo stamps (.slip)
+         story           its lines fade up in sequence (.story-card)
+         feed heading    rises out of a mask
+         polaroids       dealt from a stack onto their tilted places (.pola)
+         business band   unrolls from the start side, a paper roll riding its edge (.b2b-band)
+         branch heading  rises out of a mask
+         branch labels   swing in like hanging tags around a top pivot (.label)
+       the JS adds .rv-done to each element when its entrance has finished
+     - the ticker loop (reading direction, left to right), its scroll-velocity surge and hover brake
+     - in-slot drift of the product cutouts while scrolling (a few px, scroll-driven)
 
    RULES
-     - every moving rule is scoped to .pb.anim; the static reduced-motion ticker lives in b.css
-     - keyframes in this file are prefixed b-scroll-
-     - scroll listeners and IntersectionObservers use ctx.scroller (see b-motion-scroll.js)
-     - use the motion tokens defined on .pb in b.css (--ease-*, --spring-*, --dur-*, --stagger);
-       --spring / --ease are the legacy curves the current rules were written with
+     - every entrance rule is scoped to [data-rv]:not(.rv-done) and only exists once the JS has
+       started (.sx on the root), so the page is complete if the JS never runs, and hover/press
+       rules from the micro module apply untouched after .rv-done
+     - who moves what (agreed with the micro module, see its header):
+         .box, .pola, .label   translate / rotate / scale here; `transform` is micro's (hover, tilt)
+         .prod                 translate = drift here; `transform` = the landing here, but only
+                               while the box is closed (micro raises the product on open: a landing
+                               never starts on an open box and a lid click finishes it at once)
+         .shot::after          transform here (waiting, landing); scale and opacity are micro's
+       Everything is composite 'replace', so the compositor runs it (an 'add' animation falls back
+       to the main thread)
+     - nothing here under .rm: the JS adds no classes and no nodes there, and b.css section 6
+       turns the ticker into a static wrapping list
+     - keyframes in this file are prefixed b-scroll-; classes this module adds are prefixed sx-
+     - motion tokens from .pb (b.css): --ease-*, --spring-*, --dur-*, --stagger
      - hooks: see "hooks motion modules may rely on" at the top of b.css
+
+   CLASSES THE JS ADDS (all removed by its cleanup)
+     root      .sx (module running)  .sx-pf (no scroll timelines: JS drives the product drift)
+     [data-rv] .sx-go (its entrance has started)  .rv-done (finished: entrance rules stop matching)
+     .box      .sx-hold (product waiting to land: hidden until the leap or drop brings it in)
+               .sx-dr (box near the view: its product drift runs, from 700px wide up)
+     .ticker   .sx-tk (JS eases the hover stop)  .sx-off (out of view: loop paused)
+     slip wrapper (.order-sec .in)  .sx-slot (carries the print cover while the slip prints)
+     injected  .sx-layer > img.sx-fly  (aria-hidden copies of the three leaping products, removed
+               on landing; never under .rm); .sx-ride when the copy rides its box's view timeline
    ========================================================================== */
 
-/* ticker loop */
-.pb.anim .tk-track { animation: b-scroll-tick 38s linear infinite; }
-.pb .ticker.paused .tk-track, .pb .ticker:hover .tk-track { animation-play-state: paused; }
-@keyframes b-scroll-tick { from { transform: translateX(-50%); } to { transform: translateX(0); } }
 
-/* scroll reveals: content is visible by default; .anim only adds the entry */
-.pb.anim [data-rv] { transition: opacity .5s var(--ease), transform .55s var(--spring); }
-.pb.anim [data-rv]:not(.rv-in) { opacity: 0; transform: translateY(26px) rotate(4deg); }
-.pb.anim .box[data-rv].rv-in { transition-delay: calc(var(--i, 0) * 70ms); }
+/* ---------- 1 waiting states (only once the module runs) ---------- */
+/* hidden but still focusable: the JS finishes an entrance at once if keyboard focus arrives first */
+.pb.sx [data-rv]:not(.rv-done):not(.sx-go):not(.box) { opacity: 0; }
+.pb.sx .slip[data-rv]:not(.rv-done):not(.sx-go) { clip-path: inset(0 0 100% 0); }
+/* an empty box waiting for its product: the box and its lid stay fully readable (the shadow is
+   held at scale 0 through transform, which is this module's on .shot::after; the micro module
+   owns its scale and opacity) */
+.pb.sx .box.sx-hold .prod { opacity: 0; }
+.pb.sx .box.sx-hold .shot::after { transform: scale(0); }
+
+/* hanging tags pivot on a nail just above their top edge */
+.pb.sx .label[data-rv]:not(.rv-done) { transform-origin: 50% -18px; }
+
+/* the order slip prints top to bottom: while it prints, a cover in the page colour lies over its
+   wrapper (and the slip's border and shadow) and shrinks toward the bottom */
+.pb .sx-slot { position: relative; }
+.pb .sx-slot::after {
+  content: ""; position: absolute; inset: -6px 0 -56px; pointer-events: none;
+  background: var(--bg); transform-origin: 50% 100%;
+}
+
+/* the business band unrolls: a cover in the page colour shrinks toward the left edge while a paper
+   roll rides its leading edge (both exist only while unrolling) */
+.pb.sx .b2b-band[data-rv].sx-go:not(.rv-done) { position: relative; }
+.pb.sx .b2b-band[data-rv].sx-go:not(.rv-done)::before {
+  content: ""; position: absolute; inset: -2px; pointer-events: none;
+  background: var(--bg); transform-origin: 0 50%;
+}
+.pb.sx .b2b-band[data-rv].sx-go:not(.rv-done)::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  /* a rolled cylinder: dark rim, bright highlight, caramel paper core, shaded underside, cast shadow */
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--btn) 45%, #000) 0,
+    color-mix(in srgb, var(--btn) 58%, #fff) 5px,
+    color-mix(in srgb, var(--btn) 62%, var(--caramel)) 12px,
+    color-mix(in srgb, var(--btn) 70%, #000) 23px,
+    rgba(0, 0, 0, .26) 24px,
+    transparent 54px);
+}
+
+/* the leaping copies of the products (the real images stay in their boxes) */
+.pb .sx-layer { position: absolute; top: 0; left: 0; width: 0; height: 0; z-index: 8; pointer-events: none; }
+.pb .sx-fly { position: absolute; display: block; max-width: none; margin: 0; object-fit: contain; object-position: 50% 80%; }
+.pb[data-mode="dark"] .sx-fly { filter: brightness(.9); }
+
+
+/* ---------- 2 ticker ---------- */
+/* four identical lists side by side; sliding the track by half its width (two lists) is seamless.
+   Moving left to right = the Hebrew reading direction: each list's first item leads. */
+.pb.anim .tk-track { animation: b-scroll-tick 38s linear infinite; }
+@keyframes b-scroll-tick { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.pb .ticker.paused .tk-track,
+.pb .ticker.sx-off .tk-track { animation-play-state: paused; }
+/* keyboard focus on the pause button holds the band still (kept apart: an old browser without
+   :has() drops only this rule) */
+.pb .ticker:has(:focus-visible) .tk-track { animation-play-state: paused; }
+/* hover stop for fine pointers; with the JS running (.sx-tk) it eases to a stop instead */
+@media (hover: hover) and (pointer: fine) {
+  .pb .ticker:not(.sx-tk):hover .tk-track { animation-play-state: paused; }
+}
+
+
+/* ---------- 3 product drift: the cutouts float a few px inside their boxes while scrolling ---------- */
+/* each box publishes a view timeline; the product and its contact shadow ride it together so the
+   bread never leaves its shadow. The first three names are hoisted to the root so a leaping copy can
+   ride the same timeline and land exactly where the real image sits.
+   Cost control: the JS marks a box .sx-dr only while it is within 15% of the view, so only boxes on
+   screen carry a scroll-linked animation (the switch happens off screen, where the few px are
+   unseen). Phones get no drift at all: there the boxes are stacked a screen apart and pass at thumb
+   speed, the drift would be invisible, and the frame budget is tight. */
+@keyframes b-scroll-drift { from { translate: 0 7px; } to { translate: 0 -7px; } }
+@supports (animation-timeline: view()) and (timeline-scope: --sx) {
+  .pb.anim { timeline-scope: --sxb1, --sxb2, --sxb3; }
+  @container (min-width: 700px) {
+    .pb.anim .box.sx-dr:nth-child(1) { view-timeline: --sxb1 block; }
+    .pb.anim .box.sx-dr:nth-child(2) { view-timeline: --sxb2 block; }
+    .pb.anim .box.sx-dr:nth-child(3) { view-timeline: --sxb3 block; }
+    .pb.anim .box.sx-dr:nth-child(4) { view-timeline: --sxb4 block; }
+    .pb.anim .box.sx-dr:nth-child(5) { view-timeline: --sxb5 block; }
+    .pb.anim .box.sx-dr:nth-child(6) { view-timeline: --sxb6 block; }
+    .pb.anim .box.sx-dr .prod,
+    .pb.anim .box.sx-dr .shot::after,
+    .pb.anim .sx-fly.sx-ride { animation: b-scroll-drift linear both; animation-range: cover 0% cover 100%; }
+    .pb.anim .box.sx-dr:nth-child(1) .prod, .pb.anim .box.sx-dr:nth-child(1) .shot::after { animation-timeline: --sxb1; }
+    .pb.anim .box.sx-dr:nth-child(2) .prod, .pb.anim .box.sx-dr:nth-child(2) .shot::after { animation-timeline: --sxb2; }
+    .pb.anim .box.sx-dr:nth-child(3) .prod, .pb.anim .box.sx-dr:nth-child(3) .shot::after { animation-timeline: --sxb3; }
+    .pb.anim .box.sx-dr:nth-child(4) .prod, .pb.anim .box.sx-dr:nth-child(4) .shot::after { animation-timeline: --sxb4; }
+    .pb.anim .box.sx-dr:nth-child(5) .prod, .pb.anim .box.sx-dr:nth-child(5) .shot::after { animation-timeline: --sxb5; }
+    .pb.anim .box.sx-dr:nth-child(6) .prod, .pb.anim .box.sx-dr:nth-child(6) .shot::after { animation-timeline: --sxb6; }
+    /* a copy rides its box's timeline; with that box not marked, the timeline is inactive and the copy
+       does not drift, exactly like the real image */
+    .pb.anim .sx-fly.sx-ride { animation-timeline: var(--sx-tl); }
+  }
+}
+/* fallback without scroll timelines: the JS writes --sx-par on each .shot (and on a leaping copy) */
+.pb.sx-pf .box .prod,
+.pb.sx-pf .box .shot::after,
+.pb.sx-pf .sx-fly { translate: 0 var(--sx-par, 0px); }
