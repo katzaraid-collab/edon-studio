@@ -40,7 +40,16 @@
   /* online ordering: data-order="soon" | "live" flips the whole module on launch day */
   function orderSwitch(root) {
     var box = document.getElementById('order-live');
-    function apply() { root.setAttribute('data-order', box && box.checked ? 'live' : 'soon'); }
+    /* the app URL is written into the link only when the switch says live, so the "soon" page never contains it */
+    var links = root.querySelectorAll('[data-live-href]');
+    function apply() {
+      var live = !!(box && box.checked);
+      root.setAttribute('data-order', live ? 'live' : 'soon');
+      links.forEach(function (a) {
+        if (live) a.setAttribute('href', a.getAttribute('data-live-href'));
+        else a.removeAttribute('href');
+      });
+    }
     apply();
     if (!box) return;
     box.addEventListener('change', apply);
