@@ -49,10 +49,10 @@ body { font-family: var(--font); }
 .dir .go { font-weight: 700; color: var(--accent); }
 .prev-a { background: linear-gradient(180deg, #5D3B23 0 26%, #F2ECE2 26% 74%, transparent 74%), repeating-conic-gradient(#A64E28 0 25%, #E9DFCE 0 50%) 0 100% / 26px 26px; color: #2A1C14; align-content: center; padding-top: 40px; }
 .prev-a span { font: 400 40px/1 "Suez One", serif; }
-.prev-b { background-color: #D9BC94; color: #24170F; }
+.prev-b { background-color: #EADBC2; color: #4A1D0B; }
 .prev-b span { font: 400 44px/1 "Secular One", sans-serif; }
-.prev-b em { position: absolute; top: 18px; left: 18px; width: 92px; aspect-ratio: 1; border: 3px solid #8A2614; border-radius: 50%; display: grid; place-items: center; color: #8A2614; font: 400 22px "Secular One"; transform: rotate(-8deg); font-style: normal; }
-.prev-b small { font: 600 16px "Playpen Sans Hebrew", cursive; color: #8A2614; }
+.prev-b img { position: absolute; top: 16px; left: 18px; width: 96px; height: 96px; border-radius: 50%; transform: rotate(-7deg); box-shadow: 0 0 0 4px #FFFCF6, 0 0 0 5.5px #B0702A; }
+.prev-b small { font: 600 16px "Playpen Sans Hebrew", cursive; color: #7A4520; }
 .prev-c { background: #151311; color: #F4F4F1; }
 .prev-c::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, #2E1A12 0 2%, transparent 4%), radial-gradient(circle at 70% 40%, #2E1A12 0 2.5%, transparent 5%), radial-gradient(ellipse 50% 40% at 40% 40%, #C98A4E, transparent 70%), linear-gradient(180deg, #DDB07A, #6E4A31); opacity: .9; }
 .prev-c span { position: relative; font: 700 84px/.85 "Karantina", sans-serif; }
@@ -86,10 +86,10 @@ body { font-family: var(--font); }
   <div class="doc-head">
     <div class="wrap">
       <div class="status" aria-label="שלב בפרויקט">
-        <span>1. מחקר ✓</span><span class="now">2. כיווני עיצוב · ממתין לבחירה שלך</span><span>3–8. בנייה, נגישות, פרטיות, בדיקות</span>
+        <span>1. מחקר ✓</span><span>2. כיווני עיצוב ✓ נבחר ב׳ ״השקית״</span><span class="now">כוונון הכיוון: צבעים, סניפים, הזמנות</span><span>3–8. בנייה, נגישות, פרטיות, בדיקות</span>
       </div>
       <h1>האופה · בוטיק לחם</h1>
-      <p class="lead">סיכום מחקר ושלושה כיווני עיצוב לאתר. כל כיוון מוצג כאב־טיפוס חי למחשב ולמובייל, בבהיר ובכהה, עם אנימציות אמיתיות. עדכון אחרון: 24.10.2026.</p>
+      <p class="lead">סיכום מחקר ושלושה כיווני עיצוב לאתר. בחרת בכיוון ב׳, ״השקית״, והוא עודכן לצבעי הלוגו ואפליקציית ההזמנות. כל כיוון מוצג כאב־טיפוס חי למחשב ולמובייל, בבהיר ובכהה. עדכון אחרון: 24.10.2026.</p>
       <ul class="toc" aria-label="תוכן העמוד">
         <li><a href="#summary">תקציר</a></li>
         <li><a href="#verify">אימות החשבון</a></li>
@@ -100,6 +100,7 @@ body { font-family: var(--font); }
         <li><a href="#inspo">השראה</a></li>
         <li><a href="#missing">חסר או סותר</a></li>
         <li><a href="#law">נגישות ופרטיות</a></li>
+        <li><a href="#app">אפליקציית ההזמנות</a></li>
         <li><a href="#dirs">שלושה כיוונים</a></li>
         <li><a href="#compare">השוואה</a></li>
         <li><a href="#reco">המלצה</a></li>
@@ -142,12 +143,12 @@ body { font-family: var(--font); }
             <tr><td>שם העסק</td><td>״האופה - בוטיק לחם״ (באינסטגרם ״האוֹפה״, עם חולם)</td><td>אינסטגרם, פייסבוק, וואלה, בד״ץ בית יוסף</td><td><span class="pill ok">אומת</span></td></tr>
             <tr><td>סניפים</td><td>נתיבות, שדרות, קריית גת</td><td>כיתוב בפוסט, 15.10.2026; תקציר הביו</td><td><span class="pill ok">אומת</span></td></tr>
             <tr><td>כתובת נתיבות</td><td>שדרות ירושלים 136</td><td>וואלה (2021), Bakerias, כותרת דף הפייסבוק, נעץ במפות גוגל</td><td><span class="pill ok">אומת</span></td></tr>
-            <tr><td>טלפון נתיבות</td><td><span dir="ltr">08-9752093</span></td><td>וואלה (2021), Bakerias, ReadyMap (תקציר)</td><td><span class="pill warn">לאשר</span></td></tr>
+            <tr><td>טלפון נתיבות</td><td><span dir="ltr">08-9752093</span></td><td>haofeapp.com/order (האפליקציה שלכם), netivotonline.com/haofe, וואלה (2021), Bakerias</td><td><span class="pill ok">אומת</span></td></tr>
             <tr><td>סניף שדרות</td><td>יגאל אלון 4, <span dir="ltr">08-6491122</span></td><td>וואלה, 14.12.2021 בלבד</td><td><span class="pill warn">לאשר</span></td></tr>
             <tr><td>סניף קריית גת</td><td>קיים לפי הפוסט. כתובת וטלפון לא נמצאו</td><td>אינסטגרם, 15.10.2026</td><td><span class="pill bad">חסר</span></td></tr>
-            <tr><td>שעות פתיחה</td><td>מקור אחד: א׳–ה׳ 06:00–22:00, ו׳ עד 14:00, מוצ״ש 18:30–22:00. מקור אחר מתחיל ב־06:30 ומסיים במוצ״ש ב־23:00</td><td>Bakerias; ReadyMap (תקציר)</td><td><span class="pill bad">סותר</span></td></tr>
+            <tr><td>שעות נתיבות</td><td>באפליקציית ההזמנות: א׳–ה׳ 05:00–22:00, שישי 05:00–15:00, מוצאי שבת 20:00–23:00, בחגים לברר בסניף. מדריכים ישנים מציגים שעות אחרות (06:00 או 06:30)</td><td>haofeapp.com/order, נצפה 24.10.2026; Bakerias; ReadyMap</td><td><span class="pill warn">לאשר</span> המקור שלכם, אבל האפליקציה עוד לא הושקה</td></tr>
             <tr><td>כשרות</td><td>בד״ץ בית יוסף, ״למהדרין חלבי״ ו״למהדרין פרווה״, משגיח הרב יקיר רומנו. הרשומה היא בכתובת הסוללים 1, אזור התעשייה, בקטגוריית ״מפעלים״</td><td>badatz.biz, נצפה 24.10.2026</td><td><span class="pill warn">לאשר לכל סניף</span></td></tr>
-            <tr><td>מוצרים</td><td>פרנה, סופגניות (בעונה), מאפים בצק עלים, לחמים, פיתות, באגטים, חלות, עוגות קרות, קפה</td><td>פוסטים מאוקטובר 2026; Bakerias; וואלה</td><td><span class="pill ok">אומת</span> בכלליות. שמות מדויקים ומחירים חסרים</td></tr>
+            <tr><td>מוצרים</td><td>באפליקציה: 22 לחמים (רגיל, מלא, מזונות, מוצרי שישי), 25 מאפים (חלבי ופרווה, לפי משקל) ושני מוצרים יבשים. בפיד: סופגניות בעונה וקפה</td><td>haofeapp.com/order; פוסטים מאוקטובר 2026</td><td><span class="pill ok">אומת</span>. מחירים לא מוצגים</td></tr>
             <tr><td>בית ייצור ויצוא</td><td>מפעל שמספק למאפיות, ויצוא מוצרים קפואים לארה״ב</td><td>וואלה, 2021, כתבת תוכן ממומנת</td><td><span class="pill warn">לאשר שעדיין נכון</span></td></tr>
             <tr><td>מייסדים וסיפור</td><td>כתבה ממומנת מ־2021 מזכירה בני זוג מייסדים ואב שהיה אופה באופקים</td><td>וואלה, 2021</td><td><span class="pill warn">לא נשתמש בלי אישורך</span></td></tr>
             <tr><td>אתר קיים</td><td>הכתבה מפנה ל־bakery-653.business.site. גוגל סגרה את אתרי business.site ב־2024, כך שככל הנראה אינו פעיל</td><td>וואלה, 2021</td><td><span class="pill warn">לבדוק אם יש מערכת אחרת</span></td></tr>
@@ -261,6 +262,18 @@ body { font-family: var(--font); }
       </ul>
     </section>
 
+    <section id="app" aria-labelledby="app-h">
+      <h2 id="app-h">אפליקציית ההזמנות · haofeapp.com</h2>
+      <p>בדקתי את האתר לקריאה בלבד ב־24.10.2026: לא מילאתי טופס ולא שלחתי הזמנה.</p>
+      <ul>
+        <li><b>הכתובת הראשית</b> (haofeapp.com) היא מסך ״כניסה לצוות״ עם קוד אישי, תחת השם ״הזמנות האופה: ניהול הזמנות, ייצור ואריזה למאפייה״.</li>
+        <li><b>haofeapp.com/order פתוח לציבור ונראה פעיל.</b> יש בו טופס מלא בשלושה שלבים: בחירת מוצרים, מועד איסוף מסניף נתיבות, שם וטלפון. מופיע בו גם ״אחרי השליחה תקבלו קישור לעמוד מעקב, ועדכון בוואטסאפ״.</li>
+        <li><b>מצב העמוד:</b> הטופס מציע מועדי איסוף כבר מהיום. לעמוד אין הוראת noindex, כך שגוגל עלול להוסיף אותו לתוצאות החיפוש.</li>
+        <li><b>שפה חזותית:</b> שמנת <span class="mono">#F7F1E6</span>, כרטיסים <span class="mono">#FFFCF6</span>, טקסט <span class="mono">#24180F</span>, חום־קרמל <span class="mono">#8A5428</span>, כפתור כהה <span class="mono">#2A1D14</span>, פונט Rubik ודוגמת שיבולים ברקע. מכאן לקחנו את הצבעים החדשים של ״השקית״.</li>
+      </ul>
+      <div class="callout"><b>כדאי לטפל לפני שהאתר עולה</b><p>אם האפליקציה עוד לא אמורה לקבל הזמנות, לקוח שימצא את הקישור יכול לשלוח הזמנה שאף אחד לא מצפה לה. אפשרויות: לסגור את /order בעמוד ״בקרוב״, לחסום שליחה, או להשאיר פתוח רק עם קוד. בכל מקרה מומלץ להוסיף noindex עד ההשקה. באתר החדש הקישור לא יהיה פעיל עד שתגיד שמשיקים.</p></div>
+    </section>
+
     <section id="dirs" aria-labelledby="dirs-h">
       <h2 id="dirs-h">שלושה כיוונים</h2>
       <p>בכל כיוון: קונספט, קשר למחקר, פלטה בהיר וכהה, פונטים לעברית, טבלת תנועה, ואב־טיפוס חי במחשב ובמובייל. התוכן זהה בשלושתם כדי שיהיה קל להשוות.</p>
@@ -270,8 +283,8 @@ body { font-family: var(--font); }
           <div class="body"><b>א׳ · המקום</b><p>האתר כביקור בחנות: תקרת עץ, מנורות תלויות, רצפת משבצות. המנורה היא מתג המצב הכהה. סריף כבד וחם, תנועה רגועה.</p><span class="go">לאב־טיפוס ←</span></div>
         </a>
         <a class="dir" href="b.html">
-          <div class="prev prev-b" aria-hidden="true"><em>האופה</em><span>מה יש בקופסה</span><small>תבחרו סניף ובואו לבקר!</small></div>
-          <div class="body"><b>ב׳ · השקית</b><p>המותג כאריזה והקול מהאינסטגרם: קרפט, חותמת, סרט מוצרים אדום, קופסאות שנפתחות, פתקים בכתב יד. תנועה קופצנית ומוחשית.</p><span class="go">לאב־טיפוס ←</span></div>
+          <div class="prev prev-b" aria-hidden="true"><img src="haofe-logo.png" alt=""><span>מה יש בקופסה</span><small>תבחרו סניף ובואו לבקר!</small></div>
+          <div class="body"><b>ב׳ · השקית <span class="pill ok">נבחר</span></b><p>המותג כאריזה והקול מהאינסטגרם: הלוגו כמדבקה, סרט מוצרים, קופסאות שנפתחות, פתקים בכתב יד. גרסה 2 בצבעי הלוגו והאפליקציה, עם אזור ״הזמנה אונליין · בקרוב״.</p><span class="go">לאב־טיפוס ←</span></div>
         </a>
         <a class="dir" href="c.html">
           <div class="prev prev-c" aria-hidden="true"><span>מהתנור <b>למדף</b></span></div>
@@ -302,7 +315,9 @@ body { font-family: var(--font); }
 
     <section id="reco" aria-labelledby="reco-h">
       <div class="reco">
-        <h2 id="reco-h">ההמלצה: כיוון א׳, המקום</h2>
+        <h2 id="reco-h">הבחירה: כיוון ב׳, השקית</h2>
+        <p><b>בחרת ב״השקית״ וביקשת צבעים של הלוגו או של haofeapp.com.</b> הכיוון עודכן: שמנת ונייר מהאפליקציה, שוקולד של המילה ״האופה״, וקרמל של השיבולים והטבעת. מכיוונים א׳ וג׳ אפשר עדיין לשאול רכיבים, למשל את המדף האופקי מג׳ למובייל.</p>
+        <h3>ההמלצה המקורית שלי הייתה כיוון א׳, המקום</h3>
         <p>זה הכיוון שהכי מחובר למה שראיתי בפועל: החלל שלכם, רצפת המשבצות והמנורות הם מה שמבדיל את ״האופה״ ממאפיות אחרות, והם מתרגמים ישר ל״יש דברים שפשוט כיף שיש קרוב לבית״. הוא עובד טוב בשני המצבים, כי המצב הכהה הוא פשוט החנות בערב. הוא דורש פחות צילום מקצועי מג׳, והוא שקט ומלוטש יותר מב׳.</p>
         <p><b>שילובים שכדאי לשקול:</b> המדף האופקי מג׳ לרשימת המוצרים במובייל; ציטוטי הפיד בכתב יד מב׳ לאזור האינסטגרם; וגם אזור ״איך זה קורה״ מג׳, אם בית הייצור חשוב לך כחלק מהסיפור.</p>
       </div>
