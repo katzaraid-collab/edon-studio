@@ -1,41 +1,58 @@
 /* ==========================================================================
-   Direction B · השקית — motion module: the hero scene
+   Direction B · השקית — motion module: the hero scene. Version 3, 24.10.2026 (plan.md 2.5)
    Pairs with b-motion-hero.css (read its "WHO MOVES WHAT"). Owner: hero motion module.
 
    OWNS (all inside .hero)
-     - word masks for the headline, so its lines rise out of them (the rise itself is CSS)
-     - .b-hold: the scene's opening waits until the plate, bag, wheat and sticker are decoded
-       (at most HOLD_MAX); the text never waits
+     - word masks for the headline (brand line and headline), so its lines rise out of them (the
+       rise itself is CSS); the .sr-only separator is left as it is
+     - .b-hold: the scene's opening waits until the bag and the sticker are decoded (at most
+       HOLD_MAX). The plate (the LCP image) and the text never wait (perf P2)
      - depth: hero scroll progress (0 at the top, 1 once the hero is under the header) moves the
        planes at different rates, as one camera pushing in toward the bag. Every plane scales about
        the bag's contact point, so the bag stays on the counter. Runs as Web Animations on a
        ScrollTimeline of ctx.scroller (compositor, no per-frame script); without ScrollTimeline the
-       loop below writes the same values. Phones get their own, gentler travel.
+       loop below writes the same values. Phones get their own, gentler travel, in which the wheat
+       moves away from the bag and never across it
      - pointer lean per plane and a sunlight shift (fine pointers only, eased, idle when settled)
      - flour dust: one small canvas of motes drifting in the beam (brighter where the light is),
-       stirred a little by the pointer, slower and amber in the evening
-     - .b-off: offscreen or behind the full-screen overlay, the dust and the wheat sway stop
+       stirred a little by the pointer, slower and amber in the evening. It lives for the opening
+       only (O5 / R5 option b): the CSS fades it out by 3.65 s, then the script stops drawing it,
+       hides the canvas and lets the loop go idle for good
+     - .b-off: offscreen or behind the full-screen overlay, the dust and the lean stop
 
-   CONTRACT
-     init(root, ctx) runs for every mounted copy. ctx = { scroller, reduced, frame }.
+   CONTRACT (shell.js today, page contract 2 from site-plan/plan.md section 6.2)
+     init(root, ctx) runs for every mounted copy. ctx = { scroller, reduced, frame } in the
+     prototype; contract 2 adds { contract: 2, page, ioRoot, scrollEvents, vtHost, view }. On a page
+     root = <html class="pb">, scroller = document.scrollingElement, ioRoot = null (the viewport) and
+     scroll events come from window; each key falls back to the prototype value when missing, so the
+     same file runs in both. On a page the window's resize also re-measures (the viewport height
+     changes without <html> resizing, e.g. a phone's address bar).
+     If the CSS opening has already started when init runs (a deferred script on a page that has
+     painted), the module does not hold the scene or re-split the headline (either would restart
+     motion that is already on screen) and skips the dust.
      Under reduced motion (ctx.reduced / .rm) it does nothing: the static scene from the CSS stays.
      One rAF loop, only while something moves and the scene is on screen. Layout is read in init,
-     in the ResizeObserver and at most every 400ms inside the loop, never in scroll/pointer handlers.
-     The returned cleanup removes every listener, observer, timer, animation, the canvas, the word
-     masks and the inline styles.
+     in measure() (ResizeObserver, window resize) and at most every 400ms inside the loop, never in
+     scroll/pointer handlers. The returned cleanup removes every listener, observer, timer,
+     animation, the canvas, the word masks and the inline styles.
    ========================================================================== */
 (function () {
   'use strict';
 
   var FINE_POINTER = '(hover: hover) and (pointer: fine)';
-  var WIDE_AT = 1000;   // b.css section 5: the scene fills the hero from here up
-  var HOLD_MAX = 900;   // ms the scene waits for its images before it plays anyway
+  var WIDE_AT = 1000;   // b.css section 5 (fallback only: the CSS publishes its choice as --b-wide)
+  var HOLD_MAX = 900;   // ms the bag waits for its images before it plays anyway
   var DUST_RES = 0.5;   // canvas pixels per CSS pixel: flour dust is soft, and a quarter of the pixels to upload
   var DUST_STEP = 30;   // ms between dust frames while it only drifts (<0.4px per step); every frame while stirred
+  var DUST_OUT = 'b-hero-dust-out';   // the CSS fade that ends the dust (b-motion-hero.css section 2)
+  var DUST_LIFE = 4000; // ms after the scene starts: fallback end, should that animation never report
+  var OPENED_AFTER = 50; // ms: a CSS opening animation further along than this was already painted
 
   /* Scroll travel at hero progress 1. s: scale about the bag's contact point, x/y: share of the
      hero's width/height, o: opacity. Back and subject share y so the bag stays on the counter;
-     depth comes from scale (the bag grows faster than the wall) and from the wheat overtaking both. */
+     depth comes from scale (the bag grows faster than the wall) and from the wheat overtaking both.
+     Phone: the wheat stands to the right of the bag; its plane grows about the bag's base, so it
+     moves out to the right and never toward the bag. */
   var TRAVEL = {
     wide: {
       back:    { s: 1.08, y: 0.18 },
@@ -56,7 +73,8 @@
   };
 
   /* Pointer lean in px with the pointer at the hero's edge. The scene leans away from the pointer,
-     nearer planes further; the light follows it. Back and subject share y (bag on the counter). */
+     nearer planes further; the light follows it. Back and subject share y (bag on the counter).
+     Narrow layouts lean at half strength (see stepLean). */
   var LEAN = {
     back:    { x: -5,  y: -3 },
     light:   { x: 22,  y: 9 },
@@ -66,10 +84,11 @@
   };
 
   /* Where the light is, in scene fractions. Day: a diagonal shaft (a, b, half-width w of the scene
-     width) matching the plate's own sunlight. Evening: a pool under the lamp (radius r). */
+     width) matching the plate's own sunlight. Evening: the lamp's pool on the bag (radius r),
+     the point the CSS glow is centred on (--b-pool-l, given here in scene fractions). */
   var LIGHT = {
-    wide:   { a: [0.8, 0], b: [0.36, 0.8], w: 0.19, lamp: [0.27, 0.22], r: 0.5, count: 48 },
-    narrow: { a: [1.05, 0], b: [0.25, 0.8], w: 0.3, lamp: [0.5, 0.24], r: 0.62, count: 28 }
+    wide:   { a: [0.8, 0], b: [0.36, 0.8], w: 0.19, lamp: [0.34, 0.52], r: 0.42, count: 48 },
+    narrow: { a: [1.05, 0], b: [0.25, 0.8], w: 0.3, lamp: [0.6, 0.52], r: 0.6, count: 28 }
   };
 
   function noop() {}
@@ -78,6 +97,17 @@
   function listen(el, type, fn, opts) {
     el.addEventListener(type, fn, opts);
     return function () { el.removeEventListener(type, fn, opts); };
+  }
+
+  /* ---------- has the CSS opening already been on screen? (a page whose deferred scripts ran
+     after the first paint, or anything that mounts late) ---------- */
+  function openingStarted(hero) {
+    if (typeof hero.getAnimations !== 'function') return false;
+    try {
+      return hero.getAnimations({ subtree: true }).some(function (a) {
+        return a.animationName && a.currentTime != null && a.currentTime > OPENED_AFTER;
+      });
+    } catch (err) { return false; }
   }
 
   /* ---------- headline: one mask per word, grouped into lines ---------- */
@@ -103,15 +133,18 @@
     (function walk(el) {
       Array.prototype.slice.call(el.childNodes).forEach(function (node) {
         if (node.nodeType === 3) wrap(node);
-        else if (node.nodeType === 1) walk(node);
+        // the separator for screen readers (": ") is not seen, so it gets no mask
+        else if (node.nodeType === 1 && !node.classList.contains('sr-only')) walk(node);
       });
     })(h1);
+    // the words are now inline blocks: give the heading its sentence back as one name
     h1.setAttribute('aria-label', h1.textContent.replace(/\s+/g, ' ').trim());
     h1.classList.add('b-split');
-    // line index and index within the line drive the CSS delay (read once, here)
+    // line index and index within the line drive the CSS delay (read once, here). Positions are
+    // compared in the viewport, so the brand line and the headline share one reference
     var line = -1, top = null, inLine = 0;
     words.forEach(function (mask) {
-      var t = mask.offsetTop;
+      var t = mask.getBoundingClientRect().top;
       if (top === null || t > top + 4) { line++; inLine = 0; top = t; }
       mask.firstChild.style.setProperty('--l', line);
       mask.firstChild.style.setProperty('--wi', inLine++);
@@ -169,12 +202,18 @@
 
   (window.ProtoModules = window.ProtoModules || []).push({
     name: 'b-hero',
+    contract: 2,
     init: function (root, ctx) {
+      ctx = ctx || {};
       var hero = root.querySelector('.hero');
       var scene = hero && hero.querySelector('.scene');
       if (!scene || ctx.reduced || !root.classList.contains('anim')) return noop;
 
-      var scroller = ctx.scroller;
+      /* page contract 2: each key falls back to the prototype frame's single scrolling element */
+      var scroller = ctx.scroller || document.scrollingElement || document.documentElement;
+      var ioRoot = 'ioRoot' in ctx ? ctx.ioRoot : scroller;   // IntersectionObserver root (null = viewport)
+      var scrollEvents = ctx.scrollEvents || scroller;         // where 'scroll' fires (window on a page)
+
       var cleanups = [];
       var destroyed = false;
       var planes = {
@@ -196,33 +235,9 @@
       }
 
       try {
-        /* --- the scene waits for its images; the text does not --- */
-        hero.classList.add('b-hold');
-        var holdTimer = setTimeout(release, HOLD_MAX);
-        function release() {
-          clearTimeout(holdTimer);
-          if (!destroyed) hero.classList.remove('b-hold');
-        }
-        cleanups.push(function () { clearTimeout(holdTimer); hero.classList.remove('b-hold'); });
-        Promise.all(Array.prototype.map.call(scene.querySelectorAll('img'), function (img) {
-          return img.decode ? img.decode().catch(noop) : null;
-        })).then(release, release);
-
-        /* --- headline masks --- */
-        var h1 = hero.querySelector('h1');
-        if (h1) cleanups.push(splitHeadline(h1));
-
-        /* --- flour-dust canvas --- */
-        var canvas = document.createElement('canvas');
-        canvas.className = 'b-motes';
-        canvas.setAttribute('aria-hidden', 'true');
-        scene.insertBefore(canvas, planes.front);
-        var g2 = canvas.getContext('2d');
-        if (g2) planes.motes = canvas;
-        else canvas.remove();
-        cleanups.push(function () { canvas.remove(); });
-        var dayDot = g2 && sprite(255, 249, 236);
-        var nightDot = g2 && sprite(255, 194, 118);
+        // only a page can mount late: in the prototype shell.js clones a fresh copy right before
+        // init, so the check (a style flush of the whole mount) is skipped there
+        var opened = ctx.page ? openingStarted(hero) : false;
 
         /* --- shared state --- */
         var geo = { wide: null, w: 0, h: 0, sceneTop: 0, sceneW: 0, sceneH: 0, cvL: 0, cvT: 0, cvW: 0, cvH: 0, max: 1 };
@@ -230,6 +245,7 @@
         var night = root.getAttribute('data-mode') === 'dark' ? 1 : 0, nightTo = night;
         var motes = [];
         var clock = 0, dustDue = 0, stirred = false;
+        var released = false, dustDone = false, dustTimer = 0;
         var raf = 0, last = 0;
         var fine = window.matchMedia ? window.matchMedia(FINE_POINTER).matches : false;
         var ptr = { in: false, cx: 0, cy: 0, moved: false, rect: null, rectAt: -1e9, mx: null, my: 0, wx: 0, wy: 0 };
@@ -246,6 +262,63 @@
           raf = requestAnimationFrame(tick);
         }
         cleanups.push(function () { if (raf) cancelAnimationFrame(raf); raf = 0; });
+
+        /* --- flour-dust canvas (always mounted while the module runs; hidden once its time is up) --- */
+        var canvas = document.createElement('canvas');
+        canvas.className = 'b-motes';
+        canvas.setAttribute('aria-hidden', 'true');
+        scene.insertBefore(canvas, planes.front);
+        cleanups.push(function () { clearTimeout(dustTimer); canvas.remove(); });
+        var g2 = opened ? null : canvas.getContext('2d');
+        var dayDot = g2 && sprite(255, 249, 236);
+        var nightDot = g2 && sprite(255, 194, 118);
+        if (g2) planes.motes = canvas;
+        else endDust();
+
+        /* the dust is the opening's: when its CSS fade has run (or, failing that, after DUST_LIFE)
+           it is over. The loop stops drawing, the canvas leaves the render tree, and its scroll
+           animation goes, so nothing of it costs a frame again */
+        function endDust() {
+          if (dustDone) return;
+          dustDone = true;
+          clearTimeout(dustTimer);
+          motes = [];
+          canvas.hidden = true;
+          if (anims.motes) { anims.motes.cancel(); delete anims.motes; }
+          canvas.style.removeProperty('transform');
+          canvas.style.removeProperty('translate');
+          planes.motes = null;
+        }
+        if (g2) {
+          cleanups.push(listen(canvas, 'animationend', function (e) {
+            if (e.animationName === DUST_OUT) endDust();
+          }));
+        }
+
+        /* --- the bag waits for its images (the wall and the text do not) --- */
+        var holdTimer = 0;
+        function release() {
+          if (released || destroyed) return;
+          released = true;
+          clearTimeout(holdTimer);
+          hero.classList.remove('b-hold');
+          if (!dustDone) dustTimer = setTimeout(endDust, DUST_LIFE);
+          wake();
+        }
+        if (opened) {
+          release();
+        } else {
+          hero.classList.add('b-hold');
+          holdTimer = setTimeout(release, HOLD_MAX);
+          Promise.all(Array.prototype.map.call(scene.querySelectorAll('.sc-bag-img, .sc-sticker'), function (img) {
+            return img.decode ? img.decode().catch(noop) : null;
+          })).then(release, release);
+        }
+        cleanups.push(function () { clearTimeout(holdTimer); hero.classList.remove('b-hold'); });
+
+        /* --- headline masks (not when its one-piece rise is already playing) --- */
+        var h1 = hero.querySelector('h1');
+        if (h1 && !opened) cleanups.push(splitHeadline(h1));
 
         /* --- motes --- */
         function seed(m, anywhere) {
@@ -405,8 +478,7 @@
         cleanups.push(function () {
           Object.keys(anims).forEach(function (name) { anims[name].cancel(); });
           anims = {};
-          ['back', 'light', 'subject', 'front', 'motes', 'text'].forEach(function (name) {
-            var el = planes[name];
+          [planes.back, planes.light, planes.subject, planes.front, canvas, planes.text].forEach(function (el) {
             if (!el) return;
             el.style.removeProperty('transform');
             el.style.removeProperty('translate');
@@ -414,10 +486,15 @@
           });
         });
 
-        /* --- geometry: read here only (init and ResizeObserver) --- */
+        /* --- geometry: read here only (init, ResizeObserver, window resize on a page) --- */
+        function isWide() {
+          // the composition the container query picked (b-motion-hero.css section 0)
+          var v = getComputedStyle(hero).getPropertyValue('--b-wide').trim();
+          return v ? v === '1' : root.offsetWidth >= WIDE_AT;
+        }
         function measure() {
           if (destroyed) return;
-          var wide = root.offsetWidth >= WIDE_AT;
+          var wide = isWide();
           var layoutChanged = wide !== geo.wide;
           geo.wide = wide;
           geo.w = hero.offsetWidth;
@@ -444,12 +521,15 @@
         }
         measure();
         var measureQueued = 0;
-        var ro = new ResizeObserver(function () {
-          if (measureQueued) return;
+        function queueMeasure() {
+          if (measureQueued || destroyed) return;
           measureQueued = requestAnimationFrame(function () { measureQueued = 0; measure(); });
-        });
+        }
+        var ro = new ResizeObserver(queueMeasure);
         [root, hero, scroller].forEach(function (el) { ro.observe(el); });
-        cleanups.push(function () { ro.disconnect(); if (measureQueued) cancelAnimationFrame(measureQueued); });
+        cleanups.push(function () { ro.disconnect(); if (measureQueued) cancelAnimationFrame(measureQueued); measureQueued = 0; });
+        // a page's viewport can change height without <html> changing size (H6)
+        if (ctx.page) cleanups.push(listen(window, 'resize', queueMeasure, { passive: true }));
 
         /* --- the loop: dust, pointer lean, and the scroll fallback; idle otherwise --- */
         function tick(now) {
@@ -462,7 +542,7 @@
           if (!useTimeline && scrollDirty) { scrollDirty = false; applyScroll(); }
           if (visible && !inert) {
             if (fine && stepLean(dt, now)) busy = true;
-            if (planes.motes) {
+            if (planes.motes && released) {
               dustDue += dt;
               if (stirred || ptr.wx || ptr.wy || dustDue >= DUST_STEP) { stepMotes(dustDue); dustDue = 0; }
               busy = true;
@@ -473,7 +553,7 @@
         }
 
         /* --- scroll: only flags; the loop or the compositor does the work --- */
-        cleanups.push(listen(scroller, 'scroll', function () {
+        cleanups.push(listen(scrollEvents, 'scroll', function () {
           ptr.rect = null;
           if (!useTimeline) { scrollDirty = true; wake(); }
         }, { passive: true }));
@@ -496,9 +576,9 @@
           }, { passive: true }));
         }
 
-        /* --- on screen inside its own viewport (with a 25% lead, so everything is running again
+        /* --- on screen inside its viewport (with a 25% lead, so everything is running again
            before the scene shows), and not behind the full-screen overlay. Offscreen, the dust and
-           the sway stop and the scroll animations are held, so scrolling the rest of the page costs
+           the lean stop and the scroll animations are held, so scrolling the rest of the page costs
            nothing here; played again, a scroll-driven animation re-aligns with the scroll. --- */
         function setOff() {
           var on = visible && !inert;
@@ -514,11 +594,11 @@
         var io = new IntersectionObserver(function (entries) {
           visible = entries[entries.length - 1].isIntersecting;
           setOff();
-        }, { root: scroller, rootMargin: '25% 0px', threshold: 0 });
+        }, { root: ioRoot, rootMargin: '25% 0px', threshold: 0 });
         io.observe(scene);
         // the page behind the overlay is made inert by shell.js; its frames stop while it is open
         function checkInert() {
-          var now = !!scroller.closest('[inert]');
+          var now = !!(scroller.closest && scroller.closest('[inert]'));
           if (now !== inert) { inert = now; setOff(); }
         }
         checkInert();

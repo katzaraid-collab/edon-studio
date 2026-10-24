@@ -52,7 +52,9 @@
 
 /* ===== 2. Base elements ===== */
 * { box-sizing: border-box; }
-[hidden] { display: none !important; }
+/* [hidden] always wins, except on a menu panel that b-motion-micro.js is still folding away
+   (.mi-closing keeps it painted and inert for ~300ms after Shell.menu set [hidden]) */
+[hidden]:not(.mi-closing) { display: none !important; }
 body {
   margin: 0;
   background: var(--bg);
@@ -126,7 +128,7 @@ body::before {
 .phones { display: grid; gap: 28px; grid-template-columns: minmax(0, 1fr); align-items: start; }
 @media (min-width: 760px) { .phones { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1180px) { .phones { grid-template-columns: repeat(2, minmax(0, 390px)) minmax(0, 1fr); } }
-.frame { margin: 0; display: grid; gap: 10px; min-width: 0; }
+.frame { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; min-width: 0; }
 .frame-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 14px; }
 .frame-bar .label { font-weight: 700; margin-inline-end: auto; }
 
@@ -149,13 +151,15 @@ body::before {
 .btn:hover { border-color: var(--ink); }
 .btn--solid { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
-/* the device frames */
+/* the device frames. shell.js sets each box's exact width and height; the aspect-ratio
+   only reserves the space before it runs, so the page does not jump when the frames mount. */
 .frame-box {
-  position: relative; overflow: hidden; max-width: 100%;
+  position: relative; overflow: hidden; max-width: 100%; aspect-ratio: 1280 / 820;
   border-radius: 14px; border: 1px solid var(--line); background: var(--surface);
   box-shadow: 0 1px 0 rgba(0,0,0,.03), 0 18px 40px -24px rgba(0,0,0,.35);
 }
 .frame--phone .frame-box {
+  width: 410px; aspect-ratio: 410 / 800; /* the 390×780 viewport plus the 10px bezel on each side */
   border-radius: 44px; border: 10px solid #111; margin-inline: auto;
   box-shadow: 0 0 0 1px var(--line), 0 24px 50px -28px rgba(0,0,0,.5);
 }
@@ -164,6 +168,10 @@ body::before {
   overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; scrollbar-width: thin;
 }
 .vp:focus-visible { outline-offset: -4px; }
+/* Direction B's sticky header (74px) and mobile bar (65px) sit inside the viewport, so tell
+   the scroller about them: a control reached with Tab then stops clear of both instead of
+   under them (audit A11Y-02). On the real site the window scrolls; see skeleton/page.css. */
+.vp:has(> .pb) { scroll-padding-block: 84px 76px; }
 .frame figcaption { font-size: 13px; color: var(--muted); }
 
 /* "how to use the demo" box next to the phones */

@@ -1,72 +1,100 @@
 /* ==========================================================================
-   Direction B · השקית — motion: micro-interactions
-   Owner: micro motion module (pairs with b-motion-micro.js).
+   Direction B · השקית — motion: micro-interactions. Version 3, 24.10.2026.
+   Owner: micro motion module (pairs with b-motion-micro.js). Source: plan.md section 2.6 with the
+   owner overrides O1 (phone first, "בקרוב" kept), O5 (no ambient loop past 5 s).
 
-   THE IDEA  everything the visitor touches behaves like the bakery's packaging: buttons are
-   hard-shadow stickers that lift off their shadow and press back into it, the product boxes are
-   kraft boxes (the lid flips, the bread lifts out of the window and steams a little), the order
-   slip prints, and switching the theme turns the morning shop into the evening shop.
+   THE IDEA  everything the visitor touches behaves like the bakery's packaging: buttons are pressed
+   tabs that come up off the counter and press back in, the kraft boxes straighten and lift like a
+   box picked up off the shelf (the bread rises a little in its window), a map label lifts off the
+   map and its oven flares, the receipt is stamped on launch day, and switching the theme turns the
+   morning shop into the evening shop.
 
    OWNS
      1 theme       the whole prototype cross-fades between morning and evening in ~450ms: wide
                    layouts interpolate the registered colour tokens; phone layouts swap inside a
-                   view transition scoped to the mount's own viewport (JS), the morning snapshot
-                   fading off the live evening frame on the compositor. The logo sticker fades to
-                   its evening print; the sun sets into the moon in the toggle (rays draw in, the
-                   moon swings up); a warm bloom around the toggle at the switch
-     2 focus       focus-visible rings that ease in (fade and close in from a wider offset)
-     3 buttons     .btn-b, .order, .label .row a, .bar a, the icon buttons: hover lifts the button
-                   off its hard caramel shadow, press sinks it into the shadow (--press-scale)
+                   view transition (JS) scoped to the mount's own viewport in a frame, to the
+                   document on a real page (vtHost, plan C7/M6). The logo sticker fades to its
+                   evening print; the sun sets into the moon in the toggle; a warm bloom at the switch
+     2 focus       focus-visible rings that ease in (fade and close in from a wider offset); the skip
+                   link is deliberately not animated (in view the moment it takes focus)
+     3 buttons     .btn-b (primary and secondary), .order, .lbl .go, .bar a, the icon buttons: hover
+                   lifts the button 2px while its soft shadow grows, press sinks it (--press-scale)
+                   with the shadow drawn in close. No hard caramel shadow (design 10, R11)
      4 header      nav links underline themselves with a hand-drawn stroke, right to left; the
-                   "soon" chip wobbles; the logo sticker tips on hover; a soft shadow appears
-                   under the header once the page scrolls under it; the header ground drops b.css's
-                   backdrop blur (it cost every scrolled frame; see section 4)
-     5 menu        the panel unfolds from the header and its links slide in from the start side,
-                   one after another; it folds away again on close (the JS keeps it painted while
-                   it leaves); the menu icon morphs into an X
-     6 boxes       hover/focus-within: the box straightens and lifts (fine pointers: the JS also
-                   tilts it toward the cursor with a sheen on its window); open: the lid flips
-                   (JS), the product rises out of the window while its shadow spreads, the
-                   details unfold with --spring-settle, the text follows; close reverses
-     7 order slip  "soon": the dot beats like an oven timer (JS, only on screen); "live": the JS
-                   prints the heading, the copy and the button in and stamps the pill
+                   "בקרוב" chip wobbles; the logo sticker tips on hover; a soft shadow gathers under
+                   the header once the page scrolls under it
+     5 menu        the panel unfolds from the header, links slide in one after another; it folds away
+                   on close (the JS keeps it painted while it leaves); the menu icon morphs into an X
+     6 boxes       hover: the box straightens and lifts (fine pointers: the JS also tilts it toward the
+                   cursor, a soft glare follows the cursor in its window); the bread rises a little
+                   in its window while its contact shadow spreads; the tag wobbles (JS)
+     7 order       launch day (data-order="live", O1): the JS stamps the status line on and prints
+                   the order button in, and stamps the nav chip "חדש"; the "בקרוב:" mark gives two
+                   oven-timer beats the first time the printed receipt is on screen (JS, ~3 s, once)
      8 feed        polaroids straighten and lift on hover/focus
-     9 branches    a hanging label sways on its nail on hover; its buttons lift and press
+     9 map         a label and its pin pair up on hover and on keyboard focus inside the label: the
+                   label lifts off the map, the pin's oven flares and gets a cream rim; pointing at
+                   the production house also brightens its bread's road north. A label sways on its
+                   nail when the pointer brushes it (JS)
+    10 footer      the display number underlines itself with the hand-drawn stroke; links thicken
+                   their line; the closing sticker peels up a little on hover
 
-   WHO MOVES WHAT (so nothing fights the scroll and hero modules)
-     .box         transform  = this file (hover, open) or the JS tilt (inline, fine pointers)
-                  translate/rotate = the scroll module's landing wobble (WAAPI, composes)
-     .prod        transform  = this file (open: rises)      translate = scroll module drift
-     .shot::after scale, opacity = this file (open)          transform/translate = scroll module
-     .pola, .label  transform = this file (hover)            translate/rotate/scale = scroll entrance
-     .btn-b etc.  transform, box-shadow = this file          scale/translate = the JS live print
-   Nothing here waits on reveal state ([data-rv], .rv-done): hover/press/open work at any time.
+   WHO MOVES WHAT (so nothing fights the scroll and hero modules; matches b-motion-scroll.css)
+     .box           transform = this file (hover) or the JS tilt (inline, fine pointers)
+                    translate / rotate = the scroll module's landing rock (WAAPI, composes)
+     .prod          transform = this file on hover, ONLY once its box has landed (.rv-done) or when
+                    the scroll module is not running (no .sx), so it never meets a landing
+                    the landing's transform (WAAPI, fill backwards) and translate (drift) = scroll
+     .shot::after   scale, opacity = this file (hover)      transform = scroll (waiting, landing)
+     .pola, .place  transform = this file (hover, pairing)  translate/rotate/scale/opacity = scroll
+                    entrance; .place rotate is also this file's sway (WAAPI), never while an
+                    entrance runs on it
+     .pin           scale = this file (pairing)   transform + opacity = scroll (stamp)   translate = b.css
+     .pin::before   scale = this file             transform + opacity = scroll (the oven lighting)
+     .pin img       box-shadow = this file (the rim, switched, not animated)
+     .place::after  everything = this file (the lifted label's longer shadow, faded by opacity)
+     .order-status  transform-ish WAAPI (scale, rotate, opacity) = this file on the live switch;
+                    the scroll module stamps the visible one while the receipt prints
+     .order-status .st   scale = this file (timer beats)
+     .btn-b etc.    transform, box-shadow, background-color = this file; clip-path / scale (WAAPI)
+                    = the JS live print
+     .tag, .chip-soon    rotate = this file (wobble); the chip's scale/opacity = the live stamp
+   Nothing here waits on reveal state ([data-rv]); hover/press work at any time, except the bread's
+   rise above, which waits for its landing.
 
    RULES
-     - things that scroll under a still pointer (boxes, polaroids, buttons, label buttons, lids)
-       do not react while the prototype is scrolling: the JS sets .mi-scrolling on the root for the
-       gesture and ~160ms after, and their :hover rules wait for it to go
+     - things that scroll under a still pointer (boxes, polaroids, buttons, labels, pins) do not
+       react while the page is scrolling: the JS sets .mi-scrolling on the root for the gesture and
+       ~160ms after, and their :hover rules wait for it to go
      - motion is scoped to .pb.anim; under .rm (system setting or the page checkbox) the b.css
-       safety net zeroes every transition and animation, and state changes land at once. Under .rm
-       hover/press give calm, non-moving feedback (shadow, colour) and nothing is injected
+       safety net zeroes every transition and animation. Under .rm hover/press/pairing give calm,
+       non-moving feedback (colour, rim, shadow) and nothing is injected
      - pointer-only effects sit under @media (hover: hover); keyboard gets the same feedback through
-       :focus-visible / :focus-within, touch through :active and the open/close states
-     - animates transform, opacity, clip-path (and outline/box-shadow on small elements); the one
-       layout animation is the box details unfolding (grid rows, short, user-initiated)
+       :focus-visible / :focus-within (the map labels pair with their pins on focus too), touch
+       through :active
+     - animates transform and individual transforms, opacity, clip-path; box-shadow, outline and
+       colours only on small elements; no layout animation
+     - nothing here may hide content: every hover/press state keeps the text and the products in
+       view; the "הדמיית AI" labels (.ai-tag, .ai-note) are never hidden or animated
      - keyframes in this file are prefixed b-micro-, classes the JS adds are prefixed mi-
      - motion tokens from .pb (b.css section 1) only: --ease-*, --spring-*, --dur-*, --press-scale*,
        --stagger
-     - the "הדמיית AI" labels (.ai-tag, .ai-note) are never hidden or animated; the window sheen and
-       the steam sit under .ai-tag
+     - page contract 2 (site-plan/plan.md 6.3 C7; this file is `contract: 2`, so
+       site-plan/skeleton/tools/port-modules.mjs passes it through untouched): on a page .pb IS the
+       root element (<html class="pb">), so every rule that reaches .pb from outside (the
+       view-transition pseudo-elements) also has a :root.pb form. Nothing else here depends on
+       which element scrolls: the header's scroll timeline is `scroll(nearest block)`
 
    CLASSES THE JS ADDS (all removed by its cleanup)
      root   .mi (module running)  .mi-ready (theme cross-fade armed, one frame after mount)
-            .mi-vt (a scoped view-transition theme swap is running: the token fade is off)
+            .mi-vt (a view-transition theme swap is running: the token fade is off)
+            .mi-scrolling (the page is being scrolled: hover reactions wait)
      .box   .mi-tilt (JS owns its transform)  .mi-hot (pointer inside)
      .menu  .mi-closing (kept painted, inert, while it folds away)
-     root   .mi-scrolling (the prototype is being scrolled: hover reactions wait)
-     .hd    .mi-lift (no scroll timelines)
-     injected  .shot > span.mi-sheen (fine pointers), .shot > span.mi-steam (on open, removed after)
+     .hd    .mi-lift (only without scroll timelines)
+     .pin, .place  .mi-pair (paired by pointer or keyboard focus; also under .rm)
+     .here  .mi-fac (the production house is paired)
+     injected  .shot > span.mi-sheen > i (fine pointers: the window glare; aria-hidden)
    ========================================================================== */
 
 
@@ -74,20 +102,44 @@
 /* the ring transition, appended to every transition list on a focusable element */
 .pb { --mi-ring: outline-color .2s var(--ease-out), outline-offset .34s var(--spring-settle); }
 /* a lifted surface: the shadow grows longer and softer as the thing comes up off the counter */
-.pb { --mi-lift: 0 26px 34px -16px rgba(74, 40, 12, .42); }
-.pb[data-mode="dark"] { --mi-lift: 0 28px 42px -14px rgba(0, 0, 0, .82); }
+.pb {
+  --mi-lift: 0 26px 34px -16px rgba(74, 40, 12, .42);
+  /* buttons: the primary's soft shadow lifted and pressed (b.css rest: inset highlight + 10px/18px) */
+  --mi-btn-up: inset 0 1px 0 rgba(255, 255, 255, .18), 0 16px 22px -12px rgba(42, 29, 20, .62);
+  --mi-btn-down: inset 0 1px 0 rgba(255, 255, 255, .12), 0 5px 8px -6px rgba(42, 29, 20, .6);
+  /* secondary buttons, pills and label chips have no shadow at rest: one appears as they lift */
+  --mi-up: 0 12px 18px -12px rgba(42, 29, 20, .45);
+  /* a map label lifted off the evening counter: the longer shadow added under b.css's own */
+  --mi-place-up: 0 30px 40px -16px rgba(0, 0, 0, .6);
+}
+.pb[data-mode="dark"] {
+  --mi-lift: 0 28px 42px -14px rgba(0, 0, 0, .82);
+  --mi-btn-up: inset 0 1px 0 rgba(255, 255, 255, .18), 0 16px 24px -12px rgba(0, 0, 0, .8);
+  --mi-btn-down: inset 0 1px 0 rgba(255, 255, 255, .12), 0 5px 8px -6px rgba(0, 0, 0, .8);
+  --mi-up: 0 12px 18px -12px rgba(0, 0, 0, .78);
+  --mi-place-up: 0 30px 40px -16px rgba(0, 0, 0, .7);
+}
+/* the hand-drawn caramel stroke (nav links, the footer number): drawn from the start side (right) */
+.pb {
+  --mi-stroke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 6' preserveAspectRatio='none'%3E%3Cpath d='M1.5 3.8C12 2 24 4.6 37 3.3S61 1.6 74 3.2 92 4.4 98.5 2.4' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+}
 
 
 /* ---------- 1 theme: morning to evening ---------- */
 /* The colour tokens are registered so they can be interpolated; the prototype's whole palette then
    cross-fades from one place. Surfaces take the full 450ms; ink switches in the middle 220ms, so the
-   moment where text and ground pass through the same tone is as short as possible. */
+   moment where text and ground pass through the same tone is as short as possible. The v3 tokens
+   are registered too (plan 2.6, dark): the bands (ticker tape, mobile bar), the focus ring, the
+   strong line (theme button rim, receipt divider) and the map ground, so none of them jumps while
+   the rest of the page fades. --focus is a var(--head) alias in b.css; registered, it computes to
+   a colour at each element that sets it (.pb, the bands, the map, the labels) and follows the fade. */
 @property --bg { syntax: "<color>"; inherits: true; initial-value: #F7F1E6; }
 @property --paper { syntax: "<color>"; inherits: true; initial-value: #FFFCF6; }
 @property --kraft { syntax: "<color>"; inherits: true; initial-value: #EADBC2; }
 @property --kraft2 { syntax: "<color>"; inherits: true; initial-value: #FFFCF6; }
 @property --lid { syntax: "<color>"; inherits: true; initial-value: #F6E8D2; }
 @property --line { syntax: "<color>"; inherits: true; initial-value: rgba(74, 50, 28, .2); }
+@property --line-strong { syntax: "<color>"; inherits: true; initial-value: rgba(74, 50, 28, .55); }
 @property --caramel { syntax: "<color>"; inherits: true; initial-value: #B0702A; }
 @property --btn { syntax: "<color>"; inherits: true; initial-value: #2A1D14; }
 @property --ink { syntax: "<color>"; inherits: true; initial-value: #24180F; }
@@ -96,6 +148,11 @@
 @property --stamp { syntax: "<color>"; inherits: true; initial-value: #7A4520; }
 @property --on-stamp { syntax: "<color>"; inherits: true; initial-value: #FFFAF2; }
 @property --on-btn { syntax: "<color>"; inherits: true; initial-value: #FBF4EA; }
+@property --band { syntax: "<color>"; inherits: true; initial-value: #2A1D14; }
+@property --on-band { syntax: "<color>"; inherits: true; initial-value: #FBF4EA; }
+@property --band-accent { syntax: "<color>"; inherits: true; initial-value: #D99A52; }
+@property --focus { syntax: "<color>"; inherits: true; initial-value: #4A1D0B; }
+@property --map-bg { syntax: "<color>"; inherits: true; initial-value: #17100B; }
 
 /* armed by the JS one frame after mount (so a mount never fades in from the template's mode);
    never under .rm, where the switch is instant */
@@ -103,23 +160,29 @@
   transition:
     --bg .45s var(--ease-in-out), --paper .45s var(--ease-in-out), --kraft .45s var(--ease-in-out),
     --kraft2 .45s var(--ease-in-out), --lid .45s var(--ease-in-out), --line .45s var(--ease-in-out),
-    --caramel .45s var(--ease-in-out), --btn .45s var(--ease-in-out),
+    --line-strong .45s var(--ease-in-out), --caramel .45s var(--ease-in-out), --btn .45s var(--ease-in-out),
+    --band .45s var(--ease-in-out), --map-bg .45s var(--ease-in-out),
     --ink .22s .115s var(--ease-in-out), --ink2 .22s .115s var(--ease-in-out), --head .22s .115s var(--ease-in-out),
-    --stamp .22s .115s var(--ease-in-out), --on-stamp .22s .115s var(--ease-in-out), --on-btn .22s .115s var(--ease-in-out);
+    --stamp .22s .115s var(--ease-in-out), --on-stamp .22s .115s var(--ease-in-out), --on-btn .22s .115s var(--ease-in-out),
+    --on-band .22s .115s var(--ease-in-out), --band-accent .22s .115s var(--ease-in-out), --focus .22s .115s var(--ease-in-out);
 }
-/* shadows are not colour tokens: the surfaces that carry one fade it instead of snapping */
+/* shadows are not colour tokens: the surfaces that carry one fade it instead of snapping (boxes,
+   polaroids and labels already transition their shadow for hover) */
 .pb.mi-ready .slip, .pb.mi-ready .menu { transition: box-shadow .45s var(--ease-in-out); }
 
-/* Phone layouts (a 390px frame, or the overlay on a phone): there the token fade costs a full
-   restyle of the page every frame, so the JS swaps the theme inside a view transition scoped to
-   this mount's own viewport (never the document: other mounts share it). The evening frame is
-   drawn once, live, and the morning snapshot fades off it on the compositor: no blend group, no
-   per-frame restyle. Timing is the --ease-in-out token written out (the pseudo-elements hang off
-   the viewport, outside .pb, so they cannot read its tokens). */
-:has(> .pb.mi-vt)::view-transition-group(root) { animation: none; }
-:has(> .pb.mi-vt)::view-transition-image-pair(root) { isolation: auto; }
-:has(> .pb.mi-vt)::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
-:has(> .pb.mi-vt)::view-transition-old(root) { mix-blend-mode: normal; animation: b-micro-dusk .45s cubic-bezier(.65, 0, .35, 1) both; }
+/* Phone layouts (a 390px frame, the overlay on a phone, a phone visiting the real page): there the
+   token fade costs a full restyle of the page every frame, so the JS swaps the theme inside a view
+   transition: in a frame it is scoped to this mount's own viewport (never the presentation
+   document: other mounts share it), on a real page it covers the document (vtHost = document).
+   The evening frame is drawn once, live, and the morning snapshot fades off it on the compositor:
+   no blend group, no per-frame restyle. Timing is the --ease-in-out token written out (the
+   pseudo-elements hang off the transition's host, outside .pb in a frame, so they cannot read its
+   tokens). In a frame the host is the .pb's parent (the :has form); on a page .pb is the root
+   itself, which has no parent to :has() from (the :root.pb form, plan C7). */
+:has(> .pb.mi-vt)::view-transition-group(root), :root.pb.mi-vt::view-transition-group(root) { animation: none; }
+:has(> .pb.mi-vt)::view-transition-image-pair(root), :root.pb.mi-vt::view-transition-image-pair(root) { isolation: auto; }
+:has(> .pb.mi-vt)::view-transition-new(root), :root.pb.mi-vt::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+:has(> .pb.mi-vt)::view-transition-old(root), :root.pb.mi-vt::view-transition-old(root) { mix-blend-mode: normal; animation: b-micro-dusk .45s cubic-bezier(.65, 0, .35, 1) both; }
 @keyframes b-micro-dusk { from { opacity: 1; } to { opacity: 0; } }
 
 /* the logo sticker: both prints stacked, the evening print fades in over the morning one */
@@ -149,49 +212,56 @@
 
 /* ---------- 2 focus rings that ease in ---------- */
 /* at rest the ring is there but transparent and a little wider, so focus fades it in as it closes
-   onto the element (forced-colours mode would paint a transparent outline, so there the ring
-   exists only while focused, as in b.css) */
-
+   onto the element (b.css draws the ring: 3px var(--focus), offset 3px, -6px on the tape and the
+   bar). Forced-colours mode would paint a transparent outline, so there the ring exists only while
+   focused, as in b.css. */
 .pb a, .pb button { outline: 3px solid transparent; outline-offset: 9px; transition: var(--mi-ring); }
-/* rings that would be clipped by their surroundings sit inside the element instead */
-.pb .lid, .pb .bar a, .pb .tk-pause { outline-offset: 2px; }
-.pb .lid:focus-visible { outline-offset: -6px; }
-.pb .bar a:focus-visible, .pb .tk-pause:focus-visible { outline-offset: -5px; }
+/* rings that b.css draws inside the element (the tape's pause button, the bar cells) close in from
+   just outside it */
+.pb .bar a, .pb .tk-pause { outline-offset: 2px; }
 @media (forced-colors: active) {
   .pb a:not(:focus-visible), .pb button:not(:focus-visible) { outline: none; }
 }
+/* (the skip link is not animated: it must be fully in view the moment it takes focus) */
 
 
 /* ---------- 3 buttons ---------- */
-/* the hard-shadow button. Its caramel shadow is a fixed slot on the counter: hover lifts the face
-   up off it (the shadow grows by the same amount, so it stays put), press sinks the face into it */
-.pb .btn-b { transition: transform var(--dur-spring-bounce) var(--spring-bounce), box-shadow var(--dur-spring-bounce) var(--spring-bounce), var(--mi-ring); }
+/* The primary is a pressed chocolate tab with a soft shadow, the secondary paper with a rim (b.css,
+   design finding 10). Hover comes up 2px off the counter while the soft shadow grows longer and the
+   face warms a step; press sinks it in (--press-scale, design 10 keeps the .97) with the shadow
+   drawn in close. Under .rm: the colour step only, nothing moves. Keyboard focus gets the hover
+   state, so the button that has the ring is also the one that came up. */
+.pb .btn-b { transition: transform .25s var(--ease-spring), box-shadow .25s var(--ease-out), background-color .2s var(--ease-out), var(--mi-ring); }
 @media (hover: hover) {
-  .pb.anim:where(:not(.mi-scrolling)) .btn-b:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--caramel); }
+  .pb:where(:not(.mi-scrolling)) .btn-b:hover { background-color: var(--lid); }
+  .pb:where(:not(.mi-scrolling)) .btn-b--main:hover { background-color: color-mix(in srgb, var(--btn) 88%, var(--caramel)); }
+  .pb.anim:where(:not(.mi-scrolling)) .btn-b:hover { transform: translateY(-2px); box-shadow: var(--mi-up); }
+  .pb.anim:where(:not(.mi-scrolling)) .btn-b--main:hover { box-shadow: var(--mi-btn-up); }
 }
-.pb.anim .btn-b:focus-visible { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--caramel); }
+.pb .btn-b:focus-visible { background-color: var(--lid); }
+.pb .btn-b--main:focus-visible { background-color: color-mix(in srgb, var(--btn) 88%, var(--caramel)); }
+.pb.anim .btn-b:focus-visible { transform: translateY(-2px); box-shadow: var(--mi-up); }
+.pb.anim .btn-b--main:focus-visible { box-shadow: var(--mi-btn-up); }
+.pb .btn-b:active { background-color: color-mix(in srgb, var(--lid) 82%, var(--caramel)); }
+.pb .btn-b--main:active { background-color: color-mix(in srgb, var(--btn) 80%, var(--caramel)); }
 .pb.anim .btn-b:active {
-  transform: translate(3px, 3px) scale(var(--press-scale)); box-shadow: 1px 1px 0 var(--caramel);
-  transition: transform 80ms var(--ease-out), box-shadow 80ms var(--ease-out), var(--mi-ring);
+  transform: translateY(0) scale(var(--press-scale)); box-shadow: none;
+  transition: transform 80ms var(--ease-out), box-shadow 80ms var(--ease-out), background-color 80ms var(--ease-out), var(--mi-ring);
 }
-.pb.rm .btn-b:active { box-shadow: 1px 1px 0 var(--caramel); }
+.pb.anim .btn-b--main:active { box-shadow: var(--mi-btn-down); }
 
-/* header pill (phone order) */
-.pb .order { transition: transform var(--dur-spring-bounce) var(--spring-bounce), box-shadow var(--dur-slow) var(--ease-out), var(--mi-ring); }
+/* header pill (הזמנה בטלפון) and the labels' Google Maps chips: the same tab, smaller */
+.pb .order, .pb .lbl .go { transition: transform .25s var(--ease-spring), box-shadow .25s var(--ease-out), background-color .2s var(--ease-out), var(--mi-ring); }
 @media (hover: hover) {
-  .pb.anim .order:hover { transform: translateY(-2px); box-shadow: 0 10px 16px -10px rgba(36, 24, 15, .55); }
+  .pb:where(:not(.mi-scrolling)) :is(.order, .lbl .go):hover { background-color: color-mix(in srgb, var(--btn) 88%, var(--caramel)); }
+  .pb.anim:where(:not(.mi-scrolling)) .order:hover { transform: translateY(-2px); box-shadow: var(--mi-up); }
+  .pb.anim:where(:not(.mi-scrolling)) .lbl .go:hover { transform: translateY(-1px); box-shadow: var(--mi-up); }
 }
+.pb :is(.order, .lbl .go):focus-visible { background-color: color-mix(in srgb, var(--btn) 88%, var(--caramel)); }
 .pb.anim .order:focus-visible { transform: translateY(-2px); }
-.pb.anim .order:active { transform: scale(var(--press-scale)); box-shadow: none; transition: transform 80ms var(--ease-out), box-shadow 80ms var(--ease-out), var(--mi-ring); }
-
-/* branch label buttons: they peel up off the label with a small caramel shadow */
-.pb .label .row a { transition: transform var(--dur-spring-bounce) var(--spring-bounce), box-shadow var(--dur-spring-bounce) var(--spring-bounce), var(--mi-ring); }
-@media (hover: hover) {
-  .pb.anim:where(:not(.mi-scrolling)) .label .row a:hover { transform: translate(-2px, -2px); box-shadow: 3px 3px 0 var(--caramel); }
-  .pb.rm .label .row a:hover { box-shadow: 3px 3px 0 var(--caramel); }
-}
-.pb.anim .label .row a:focus-visible { transform: translate(-2px, -2px); box-shadow: 3px 3px 0 var(--caramel); }
-.pb.anim .label .row a:active { transform: scale(var(--press-scale)); box-shadow: 0 0 0 var(--caramel); transition: transform 80ms var(--ease-out), box-shadow 80ms var(--ease-out), var(--mi-ring); }
+.pb.anim .lbl .go:focus-visible { transform: translateY(-1px); }
+.pb :is(.order, .lbl .go):active { background-color: color-mix(in srgb, var(--btn) 80%, var(--caramel)); }
+.pb.anim :is(.order, .lbl .go):active { transform: scale(var(--press-scale)); box-shadow: none; transition: transform 80ms var(--ease-out), box-shadow 80ms var(--ease-out), background-color 80ms var(--ease-out), var(--mi-ring); }
 
 /* mobile bar: the cell presses, a soft wash marks the touch, the icon squashes and springs back */
 .pb .bar a { position: relative; -webkit-tap-highlight-color: transparent; transition: transform var(--dur-spring-bounce) var(--spring-bounce), var(--mi-ring); }
@@ -202,7 +272,7 @@
 .pb.anim .bar a:active svg { transform: translateY(1px) scale(.84); transition-duration: 80ms; transition-timing-function: var(--ease-out); }
 @media (hover: hover) { .pb.anim .bar a:hover svg { transform: translateY(-2px); } }
 
-/* round icon buttons (theme, menu, ticker pause): the button gives, the icon squashes */
+/* round icon buttons (theme, menu, the tape's pause): the button gives, the icon squashes */
 .pb .theme-btn, .pb .menu-btn, .pb .tk-pause { transition: transform var(--dur-spring-bounce) var(--spring-bounce), border-color .3s var(--ease-out), var(--mi-ring); }
 .pb.anim .theme-btn:active, .pb.anim .menu-btn:active, .pb.anim .tk-pause:active { transform: scale(var(--press-scale)); transition: transform 80ms var(--ease-out), var(--mi-ring); }
 .pb.anim .menu-btn svg, .pb.anim .tk-pause svg { transition: scale var(--dur-spring-bounce) var(--spring-bounce); }
@@ -215,19 +285,24 @@
   .pb.anim[data-mode="dark"] .theme-btn:hover .moon { rotate: -14deg; }
 }
 
-/* (the "not open yet" placeholder shakes its head when pressed: the JS plays it, so it always
-   finishes even if the pointer lets go mid-shake) */
+/* text links on the labels, the receipt and the footer: the line thickens and warms to the stamp
+   colour (paint only, small elements) */
+.pb :is(.lbl a:not(.go), .order-num a, .ft-cities a, .ft-social a, .ft-legal a) { transition: text-decoration-color .2s var(--ease-out), text-decoration-thickness .2s var(--ease-out), transform var(--dur-spring-bounce) var(--spring-bounce), var(--mi-ring); }
+@media (hover: hover) {
+  .pb :is(.lbl a:not(.go), .ft-cities a, .ft-social a, .ft-legal a):hover { text-decoration-color: var(--stamp); text-decoration-thickness: 2px; }
+  .pb .order-num a:hover { text-decoration-color: var(--stamp); text-decoration-thickness: 3px; }
+}
+.pb :is(.lbl a:not(.go), .ft-cities a, .ft-social a, .ft-legal a):focus-visible { text-decoration-color: var(--stamp); text-decoration-thickness: 2px; }
+.pb .order-num a:focus-visible { text-decoration-color: var(--stamp); text-decoration-thickness: 3px; }
 
 
 /* ---------- 4 header ---------- */
 /* nav links: a hand-drawn caramel stroke draws itself under the link in reading direction (it grows
-   from the right edge), and fades away when the pointer leaves */
-.pb .nav a { position: relative; }
+   from the right edge), and fades away when the pointer leaves; the cream ground from b.css fades in */
+.pb .nav a { position: relative; transition: background-color .2s var(--ease-out), var(--mi-ring); }
 .pb .nav a::after {
   content: ""; position: absolute; left: 12px; right: 12px; bottom: 3px; height: 6px; pointer-events: none;
-  background: var(--caramel);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 6' preserveAspectRatio='none'%3E%3Cpath d='M1.5 3.8C12 2 24 4.6 37 3.3S61 1.6 74 3.2 92 4.4 98.5 2.4' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 6' preserveAspectRatio='none'%3E%3Cpath d='M1.5 3.8C12 2 24 4.6 37 3.3S61 1.6 74 3.2 92 4.4 98.5 2.4' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+  background: var(--caramel); -webkit-mask: var(--mi-stroke); mask: var(--mi-stroke);
   clip-path: inset(0 0 0 100%); opacity: 0;
   transition: clip-path 0s .24s, opacity .22s var(--ease-out);
 }
@@ -236,9 +311,9 @@
 }
 .pb .nav a:focus-visible::after { clip-path: inset(0); opacity: 1; transition: clip-path .46s var(--ease-out), opacity 0s; }
 
-/* chips and tags wobble when their link is entered or focused (the JS plays it once per entry, to
-   the end, so leaving early never snaps it). inline-block so the chip can turn; it keeps its
-   baseline and size */
+/* the "בקרוב" / "חדש" chip wobbles when its link is entered or focused (the JS plays it once per
+   entry, to the end, so leaving early never snaps it), and is stamped on launch day. inline-block
+   so it can turn; it keeps its baseline and size */
 .pb .nav .chip-soon { display: inline-block; }
 
 /* the logo is a sticker: hover tips it like a peeling corner; the evening print fades its paper */
@@ -246,12 +321,6 @@
 @media (hover: hover) { .pb.anim .mark:hover .mark-logo { transform: rotate(-12deg) scale(1.06); } }
 .pb.anim .mark:focus-visible .mark-logo { transform: rotate(-12deg) scale(1.06); }
 .pb.anim .mark:active .mark-logo { transform: rotate(-5deg) scale(var(--press-scale)); transition-duration: 80ms; transition-timing-function: var(--ease-out); }
-
-/* the header ground: b.css frosts it (94% paper over an 8px backdrop blur). The blur re-renders the
-   strip under the header on every scrolled frame (measured: desktop scrolling p50 33ms with it,
-   16.7ms without) while only 6% of what is behind ever shows, so the ground is plain paper. (Any
-   see-through without the blur shows sharp ghosts of the page, e.g. a caramel tag, so: opaque.) */
-.pb .hd { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--paper); }
 
 /* once the page scrolls under the header, a soft shadow gathers under it (scroll-driven; the JS
    toggles .mi-lift where scroll timelines are missing). Below the menu panel, above the page. */
@@ -274,7 +343,8 @@
 .pb .menu-btn path { d: path("M4 8L20 8M4 16L20 16"); }
 .pb .menu-btn[aria-expanded="true"] path { d: path("M6 6L18 18M6 18L18 6"); }
 .pb.anim .menu-btn path { transition: d var(--dur-spring-bounce) var(--spring-bounce); }
-/* the panel keeps painting (inert) while the JS folds it away after Shell.menu set [hidden] */
+/* the panel keeps painting (inert) while the JS folds it away after Shell.menu set [hidden]
+   (shell.css and the site's page.css both exempt .mi-closing from their [hidden] rule) */
 .pb .menu.mi-closing[hidden] { display: grid; }
 @media (hover: hover) {
   .pb.anim .menu a { transition: translate var(--dur-spring) var(--ease-out), var(--mi-ring); }
@@ -283,9 +353,9 @@
 
 
 /* ---------- 6 boxes ---------- */
+/* hovering a box lifts it off the shelf, straight; nothing in a box is focusable today (the lids are
+   gone, plan R1), :focus-within is kept so a link added later gets the same state from the keyboard */
 .pb .box { transition: transform var(--dur-slow) var(--spring-settle), box-shadow var(--dur-slow) var(--ease-out); }
-/* an open box is picked up straight; hovering or focusing one lifts it off the shelf */
-.pb.anim .box.open { transform: rotate(0deg); }
 @media (hover: hover) {
   .pb.anim:where(:not(.mi-scrolling)) .box:hover { transform: rotate(0deg) translateY(-6px); box-shadow: var(--mi-lift); }
   .pb.rm .box:hover { box-shadow: var(--mi-lift); }
@@ -294,63 +364,49 @@
 .pb.rm .box:focus-within { box-shadow: var(--mi-lift); }
 /* fine pointers: the JS drives the transform (lift, straighten, 3D tilt toward the cursor) */
 .pb .box.mi-tilt { transition: box-shadow var(--dur-slow) var(--ease-out); will-change: transform; }
-/* while a box is open its row-mates keep their own height instead of stretching into an empty
-   kraft panel under their lids (with nothing open the grid is exactly as b.css lays it out) */
-.pb .box-grid:has(> .box.open) { align-items: start; }
 
-/* the lid strip: hinged at its top edge (the JS flips it on open/close); hover warms it, press gives */
-.pb .lid { transform-origin: 50% 0; transition: scale var(--dur-spring-bounce) var(--spring-bounce), background-color .24s var(--ease-out), var(--mi-ring); }
-@media (hover: hover) { .pb:where(:not(.mi-scrolling)) .lid:hover { background-color: color-mix(in srgb, var(--lid) 86%, var(--caramel)); } }
-.pb.anim .lid:active { scale: var(--press-scale-soft); transition: scale 80ms var(--ease-out), background-color .24s var(--ease-out), var(--mi-ring); }
-/* the chevron flips over like a flap (state cue, so it also turns, instantly, under .rm) */
-.pb .lid svg { transform: perspective(50px) rotateX(0deg); transition: transform var(--dur-spring-bounce) var(--spring-bounce), translate var(--dur-spring) var(--ease-out); }
-.pb .lid[aria-expanded="true"] svg { transform: perspective(50px) rotateX(180deg); }
+/* the bread rises a little in its window toward you while its contact shadow spreads and softens.
+   Only once the product has landed (.rv-done on the box, set by the scroll module) or with no scroll
+   module at all: a transition on transform would otherwise override the landing while it plays.
+   (Its evening dimming, a b.css filter, switches at once: a filter fade on six photos costs more per
+   frame than the whole colour cross-fade.) */
+.pb.anim .prod { transition: transform var(--dur-spring-bounce) var(--spring-bounce); }
+.pb.anim .shot::after { transition: scale var(--dur-spring-bounce) var(--spring-bounce), opacity var(--dur-slow) var(--ease-out); }
 @media (hover: hover) {
-  .pb.anim:where(:not(.mi-scrolling)) .lid:hover svg { translate: 0 2px; }
-  .pb.anim:where(:not(.mi-scrolling)) .lid[aria-expanded="true"]:hover svg { translate: 0 -2px; }
+  .pb.anim:not(.sx):where(:not(.mi-scrolling)) .box:hover .prod,
+  .pb.anim.sx:where(:not(.mi-scrolling)) .box.rv-done:hover .prod { transform: translateY(-3.5%) scale(1.03); }
+  .pb.anim:not(.sx):where(:not(.mi-scrolling)) .box:hover .shot::after,
+  .pb.anim.sx:where(:not(.mi-scrolling)) .box.rv-done:hover .shot::after { scale: 1.18 1.1; opacity: .62; }
 }
 
-/* open: the product rises out of the window toward you, its contact shadow spreads and softens */
-/* (its evening dimming, a b.css filter, switches at once: a filter fade on six photos costs more
-   per frame than the whole colour cross-fade) */
-.pb.anim .prod { transition: transform var(--dur-spring-bounce) var(--spring-bounce); }
-.pb.anim .box.open .prod { transform: translateY(-6%) scale(1.045); }
-.pb.anim .shot::after { transition: scale var(--dur-spring-bounce) var(--spring-bounce), opacity var(--dur-slow) var(--ease-out); }
-.pb.anim .box.open .shot::after { scale: 1.24 1.14; opacity: .58; }
-
-/* the details unfold (one short, user-initiated layout animation); the text follows them out of
-   the box; closing folds faster, the text leaving first */
-.pb.anim .det { transition: grid-template-rows .28s var(--ease-in-out); }
-.pb.anim .box.open .det { transition: grid-template-rows var(--dur-slow) var(--spring-settle); }
-.pb.anim .det p { opacity: 0; translate: 0 -10px; transition: opacity .14s var(--ease-out), translate .2s var(--ease-in); }
-.pb.anim .box.open .det p { opacity: 1; translate: 0 0; transition: opacity .3s .08s var(--ease-out), translate var(--dur-spring-bounce) .05s var(--spring-bounce); }
-
-/* the window sheen (fine pointers, injected by the JS): a soft glare that follows the cursor on the
-   box's window, under the "הדמיית AI" tag */
+/* the window glare (fine pointers, injected by the JS): the span covers the window's box (b.css
+   .shot::before: same inset), the <i> inside follows the cursor on its own layer. The JS keeps the
+   glare's centre at least one radius inside that box, so it never spills past the window onto the
+   page. Not clipped on purpose: with a rounded clip around the moving layer, hovering the boxes at a
+   4x-throttled CPU took 26.5-29 ms per frame on average against 23.4-24.2 ms for the old unclipped
+   sheen (unclipped like this: 24.2-25.6 ms, same main-thread totals as before). The glare's soft
+   edge at the arched top corners lands on the box's own kraft, where light would fall anyway. */
 .pb .mi-sheen {
-  position: absolute; z-index: 1; left: 0; top: 0; width: 70%; aspect-ratio: 1; margin: -35% 0 0 -35%;
-  border-radius: 50%; pointer-events: none; opacity: 0;
-  background: radial-gradient(closest-side, rgba(255, 253, 246, .62), rgba(255, 250, 238, .2) 48%, rgba(255, 250, 238, 0));
+  position: absolute; z-index: 1; inset: 9% 7% 3%; pointer-events: none; opacity: 0;
   transition: opacity .4s var(--ease-out);
 }
-.pb[data-mode="dark"] .mi-sheen { background: radial-gradient(closest-side, rgba(255, 194, 124, .24), rgba(255, 180, 100, .07) 50%, rgba(255, 180, 100, 0)); }
-/* its own layer while it follows the cursor, so the box's picture is never re-rasterised under it */
-.pb .box.mi-hot .mi-sheen { opacity: 1; transition-duration: .25s; will-change: translate; }
-/* steam from fresh bread, rising out of the window when a box opens (the JS animates and removes it) */
-.pb .mi-steam {
-  position: absolute; z-index: 1; width: 24%; aspect-ratio: 1 / 1.5; border-radius: 50%; pointer-events: none; opacity: 0;
-  background: radial-gradient(closest-side, rgba(255, 255, 255, .7), rgba(255, 255, 255, 0));
+.pb .mi-sheen > i {
+  position: absolute; left: 0; top: 0; width: 50%; aspect-ratio: 1; margin: -25% 0 0 -25%; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 253, 246, .5), rgba(255, 250, 238, .16) 48%, rgba(255, 250, 238, 0));
 }
-.pb[data-mode="dark"] .mi-steam { background: radial-gradient(closest-side, rgba(255, 228, 196, .34), rgba(255, 228, 196, 0)); }
+.pb[data-mode="dark"] .mi-sheen > i { background: radial-gradient(closest-side, rgba(255, 194, 124, .24), rgba(255, 180, 100, .07) 50%, rgba(255, 180, 100, 0)); }
+.pb .box.mi-hot .mi-sheen { opacity: 1; transition-duration: .25s; }
+.pb .box.mi-hot .mi-sheen > i { will-change: translate; }
 
 
-/* ---------- 7 order slip ---------- */
-/* "soon": the dot beats like an oven timer (a beat, a smaller beat, a ring leaving it, then rest).
-   The JS plays one beat every 2.6s, only while the slip is on screen, so between beats nothing is
-   animating at all (a CSS infinite loop kept ticking through its rests and cost frames while the
-   page scrolled). In "live" the dot holds still: the oven is open. */
-.pb .soon i { position: relative; }
-.pb.anim .soon i::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 1.5px solid var(--caramel); opacity: 0; pointer-events: none; }
+/* ---------- 7 order receipt ---------- */
+/* O1: the receipt leads with the phone; the status line says the online order is coming. The JS
+   gives the "בקרוב:" mark two oven-timer beats (a tick and a smaller tick, scale only) the first
+   time the printed receipt is on screen, then never again in that mount: about 3 s, inside the 5 s
+   that O5 allows any ambient motion, and nothing between or after. On launch day the status line is
+   stamped on and the order button prints in (JS). inline-block so the mark can scale; one word,
+   same line box. */
+.pb.mi .order-status .st { display: inline-block; }
 
 
 /* ---------- 8 feed polaroids ---------- */
@@ -360,11 +416,80 @@
   .pb.rm .pola:hover { box-shadow: var(--mi-lift); }
 }
 .pb.anim .pola:focus-visible { transform: rotate(0deg) translateY(-6px) scale(1.015); box-shadow: var(--mi-lift); }
+.pb.rm .pola:focus-visible { box-shadow: var(--mi-lift); }
 .pb.anim .pola:active { transform: rotate(0deg) translateY(-3px) scale(var(--press-scale-soft)); transition: transform 90ms var(--ease-out), box-shadow var(--dur-slow) var(--ease-out), var(--mi-ring); }
 
 
-/* ---------- 9 branch labels ---------- */
-/* a label hangs on a nail above its top edge (the scroll entrance swings it in from the same
-   point); brushing it with the pointer sets it swaying for a moment (the JS plays the sway, so it
-   always finishes) */
-.pb .label { transform-origin: 50% -18px; }
+/* ---------- 9 map "אנחנו כאן." ---------- */
+/* A label hangs on a nail just above its top edge (the scroll module swings it in from the same
+   point). A label and its pin pair up (.mi-pair, set by the JS on both from either side, by
+   pointer, and by keyboard focus on a link inside the label): the label comes up off the map, the
+   pin's oven flares (the badge grows a little, its glow spreads) and the badge gets a cream rim.
+   The pins are deliberately not focusable (they live inside the map's role="img"); each label holds
+   its place's actions, so focusing them is the keyboard way to point at a pin. Pairing the
+   production house also brightens its bread's road north and "לסופרים בכל הארץ" (.here.mi-fac).
+   Under .rm the JS still pairs (a class, no motion): the rim, the brighter road and the shadow
+   stay; the scale and the lift do not. :hover and :focus-within on the label itself are kept as a
+   fallback for when the JS is not running. */
+/* The lifted label's longer shadow is drawn once on its own ::after and faded in by opacity (the
+   compositor's job): animating the label's large blurred box-shadow repainted it on every frame (one
+   pointer pass over all pins and labels, Chromium trace at 1440: 1.37 s of main-thread work that
+   way, 0.75 s this way). isolation keeps that layer just under the
+   label's own paint; :where() keeps the position at zero specificity, so on the wide map b.css's
+   `position: absolute` still wins (relative only applies to the list under a narrow map). */
+:where(.pb .place) { position: relative; }
+.pb .place { isolation: isolate; transform-origin: 50% -14px; transition: transform var(--dur-slow) var(--spring-settle); }
+.pb .place::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  box-shadow: var(--mi-place-up); opacity: 0; transition: opacity var(--dur-slow) var(--ease-out);
+}
+.pb .place:is(.mi-pair, :focus-within)::after { opacity: 1; }
+.pb.anim .place:is(.mi-pair, :focus-within) { transform: translateY(-4px); }
+@media (hover: hover) {
+  .pb:where(:not(.mi-scrolling)) .place:hover::after { opacity: 1; }
+  .pb.anim:where(:not(.mi-scrolling)) .place:hover { transform: translateY(-4px); }
+}
+/* the Ofakim label is a dashed outline on the map (the past): its line firms up instead */
+.pb .place--past::after { content: none; }
+.pb .place--past:is(.mi-pair, :focus-within, :hover) { border-color: rgba(205, 187, 163, .9); }
+
+/* only the scale and the glow animate (compositor); the rim and the square's colour switch at once:
+   as transitions they repainted the map on every frame of every pairing (the same pass: 1.26 s of
+   main-thread work with them, 0.75 s without) */
+.pb .pin { transition: scale var(--dur-spring-bounce) var(--spring-bounce); }
+.pb .pin::before { transition: scale .5s var(--ease-out); }
+.pb .pin.mi-pair img { box-shadow: 0 0 0 2px var(--map-head), 0 2px 10px rgba(0, 0, 0, .6); }
+.pb.anim .pin.mi-pair { scale: 1.14; }
+.pb.anim .pin.mi-pair::before { scale: 1.35; }
+/* the production house's square and Ofakim's dotted ring */
+.pb .pin--fac.mi-pair { border-color: var(--map-accent-t); }
+.pb .pin--past.mi-pair { border-color: var(--map-head); }
+.pb.anim :is(.pin--fac, .pin--past).mi-pair { scale: 1.3; }
+/* (the road brightens at once: an opacity fade on svg paths repaints the whole map every frame) */
+.pb .here.mi-fac .out, .pb .here.mi-fac .out-head { opacity: 1; }
+.pb .here.mi-fac .map-out { color: var(--map-head); }
+
+
+/* ---------- 10 footer: the folded bag bottom ---------- */
+/* the display number underlines itself with the hand-drawn stroke (in the stamp colour: caramel is
+   too faint on the footer's caramel kraft) and gives when pressed; the closing sticker peels up a
+   little under the pointer (b.css turns it -6deg with `rotate`; this adds a transform) */
+.pb .ft-num { position: relative; transition: transform var(--dur-spring-bounce) var(--spring-bounce), var(--mi-ring); }
+.pb .ft-num::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 8px; pointer-events: none;
+  background: var(--stamp); -webkit-mask: var(--mi-stroke); mask: var(--mi-stroke);
+  clip-path: inset(0 0 0 100%); opacity: 0;
+  transition: clip-path 0s .24s, opacity .22s var(--ease-out);
+}
+@media (hover: hover) {
+  .pb .ft-num:hover::after { clip-path: inset(0); opacity: 1; transition: clip-path .5s var(--ease-out), opacity 0s; }
+}
+.pb .ft-num:focus-visible::after { clip-path: inset(0); opacity: 1; transition: clip-path .5s var(--ease-out), opacity 0s; }
+.pb.anim .ft-num:active { transform: scale(var(--press-scale)); transition: transform 80ms var(--ease-out), var(--mi-ring); }
+/* (their transition list is in section 3, with the other text links: they are inline-flex, so they
+   can give when pressed) */
+.pb.anim .ft-cities a:active, .pb.anim .ft-social a:active { transform: scale(var(--press-scale)); transition-duration: 80ms; }
+.pb .ft-sticker { transition: transform var(--dur-spring-bounce) var(--spring-bounce); }
+@media (hover: hover) {
+  .pb.anim:where(:not(.mi-scrolling)) .ft-sticker:hover { transform: rotate(-7deg) scale(1.05); }
+}

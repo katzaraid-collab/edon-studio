@@ -8,6 +8,8 @@
  *     - a full-screen overlay opened by the [data-full] button.
  *   It also wires the frame controls: the light/dark radios, the reduced-motion
  *   checkbox (#rm), the replay button [data-replay] and the overlay's close button.
+ *   Every .vp is a named region (role="region" + aria-label). While the overlay is open,
+ *   every other child of <body> is inert.
  *
  * CONTRACT WITH THE DIRECTION PAGES
  *   1. The direction's own behaviour:
@@ -167,9 +169,11 @@
       return function () { observer.disconnect(); };
     },
 
-    /* Mobile header menu (disclosure pattern). The button toggles the panel; Esc closes it
-       and returns focus to the button; Shift+Tab on the first item goes back to the button;
-       choosing a link closes the panel. Returns a cleanup. */
+    /* Mobile header menu (disclosure pattern). The button toggles the panel; Esc anywhere in
+       the mount closes it and returns focus to the button; Shift+Tab on the first item goes
+       back to the button; choosing a link closes the panel; and the panel closes as soon as
+       focus leaves both the panel and the button (audit A11Y-03: before, Tab past the last
+       item left the open panel covering the next controls). Returns a cleanup. */
     menu: function (root) {
       var button = root.querySelector('[data-menu-btn]');
       var panel = root.querySelector('[data-menu]');
@@ -191,8 +195,9 @@
         }
       }
 
-      // preventDefault() on Esc tells the full-screen overlay "already handled, stay open"
-      function onButtonKey(e) {
+      // Esc is heard on the whole mount, not only on the panel and the button.
+      // preventDefault() tells the full-screen overlay "already handled, stay open".
+      function onRootKey(e) {
         if (e.key === 'Escape' && isOpen()) {
           e.preventDefault();
           setOpen(false, true);
@@ -200,10 +205,6 @@
       }
 
       function onPanelKey(e) {
-        if (e.key === 'Escape') {
-          e.preventDefault();
-          setOpen(false, true);
-        }
         if (e.key === 'Tab' && e.shiftKey) {
           var first = panel.querySelector('a,button');
           if (first && document.activeElement === first) {
@@ -213,10 +214,30 @@
         }
       }
 
+      // Safari does not focus a button on click, so pressing the button while focus is in
+      // the panel looks like "focus left" (relatedTarget null). Ignore that one focusout and
+      // let the click toggle the panel. The flag only lives for the current input event.
+      var pressingButton = false;
+      function onButtonPress() {
+        pressingButton = true;
+        setTimeout(function () { pressingButton = false; }, 0);
+      }
+
+      function onFocusOut(e) {
+        if (!isOpen()) return;
+        var next = e.relatedTarget;
+        if (next && (panel.contains(next) || button.contains(next))) return;
+        if (!next && (pressingButton || !document.hasFocus())) return; // button press, or the window lost focus
+        setOpen(false, false);
+      }
+
       var cleanups = [
         listen(button, 'click', function () { setOpen(!isOpen(), false); }),
-        listen(button, 'keydown', onButtonKey),
-        listen(panel, 'keydown', onPanelKey)
+        listen(button, 'pointerdown', onButtonPress),
+        listen(root, 'keydown', onRootKey),
+        listen(panel, 'keydown', onPanelKey),
+        listen(panel, 'focusout', onFocusOut),
+        listen(button, 'focusout', onFocusOut)
       ];
       panel.querySelectorAll('a').forEach(function (link) {
         cleanups.push(listen(link, 'click', function () { setOpen(false, false); }));
@@ -355,6 +376,10 @@
       root: null
     };
     frames.push(f);
+    // Every scroll viewport is a named region (audit A11Y-14: aria-label without a role is
+    // not allowed on a div). The direction pages should write role="region" themselves;
+    // this only fills the gap when a page has not been updated yet.
+    if (f.vp.hasAttribute('aria-label') && !f.vp.hasAttribute('role')) f.vp.setAttribute('role', 'region');
     f.root = build(f.vp, currentMode(f), f.kind);
     fitFrame(f);
 
@@ -376,14 +401,14 @@
   var OVERLAY_HTML =
     '<div class="fs-bar"><strong></strong>' +
     '<button type="button" class="btn btn--solid" data-close>סגירה (Esc)</button></div>' +
-    '<div class="vp" tabindex="0" aria-label="תצוגת האתר"></div>';
+    '<div class="vp" role="region" tabindex="0" aria-label="תצוגת האתר"></div>';
 
-  /* While the overlay is open the page behind it can't be focused or scrolled. */
+  /* While the overlay is open nothing behind it can be focused or scrolled: every direct
+     child of <body> except the overlay itself (audit A11Y-11: before, only #main and
+     .topbar were inert, and Shift+Tab from the close button reached the page's skip link). */
+  var BEHIND_OVERLAY = 'body > :not(.fs):not(script):not(template)';
   function setPageBehindInert(inert) {
-    var main = document.getElementById('main');
-    var topbar = document.querySelector('.topbar');
-    if (main) main.inert = inert;
-    if (topbar) topbar.inert = inert;
+    document.querySelectorAll(BEHIND_OVERLAY).forEach(function (el) { el.inert = inert; });
     document.documentElement.style.overflow = inert ? 'hidden' : '';
   }
 
@@ -405,7 +430,18 @@
     var closeButton = overlay.querySelector('[data-close]');
     build(vp, mode, 'full');
 
+    // Esc closes the overlay, unless something inside already used it (e.g. the menu).
+    // Heard on the document, so it also works when focus has left the dialog for <body>
+    // (Shift+Tab from the close button: everything else on the page is inert).
+    function onKey(e) {
+      if (e.key !== 'Escape' || e.defaultPrevented) return;
+      if (overlay.querySelector('.menu-open')) return;
+      e.preventDefault();
+      close();
+    }
+
     function close() {
+      document.removeEventListener('keydown', onKey);
       unmount(vp); // runs this mount's cleanups before the overlay disappears
       overlay.remove();
       setPageBehindInert(false);
@@ -413,14 +449,12 @@
     }
 
     closeButton.addEventListener('click', close);
-    overlay.addEventListener('keydown', function (e) {
-      // Esc closes the overlay, unless something inside already used it (e.g. the menu)
-      if (e.key !== 'Escape' || e.defaultPrevented) return;
-      if (overlay.querySelector('.menu-open')) return;
-      e.preventDefault();
-      close();
+    document.addEventListener('keydown', onKey);
+    // Focus after the first frame, so the browser does not have to lay out the freshly
+    // built mount synchronously just to place the focus (perf).
+    requestAnimationFrame(function () {
+      if (overlay.isConnected) closeButton.focus();
     });
-    closeButton.focus();
   }
 
   /* The overlay opens in whatever mode the desktop frame is showing. */

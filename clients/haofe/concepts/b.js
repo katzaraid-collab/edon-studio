@@ -8,23 +8,15 @@
    shell.js calls before the copy is rebuilt or the overlay closes.
 
    OWNS
-     - product boxes: the lid button opens and closes its details (.box.open, aria-expanded)
      - ticker: the pause button (WCAG 2.2.2) toggles .ticker.paused and its label
+     - feed rail (phones): a polaroid that receives keyboard focus is centred in the rail
      - online ordering: root[data-order] follows the page's "הדמיית יום ההשקה" checkbox
+   The product boxes have no lid any more (plan R1): the list is printed on each box, so
+   there is nothing to open. The real site does not get orderSwitch(): it builds one state
+   from site.config.json (plan BL-7).
    ========================================================================== */
 (function () {
   'use strict';
-
-  /* product boxes: a real <button>, so Enter and Space work without extra code */
-  function boxes(root) {
-    root.querySelectorAll('.lid').forEach(function (lid) {
-      lid.addEventListener('click', function () {
-        var open = lid.getAttribute('aria-expanded') !== 'true';
-        lid.setAttribute('aria-expanded', open ? 'true' : 'false');
-        lid.closest('.box').classList.toggle('open', open);
-      });
-    });
-  }
 
   /* ticker pause; hovering also pauses it, in b-motion-scroll.css */
   function ticker(root) {
@@ -37,7 +29,27 @@
     });
   }
 
-  /* online ordering: data-order="soon" | "live" flips the whole module on launch day */
+  /* feed rail: under 700px the polaroids scroll sideways (b.css). When Tab lands on a card, centre
+     it in the rail. Only the rail scrolls (scrollBy on it, not scrollIntoView), so neither the
+     prototype's viewport nor the presentation page moves. Frames are scaled with a transform:
+     getBoundingClientRect() is in screen pixels, scrollBy in the rail's own, hence k. */
+  function feedRail(root, ctx) {
+    var rail = root.querySelector('.polas');
+    if (!rail) return;
+    rail.addEventListener('focusin', function (e) {
+      var card = e.target && e.target.closest && e.target.closest('.pola');
+      if (!card || rail.scrollWidth <= rail.clientWidth + 1) return;
+      var r = rail.getBoundingClientRect();
+      var c = card.getBoundingClientRect();
+      var k = (r.width / (rail.offsetWidth || r.width)) || 1;
+      var dx = ((c.left + c.width / 2) - (r.left + r.width / 2)) / k;
+      if (Math.abs(dx) < 2) return;
+      var still = (ctx && ctx.reduced) || root.classList.contains('rm');
+      rail.scrollBy({ left: dx, behavior: still ? 'auto' : 'smooth' });
+    });
+  }
+
+  /* online ordering: data-order="soon" | "live" flips the receipt on launch day */
   function orderSwitch(root) {
     var box = document.getElementById('order-live');
     /* the app URL is written into the link only when the switch says live, so the "soon" page never contains it */
@@ -57,9 +69,9 @@
   }
 
   window.PROTO = {
-    init: function (root) {
-      boxes(root);
+    init: function (root, ctx) {
       ticker(root);
+      feedRail(root, ctx);
       return orderSwitch(root);
     }
   };

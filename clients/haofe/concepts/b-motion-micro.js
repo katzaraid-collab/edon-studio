@@ -1,46 +1,60 @@
 /* ==========================================================================
-   Direction B · השקית — motion module: micro-interactions
+   Direction B · השקית — motion module: micro-interactions. Version 3, 24.10.2026.
    Pairs with b-motion-micro.css (read its header: what it owns, who moves what, the classes).
 
    OWNS (the parts CSS cannot do alone)
      - boxes, fine pointers: while the cursor is over a box this module owns the box's transform.
        Springs lift and straighten it and tilt it in 3D toward the cursor (a few degrees), and a
-       soft sheen follows the cursor across the box's window. On leave the springs settle back to
-       exactly the state the CSS rules describe, then hand the transform back to CSS.
-     - boxes, open/close (any input): the lid strip flips on its top hinge, the tag wobbles, a
-       little steam rises out of the window on open. The product rise, the shadow spread and the
-       details unfolding are CSS (.box.open), so they work without this file.
+       soft glare follows the cursor inside the box's window. On leave the springs settle back to
+       exactly the state the CSS rules describe, then hand the transform back to CSS. (The boxes
+       have no lid any more, plan R1: there is nothing to open; the bread's small rise on hover
+       is CSS.)
+     - map pairing: pointing at a pin or at its label, or moving keyboard focus into a label,
+       marks both .mi-pair (and .here.mi-fac for the production house); the CSS lifts the label
+       and flares the oven. This part also runs under reduced motion: it is a highlight, not motion.
+     - enter-once accents, each played to the end: the nav chip wobbles, a box's tag wobbles, a map
+       label sways on its nail, the pin in the main button hops, the tape's pause icon pops
      - the mobile menu: panel unfolds and links slide in one after another (--stagger) when
        Shell.menu shows it; it folds away when Shell.menu hides it (kept painted and inert while it
        leaves, so nothing in it can be focused or clicked). Focus handling stays Shell.menu's.
-     - theme: on phone layouts the in-prototype toggle swaps the mode inside a view transition
-       scoped to this mount's viewport (never the document), so the cross-fade runs on the
+     - theme: on phone layouts the in-page toggle swaps the mode inside a view transition on vtHost
+       (the mount's own viewport in a frame, the document on a page), so the cross-fade runs on the
        compositor; wide layouts and switches from outside (the page's radios) use the CSS token
        fade. A short bloom around the toggle at every switch. The icon morph is CSS.
-     - order slip: when data-order flips to "live" the pill and the header chip are stamped on,
-       the heading, the copy and the button print in; back to "soon" they fade in
-     - enter-once accents, each played to the end: the chip and tag wobble, a branch label sways,
-       the map pin in the main button hops, the ticker's pause icon pops, the "not open yet"
-       placeholder shakes its head when pressed
+     - order receipt (owner override O1): when data-order flips to "live" the status line is
+       stamped on, the order button prints in and the nav chip is stamped; back to "soon" the
+       status line and the chip fade in. The "בקרוב:" mark gives two oven-timer beats the first
+       time the printed receipt is on screen: once per mount, over about 3 s after it starts (O5,
+       plan R5 option b: nothing ambient runs past 5 s). It never repeats and never loops.
      - the header's scroll shadow where CSS scroll timelines are missing (.mi-lift)
-     - the order slip's "soon" dot: one oven-timer beat every 2.6s, only while the slip is on screen
-     - .mi-scrolling on the root while the prototype scrolls (and ~160ms after): hover reactions
-       wait, a tilted box settles back, so nothing reacts to merely passing under the pointer
+     - .mi-scrolling on the root while the page scrolls (and ~160ms after): hover reactions wait,
+       a tilted box settles back, a pointer pairing drops, so nothing reacts to merely passing
+       under the pointer
 
-   CONTRACT
+   CONTRACT 2 (site-plan/plan.md 6.2; shell.js passes { scroller, reduced, frame } today, the site's
+   runtime.js passes all of it)
      init(root, ctx) runs for every mounted copy, after PROTO.init (b.js) and before Shell.reveal.
-     ctx = { scroller, reduced, frame }  frame: 'desktop' | 'phone' | 'full'
-     Under reduced motion (ctx.reduced / .rm) it does nothing: the CSS gives instant, calm states.
-     The returned cleanup removes every listener, observer, rAF, animation, injected node, class
-     and inline style it added.
-     Inside a prototype: no position: fixed, no window scroll; scroll and IntersectionObserver use
-     ctx.scroller (one observer without a root watches the scroller itself, to know when the whole
-     mount is off screen). Pointer and scroll handlers only store numbers and wake the loop: layout
-     is read inside the rAF loop, before anything is written, and only when a hover starts or the
-     scroller moved under a hovered box; sizes come from a ResizeObserver.
+     ctx = { scroller, reduced, frame, [contract, page, ioRoot, scrollEvents, vtHost, view()] }
+       scroller      scroll position, sizes, ResizeObserver (a frame's .vp; on a page <html>)
+       ioRoot        IntersectionObserver root (the .vp; on a page null = the viewport)
+       scrollEvents  where 'scroll' fires (the .vp; on a page window)
+       vtHost        startViewTransition host (the .vp; on a page document)
+       view()        { top, left, width, height, scale } of the visible scroll area in client px
+     Each key falls back to the prototype frame when the shell does not pass it. On a page root is
+     <html class="pb">. No window resize listener is needed here: nothing caches the viewport
+     height; the box sizes and the phone/wide switch come from ResizeObservers, which also fire
+     on a page (<html> changes width with the window), and every hover measures afresh.
+     Under reduced motion (ctx.reduced / .rm) only the map pairing runs: the CSS gives instant,
+     calm states and nothing moves or is injected.
+     The returned cleanup removes every listener, observer, rAF, timer, animation, injected node,
+     class and inline style it added.
+     Inside a prototype: no position: fixed, no window scroll. Pointer and scroll handlers only
+     store numbers or flip a flag and wake the loop: layout is read inside the rAF loop, before
+     anything is written, and only when a hover starts or the size changed under a hovered box;
+     sizes come from ResizeObservers.
      One rAF loop, running only while a box is being tilted or settling (or the header fallback
      has a change to write); asleep otherwise, and so asleep whenever the mount is off screen.
-     Timers: the timer beat (only while the slip is visible) and the scroll-end timeout.
+     Timers: the two timer beats (only while the receipt is on screen) and the scroll-end timeout.
      Hooks: see "hooks motion modules may rely on" at the top of b.css.
    ========================================================================== */
 (function () {
@@ -50,6 +64,9 @@
   var TILT = 4.5;       // degrees of 3D tilt with the cursor at a box's edge (gentle: past ~9 it is a toy)
   var LIFT = -6;        // px, the hover lift in b-motion-micro.css
   var PERSPECTIVE = 1000;
+  var BEATS = 2;        // the "בקרוב:" timer beats, once per mount (O5: all of it inside 5 s)
+  var BEAT_GAP = 1500;  // ms from one beat's start to the next; a beat lasts 1100ms
+  var BEAT_WAIT = 450;  // ms after the printed receipt is in view before the first beat
 
   function noop() {}
   function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
@@ -69,12 +86,81 @@
   };
   Spring.prototype.jump = function (x) { this.x = this.t = x; this.v = 0; };
 
+  /* ===== map pairing: a pin and its label light up together (any motion setting) =====
+     Delegated on the map section. The pointer side ignores touch (a tap would leave a pairing
+     behind) and, while the page scrolls, the caller drops it (scrollingNow). Writes classes only
+     when the paired set changes. Returns { drop, off }. */
+  function mapPairs(root, scrollingNow) {
+    var here = root.querySelector('.here');
+    if (!here) return { drop: noop, off: noop };
+    var parts = Array.prototype.slice.call(here.querySelectorAll('.pin[data-place], .place[data-place]'));
+    var offs = [];
+    var byPointer = null, byFocus = null, shown = '';
+    function on(el, type, fn, opts) { el.addEventListener(type, fn, opts); offs.push(function () { el.removeEventListener(type, fn, opts); }); }
+    function placeOf(node) {
+      var el = node && node.closest ? node.closest('.pin[data-place], .place[data-place]') : null;
+      return el && here.contains(el) ? el.getAttribute('data-place') : null;
+    }
+    function render() {
+      var key = (byPointer || '') + '|' + (byFocus || '');
+      if (key === shown) return;
+      shown = key;
+      parts.forEach(function (el) {
+        var p = el.getAttribute('data-place');
+        el.classList.toggle('mi-pair', p === byPointer || p === byFocus);
+      });
+      here.classList.toggle('mi-fac', byPointer === 'factory' || byFocus === 'factory');
+    }
+    on(here, 'pointerover', function (e) {
+      if (e.pointerType === 'touch' || scrollingNow()) return;
+      var p = placeOf(e.target);
+      if (p !== byPointer) { byPointer = p; render(); }
+    }, { passive: true });
+    on(here, 'pointerleave', function () { if (byPointer) { byPointer = null; render(); } }, { passive: true });
+    /* keyboard: focus on a link inside a label (its phone or Google Maps link) points at its pin */
+    on(here, 'focusin', function (e) {
+      var label = e.target && e.target.closest ? e.target.closest('.place[data-place]') : null;
+      byFocus = label ? label.getAttribute('data-place') : null;
+      render();
+    });
+    on(here, 'focusout', function (e) {
+      var next = e.relatedTarget;
+      var label = next && next.closest ? next.closest('.place[data-place]') : null;
+      byFocus = label && here.contains(label) ? label.getAttribute('data-place') : null;
+      render();
+    });
+    return {
+      drop: function () { if (byPointer) { byPointer = null; render(); } },
+      off: function () {
+        offs.forEach(function (f) { f(); });
+        parts.forEach(function (el) { el.classList.remove('mi-pair'); });
+        here.classList.remove('mi-fac');
+      }
+    };
+  }
+
   (window.ProtoModules = window.ProtoModules || []).push({
     name: 'b-micro',
+    contract: 2,
     init: function (root, ctx) {
-      var scroller = ctx && ctx.scroller;
-      var motion = !(ctx && ctx.reduced) && root.classList.contains('anim') && !root.classList.contains('rm');
-      if (!motion || !scroller || typeof root.animate !== 'function') return noop;
+      ctx = ctx || {};
+      var scroller = ctx.scroller;
+      if (!scroller) return noop;
+
+      /* ---- page contract 2: each key falls back to the prototype frame (shell.js contract 1) ---- */
+      var ioRoot = 'ioRoot' in ctx ? ctx.ioRoot : scroller;   // IntersectionObserver root (null = viewport)
+      var scrollEvents = ctx.scrollEvents || scroller;         // where 'scroll' fires (window on a page)
+      var vtHost = ctx.vtHost || scroller;                     // startViewTransition host (document on a page)
+      var view = typeof ctx.view === 'function' ? ctx.view : function () {
+        var r = scroller.getBoundingClientRect();
+        return { top: r.top, left: r.left, width: r.width, height: r.height,
+          scale: (r.height / (scroller.offsetHeight || r.height || 1)) || 1 };
+      };
+
+      var scrolling = false;
+      var pairs = mapPairs(root, function () { return scrolling; });
+      var motion = !ctx.reduced && root.classList.contains('anim') && !root.classList.contains('rm');
+      if (!motion || typeof root.animate !== 'function') return pairs.off;
 
       var dead = false;
       var offs = [];             // listener removers
@@ -119,7 +205,6 @@
       var E_IN = easing(tok('--ease-in'), 'cubic-bezier(.4,0,1,1)');
       var E_INOUT = easing(tok('--ease-in-out'), 'cubic-bezier(.65,0,.35,1)');
       var E_SPRING = easing(tok('--ease-spring'), 'cubic-bezier(.34,1.3,.64,1)');
-      var SETTLE = easing(tok('--spring-settle'), E_OUT);
       var BOUNCE = easing(tok('--spring-bounce'), E_SPRING);
       var D_BOUNCE = ms('--dur-spring-bounce', 550);
       var STAG = ms('--stagger', 40);
@@ -147,20 +232,21 @@
       }
 
       /* ===== scrolling: things passing under a still pointer do not react ===== */
-      /* .mi-scrolling for the gesture and a moment after; a tilted box settles back. The handler
-         only flips a flag and a timer: it reads nothing. */
-      var scrolling = false, scrollT = 0, scrollEndAt = 0;
+      /* .mi-scrolling for the gesture and a moment after; a tilted box settles back, a pointer
+         pairing on the map drops. The handler only flips a flag and a timer: it reads nothing. */
+      var scrollT = 0, scrollEndAt = 0;
       function scrollEnd() {
         scrollT = 0;
         scrolling = false;
         scrollEndAt = performance.now();
         if (!dead) root.classList.remove('mi-scrolling');
       }
-      on(scroller, 'scroll', function () {
+      on(scrollEvents, 'scroll', function () {
         if (!scrolling) {
           scrolling = true;
           root.classList.add('mi-scrolling');
           if (hot) leave(hot);
+          pairs.drop();
         }
         if (scrollT) clearTimeout(scrollT);
         scrollT = setTimeout(scrollEnd, 160);
@@ -179,9 +265,9 @@
       function makeState(box) {
         var tilt = parseFloat(getComputedStyle(box).getPropertyValue('--tilt'));
         return {
-          el: box, shot: box.querySelector('.shot'), sheen: null,
+          el: box, shot: box.querySelector('.shot'), sheen: null, glare: null,
           tilt: isFinite(tilt) ? tilt : -1,         // b.css: rotate(var(--tilt, -1deg))
-          w: 0, h: 0,
+          w: 0, h: 0, gw: 0, gh: 0,
           cx: 0, cy: 0, rect: null, measure: true, snapSheen: true, hot: false, on: false, last: '',
           lift: new Spring(260, 24), rz: new Spring(300, 34, .005),
           rx: new Spring(300, 32, .005), ry: new Spring(300, 32, .005),
@@ -191,13 +277,13 @@
       /* the transform the CSS rules give this box right now (what the springs settle to on leave) */
       function restOf(st) {
         var held = st.el.matches(':focus-within');
-        return { lift: held ? LIFT : 0, rz: held || st.el.classList.contains('open') ? 0 : st.tilt };
+        return { lift: held ? LIFT : 0, rz: held ? 0 : st.tilt };
       }
       function write(st) {
         var tf = 'perspective(' + PERSPECTIVE + 'px) translateY(' + f2(st.lift.x) + 'px) rotate(' + f2(st.rz.x) +
           'deg) rotateX(' + f2(st.rx.x) + 'deg) rotateY(' + f2(st.ry.x) + 'deg)';
         if (tf !== st.last) { st.last = tf; st.el.style.transform = tf; }
-        if (st.sheen) st.sheen.style.translate = f2(st.sx.x) + 'px ' + f2(st.sy.x) + 'px';
+        if (st.glare) st.glare.style.translate = f2(st.sx.x) + 'px ' + f2(st.sy.x) + 'px';
       }
       function release(st) {
         st.on = false;
@@ -232,9 +318,12 @@
           st.snapSheen = true;
         }
         if (!st.sheen && st.shot) {
+          /* the glare's window: same shape as the window b.css cuts into the box (.shot::before) */
           st.sheen = document.createElement('span');
           st.sheen.className = 'mi-sheen';
           st.sheen.setAttribute('aria-hidden', 'true');
+          st.glare = document.createElement('i');
+          st.sheen.appendChild(st.glare);
           st.shot.appendChild(st.sheen);
           injected.add(st.sheen);
         }
@@ -251,9 +340,9 @@
         if (!tilting.size) return false;
         /* reads first (nothing has been written yet this frame) */
         if (hot && hot.measure) {
-          var vr = scroller.getBoundingClientRect();
-          scale = (vr.height / (scroller.offsetHeight || vr.height || 1)) || 1;
+          scale = view().scale || 1;
           hot.rect = hot.el.getBoundingClientRect();
+          if (hot.sheen) { hot.gw = hot.sheen.offsetWidth; hot.gh = hot.sheen.offsetHeight; }
           hot.measure = false;
         }
         var more = false;
@@ -266,7 +355,13 @@
             var v = clamp((st.cy - (st.rect.top + st.rect.height / 2)) / hh, -1, 1);
             st.lift.t = LIFT; st.rz.t = 0;
             st.ry.t = u * TILT; st.rx.t = -v * TILT * .8;   // the box turns to face the cursor
-            st.sx.t = (u + 1) / 2 * st.w; st.sy.t = (v + 1) / 2 * st.h;
+            /* the glare crosses the window as the cursor crosses the box (a reflection moves with
+               the viewer's eye; it need not sit under the cursor). Its centre stays one radius
+               (a quarter of the window's width, b-motion-micro.css) inside the window's box, so
+               the glare never leaves the window: no clip needed */
+            var gr = st.gw * .25;
+            st.sx.t = st.gw > 2 * gr ? gr + (u + 1) / 2 * (st.gw - 2 * gr) : st.gw / 2;
+            st.sy.t = st.gh > 2 * gr ? gr + (v + 1) / 2 * (st.gh - 2 * gr) : st.gh / 2;
             if (st.snapSheen) { st.sx.jump(st.sx.t); st.sy.jump(st.sy.t); st.snapSheen = false; }
           } else if (!st.hot) {
             var r = restOf(st);
@@ -313,57 +408,6 @@
         }
       }
 
-      /* ===== boxes: open and close ===== */
-
-      var lidAnims = new Map();
-      function flipLid(lid) {
-        var box = lid.closest('.box');
-        var open = lid.getAttribute('aria-expanded') === 'true';
-        var prev = lidAnims.get(lid);
-        if (prev) { try { prev.cancel(); } catch (e) { /* gone */ } }
-        var P = 'perspective(700px) rotateX(';
-        var a = open
-          /* the flap lifts toward you on its top hinge, then drops back with the app's bounce */
-          ? play(lid, [
-            { transform: P + '0deg)', easing: E_OUT },
-            { transform: P + '-30deg)', offset: .2, easing: BOUNCE },
-            { transform: P + '0deg)' }
-          ], { duration: 700 })
-          /* closing: it is pressed shut, a small give inward, and settles */
-          : play(lid, [
-            { transform: P + '0deg)', easing: E_OUT },
-            { transform: P + '16deg)', offset: .3, easing: SETTLE },
-            { transform: P + '0deg)' }
-          ], { duration: 460 });
-        lidAnims.set(lid, a);
-        if (open && box) {
-          wobble(box.querySelector('.tag'), 80);
-          steam(box);
-        }
-      }
-      /* steam from fresh bread: three soft wisps rise out of the window and thin away */
-      var WISPS = [{ x: 33, dx: -14, d: 140 }, { x: 46, dx: 6, d: 230 }, { x: 58, dx: 18, d: 320 }];
-      function steam(box) {
-        var shot = box.querySelector('.shot');
-        if (!shot || shot.querySelectorAll('.mi-steam').length > 6) return;
-        WISPS.forEach(function (w) {
-          var s = document.createElement('span');
-          s.className = 'mi-steam';
-          s.setAttribute('aria-hidden', 'true');
-          s.style.left = w.x + '%';
-          s.style.top = '20%';
-          shot.appendChild(s);
-          injected.add(s);
-          var a = play(s, [
-            { opacity: 0, transform: 'translate(0, 0) scale(.5)' },
-            { opacity: .9, transform: 'translate(' + (w.dx * .25) + '%, -28%) scale(.85)', offset: .3 },
-            { opacity: 0, transform: 'translate(' + w.dx + '%, -120%) scale(1.5)' }
-          ], { duration: 1200, delay: w.d, easing: 'cubic-bezier(.2,.6,.35,1)', fill: 'backwards' });
-          var gone = function () { s.remove(); injected.delete(s); };
-          if (a) a.finished.then(gone, gone); else gone();
-        });
-      }
-
       /* ===== enter-once accents (played to the end, never restarted while running) ===== */
 
       function wobble(el, delay) {
@@ -376,15 +420,17 @@
           { rotate: '0deg' }
         ], { duration: 640, delay: delay || 0 });
       }
+      /* a map label brushed by the pointer swings a little on its nail (b-motion-micro.css sets its
+         transform-origin there); never while its swing-in entrance (scroll module) is running */
       function sway(label) {
-        if (!label || busy(label)) return;   // its swing-in entrance (scroll module) is still running
+        if (!label || busy(label)) return;
         play(label, [
           { rotate: '0deg', easing: E_OUT },
-          { rotate: '1.4deg', offset: .18, easing: E_INOUT },
-          { rotate: '-.8deg', offset: .44, easing: E_INOUT },
-          { rotate: '.3deg', offset: .68, easing: E_INOUT },
+          { rotate: '1deg', offset: .18, easing: E_INOUT },
+          { rotate: '-.55deg', offset: .44, easing: E_INOUT },
+          { rotate: '.2deg', offset: .68, easing: E_INOUT },
           { rotate: '0deg' }
-        ], { duration: 1250 });
+        ], { duration: 1100 });
       }
       function hop(btn) {
         var pin = btn && btn.querySelector('svg');
@@ -398,13 +444,6 @@
           { translate: '0 0' }
         ], { duration: 620 });
       }
-      function nope(el) {
-        if (busy(el)) return;
-        play(el, [
-          { translate: '0 0' }, { translate: '4px 0', offset: .18 }, { translate: '-4px 0', offset: .38 },
-          { translate: '2.5px 0', offset: .58 }, { translate: '-1px 0', offset: .78 }, { translate: '0 0' }
-        ], { duration: 420, easing: E_OUT });
-      }
       function popIcon(btn) {
         var tk = btn.closest('[data-ticker]');
         var icon = btn.querySelector(tk && tk.classList.contains('paused') ? '.play' : '.pause');
@@ -412,11 +451,11 @@
       }
       function accent(el, kind) {
         if (kind === 'nav') wobble(el.querySelector('.chip-soon'));
-        else if (kind === 'lid') wobble(el.querySelector('.tag'));
-        else if (kind === 'label') sway(el);
+        else if (kind === 'box') wobble(el.querySelector('.tag'), 60);
+        else if (kind === 'place') sway(el);
         else if (kind === 'btn') hop(el);
       }
-      var ACCENTS = [['.nav a', 'nav'], ['.lid', 'lid'], ['.label', 'label'], ['.btn-b', 'btn']];
+      var ACCENTS = [['.nav a', 'nav'], ['.box', 'box'], ['.place', 'place'], ['.btn-b', 'btn']];
       if (pointerFx) {
         on(root, 'pointerover', function (e) {
           if (e.pointerType !== 'mouse' || !fine.matches || scrolling || !e.target.closest) return;
@@ -427,7 +466,8 @@
           });
         }, { passive: true });
       }
-      /* keyboard gets the same accents when focus arrives (not the label sway: it is not focusable) */
+      /* keyboard gets the same accents when focus arrives (not the label sway: focus should not move
+         the text it lands in; the label lifts and pairs with its pin in CSS instead) */
       on(root, 'focusin', function (e) {
         var t = e.target;
         if (!t || !t.matches) return;
@@ -435,21 +475,12 @@
         try { visible = t.matches(':focus-visible'); } catch (err) { visible = false; }
         if (!visible) return;
         if (t.matches('.nav a')) accent(t, 'nav');
-        else if (t.matches('.lid')) accent(t, 'lid');
         else if (t.matches('.btn-b')) accent(t, 'btn');
       });
       on(root, 'click', function (e) {
-        var t = e.target;
-        if (!t || !t.closest) return;
-        var lid = t.closest('.lid');
-        if (lid && root.contains(lid)) { flipLid(lid); return; }   // b.js has already toggled it
-        var tp = t.closest('.tk-pause');
-        if (tp && root.contains(tp)) popIcon(tp);
+        var tp = e.target && e.target.closest && e.target.closest('.tk-pause');
+        if (tp && root.contains(tp)) popIcon(tp);   // b.js has already toggled .paused
       });
-      on(root, 'pointerdown', function (e) {
-        var el = e.target && e.target.closest && e.target.closest('.btn-soon');
-        if (el && root.contains(el)) nope(el);
-      }, { passive: true });
 
       /* ===== the mobile menu ===== */
 
@@ -501,7 +532,7 @@
         observers.push(menuWatch);
       }
 
-      /* ===== theme switch and the order switch ===== */
+      /* ===== theme switch ===== */
 
       function bloom() {
         qa('[data-theme-toggle]').forEach(function (btn) {
@@ -509,21 +540,21 @@
         });
       }
 
-      /* Phone layouts: the in-prototype toggle swaps the theme inside a view transition scoped to
-         this mount's viewport (the CSS fades the morning snapshot off the live evening frame on the
-         compositor). Measured at 4x CPU throttle this removes ~2s of main-thread work per four
-         switches. Wide layouts keep the CSS token fade, which is cheaper there than compositing
-         two full-size frames, and so does any switch made from outside (the page's radios). */
+      /* Phone layouts: the in-page toggle swaps the theme inside a view transition on vtHost (the
+         CSS fades the morning snapshot off the live evening frame on the compositor). Measured at
+         4x CPU throttle this removes ~2s of main-thread work per four switches. Wide layouts keep
+         the CSS token fade, which is cheaper there than compositing two full-size frames, and so
+         does any switch made from outside (the page's radios). */
       var narrow = scroller.clientWidth < 700;   // b.css: the phone composition lives below 700px
       var vtRun = null;
       function canSwap() {
-        return narrow && typeof scroller.startViewTransition === 'function' && !!window.Shell && typeof window.Shell.setMode === 'function';
+        return narrow && typeof vtHost.startViewTransition === 'function' && !!window.Shell && typeof window.Shell.setMode === 'function';
       }
       function swapTheme(next) {
         root.classList.remove('mi-ready');   // the token fade must not run under the snapshot
         root.classList.add('mi-vt');
         var vt = null;
-        try { vt = scroller.startViewTransition(function () { window.Shell.setMode(root, next); }); } catch (err) { vt = null; }
+        try { vt = vtHost.startViewTransition(function () { window.Shell.setMode(root, next); }); } catch (err) { vt = null; }
         if (!vt) {
           root.classList.remove('mi-vt');
           root.classList.add('mi-ready');
@@ -540,9 +571,10 @@
         };
         vt.finished.then(end, end);
       }
-      /* capture phase, so it runs before Shell.themeButtons' own listener on the button, which would
-         change the mode before the old frame could be captured; the same Shell.setMode call then
-         happens inside the transition (radios and aria-pressed follow exactly as before) */
+      /* capture phase, so it runs before the toggle's own listener (Shell.themeButtons on the
+         button in a frame, theme.js on document on a page), which would change the mode before the
+         old frame could be captured; the same Shell.setMode call then happens inside the
+         transition (radios, aria-pressed and the saved choice follow exactly as before) */
       on(root, 'click', function (e) {
         var btn = e.target && e.target.closest && e.target.closest('[data-theme-toggle]');
         if (!btn || !root.contains(btn) || !canSwap()) return;
@@ -554,40 +586,47 @@
         vpRO.observe(scroller);
         observers.push(vpRO);
       }
-      /* the stamp: comes down large and turned, the spring's overshoot is the squash on impact, a
-         ring of ink spreads from it */
-      function stamp(el, delay, ink, big) {
-        if (!el) return;
-        play(el, [{ scale: big ? 1.9 : 1.6, rotate: '-10deg' }, { scale: 1, rotate: '0deg' }], { duration: D_BOUNCE, delay: delay, easing: BOUNCE, fill: 'backwards' });
-        play(el, [{ opacity: 0 }, { opacity: 1 }], { duration: 110, delay: delay, easing: 'linear', fill: 'backwards' });
-        if (ink) play(el, [{ boxShadow: '0 0 0 0 ' + ink }, { boxShadow: '0 0 0 12px rgba(0, 0, 0, 0)' }], { duration: 520, delay: delay + 170, easing: E_OUT });
+
+      /* ===== the order receipt: launch day, and the "בקרוב:" timer ===== */
+
+      var slip = q('.slip');
+      var soonLine = slip && slip.querySelector('.order-status.when-soon');
+      var mark = soonLine && soonLine.querySelector('.st');
+      var chip = q('.nav .chip-soon');
+
+      /* the stamp on the status line: the same device the scroll module uses when the receipt
+         prints, so launch day reads as the receipt being stamped again */
+      function stampLine(el, delay) {
+        if (!el || busy(el)) return;
+        play(el, [{ scale: 1.3, rotate: '-2.5deg' }, { scale: 1, rotate: '0deg' }], { duration: D_BOUNCE + 120, delay: delay, easing: BOUNCE, fill: 'backwards' });
+        play(el, [{ opacity: 0 }, { opacity: 1 }], { duration: 160, delay: delay, easing: E_OUT, fill: 'backwards' });
       }
-      /* the print: the line feeds out downward while it is revealed top to bottom */
+      /* the chip: comes down large and turned, the spring's overshoot is the squash on impact */
+      function stampChip(el, delay) {
+        if (!el) return;
+        play(el, [{ scale: 1.6, rotate: '-10deg' }, { scale: 1, rotate: '0deg' }], { duration: D_BOUNCE, delay: delay, easing: BOUNCE, fill: 'backwards' });
+        play(el, [{ opacity: 0 }, { opacity: 1 }], { duration: 110, delay: delay, easing: 'linear', fill: 'backwards' });
+      }
+      /* the print: the button feeds out downward while it is revealed top to bottom */
       function print(el, delay, pad) {
         if (!el) return;
-        pad = pad || ['-0.25em', '-0.4em', '-0.4em', '-0.4em'];
         play(el, [
           { clipPath: 'inset(' + pad[0] + ' ' + pad[1] + ' 100% ' + pad[3] + ')', translate: '0 -8px' },
           { clipPath: 'inset(' + pad.join(' ') + ')', translate: '0 0' }
         ], { duration: 480, delay: delay, easing: E_OUT, fill: 'backwards' });
       }
       function orderLive() {
-        var slip = q('.slip');
-        var ink = tok('--caramel');
-        stamp(slip && slip.querySelector('.soon'), 0, ink, true);
-        print(slip && slip.querySelector('h2'), 120);
-        print(slip && slip.querySelector('.slip-copy > p:not(.soon)'), 210);
-        var btn = slip && slip.querySelector('.acts .btn-b.when-live');
+        stopBeats(true);
+        stampLine(slip && slip.querySelector('.order-status.when-live'), 0);
+        var btn = slip && slip.querySelector('.btn-b.when-live');
         if (btn) {
-          print(btn, 300, ['-4px', '-12px', '-12px', '-4px']);
+          print(btn, 300, ['-4px', '-24px', '-28px', '-24px']);
           play(btn, [{ scale: .92 }, { scale: 1 }], { duration: D_BOUNCE, delay: 420, easing: BOUNCE, fill: 'backwards' });
         }
-        stamp(q('.nav .chip-soon'), 60, null, false);
+        stampChip(chip, 60);
       }
       function orderSoon() {
-        var slip = q('.slip');
-        if (!slip) return;
-        [slip.querySelector('.soon'), slip.querySelector('h2'), slip.querySelector('.slip-copy > p:not(.soon)')].forEach(function (el, i) {
+        [soonLine, chip].forEach(function (el, i) {
           play(el, [{ opacity: 0, translate: '0 4px' }, { opacity: 1, translate: '0 0' }], { duration: 320, delay: i * STAG, easing: E_OUT, fill: 'backwards' });
         });
       }
@@ -596,13 +635,73 @@
         var stateWatch = new MutationObserver(function () {
           var m = root.getAttribute('data-mode'), o = root.getAttribute('data-order');
           if (m !== mode) { mode = m; bloom(); }
-          if (o !== order) { order = o; if (o === 'live') orderLive(); else orderSoon(); syncSlip(); }
+          if (o !== order) { order = o; if (o === 'live') orderLive(); else orderSoon(); syncBeats(); }
         });
         stateWatch.observe(root, { attributes: true, attributeFilter: ['data-mode', 'data-order'] });
         observers.push(stateWatch);
       }
 
-      /* ===== header shadow without scroll timelines; the slip timer only runs on screen ===== */
+      /* the oven timer, limited (O5, plan R5 option b): two beats on "בקרוב:", the first BEAT_WAIT
+         after the printed receipt's status line is fully on screen, the second BEAT_GAP later; then
+         nothing, for the life of this mount. If the line leaves the screen between the beats, the
+         second is dropped (it never comes back later as a stray beat). Between beats no animation
+         exists, so nothing ticks. */
+      var lineOn = false, mountOn = true, beatT = 0, beats = 0, beatDone = !mark, slipWatch = null;
+      function printed() {   // the receipt is not waiting for, or still in, its print entrance
+        return !root.classList.contains('sx') || !slip.hasAttribute('data-rv') || slip.classList.contains('rv-done');
+      }
+      function beat() {
+        beatT = 0;
+        if (dead || beatDone) return;
+        beats++;
+        play(mark, [
+          { scale: 1, easing: E_OUT },
+          { scale: 1.16, offset: .14, easing: E_INOUT },
+          { scale: .96, offset: .3, easing: E_INOUT },
+          { scale: 1.07, offset: .46, easing: E_INOUT },
+          { scale: 1, offset: .66 },
+          { scale: 1 }
+        ], { duration: 1100 });
+        if (beats < BEATS) beatT = setTimeout(beat, BEAT_GAP);
+        else stopBeats(true);
+      }
+      function stopBeats(forGood) {
+        if (beatT) { clearTimeout(beatT); beatT = 0; }
+        if (!forGood) return;
+        beatDone = true;
+        if (slipWatch) { slipWatch.disconnect(); slipWatch = null; }
+      }
+      function syncBeats() {
+        if (beatDone) return;
+        var want = lineOn && mountOn && order !== 'live' && printed();
+        if (want && !beatT) beatT = setTimeout(beat, beats ? BEAT_GAP : BEAT_WAIT);
+        else if (!want && beatT) stopBeats(beats > 0);   // started and interrupted: done for good
+      }
+      if (mark && 'IntersectionObserver' in window) {
+        var lineIO = new IntersectionObserver(function (entries) {
+          var en = entries[entries.length - 1];
+          lineOn = en.isIntersecting && en.intersectionRatio > .98;
+          syncBeats();
+        }, { root: ioRoot, threshold: [0, 1] });
+        lineIO.observe(soonLine);
+        observers.push(lineIO);
+        /* the whole mount on the presentation page (on a real page the root always intersects) */
+        var mountIO = new IntersectionObserver(function (entries) {
+          mountOn = entries[entries.length - 1].isIntersecting;
+          syncBeats();
+        }, { threshold: 0 });
+        mountIO.observe(scroller);
+        observers.push(mountIO);
+        /* the scroll module marks the receipt .rv-done when its print has finished */
+        if (!printed() && window.MutationObserver) {
+          slipWatch = new MutationObserver(function () { if (printed()) { slipWatch.disconnect(); slipWatch = null; syncBeats(); } });
+          slipWatch.observe(slip, { attributes: true, attributeFilter: ['class'] });
+        }
+      } else {
+        beatDone = true;
+      }
+
+      /* ===== header shadow without scroll timelines ===== */
 
       var hd = q('.hd');
       var timelines = !!(window.CSS && CSS.supports && CSS.supports('animation-timeline: scroll()'));
@@ -613,49 +712,10 @@
         hd.classList.toggle('mi-lift', lifted);
       }
       if (hd && !timelines) {
-        on(scroller, 'scroll', function () {
+        on(scrollEvents, 'scroll', function () {
           liftWant = scroller.scrollTop > 6;   // scroll handler: scrollTop only, the class is written in the loop
           if (liftWant !== lifted) wake();
         }, { passive: true });
-      }
-
-      /* the oven timer: one beat every 2.6s while the slip is on screen and the order is "soon";
-         between beats no animation exists, so nothing ticks */
-      var slip = q('.slip');
-      var dot = slip && slip.querySelector('.soon i');
-      var slipOn = false, mountOn = true, beatT = 0;
-      function beat() {
-        beatT = 0;
-        if (dead || !dot) return;
-        var k = function (o, sc, extra) { var f = { offset: o, transform: 'scale(' + sc + ')', easing: E_INOUT }; for (var x in extra) f[x] = extra[x]; return f; };
-        play(dot, [k(0, 1), k(.14, 1.5), k(.3, .92), k(.46, 1.22), k(.66, 1), k(1, 1)], { duration: 1300 });
-        play(dot, [
-          { offset: 0, opacity: 0, transform: 'scale(.5)' },
-          { offset: .1, opacity: 0, transform: 'scale(.5)', easing: E_OUT },
-          { offset: .18, opacity: .8, transform: 'scale(.8)', easing: E_OUT },
-          { offset: .96, opacity: 0, transform: 'scale(2.2)' },
-          { offset: 1, opacity: 0, transform: 'scale(2.2)' }
-        ], { duration: 1300, pseudoElement: '::after' });
-        beatT = setTimeout(beat, 2600);
-      }
-      function syncSlip() {
-        var want = !!dot && slipOn && mountOn && order !== 'live';
-        if (want && !beatT) beatT = setTimeout(beat, 300);
-        else if (!want && beatT) { clearTimeout(beatT); beatT = 0; }
-      }
-      if (slip && 'IntersectionObserver' in window) {
-        var slipIO = new IntersectionObserver(function (entries) {
-          slipOn = entries[entries.length - 1].isIntersecting;
-          syncSlip();
-        }, { root: scroller });
-        slipIO.observe(slip);
-        observers.push(slipIO);
-        var mountIO = new IntersectionObserver(function (entries) {
-          mountOn = entries[entries.length - 1].isIntersecting;
-          syncSlip();
-        }, { threshold: 0 });
-        mountIO.observe(scroller);
-        observers.push(mountIO);
       }
 
       return function cleanup() {
@@ -663,6 +723,8 @@
         if (vtRun) { try { vtRun.skipTransition(); } catch (e) { /* done */ } vtRun = null; }
         offs.forEach(function (off) { off(); });
         observers.forEach(function (o) { o.disconnect(); });
+        if (slipWatch) slipWatch.disconnect();
+        pairs.off();
         if (raf) cancelAnimationFrame(raf);
         if (armRaf) cancelAnimationFrame(armRaf);
         raf = armRaf = 0;

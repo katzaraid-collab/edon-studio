@@ -1,52 +1,131 @@
 /* ==========================================================================
-   Direction B · השקית — prototype styles (static look only)
+   Direction B · השקית — prototype styles (static look only). Version 3, 24.10.2026.
 
-   The brand as packaging: a light-kraft hero with the logo pressed on like a
-   sticker, a chocolate ticker, products as tilted "boxes" that open, and the
-   feed's own captions as handwritten notes.
+   The brand as packaging: a kraft bag on the counter with the logo pressed on like a sticker,
+   a chocolate sealing tape (the ticker), kraft boxes with a window and the product list printed
+   on the face, a phone-order receipt, a to-scale map of the three ovens on the evening counter
+   ("אנחנו כאן."), the feed's own captions pinned on a board, and a folded bag bottom as the
+   footer. Source: clients/haofe/plan/plan.md section 2.1, with the owner overrides O1-O6 (the
+   "הזמנה אונליין · בקרוב" nav chip and the order status line stay; supermarkets live on the map).
 
    FILE MAP (b.html loads them in this order)
      shell.css            presentation page + shared photo slots (.ph, .ph--*, .ph-tag, .ph-cap, .tbd)
      b.css                this file: tokens, layout and every static style of the prototype
-     b-motion-hero.css    opening: logo sticker press + ink ring, hero text rise, handwritten note
+     b-motion-hero.css    opening: logo sticker press + ink ring, hero text rise, evening dim
      b-motion-scroll.css  [data-rv] scroll reveals, ticker loop, section entrances
-     b-motion-micro.css   hover/press, lid open, theme toggle, order switch, "soon" dot
-     b.js                 PROTO.init: boxes open/close, ticker pause, order-live switch
+     b-motion-micro.css   hover/press, theme toggle, order switch, menu
+     b.js                 PROTO.init: ticker pause, feed rail focus, order-live switch (no box lids)
      b-motion-*.js        motion modules (window.ProtoModules), one per motion css file
      shell.js             mounts <template id="proto"> into every frame (loaded last)
    No animation, transition, :hover/:active movement or @keyframes belongs in this file;
    it lives in the b-motion-*.css file that owns it.
 
    SECTIONS OF THIS FILE
-     1 tokens (light, then dark)   2 base   3 layout and shared pieces
-     4 components in page order: header, menu, hero, ticker, boxes, order module,
-       feed, branches, footer, mobile bar
-     5 container queries (700px, 1000px)   6 reduced motion
+     1 tokens (light, then dark)   2 base, focus, .sr-only, skip link   3 layout and shared pieces
+     4 components in page order: header, menu, hero, ticker (tape), boxes, order receipt,
+       map "אנחנו כאן.", feed board, footer (bag bottom), mobile bar
+     5 page container queries (@container pb: 700px, 1000px, 1180px) and the map's own query
+       (@container map: 760px)   6 reduced motion   7 short screens (max-height: 500px)
+
+   PAGE ORDER (data-section = in-prototype jump target, used by a[data-jump])
+     a.skip (first child, data-jump="top") · header.hd · main.pg-main: hero [top] · ticker ·
+     boxes [boxes] · order receipt [order] · map .here [visit] (its labels: [netivot] [sderot]
+     [kiryat-gat], the production-house label [b2b]) · feed [feed] · /main · footer.ft · nav.bar
+     REMOVED in v3, do not target: .story .story-card .draft, .b2b .b2b-band .b2b-copy .b2b-facts
+     .b2b-cta, .visit .labels .label .meta .row, .lid .lid-h .open .det, .note-hand, .logo-s,
+     .soon (pill and its dot), .btn-soon, .phone-line, .hero.paper, style="--i:n" on the boxes.
 
    HOOKS MOTION MODULES MAY RELY ON (keep names stable)
      root       .proto.pb   .anim (motion allowed) | .rm (reduced motion)   [data-mode="light|dark"]
                 [data-order="soon|live"]   .menu-open (set by Shell.menu)
-     header     .hd  .mark (img, b)  .nav a  .chip-soon
-                .theme-btn[data-theme-toggle][aria-pressed] (.sun, .moon)  .order
-                .menu-btn[data-menu-btn][aria-expanded]  .menu[data-menu]
+                containers: .pb is `container: pb`; .map-wrap is `container: map`. Inside .map-wrap
+                an unnamed @container query (and cqi/cqw) resolves against the map, so page-width
+                conditions there must say `@container pb (...)`.
+                tokens: --focus (ring), --band / --on-band / --band-accent (tape, bar), --map-* (the map
+                ground: the evening counter in both modes), --sec, --h-a, --h-b, --r-paper, --r-ctl
+     header     .hd  .mark (img, b)  .nav a  .chip-soon (.when-soon "בקרוב" / .when-live "חדש")
+                .theme-btn[data-theme-toggle][aria-pressed] (.sun, .moon)  .order (.order-n = the
+                number, visually hidden below 1180px)  .menu-btn[data-menu-btn][aria-expanded]
+                .menu[data-menu] (a, a.menu-small)
      hero       .hero[data-section="top"]  .scene > .sc-plane (.sc-back .sc-light .sc-subject .sc-front)
-                .sc-plate  .sc-bag (.sc-shadow .sc-bag-img .sc-sticker)  .sc-wheat  .ai-note
-                .hero-text  .hero h1 (em)  .sub  .ctas
-                the hero module drives the plane transforms directly (scroll timeline + pointer lean)
-                .btn-b  .btn-b--main  .note-hand (svg path, span)
+                .sc-plate  .sc-bag (.sc-shadow .sc-bag-img .sc-shade .sc-sticker; ::before = contact
+                line; ::after stays free for the hero module's ink ring)  .sc-wheat
+                .hero-text  .hero h1 (.h1-kicker, .sr-only ": ", em)  .sub  .ctas  .btn-b  .btn-b--main
+                .ai-note comes after .in in the source: on phones it is a flex item under the buttons
+                (order: 1, on the wall's fade), from 1000px it is absolute at the wall's top-left.
+                .hero::before = the evening text-side scrim (dark, 1000px and up).
+                Each scene <img> sits in a <picture> (display: contents), so img.parentElement is the
+                <picture>: use closest('.sc-bag') / closest('.sc-plane').
+                Scene geometry changed (design findings 4 and 6), for --b-pivot in the hero css: bag
+                contact point (centre of its base) phone 50% 80% of the scene, desktop 25% 85% (the
+                bag's `left` is its centre: translate: -50% 0). Phone scene: margin-top -80px under the
+                text, plate fades in from the top (mask). Wheat: height auto, blurred, 19% / 32% wide.
+                .sc-shade (left-side shade, masked by an inline 128px silhouette of bag-480.webp) is
+                static: it should ride .sc-bag-img's rise; until then it is hidden while .hero.b-hold.
      ticker     .ticker[data-ticker] (.paused)  .tk-pause (.pause, .play)  .tk-view  .tk-track
                 .tk-list (first one is the real list, the rest are aria-hidden copies)  li
-     boxes      .boxes  .sec-head (.hand)  .box-grid  .box[data-rv] (style="--i:n" order, --tilt, .open)
-                .shot (.prod img, .ai-tag)  .lid-h  .lid[aria-expanded]  .nm  .tag  .lid .open (the "פתחו" label)  .det > div > p
-     order      .order-sec  .slip[data-rv]  .logo-s  .slip-copy  .soon (i)  .acts  .btn-soon  .phone-line
-                .when-soon / .when-live (shown by [data-order])
-     story      .story  .story-card[data-rv]  .draft
-     feed       .feed  .polas  .pola[data-rv] (--r)  q  small  .more
-     business   .b2b  .b2b-band[data-rv]  .b2b-copy  .b2b-facts li  .b2b-cta
-     branches   .visit  .labels  .label[data-rv]  .meta  .row a
-     footer     .ft          mobile bar   .bar a
+                the tape is tilted (rotate: -1.2deg on .ticker, never animate that); separators are
+                li::after (a wheat mark), li + li::before under .rm
+     boxes      .boxes  .sec-head  .box-grid  .box[data-rv] (--tilt)  .box--fri (first box; spans two
+                rows from 1000px, full width below)
+                .shot (::before = the window cut in the box, ::after = contact shadow)  picture > img.prod
+                .face  .face .nm (h3)  .tag  .list  .box-note  .ai-tag (printed text on the face,
+                aria-hidden: the alt carries "הדמיית AI")
+                Box order: 1 Friday (TWO .prod: frena first, then challah), 2 breads (baguette),
+                3 dairy, 4 parve (rugelach), 5 sufganiyot. box.querySelector('.prod') returns the frena;
+                the challah is box.querySelectorAll('.prod')[1]. Nothing in a box is focusable now.
+     order      .order-sec  .slip[data-rv] (a receipt, rotate: -1deg; ::before / ::after = torn edges)
+                .slip-copy (h2, p.order-num > a[href^="tel:"], p)  .acts (dotted divider on top)
+                .order-status.when-soon / .order-status.when-live (.st = "בקרוב:" / "חדש:")
+                a.btn-b.btn-b--main.when-live[data-live-href]   .when-soon / .when-live (by [data-order])
+     map        .here[data-section="visit"] (--focus: --map-head)  .here-copy.sec-head[data-rv]
+                (h2, blockquote.here-q > p + footer, .here-story, .here-facts, .here-src)
+                .map-wrap > .map-art[role="img"] (aspect 1; every coordinate below is in its 800x800
+                units, 15 units per km, equirectangular: x = (lon - 34.50) * 94.85 km, y = (31.66 -
+                lat) * 111.2 km; children of role=img are presentational)
+                  svg: .map-grid  .route-base  .route (dotted, Ofakim > Netivot > Sderot > Kiryat Gat,
+                       south to north; pathLength="1000")  .out + .out-head (the production house's
+                       bread leaving north, "לסופרים בכל הארץ")  .fac-lead + .fac-dot (the house's true
+                       point; its square is a callout)  .leaders (pin to label, wide map only)
+                       .north  .scale (10 km = 150 units)
+                  .pin[data-place] (netivot sderot kiryat-gat: logo badge img + b.pin-n + .pin-tag;
+                       ::before = the oven glow)  .pin--fac (square)  .pin--past (Ofakim, dotted ring)
+                       .map-out  .map-north  .map-scale. Pin centres: --x / --y in this file.
+                > ul.places > li.place[data-place][data-rv] (h3 with span.pin-n, p.since, dl.lbl with
+                  dt/dd rows כתובת · טלפון · שעות (ul.hrs) · כשרות · ניווט (a.go), p.lbl-note)
+                  .place--fac (data-section="b2b")  .place--past (Ofakim, the draft story's start)
+                  map 760px and wider: labels sit on the map (absolute, --lx / --ly); narrower: a list
+                  under the map, tied to the pins by number (.pin-n, .pin-tag show only then).
+                Route drawing on scroll (plan 2.5): stroke-dashoffset on .route (pathLength 1000) after
+                swapping its dot pattern, or a clip on the svg from the bottom up; under .rm it stays
+                complete. The ovens can "light" in route order through .pin::before (opacity, scale).
+     feed       .feed (::before = serrated bag edge)  .polas (a rail under 700px: scroll-snap,
+                overflow-x; a pinned board from 700px: overlapping cards, the middle one larger)
+                .pola[data-rv] (--r, z-index 1-3; :hover / :focus-within lift it to 5)  q  small  .more
+     footer     .ft (::before = serrated bag edge)  .ft-sticker  .ft-main (.ft-name .ft-label .ft-num
+                .ft-cities a[data-jump] .ft-b2b)  .ft-side (.ft-social, .ft-legal)
+     mobile bar .bar a   (ניווט is data-jump="visit")
      reveals    every [data-rv] gets .rv-in once it enters ctx.scroller (Shell.reveal)
-     sections   [data-section="top|boxes|order|story|feed|b2b|visit"] are the in-prototype jump targets
+     sections   [data-section="top|boxes|order|visit|netivot|sderot|kiryat-gat|b2b|feed"]
+
+   NOTES FOR THE MOTION FILES (what this version changes for them)
+     - O5 / R5(b): every ambient loop ends within 5 s (wheat sway, flour dust). The ticker keeps its
+       pause button. The order slip has no "soon" dot any more, so the micro timer has nothing to beat.
+     - b-motion-scroll.js: boxes[0] is the Friday box (frena, then challah), boxes[1] the breads
+       (baguette), boxes[2] dairy: BAG_SPOTS and the leap/drop split follow the old six-box order.
+       info.shot = prod.parentElement is now the <picture>: use prod.closest('.shot'). .sx-hold .prod
+       hides both Friday breads until the frena lands. .slip has no .logo-s; .story-card, .b2b-band
+       and .label are gone, so the lines / unroll / swing devices have nothing to play; .place labels
+       and .here-copy currently get the default fade / head devices.
+     - b-motion-micro.js: orderLive() stamps .soon (gone): stamp .order-status.when-live instead;
+       `.slip-copy > p:not(.soon)` now matches the phone number line. .lid / .det / .label rules and
+       the "פתחו" accents are dead. The hard caramel button shadow is gone (design 10, R11): hover and
+       press should lift the soft shadow, not bring the offset shadow back. The press scale stays.
+     - b-motion-hero: the evening lamp should move onto the bag (design 7: 34% 52%, via --b-lamp);
+       the sticker's filter belongs in the last frame of b-hero-lift (R13); the bag's dark filter moved
+       from .sc-bag-img to .sc-bag, so move its transition too; on phones the wheat must not cross
+       the bag; the plate's opacity fade should go (perf P2).
+     - New colour tokens to register with @property: --band, --on-band, --band-accent, --focus.
    ========================================================================== */
 
 
@@ -55,8 +134,8 @@
   /* palette from the logo (caramel ring and wheat, chocolate wordmark) and the haofeapp.com order app */
   --bg: #F7F1E6;      /* app background */
   --paper: #FFFCF6;   /* app cards */
-  --kraft: #EADBC2;   /* light kraft: the bag, toned down */
-  --kraft2: #FFFCF6;  /* box face */
+  --kraft: #EADBC2;   /* light kraft: the bag and the boxes, toned down */
+  --kraft2: #FFFCF6;  /* box window */
   --lid: #F6E8D2;     /* app notice cream */
   --ink: #24180F;     /* app text */
   --ink2: #5F4E3B;
@@ -66,12 +145,35 @@
   --on-stamp: #FFFAF2;
   --btn: #2A1D14;     /* app primary button */
   --on-btn: #FBF4EA;
+  /* the chocolate bands (ticker tape, mobile bar), split from --btn so buttons can go cream at night */
+  --band: #2A1D14;
+  --on-band: #FBF4EA;
+  --band-accent: #D99A52;
+  /* one focus ring colour (a11y A11Y-06, plan R2): 7.8:1 or more on every surface it lands on */
+  --focus: var(--head);
   --line: rgba(74, 50, 28, .2);
+  --line-strong: rgba(74, 50, 28, .55);  /* borders that are a control's only outline */
   --shadow: 0 14px 24px -14px rgba(74, 40, 12, .38);
+  /* the map ground is the evening counter in both modes (design finding 2) */
+  --map-bg: #17100B;
+  --map-ink: #F7F1E6;
+  --map-ink2: #CDBBA3;
+  --map-head: #F6E3C4;
+  --map-accent: #D99A52;   /* graphics */
+  --map-accent-t: #E6AE6C; /* text, 9.5:1 */
+  --map-mute: #A8967E;     /* small print, 6.3:1 */
+  --map-line: rgba(247, 241, 230, .16);
+
+  /* rhythm (design finding 3) and radii (finding 21) */
+  --sec: clamp(56px, 8cqi, 136px);
+  --h-a: clamp(40px, 6.2cqi, 92px);   /* products and map headings */
+  --h-b: clamp(30px, 3.4cqi, 48px);   /* order and feed headings */
+  --r-paper: 4px;
+  --r-ctl: 14px;
 
   --display: "Secular One", "Rubik", "Arial Hebrew", sans-serif;
   --body: "Rubik", "Arial Hebrew", Arial, sans-serif;
-  --hand: "Playpen Sans Hebrew", "Rubik", cursive;
+  --hand: "Playpen Sans Hebrew", "Rubik", cursive;   /* weight 600 only (R10) */
 
   /* motion tokens, from the bakery's own ordering app (haofeapp.com) */
   --ease-out: cubic-bezier(.16, 1, .3, 1);
@@ -86,61 +188,108 @@
   --press-scale: .97;
   --press-scale-soft: .985;
   --stagger: 40ms;
+  color-scheme: light;
 }
 .pb[data-mode="dark"] {
+  /* the same shop in the evening. Surface ladder, darkest to lightest: bg < kraft < paper < lid */
   --bg: #17100B;      /* chocolate counter at night */
-  --paper: #221812;
-  --kraft: #2A1E15;   /* kraft in shadow */
-  --kraft2: #221812;
-  --lid: #2E2118;
+  --paper: #2A1E15;
+  --kraft: #1E1610;
+  --kraft2: #2A1E15;
+  --lid: #36271B;
   --ink: #F7F1E6;
   --ink2: #CDBBA3;
   --head: #F6E3C4;
   --caramel: #D99A52;
   --stamp: #E6AE6C;   /* caramel under lamp light */
   --on-stamp: #1B0F07;
-  --btn: #F7F1E6;
+  --btn: #F2E5D0;
   --on-btn: #1B120C;
-  --line: rgba(247, 241, 230, .18);
+  --band: #4A1D0B;    /* the logo's wordmark chocolate (R3) */
+  --on-band: #F7F1E6;
+  --band-accent: #E6AE6C;
+  --line: rgba(247, 241, 230, .14);
+  --line-strong: rgba(247, 241, 230, .45);
   --shadow: 0 16px 28px -14px rgba(0, 0, 0, .75);
+  --map-bg: #110B07;  /* a step below the page, so the map still reads as its own ground */
+  color-scheme: dark;
+  /* light text on a dark ground needs a little more air (design finding 7) */
+  line-height: 1.66;
+  letter-spacing: .005em;
 }
 
 
 /* ---------- 2 base ---------- */
 .pb {
-  container-type: inline-size; min-height: 100%;
+  container: pb / inline-size; min-height: 100%;
   background: var(--bg); color: var(--ink); font: 400 17px/1.6 var(--body);
+  overflow-x: clip;   /* the tilted ticker tape bleeds past both edges (on the real site: on body) */
 }
+.pb[data-mode="dark"] { line-height: 1.66; }
 .pb *, .pb *::before, .pb *::after { box-sizing: border-box; }
 .pb a { color: inherit; }
-.pb :focus-visible { outline: 3px solid var(--caramel); outline-offset: 3px; border-radius: 6px; }
+.pb ::selection { background: color-mix(in srgb, var(--caramel) 35%, transparent); color: inherit; }
+/* focus: one token that follows the ground; no border-radius, outlines follow each element's own */
+.pb :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.pb .ticker, .pb .bar { --focus: var(--on-band); }
+.pb .tk-pause:focus-visible, .pb .bar a:focus-visible { outline-offset: -6px; }
 .pb h1, .pb h2, .pb h3 { font-family: var(--display); font-weight: 400; line-height: 1.08; margin: 0; text-wrap: balance; color: var(--head); }
 .pb p { margin: 0; }
 .pb [data-section]:focus { outline: none; }
+/* text only screen readers get: "(נפתח בחלון חדש)", the h1 separator, a missing value */
+.pb .sr-only {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+/* skip link: the first stop, shown on focus; it jumps to the hero (data-jump="top") */
+.pb .skip {
+  position: absolute; inset-inline-start: 12px; top: 10px; z-index: 30; padding: 10px 16px;
+  border-radius: var(--r-ctl); background: var(--btn); color: var(--on-btn); font: 700 15px/1.2 var(--body);
+  text-decoration: none; transform: translateY(-180%);
+}
+.pb .skip:focus { transform: none; }
 /* kraft texture: faint wheat ears over paper grain, as in the order app */
 .pb .paper { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='120' viewBox='0 0 96 120'><g fill='none' stroke='%23B0702A' stroke-width='1.4' stroke-linecap='round' opacity='.16'><path d='M48 104V30'/><path d='M48 40c-7-2-10-8-10-14 7 2 10 8 10 14zM48 40c7-2 10-8 10-14-7 2-10 8-10 14zM48 56c-7-2-10-8-10-14 7 2 10 8 10 14zM48 56c7-2 10-8 10-14-7 2-10 8-10 14zM48 72c-7-2-10-8-10-14 7 2 10 8 10 14zM48 72c7-2 10-8 10-14-7 2-10 8-10 14zM48 30c-3-5-3-10 0-16 3 6 3 11 0 16z'/></g></svg>"), url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='k'><feTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.35  0 0 0 0 0.22  0 0 0 0 0.1  0 0 0 .22 0'/></filter><rect width='100%' height='100%' filter='url(%23k)'/></svg>"); }
-.pb[data-mode="dark"] .ph { filter: brightness(.85); }
+/* placeholders at night: dim the photo, not its "צילום זמני" label */
+.pb[data-mode="dark"] .ph { filter: none; box-shadow: inset 0 0 0 100vmax rgba(12, 8, 5, .16); }
 
 
 /* ---------- 3 layout and shared pieces ---------- */
 .pb .in { padding-inline: 20px; max-width: 1240px; margin-inline: auto; }
+.pb .boxes, .pb .order-sec, .pb .here, .pb .feed { padding-block: var(--sec); }
 
-/* section heading (boxes, feed, branches) */
-.pb .sec-head { display: grid; gap: 8px; margin-bottom: 26px; }
-.pb .sec-head h2 { font-size: 38px; }
+/* section heading (boxes, map, feed) */
+.pb .sec-head { display: grid; gap: 10px; margin-bottom: clamp(20px, 2.2cqi, 36px); }
 .pb .sec-head p { color: var(--ink2); max-width: 52ch; }
-.pb .sec-head .hand { font: 600 18px/1.3 var(--hand); color: var(--stamp); }
+.pb .boxes .sec-head h2 { font-size: var(--h-a); }
+.pb .feed .sec-head h2 { font-size: var(--h-b); }
 
-/* the hard-shadow button (hero, order module, feed) */
-.pb .btn-b { text-decoration: none; font-weight: 700; font-size: 16px; min-height: 52px; padding: 0 22px; border-radius: 14px; display: inline-flex; align-items: center; gap: 8px; border: 2px solid var(--btn); background: var(--paper); color: var(--ink); box-shadow: 4px 4px 0 var(--caramel); }
-.pb .btn-b--main { background: var(--btn); color: var(--on-btn); }
-.pb .btn-b svg { width: 20px; height: 20px; }
+/* buttons: the primary is a pressed chocolate tab with a soft shadow, the secondary paper with a rim */
+.pb .btn-b {
+  text-decoration: none; font-weight: 700; font-size: 16px; min-height: 52px; padding: 0 22px;
+  border-radius: var(--r-ctl); display: inline-flex; align-items: center; gap: 8px;
+  border: 1.5px solid var(--btn); background: var(--paper); color: var(--ink);
+}
+.pb .btn-b--main { background: var(--btn); color: var(--on-btn); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 10px 18px -12px rgba(42, 29, 20, .6); }
+.pb .btn-b svg { width: 20px; height: 20px; flex: none; }
+
+/* responsive images: <picture> must not become an extra grid or flex item */
+.pb picture { display: contents; }
+.pb picture > source { display: none; }
+/* blurred placeholder until the real file has loaded (b.html <head> drops data-lqip on load) */
+.pb img[data-lqip] { background: var(--lqip) 50% 100% / 100% 100% no-repeat; }
+.pb .sc-plate[data-lqip] { background-size: cover; }
+.pb .prod[data-lqip] { background-size: contain; background-position: 50% 80%; }
+
+/* phone numbers: only the number itself never breaks (text spacing at 320px, A11Y-12) */
+.pb a[href^="tel:"] { white-space: normal; }
+.pb bdi[dir="ltr"] { white-space: nowrap; }
 
 
 /* ---------- 4 components, in page order ---------- */
 
 /* header */
-.pb .hd { position: sticky; top: 0; z-index: 10; background: var(--paper); border-bottom: 1px solid var(--line); }  /* solid: a backdrop blur repainted on every scrolled frame */
+.pb .hd { position: sticky; top: 0; z-index: 10; background: var(--paper); border-bottom: 1px solid var(--line); }
 .pb .hd .in { display: flex; align-items: center; gap: 14px; min-height: 62px; }
 .pb .mark { text-decoration: none; display: flex; align-items: center; gap: 10px; }
 .pb .mark-logo { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: #FFFFFF; box-shadow: 0 0 0 1px var(--line); }
@@ -151,56 +300,85 @@
 .pb[data-mode="dark"] .mark-logo { background: transparent; box-shadow: none; }
 .pb .mark b { font: 400 26px/1 var(--display); color: var(--head); }
 .pb .nav { display: none; gap: 2px; margin-inline: auto; }
-.pb .nav a { text-decoration: none; padding: 10px 12px; font-weight: 500; font-size: 15px; border-radius: 999px; }
-.pb .nav a:hover { background: var(--kraft2); }
-.pb .nav .chip-soon { font: 600 11px/1 var(--body); color: var(--stamp); border: 1px dashed var(--caramel); border-radius: 999px; padding: 3px 6px; margin-inline-start: 6px; }
-.pb[data-order="live"] .nav .chip-soon { border-style: solid; background: var(--stamp); color: var(--on-stamp); }
+.pb .nav a { text-decoration: none; padding: 10px 12px; font-weight: 500; font-size: 15px; border-radius: 999px; white-space: nowrap; }
+.pb .nav a:hover { background: var(--lid); }
+.pb .nav .chip-soon { font: 600 11px/1 var(--body); color: var(--stamp); border: 1px solid color-mix(in srgb, var(--stamp) 55%, transparent); border-radius: 999px; padding: 3px 6px; margin-inline-start: 6px; }
+.pb[data-order="live"] .nav .chip-soon { background: var(--stamp); color: var(--on-stamp); border-color: var(--stamp); }
 .pb .hd-actions { display: flex; gap: 8px; align-items: center; margin-inline-start: auto; }
-.pb .theme-btn { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--line); background: transparent; color: var(--ink); display: grid; place-items: center; cursor: pointer; }
+.pb .theme-btn { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--line-strong); background: transparent; color: var(--ink); display: grid; place-items: center; cursor: pointer; }
 .pb .theme-btn svg { width: 22px; height: 22px; }
 .pb .theme-btn .moon { display: none; }
 .pb[data-mode="dark"] .theme-btn .sun { display: none; }
 .pb[data-mode="dark"] .theme-btn .moon { display: block; }
-.pb .order { display: none; text-decoration: none; background: var(--btn); color: var(--on-btn); font-weight: 700; font-size: 15px; padding: 0 18px; min-height: 44px; border-radius: 999px; align-items: center; }
+.pb .order { display: none; text-decoration: none; background: var(--btn); color: var(--on-btn); font-weight: 700; font-size: 15px; padding: 0 18px; min-height: 44px; border-radius: 999px; align-items: center; gap: 6px; white-space: nowrap; }
+.pb .order-n { font-weight: 500; }
 .pb .menu-btn { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--btn); background: var(--btn); color: var(--on-btn); display: grid; place-items: center; cursor: pointer; }
 .pb .menu-btn svg { width: 22px; height: 22px; }
 
 /* menu (mobile disclosure, opened by Shell.menu) */
-.pb .menu { position: absolute; inset: 100% 0 auto; background-color: var(--paper); padding: 10px 20px 22px; display: grid; gap: 4px; border-bottom: 1px solid var(--line); box-shadow: var(--shadow); }
-.pb .menu a { text-decoration: none; font: 400 28px/1.2 var(--display); padding: 10px 0; }
+.pb .menu { position: absolute; inset: 100% 0 auto; background-color: var(--paper); padding: 10px 20px 22px; display: grid; gap: 2px; border-bottom: 1px solid var(--line); box-shadow: var(--shadow); max-height: calc(100vh - 80px); overflow-y: auto; }
+.pb .menu a { text-decoration: none; font: 400 26px/1.2 var(--display); padding: 9px 0; }
+.pb .menu .menu-small { font: 500 16px/1.3 var(--body); padding: 12px 0; color: var(--ink2); }
+.pb .menu .menu-small + .menu-small { padding-top: 4px; }
 
-/* hero */
-/* hero: text first, then the scene (phone); on desktop the scene fills the hero behind the text.
-   The plate is 16:9 with its counter edge at 69% of its height; the bag stands on that edge. */
+/* hero: one scene on phones (text over the wall that fades in from the kraft), the scene fills
+   a 16:9 hero behind the text on desktop. The plate is 16:9 with its counter edge at 69% of its
+   height; the bag stands on the counter in front of that edge. */
 .pb .hero { background-color: var(--kraft); position: relative; overflow: hidden; display: flex; flex-direction: column; }
-.pb .hero .in { display: grid; gap: 18px; padding-block: 30px 22px; position: relative; z-index: 2; }
-.pb .hero-text { display: grid; gap: 16px; }
-.pb .scene { position: relative; order: 2; aspect-ratio: 4 / 4.4; max-width: 100%; overflow: hidden; isolation: isolate; }
+.pb .hero .in { display: grid; gap: 18px; padding-block: 26px 22px; position: relative; z-index: 2; width: 100%; }
+.pb .hero-text { display: grid; gap: 14px; }
+.pb .scene { position: relative; order: 2; aspect-ratio: 4 / 4.6; margin-top: -80px; max-width: 100%; overflow: hidden; isolation: isolate; }
 .pb .sc-plane { position: absolute; inset: 0; pointer-events: none; }
 .pb .sc-plate { width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; display: block; }
 .pb .sc-light { background: linear-gradient(105deg, transparent 35%, rgba(255, 214, 150, .22) 62%, rgba(255, 236, 200, .32) 80%, transparent 100%); mix-blend-mode: soft-light; }
-.pb .sc-bag { position: absolute; left: 50%; bottom: calc(31% - 6%); width: 46%; aspect-ratio: 748 / 1100; translate: -50% 0; }
+.pb .sc-bag { position: absolute; left: 50%; bottom: 20%; width: 50%; aspect-ratio: 748 / 1100; translate: -50% 0; }
 .pb .sc-bag-img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* light from the right: the bag casts its shadow to the left and back along the counter */
+.pb .sc-shadow { position: absolute; left: -62%; right: 46%; bottom: -2.5%; height: 11%; border-radius: 50%; transform: skewX(52deg); background: radial-gradient(closest-side, rgba(70, 40, 15, .5), rgba(70, 40, 15, .2) 60%, transparent); }
+/* contact line where the bag meets the counter */
+.pb .sc-bag::before { content: ""; position: absolute; left: 4%; right: 4%; bottom: -.5%; height: 2.2%; border-radius: 50%; background: rgba(50, 28, 10, .55); filter: blur(3px); }
+/* the bag's left side, away from the window light */
+.pb .sc-shade {
+  position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply;
+  background: linear-gradient(90deg, rgba(60, 35, 12, .28), transparent 45%);
+  -webkit-mask: var(--bag-mask) center / 100% 100% no-repeat;
+  mask: var(--bag-mask) center / 100% 100% no-repeat;
+  /* the bag's silhouette, 128px, from assets/ai/r/bag-480.webp (inline: a mask URL is fetched with CORS) */
+  --bag-mask: url("data:image/webp;base64,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");
+}
+.pb .hero.b-hold .sc-shade { opacity: 0; }
 /* the real logo, stuck on the blank front panel of the bag */
 .pb .sc-sticker { position: absolute; left: 50%; top: 62%; width: 40%; height: auto; translate: -50% -50%; rotate: -6deg; border-radius: 50%; filter: drop-shadow(0 2px 2px rgba(60, 35, 12, .28)); }
-.pb .sc-shadow { position: absolute; left: -6%; right: -10%; bottom: -3%; height: 9%; border-radius: 50%; background: radial-gradient(closest-side, rgba(70, 40, 15, .45), transparent); }
-.pb .sc-wheat { position: absolute; width: 40%; height: auto; right: -8%; bottom: -12%; rotate: -14deg; }
-.pb .ai-note { position: absolute; z-index: 3; bottom: 10px; left: 12px; font: 600 11px/1 var(--body); color: #fff; background: rgba(36, 24, 15, .66); border: 1px dashed rgba(255, 255, 255, .7); padding: 6px 9px; border-radius: 999px; }
-/* evening: the morning light becomes lamp light */
+/* the wheat is the nearest, out-of-focus layer: it recedes instead of competing with the bag */
+.pb .sc-wheat { position: absolute; width: 32%; height: auto; right: -8%; bottom: -10%; rotate: -14deg; filter: blur(1.6px) brightness(.9) saturate(.85); }
+/* the required AI label, printed as a caption on the dark wood (design finding 19) */
+/* phones: a line under the buttons, on the wall's fade (always on the first screen, never under the bar) */
+.pb .ai-note { position: relative; z-index: 3; order: 1; align-self: flex-start; margin-inline: 20px; font: 500 12px/1.2 var(--body); color: #fffc; text-shadow: 0 1px 2px #0009; }
+/* by day the caption lies on the sunlit wall: print it in ink. At night it lies in the lamp glow: a faint slip */
+.pb[data-mode="light"] .ai-note { color: var(--ink); text-shadow: 0 0 6px rgba(255, 248, 236, .9); }
+.pb[data-mode="dark"] .ai-note { background: rgba(17, 11, 7, .62); padding: 2px 6px; border-radius: 2px; text-shadow: none; }
+/* evening: the morning light becomes lamp light; the bag is dimmed as one object (R13) */
 .pb[data-mode="dark"] .sc-plate { filter: brightness(.48) saturate(.85) sepia(.15); }
-.pb[data-mode="dark"] .sc-light { background: radial-gradient(ellipse 50% 60% at 30% 30%, rgba(255, 176, 90, .45), transparent 70%); mix-blend-mode: screen; }
-.pb[data-mode="dark"] .sc-bag-img, .pb[data-mode="dark"] .sc-wheat { filter: brightness(.78); }
-.pb .hero h1 { font-size: 48px; max-width: 12ch; }
+.pb[data-mode="dark"] .sc-light { background: radial-gradient(ellipse 30% 48% at 34% 52%, rgba(255, 176, 90, .42), transparent 70%); mix-blend-mode: screen; }
+.pb[data-mode="dark"] .sc-bag { filter: brightness(.8) sepia(.12); }
+.pb[data-mode="dark"] .sc-bag-img { filter: none; }
+.pb[data-mode="dark"] .sc-wheat { filter: blur(1.6px) brightness(.66) saturate(.85); }
+.pb .hero h1 { font-size: 46px; max-width: 12ch; }
+.pb .h1-kicker { display: block; font: 500 15px/1.4 var(--body); margin-bottom: 12px; text-wrap: pretty; }
 .pb .hero h1 em { font-style: normal; color: var(--stamp); }
-.pb .hero .sub { max-width: 40ch; color: var(--ink2); font-size: 18px; }
-.pb .ctas { display: flex; flex-wrap: wrap; gap: 10px; }
-.pb .note-hand { font: 600 22px/1.25 var(--hand); color: var(--stamp); display: flex; align-items: center; gap: 8px; }
-.pb .note-hand svg { width: 64px; height: 40px; flex: none; }
-.pb .note-hand path { stroke: var(--caramel); }
+/* the hero's secondary text sits on the photo or its fade: one step closer to --ink than --ink2 (R4) */
+.pb .hero .sub, .pb .h1-kicker { color: color-mix(in srgb, var(--ink2) 55%, var(--ink)); }
+.pb .hero .sub { max-width: 40ch; font-size: 16px; }
+.pb .ctas { display: flex; flex-wrap: wrap; gap: 14px; }
 
-/* ticker: four copies of the list side by side; the motion file slides the track by half its width */
-.pb .ticker { background: var(--btn); color: var(--on-btn); display: flex; align-items: center; }
-.pb .tk-pause { flex: none; width: 52px; height: 52px; border: 0; border-inline-end: 1px solid color-mix(in srgb, var(--on-btn) 25%, transparent); background: transparent; color: inherit; display: grid; place-items: center; cursor: pointer; }
+/* ticker: sealing tape across the seam under the hero. Four copies of the list side by side;
+   the motion file slides the track by half its width */
+.pb .ticker {
+  background: var(--band); color: var(--on-band); display: flex; align-items: center;
+  rotate: -1.2deg; margin-block: -12px; margin-inline: -2%; padding-inline: 2%;
+  position: relative; z-index: 3; box-shadow: 0 8px 16px -10px rgba(40, 20, 5, .55);
+}
+.pb .tk-pause { flex: none; width: 52px; height: 52px; border: 0; border-inline-end: 1px solid color-mix(in srgb, var(--on-band) 25%, transparent); background: transparent; color: inherit; display: grid; place-items: center; cursor: pointer; }
 .pb .tk-pause svg { width: 18px; height: 18px; }
 .pb .tk-pause .play { display: none; }
 .pb .ticker.paused .tk-pause .play { display: block; }
@@ -209,109 +387,213 @@
 .pb .tk-track { display: flex; width: max-content; }
 .pb .tk-list { display: flex; direction: rtl; margin: 0; padding: 0; list-style: none; }
 .pb .tk-list li { font: 400 22px/52px var(--display); padding-inline: 18px; white-space: nowrap; display: flex; align-items: center; gap: 18px; }
-.pb .tk-list li::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--caramel); }
+/* separator: a wheat ear printed in caramel on the tape */
+.pb .tk-list li::after, .pb.rm .tk-list li + li::before {
+  content: ""; flex: none; width: 12px; height: 18px; background: var(--band-accent);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 36'><g fill='%23000'><rect x='11' y='9' width='2' height='27' rx='1'/><path d='M12 1c2.2 2.4 2.2 5.6 0 8-2.2-2.4-2.2-5.6 0-8zM11.6 14C8 13 6 10.2 6 7c3.6 1 5.6 3.8 5.6 7zM12.4 14c3.6-1 5.6-3.8 5.6-7-3.6 1-5.6 3.8-5.6 7zM11.6 21C8 20 6 17.2 6 14c3.6 1 5.6 3.8 5.6 7zM12.4 21c3.6-1 5.6-3.8 5.6-7-3.6 1-5.6 3.8-5.6 7zM11.6 28C8 27 6 24.2 6 21c3.6 1 5.6 3.8 5.6 7zM12.4 28c3.6-1 5.6-3.8 5.6-7-3.6 1-5.6 3.8-5.6 7z'/></g></svg>") center / contain no-repeat;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 36'><g fill='%23000'><rect x='11' y='9' width='2' height='27' rx='1'/><path d='M12 1c2.2 2.4 2.2 5.6 0 8-2.2-2.4-2.2-5.6 0-8zM11.6 14C8 13 6 10.2 6 7c3.6 1 5.6 3.8 5.6 7zM12.4 14c3.6-1 5.6-3.8 5.6-7-3.6 1-5.6 3.8-5.6 7zM11.6 21C8 20 6 17.2 6 14c3.6 1 5.6 3.8 5.6 7zM12.4 21c3.6-1 5.6-3.8 5.6-7-3.6 1-5.6 3.8-5.6 7zM11.6 28C8 27 6 24.2 6 21c3.6 1 5.6 3.8 5.6 7zM12.4 28c3.6-1 5.6-3.8 5.6-7-3.6 1-5.6 3.8-5.6 7z'/></g></svg>") center / contain no-repeat;
+}
 
-/* boxes: products as tilted boxes whose lid opens */
-.pb .boxes { padding-block: 48px 28px; }
-.pb .box-grid { display: grid; gap: 22px; grid-template-columns: minmax(0, 1fr); }
-.pb .box { background: var(--kraft2); border: 1.5px solid var(--line); border-radius: 10px; overflow: hidden; transform: rotate(var(--tilt, -1deg)); box-shadow: var(--shadow); display: grid; align-content: start; }
-.pb .box:nth-child(3n+2) { --tilt: .8deg; }
-.pb .box:nth-child(3n) { --tilt: -.5deg; }
-.pb .shot { position: relative; aspect-ratio: 5 / 4; display: grid; place-items: center; overflow: hidden; background: radial-gradient(ellipse 75% 65% at 50% 58%, var(--paper), var(--lid) 70%, var(--kraft)); }
-.pb .shot::after { content: ""; position: absolute; left: 18%; right: 18%; bottom: 13%; height: 10%; border-radius: 50%; background: radial-gradient(closest-side, rgba(70, 40, 15, .3), transparent); z-index: 0; }
-.pb .prod { position: relative; z-index: 1; width: 84%; height: 76%; object-fit: contain; object-position: 50% 80%; display: block; }
-.pb .ai-tag { position: absolute; z-index: 2; top: 10px; right: 10px; font: 600 11px/1 var(--body); color: #fff; background: rgba(36, 24, 15, .62); border: 1px dashed rgba(255, 255, 255, .7); padding: 5px 8px; border-radius: 999px; }
+/* boxes: kraft boxes with a window; the name and the product list are printed on the face */
+.pb .box-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+.pb .box {
+  background: var(--kraft); border: 1px solid var(--line); border-radius: var(--r-paper);
+  transform: rotate(var(--tilt, -1deg)); box-shadow: var(--shadow); display: flex; flex-direction: column; min-width: 0;
+}
+.pb .box:nth-child(2) { --tilt: .8deg; }
+.pb .box:nth-child(3) { --tilt: -.5deg; }
+.pb .box:nth-child(4) { --tilt: .6deg; }
+.pb .box:nth-child(5) { --tilt: -.9deg; }
+.pb .box--fri { --tilt: -.6deg; grid-column: 1 / -1; }
+.pb .shot { position: relative; aspect-ratio: 5 / 4; display: grid; place-items: center; }
+/* the window cut into the box, with a little depth on its top edge */
+.pb .shot::before {
+  content: ""; position: absolute; inset: 9% 7% 3%; z-index: 0;
+  border-radius: 40% 40% 6px 6px / 22% 22% 6px 6px; background: var(--kraft2);
+  box-shadow: inset 0 2px 6px rgba(74, 40, 12, .25);
+}
+.pb .shot::after { content: ""; position: absolute; left: 18%; right: 18%; bottom: 9%; height: 10%; border-radius: 50%; background: radial-gradient(closest-side, rgba(70, 40, 15, .3), transparent); z-index: 0; }
+.pb .prod { position: relative; z-index: 1; width: 80%; height: 74%; object-fit: contain; object-position: 50% 80%; display: block; }
+.pb .box--fri .shot { aspect-ratio: 16 / 9; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.pb .box--fri .prod { width: 88%; height: 80%; filter: drop-shadow(0 10px 8px rgba(70, 40, 15, .2)); }
+.pb[data-mode="dark"] .shot::before { background: radial-gradient(ellipse 75% 65% at 50% 58%, var(--lid), var(--kraft2) 72%); box-shadow: inset 0 2px 8px rgba(0, 0, 0, .5); }
+.pb[data-mode="dark"] .shot::after { background: radial-gradient(closest-side, rgba(0, 0, 0, .5), transparent); }
 .pb[data-mode="dark"] .prod { filter: brightness(.9); }
-.pb .lid-h { font-size: 26px; }
-.pb .lid { display: flex; align-items: center; gap: 12px; padding: 14px 16px; width: 100%; background: var(--lid); border: 0; border-top: 3px dashed color-mix(in srgb, var(--caramel) 55%, transparent); color: var(--ink); font: inherit; text-align: start; cursor: pointer; min-height: 64px; }
-.pb .lid .nm { flex: 1; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font: 400 26px/1.1 var(--display); }
-.pb .lid .open { font: 600 15px var(--hand); color: var(--stamp); display: inline-flex; align-items: center; gap: 6px; }
-.pb .lid svg { width: 18px; height: 18px; }
+.pb[data-mode="dark"] .box--fri .prod { filter: brightness(.9) drop-shadow(0 10px 8px rgba(0, 0, 0, .4)); }
+.pb .face { display: grid; gap: 6px; padding: 10px 12px 12px; align-content: start; }
+.pb .face .nm { font-size: 19px; line-height: 1.1; display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
+.pb .face .list { font-size: 13.5px; line-height: 1.42; color: var(--ink2); }
+.pb .box-note { font-size: 13px; line-height: 1.4; color: var(--ink2); }
+.pb .ai-tag { font: 500 11px/1.2 var(--body); color: var(--ink2); }
 .pb .tag { font: 700 12px/1 var(--body); padding: 6px 9px; border-radius: 999px; background: var(--stamp); color: var(--on-stamp); transform: rotate(-3deg); }
-.pb .det { display: grid; grid-template-rows: 0fr; }
-.pb .det > div { overflow: hidden; }
-.pb .det p { padding: 0 16px 16px; color: var(--ink2); }
-.pb .box.open .det { grid-template-rows: 1fr; }
 
-/* order module: one switch (data-order="soon" | "live") flips the whole module on launch day */
+/* order receipt: what works today (the phone) leads; the app is the status line under it.
+   One switch (data-order="soon" | "live") flips it on launch day */
 .pb:not([data-order="live"]) .when-live, .pb[data-order="live"] .when-soon { display: none !important; }
-.pb .order-sec { padding-block: 20px 52px; }
-.pb .slip { position: relative; background: var(--paper); border: 1.5px solid var(--line); border-radius: 18px; padding: 26px 22px; display: grid; gap: 16px; box-shadow: var(--shadow); overflow: hidden; }
-.pb .slip::before { content: ""; position: absolute; inset: 0 0 auto; height: 10px; background: radial-gradient(circle at 10px 0, transparent 7px, var(--lid) 7.5px) 0 0 / 20px 10px repeat-x; }
-.pb .slip .logo-s { width: 64px; height: 64px; border-radius: 50%; box-shadow: 0 0 0 4px var(--paper), 0 0 0 5px var(--caramel); transform: rotate(-6deg); }
+.pb .slip {
+  position: relative; max-width: 520px; margin-inline-start: auto; rotate: -1deg;
+  background: var(--paper); border-inline: 1px solid var(--line); border-radius: 2px;
+  padding: 36px 26px 40px; display: grid; gap: 22px; box-shadow: var(--shadow);
+}
+/* torn top and bottom edges: bites in the page colour */
+.pb .slip::before, .pb .slip::after { content: ""; position: absolute; inset-inline: 0; height: 10px; pointer-events: none; }
+.pb .slip::before { top: -1px; background: radial-gradient(circle at 10px 0, var(--bg) 6.5px, transparent 7px) 0 0 / 20px 10px repeat-x; }
+.pb .slip::after { bottom: -1px; background: radial-gradient(circle at 10px 100%, var(--bg) 6.5px, transparent 7px) 0 100% / 20px 10px repeat-x; }
 .pb .slip-copy { display: grid; gap: 10px; }
-.pb .slip h2 { font-size: 34px; }
-.pb .slip p { color: var(--ink2); max-width: 46ch; }
-.pb .soon { display: inline-flex; align-items: center; gap: 8px; font: 600 13px/1 var(--body); color: var(--stamp); background: var(--lid); border: 1.5px dashed var(--caramel); padding: 7px 12px; border-radius: 999px; width: max-content; }
-.pb .soon i { width: 8px; height: 8px; border-radius: 50%; background: var(--caramel); }
-.pb .slip .acts { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.pb .btn-soon { font: 700 16px var(--body); min-height: 52px; padding: 0 22px; border-radius: 14px; display: inline-flex; align-items: center; gap: 8px; border: 2px dashed var(--caramel); color: var(--stamp); background: transparent; cursor: not-allowed; }
-.pb .phone-line { font-weight: 600; }
-.pb .phone-line a { color: var(--stamp); }
-/* phone numbers never break at their hyphens */
-.pb a[href^="tel:"], .pb bdi[dir="ltr"], .pb p[dir="ltr"] { white-space: nowrap; }
+.pb .slip h2 { font-size: var(--h-b); }
+.pb .order-num { font: 400 clamp(40px, 5cqi, 64px)/1.05 var(--display); color: var(--head); }
+.pb .order-num a { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 8px; text-decoration-color: color-mix(in srgb, var(--head) 35%, transparent); }
+.pb .slip p:not(.order-num) { color: var(--ink2); max-width: 46ch; }
+.pb .slip .acts { display: grid; gap: 14px; justify-items: start; border-top: 2px dotted var(--line-strong); padding-top: 18px; }
+.pb .order-status { font-weight: 500; color: var(--ink); }
+.pb .order-status .st { font-weight: 700; color: var(--stamp); }
 
-/* story: a draft from the 2021 Walla article, pending the owner's approval */
-.pb .story { padding-block: 8px 48px; }
-.pb .story-card { display: grid; gap: 12px; max-width: 760px; }
-.pb .story-card h2 { font-size: 34px; }
-.pb .story-card p { color: var(--ink2); font-size: 18px; max-width: 60ch; }
-.pb .story-card .hand { font: 600 18px/1.3 var(--hand); color: var(--stamp); }
-.pb .story-card .draft { font-size: 14px; }
+/* map "אנחנו כאן.": the three ovens on a to-scale map, drawn like a print on a bag, always on
+   the evening counter. Wide maps carry the labels next to the pins; narrow ones list them under
+   the map, tied to the pins by number */
+.pb .here {
+  --focus: var(--map-head);
+  position: relative; color: var(--map-ink);
+  background-color: var(--map-bg);
+  background-image:
+    radial-gradient(ellipse 60% 70% at 30% 55%, rgba(217, 154, 82, .10), transparent 70%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='k'><feTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 .9  0 0 0 0 .8  0 0 0 .05 0'/></filter><rect width='100%' height='100%' filter='url(%23k)'/></svg>");
+}
+.pb[data-mode="dark"] .here { border-block: 1px solid var(--line); }
+.pb .here .in { display: grid; gap: 28px; }
+.pb .here-copy { margin-bottom: 0; gap: 12px; align-content: start; }
+.pb .here h2 { font-size: var(--h-a); color: var(--map-head); line-height: 1; }
+.pb .here-q { margin: 0; font: 600 20px/1.4 var(--hand); color: var(--map-accent-t); }
+.pb .here-q p { color: inherit; }
+.pb .here-q footer { font: 500 13px/1.5 var(--body); color: var(--map-mute); margin-top: 6px; }
+.pb .here-copy p { color: var(--map-ink2); max-width: 44ch; }
+.pb .here-copy .here-src { font-size: 12.5px; line-height: 1.5; color: var(--map-mute); }
+.pb .map-wrap { container: map / inline-size; position: relative; min-width: 0; }
+.pb .map-art { position: relative; aspect-ratio: 1; }
+.pb .map-art svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.pb .map-art svg * { vector-effect: non-scaling-stroke; fill: none; }
+.pb .map-grid { stroke: rgba(247, 241, 230, .05); stroke-width: 1; }
+.pb .route-base { stroke: rgba(217, 154, 82, .22); stroke-width: 1; }
+.pb .route { stroke: var(--map-accent); stroke-width: 2.6; stroke-linecap: round; stroke-dasharray: 0 8; }
+.pb .out { stroke: var(--map-accent); stroke-width: 1.5; stroke-dasharray: 9 7; opacity: .7; }
+.pb .out-head { stroke: var(--map-accent); stroke-width: 1.5; stroke-linejoin: round; opacity: .7; }
+.pb .fac-lead { stroke: var(--map-head); stroke-width: 1; opacity: .6; }
+.pb .map-art .fac-dot { fill: var(--map-head); }
+.pb .leaders { display: none; stroke: rgba(247, 241, 230, .35); stroke-width: 1; }
+.pb .north, .pb .scale { stroke: var(--map-mute); stroke-width: 1.5; }
+/* pins: HTML over the svg, placed in % of the 800x800 map */
+.pb .pin { position: absolute; left: var(--x); top: var(--y); width: clamp(22px, 4.5cqw, 40px); aspect-ratio: 1; translate: -50% -50%; }
+.pb .pin[data-place="netivot"] { --x: 38.163%; --y: 47.2%; }     /* 305.3, 377.6 */
+.pb .pin[data-place="sderot"] { --x: 39.942%; --y: 25.338%; }      /* 319.5, 202.7 */
+.pb .pin[data-place="kiryat-gat"] { --x: 70.918%; --y: 7.5%; }   /* 567.4, 60 */
+.pb .pin[data-place="factory"] { --x: 32.75%; --y: 52.5%; }      /* 262, 420: a callout; the true point is .fac-dot */
+.pb .pin[data-place="ofakim"] { --x: 43.935%; --y: 70.425%; }      /* 351.5, 563.4 */
+/* the oven light on each branch */
+.pb .pin::before { content: ""; position: absolute; left: 50%; top: 50%; width: 420%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 180, 90, .5), rgba(217, 154, 82, .16) 42%, transparent); pointer-events: none; }
+.pb .pin img { position: relative; width: 100%; height: 100%; display: block; border-radius: 50%; box-shadow: 0 2px 8px rgba(0, 0, 0, .5); }
+.pb[data-mode="dark"] .pin img { filter: brightness(.93) sepia(.1); }
+.pb .pin-n { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; font: 700 12px/1 var(--body); background: var(--map-head); color: #2A1D14; }
+.pb .pin > .pin-n { position: absolute; top: -7px; inset-inline-end: -9px; }
+.pb .pin-tag { position: absolute; top: 50%; left: calc(100% + 8px); translate: 0 -50%; font: 600 13px/1 var(--body); color: var(--map-ink); white-space: nowrap; text-shadow: 0 1px 3px #000; }
+.pb .pin--fac { width: clamp(10px, 1.8cqw, 15px); border: 2px solid var(--map-head); rotate: 8deg; }
+.pb .pin--past { width: clamp(12px, 2.3cqw, 19px); border: 1.6px dotted var(--map-ink2); border-radius: 50%; }
+.pb .pin--fac::before, .pb .pin--past::before { content: none; }
+.pb .pin--fac .pin-tag { left: auto; right: calc(100% + 8px); }
+.pb .map-out, .pb .map-north, .pb .map-scale { position: absolute; font: 500 13px/1.2 var(--body); color: var(--map-ink2); white-space: nowrap; }
+.pb .map-out { left: 1.5%; top: 1%; }
+.pb .map-north { left: 96.5%; top: 91.25%; translate: -50% 0; color: var(--map-mute); font-size: 12px; }
+.pb .map-scale { left: 85.625%; bottom: 2.75%; translate: -50% 0; color: var(--map-mute); font-size: 12px; }
+/* labels: one layout for every place (design finding 11) */
+.pb .places { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); align-items: start; }
+.pb .place {
+  --focus: var(--head);
+  background: var(--paper); color: var(--ink); border-radius: var(--r-paper); padding: 10px 12px 11px;
+  box-shadow: 0 18px 30px -16px rgba(0, 0, 0, .8), inset 0 1px 0 rgba(255, 255, 255, .5);
+  display: grid; gap: 4px; align-content: start; font-size: 13.5px; line-height: 1.35;
+}
+.pb[data-mode="dark"] .place { box-shadow: 0 18px 30px -16px rgba(0, 0, 0, .9), inset 0 0 0 1px var(--line); }
+.pb .place h3 { font-size: 21px; line-height: 1.1; display: flex; align-items: center; gap: 8px; }
+.pb .place h3 .pin-n { background: var(--head); color: var(--paper); }
+.pb .place .since { color: var(--ink2); font-size: 13px; }
+.pb .lbl { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 12px; }
+.pb .lbl dt, .pb .lbl dd { margin: 0; padding-block: 3px; border-top: 1px solid var(--line); }
+.pb .lbl dt { color: var(--ink2); font-weight: 500; }
+.pb .lbl dd { min-width: 0; }
+.pb .hrs { list-style: none; margin: 0; padding: 0; font-variant-numeric: tabular-nums; }
+.pb .hrs li { display: flex; gap: 10px; justify-content: space-between; max-width: 15em; }
+.pb .lbl a { font-weight: 600; text-underline-offset: 3px; }
+.pb .lbl .go { display: inline-flex; align-items: center; min-height: 30px; padding: 0 12px; border-radius: 10px; background: var(--btn); color: var(--on-btn); text-decoration: none; font-weight: 700; font-size: 13px; }
+.pb .lbl-note { font-size: 12px; line-height: 1.4; color: var(--ink2); }
+.pb .place--past { background: transparent; color: var(--map-ink2); box-shadow: none; border: 1px dashed rgba(205, 187, 163, .55); --focus: var(--map-head); }
+.pb .place--past h3 { color: var(--map-ink2); }
+.pb .place--past .lbl dt { color: var(--map-mute); }
+.pb .place--past .lbl dt, .pb .place--past .lbl dd { border-top-color: rgba(205, 187, 163, .3); }
+.pb .place--past .lbl-note { color: var(--map-ink2); }
 
-/* feed: the Instagram captions as polaroid notes */
-.pb .feed { padding-block: 36px 48px; background-color: var(--kraft); }
-.pb .polas { display: grid; gap: 22px; grid-template-columns: minmax(0, 1fr); }
-.pb .pola { background: var(--paper); padding: 10px 10px 14px; border: 1px solid var(--line); border-radius: 4px; transform: rotate(var(--r, 1.5deg)); box-shadow: var(--shadow); display: grid; gap: 10px; text-decoration: none; }
-.pb .pola:nth-child(2) { --r: -1.4deg; }
-.pb .pola:nth-child(3) { --r: .6deg; }
+/* feed: the Instagram captions pinned on a kraft board */
+.pb .feed { position: relative; background-color: var(--kraft); }
+/* the bag's serrated top edge, the only section edge on the page (design finding 5a) */
+.pb .feed::before, .pb .ft::before {
+  content: ""; position: absolute; inset: -8px 0 auto; height: 8px; pointer-events: none;
+  background: conic-gradient(from -45deg at 50% 100%, var(--edge) 90deg, #0000 0) 0 0 / 16px 8px repeat-x;
+}
+.pb .feed { --edge: var(--kraft); }
+.pb .feed .sec-head .hand { font: 600 17px/1.3 var(--body); color: var(--head); }
+.pb .polas { display: grid; gap: 14px; grid-auto-flow: column; grid-auto-columns: 74%; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; margin-inline: -20px; padding: 14px 20px 22px; scrollbar-width: none; }
+.pb .polas::-webkit-scrollbar { display: none; }
+.pb .pola { position: relative; background: var(--paper); padding: 10px 10px 14px; border: 1px solid var(--line); border-radius: var(--r-paper); transform: rotate(var(--r, 1.5deg)); box-shadow: var(--shadow); display: grid; gap: 10px; align-content: start; text-decoration: none; scroll-snap-align: center; }
+.pb .pola:nth-child(1) { --r: -4deg; z-index: 1; }
+.pb .pola:nth-child(2) { --r: 2deg; z-index: 2; }
+.pb .pola:nth-child(3) { --r: 5deg; z-index: 3; }
+.pb .pola:hover, .pb .pola:focus-within { z-index: 5; }   /* an overlapping card never covers the focus (2.4.11) */
 .pb .pola .ph { aspect-ratio: 1; }
-.pb .pola q { font: 400 18px/1.35 var(--hand); quotes: none; }
+.pb .pola q { font: 600 17px/1.4 var(--hand); quotes: none; }
 .pb .pola small { font-size: 13px; color: var(--ink2); }
-.pb .feed .more { margin-top: 22px; }
+.pb .feed .more { margin-top: 18px; }
 
-/* business: wholesale to supermarkets, a dark band like the ticker */
-.pb .b2b { padding-block: 0 8px; }
-.pb .b2b-band { background: var(--btn); color: var(--on-btn); border-radius: 22px; padding: 28px 22px; display: grid; gap: 20px; }
-.pb .b2b-band h2 { color: var(--on-btn); font-size: 32px; }
-.pb .b2b-copy { display: grid; gap: 10px; }
-.pb .b2b-copy p { opacity: .86; max-width: 50ch; }
-.pb .b2b-copy .hand { font: 600 18px/1.3 var(--hand); color: var(--caramel); opacity: 1; }
-.pb .b2b-facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-.pb .b2b-facts li { display: flex; justify-content: space-between; gap: 12px; border-top: 1px solid color-mix(in srgb, var(--on-btn) 18%, transparent); padding-top: 10px; }
-.pb .b2b-facts b { font-weight: 700; }
-.pb .b2b-cta .btn-b { background: transparent; color: var(--on-btn); border-color: var(--on-btn); }
-
-/* branches: shipping labels */
-.pb .visit { padding-block: 48px; }
-.pb .labels { display: grid; gap: 18px; grid-template-columns: minmax(0, 1fr); }
-.pb .label { background: var(--paper); border: 2px dashed var(--caramel); border-radius: 12px; padding: 18px 18px 20px; display: grid; gap: 8px; align-content: start; position: relative; }
-.pb .label h3 { font-size: 32px; }
-.pb .label .meta { display: grid; gap: 4px; font-size: 16px; }
-.pb .label .meta span { color: var(--ink2); }
-.pb .label .meta p[dir="ltr"] { text-align: right; }
-.pb .label .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-.pb .label .row a { text-decoration: none; font-weight: 700; font-size: 15px; min-height: 44px; padding: 0 16px; border-radius: 12px; border: 2px solid var(--btn); display: inline-flex; align-items: center; }
-.pb .label .row a:first-child { background: var(--btn); color: var(--on-btn); }
-
-/* footer */
-.pb .ft { border-top: 1px solid var(--line); }
-.pb .ft .in { padding-block: 22px 26px; display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 14px; color: var(--ink2); }
-.pb .ft a { color: var(--ink); }
+/* footer: the folded bag bottom. The sticker closes the bag, the phone number is the last word */
+.pb .ft { --ft-bg: color-mix(in srgb, var(--kraft) 86%, var(--caramel)); --edge: var(--ft-bg); position: relative; background: var(--ft-bg); box-shadow: inset 0 10px 14px -12px rgba(60, 35, 12, .35); }
+.pb .ft .in { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px 16px; padding-block: var(--sec) 28px; align-items: start; }
+.pb .ft-side { grid-column: 1 / -1; }
+.pb .ft-sticker { width: 76px; height: 76px; rotate: -6deg; border-radius: 50%; box-shadow: 0 8px 16px -8px rgba(60, 35, 12, .55); }
+.pb[data-mode="dark"] .ft-sticker { filter: brightness(.93) sepia(.1); }
+.pb .ft-main { display: grid; gap: 6px; }
+.pb .ft-name { font: 400 22px/1.2 var(--display); color: var(--head); }
+.pb .ft-label { font-weight: 500; color: var(--ink2); margin-top: 8px; }
+.pb .ft-num { font: 400 clamp(40px, 4.6cqi, 60px)/1 var(--display); color: var(--head); text-decoration: none; justify-self: start; }
+.pb .ft-cities { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-top: 10px; }
+.pb .ft-cities a { font-weight: 700; min-height: 32px; display: inline-flex; align-items: center; text-underline-offset: 4px; }
+.pb .ft-b2b { font-size: 14px; color: var(--ink2); margin-top: 4px; }
+.pb .ft-side { display: grid; gap: 14px; align-content: end; }
+.pb .ft-side ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.pb .ft-social a { font-weight: 600; min-height: 32px; display: inline-flex; align-items: center; }
+.pb .ft-legal { font-size: 13px; color: var(--ink2); }
+.pb .ft-legal a { color: var(--ink); }
 
 /* mobile bar (sticky inside the prototype, never position: fixed) */
-.pb .bar { position: sticky; bottom: 0; z-index: 9; display: grid; grid-template-columns: repeat(3, 1fr); background: var(--btn); color: var(--on-btn); }
-.pb[data-mode="dark"] .bar { background: var(--paper); color: var(--ink); border-top: 1px solid var(--line); }
+.pb .bar { position: sticky; bottom: 0; z-index: 9; display: grid; grid-template-columns: repeat(3, 1fr); background: var(--band); color: var(--on-band); }
 .pb .bar a { text-decoration: none; display: grid; justify-items: center; gap: 2px; padding: 9px 4px 11px; font-size: 13px; font-weight: 700; min-height: 56px; }
-.pb .bar svg { width: 22px; height: 22px; color: var(--caramel); }
+.pb .bar svg { width: 22px; height: 22px; color: var(--band-accent); }
 
 
-/* ---------- 5 container queries (the root is the container) ---------- */
-@container (min-width: 700px) {
+/* ---------- 5 container queries ---------- */
+@container pb (min-width: 700px) {
   .pb .order { display: inline-flex; }
-  .pb .box-grid, .pb .polas, .pb .labels { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pb .order-n { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .pb .box-grid { gap: 22px; }
+  .pb .face { padding: 12px 16px 14px; }
+  .pb .face .nm { font-size: 24px; }
+  .pb .face .list { font-size: 15px; }
+  /* the feed becomes a pinned board: the cards overlap, one is a size larger */
+  .pb .polas { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1fr); overflow: visible; margin-inline: 0; padding: 10px 0 0; align-items: center; max-width: 1040px; }
+  .pb .pola + .pola { margin-inline-start: -40px; }
+  /* the end side of the first two cards lies under the next one: keep their captions clear of it */
+  .pb .pola:not(:last-child) q, .pb .pola:not(:last-child) small { padding-inline-end: 40px; }
+  .pb .ft .in { grid-template-columns: auto minmax(0, 1fr) auto; align-items: end; column-gap: 40px; }
+  .pb .ft-side { grid-column: auto; }
+  .pb .ft-sticker { width: 120px; height: 120px; align-self: center; }
 }
-@container (min-width: 1000px) {
+@container pb (min-width: 1000px) {
   .pb .in { padding-inline: 48px; }
   /* header */
   .pb .hd .in { min-height: 74px; }
@@ -319,29 +601,57 @@
   .pb .menu-btn, .pb .menu, .pb .bar { display: none !important; }
   /* hero: the scene fills a 16:9 hero, the text sits on the sunlit wall at the start side (right) */
   .pb .hero { display: block; aspect-ratio: 16 / 9; }
-  .pb .scene { position: absolute; inset: 0; aspect-ratio: auto; }
-  .pb .hero .in { height: 100%; align-content: center; padding-block: 0 9%; }
-  .pb .hero-text { gap: 20px; width: min(560px, 46%); }
-  .pb .sc-bag { left: 27%; bottom: calc(31% - 7%); width: 25%; }
-  .pb .sc-wheat { width: 30%; right: auto; left: -5%; bottom: -10%; rotate: 8deg; }
-  .pb .ai-note { bottom: 16px; left: 18px; }
-  .pb .hero h1 { font-size: 84px; }
-  .pb .note-hand { font-size: 28px; }
+  .pb .scene { position: absolute; inset: 0; aspect-ratio: auto; margin-top: 0; }
+  .pb .hero .in { height: 100%; align-content: center; padding-block: 0 8%; }
+  .pb .hero-text { gap: 20px; width: min(580px, 46%); }
+  .pb .sc-bag { left: 25%; bottom: 15%; width: 31%; }
+  .pb .sc-wheat { width: 19%; right: auto; left: -5%; bottom: -4%; rotate: 8deg; }
+  .pb .ai-note { position: absolute; top: 18px; left: 18px; margin: 0; }
+  .pb[data-mode="dark"] .ai-note { background: none; padding: 0; text-shadow: 0 1px 2px #0009; }   /* top of the wall: in view at load even when the 16:9 hero runs past the fold */   /* top of the wall: in view at load even when the 16:9 hero runs past the fold */
+  .pb[data-mode="dark"] .h1-kicker { color: var(--ink); }
+  /* evening: a scrim on the text side (right in RTL) under the headline (dark proposal, R4). If the hero
+     css adds its own text-side scrim to .sc-back::after, delete this one */
+  .pb[data-mode="dark"] .hero::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to left, rgba(12, 6, 2, .5), rgba(12, 6, 2, .18) 34%, rgba(12, 6, 2, 0) 56%); }
+  .pb .hero h1 { font-size: clamp(56px, 5.5cqi, 80px); }
+  .pb .h1-kicker { font-size: 17px; margin-bottom: 16px; }
+  .pb .hero .sub { font-size: 18px; }
   /* ticker */
   .pb .tk-list li { font-size: 26px; line-height: 60px; }
   .pb .tk-pause { width: 60px; height: 60px; }
-  /* boxes, feed, branches */
-  .pb .sec-head h2 { font-size: 54px; }
-  .pb .box-grid, .pb .polas, .pb .labels { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  /* order module */
-  .pb .slip { grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; padding: 34px 38px; gap: 28px; }
-  .pb .slip h2 { font-size: 46px; }
-  .pb .slip .acts { justify-content: flex-end; }
-  /* story and business */
-  .pb .story-card h2 { font-size: 46px; }
-  .pb .b2b-band { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: center; padding: 40px 44px; gap: 28px 48px; }
-  .pb .b2b-band h2 { font-size: 44px; }
-  .pb .b2b-cta { grid-column: 1 / -1; }
+  /* boxes: a shelf; the Friday box holds frena and challah and spans two rows */
+  .pb .box-grid { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1fr); gap: 26px; align-items: stretch; }
+  .pb .box--fri { grid-column: auto; grid-row: span 2; }
+  .pb .box--fri .shot { flex: 1; aspect-ratio: auto; min-height: 0; grid-template-columns: none; grid-template-rows: repeat(2, minmax(0, 1fr)); }
+  .pb .box--fri .shot::after { bottom: 7%; }
+  .pb .box--fri .face .nm { font-size: 30px; }
+  /* order receipt */
+  .pb .slip { padding: 40px 36px 44px; }
+  /* feed */
+  .pb .feed .sec-head .hand { font-size: 18px; }
+  .pb .pola q { font-size: 18px; }
+}
+@container pb (min-width: 1180px) {
+  .pb .order-n { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
+  /* map: copy at the start side, the map at the end side, a little wider than the page column */
+  .pb .here .in { max-width: 1440px; grid-template-columns: minmax(0, 3.4fr) minmax(0, 7fr); column-gap: 48px; align-items: center; }
+  .pb .here h2 { font-size: clamp(56px, 5.4cqi, 84px); }
+  .pb .here-copy { gap: 16px; }
+  .pb .here-q { font-size: 22px; }
+}
+
+/* the map's own width decides where the labels go */
+@container map (min-width: 760px) {
+  /* positions in map units (800x800): KG 560,92 · Sderot 48,96 · Netivot 380,362 · factory 16,400 · Ofakim 16,648 */
+  .pb .places { position: absolute; inset: 0; margin: 0; display: block; pointer-events: none; }
+  .pb .place { position: absolute; left: var(--lx); top: var(--ly); width: 29%; pointer-events: auto; font-size: clamp(12.3px, 1.62cqw, 14px); }
+  .pb .place h3 { font-size: clamp(18px, 2.4cqw, 21px); }
+  .pb .place[data-place="kiryat-gat"] { --lx: 70%; --ly: 11.5%; width: 30%; }
+  .pb .place[data-place="sderot"] { --lx: 6%; --ly: 12%; }
+  .pb .place[data-place="netivot"] { --lx: 47.5%; --ly: 45.25%; }
+  .pb .place[data-place="factory"] { --lx: 2%; --ly: 50%; }
+  .pb .place[data-place="ofakim"] { --lx: 2%; --ly: 81%; width: 27.5%; }
+  .pb .leaders { display: inline; }
+  .pb .pin-n, .pb .pin-tag { display: none; }
 }
 
 
@@ -351,5 +661,13 @@
 .pb.rm .tk-list { flex-wrap: wrap; }
 .pb.rm .tk-list[aria-hidden] { display: none; }
 .pb.rm .tk-pause { display: none; }
+.pb.rm .tk-list li::after { content: none; }
+.pb.rm .tk-list li { font-size: 19px; line-height: 40px; padding-inline: 12px; gap: 12px; }
 /* safety net over every motion file: nothing animates, state changes land at once */
 .pb.rm *, .pb.rm *::before, .pb.rm *::after { animation: none !important; transition-duration: .01s !important; }
+
+
+/* ---------- 7 short screens (zoomed in, landscape phones): the bars stop sticking (A11Y-02) ---------- */
+@media (max-height: 500px) {
+  .pb .hd, .pb .bar { position: relative; }
+}
