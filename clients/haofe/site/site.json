@@ -2,32 +2,101 @@
   "_readme": "Site settings and the verified business facts the build writes into <head> (JSON-LD). Only facts with a source go here; hours and kashrut stay out until the owner confirms them (plan Q10, Q13). origin: the site's address, null until the owner picks a domain (Q5); while it is null the build writes no canonical, og:url or sitemap, and robots.txt keeps search engines out.",
   "origin": null,
   "name": "האופה - בוטיק לחם",
-  "orderLine": { "display": "1700-55-22-55", "tel": "1700-55-22-55", "source": "TikTok bio @haofe_bakery1, 24.10.2026" },
+  "orderLine": {
+    "display": "1700-55-22-55",
+    "tel": "1700-55-22-55",
+    "source": "TikTok bio @haofe_bakery1, 24.10.2026"
+  },
   "sameAs": [
     "https://www.instagram.com/haofe_bakery/",
     "https://www.tiktok.com/@haofe_bakery1"
   ],
   "branches": [
     {
-      "id": "netivot", "name": "האופה - בוטיק לחם נתיבות",
-      "street": "שדרות ירושלים 136", "city": "נתיבות",
+      "id": "netivot",
+      "name": "האופה - בוטיק לחם נתיבות",
+      "street": "שדרות ירושלים 136",
+      "city": "נתיבות",
       "telephone": "+972-8-975-2093",
-      "geo": [31.4182247, 34.585906],
-      "source": "Google Maps, Badatz Beit Yosef, Walla 2021, netivotonline.com (24.10.2026)"
+      "geo": [
+        31.4182247,
+        34.585906
+      ],
+      "source": "Google Maps, Badatz Beit Yosef, Walla 2021, netivotonline.com (24.10.2026)",
+      "inCity": "בנתיבות",
+      "addressLine": "שדרות ירושלים 136, במרכז המסחרי טדי קולק",
+      "phoneDisplay": "08-9752093",
+      "hours": [
+        [
+          "א׳–ה׳",
+          "05:00–22:00"
+        ],
+        [
+          "שישי",
+          "05:00–15:00"
+        ],
+        [
+          "מוצ״ש",
+          "20:00–23:00"
+        ]
+      ],
+      "kashrut": null,
+      "since": null,
+      "notes": [],
+      "pending": "בבדיקה: השעות והכשרות",
+      "maps": "https://www.google.com/maps/search/?api=1&query=%D7%94%D7%90%D7%95%D7%A4%D7%94+%D7%91%D7%95%D7%98%D7%99%D7%A7+%D7%9C%D7%97%D7%9D+%D7%A9%D7%93%D7%A8%D7%95%D7%AA+%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D+136+%D7%A0%D7%AA%D7%99%D7%91%D7%95%D7%AA&query_place_id=ChIJsxSE1GR-AhURpDsRtfFQr6M"
     },
     {
-      "id": "sderot", "name": "האופה - בוטיק לחם שדרות",
-      "street": "יגאל אלון 4", "city": "שדרות",
+      "id": "sderot",
+      "name": "האופה - בוטיק לחם שדרות",
+      "street": "יגאל אלון 4",
+      "city": "שדרות",
       "telephone": null,
-      "geo": [31.5230457, 34.5957709],
-      "source": "Instagram 15.10.2026, Google Maps, Badatz Beit Yosef, Walla 2021"
+      "geo": [
+        31.5230457,
+        34.5957709
+      ],
+      "source": "Instagram 15.10.2026, Google Maps, Badatz Beit Yosef, Walla 2021",
+      "inCity": "בשדרות",
+      "addressLine": "יגאל אלון 4, שדרות",
+      "phoneDisplay": null,
+      "hours": null,
+      "kashrut": "בד״ץ בית יוסף, מהדרין חלבי ופרווה",
+      "since": null,
+      "notes": [
+        {
+          "text": "הסניף נפגע ישירות, וחזר לאפות",
+          "tbd": true
+        }
+      ],
+      "pending": "בבדיקה: הטלפון והשעות",
+      "maps": "https://www.google.com/maps/search/?api=1&query=%D7%94%D7%90%D7%95%D7%A4%D7%94+%D7%91%D7%95%D7%98%D7%99%D7%A7+%D7%9C%D7%97%D7%9D+%D7%99%D7%92%D7%90%D7%9C+%D7%90%D7%9C%D7%95%D7%9F+4+%D7%A9%D7%93%D7%A8%D7%95%D7%AA&query_place_id=ChIJoV70uNuBAhUR1_njhNiUCJM"
     },
     {
-      "id": "kiryat-gat", "name": "האופה - בוטיק לחם קריית גת",
-      "street": "הרימון 70", "city": "קריית גת",
+      "id": "kiryat-gat",
+      "name": "האופה - בוטיק לחם קריית גת",
+      "street": "הרימון 70",
+      "city": "קריית גת",
       "telephone": null,
-      "geo": [31.6086063, 34.7699476],
-      "source": "branch post 6.10.2026, Google Maps, Badatz Beit Yosef"
+      "geo": [
+        31.6086063,
+        34.7699476
+      ],
+      "source": "branch post 6.10.2026, Google Maps, Badatz Beit Yosef",
+      "inCity": "בקריית גת",
+      "addressLine": "הרימון 70, בניין תיקשוב (ליד הארנונה), קריית גת",
+      "phoneDisplay": null,
+      "hours": null,
+      "kashrut": "בד״ץ בית יוסף, מהדרין פרווה",
+      "since": "נפתח ב־22.8.2022",
+      "notes": [
+        {
+          "text": "יש בסניף ישיבה במקום: קפה, מאפים, עוגות וכריכים.",
+          "tbd": false
+        }
+      ],
+      "pending": "בבדיקה: איזה טלפון להציג, והשעות",
+      "maps": "https://www.google.com/maps/search/?api=1&query=%D7%94%D7%90%D7%95%D7%A4%D7%94+%D7%91%D7%95%D7%98%D7%99%D7%A7+%D7%9C%D7%97%D7%9D+%D7%94%D7%A8%D7%99%D7%9E%D7%95%D7%9F+70+%D7%A7%D7%A8%D7%99%D7%99%D7%AA+%D7%92%D7%AA&query_place_id=ChIJZ-DXvpGRAhURNMucdk6u5T0"
     }
   ],
   "pages": {
@@ -46,6 +115,31 @@
     "404": {
       "title": "העמוד לא נמצא | האופה - בוטיק לחם",
       "description": "העמוד שחיפשתם לא נמצא."
+    },
+    "menu": {
+      "title": "התפריט | האופה - בוטיק לחם",
+      "description": "כל הלחמים, החלות לשישי והמאפים של האופה: 49 מוצרים, לפי קטגוריות."
+    },
+    "about": {
+      "title": "הסיפור שלנו | האופה - בוטיק לחם",
+      "description": "מהמאפייה של אבא באופקים לשלושה סניפים ובית ייצור בדרום."
+    },
+    "business": {
+      "title": "לעסקים ולרשתות | האופה - בוטיק לחם",
+      "description": "מבית הייצור של האופה בנתיבות יוצאים לחמים לסופרים בכל הארץ."
+    },
+    "netivot": {
+      "title": "האופה בנתיבות | שדרות ירושלים 136",
+      "description": "הסניף של האופה - בוטיק לחם בנתיבות: שדרות ירושלים 136, במרכז המסחרי טדי קולק. טלפון, שעות וניווט."
+    },
+    "sderot": {
+      "title": "האופה בשדרות | יגאל אלון 4",
+      "description": "הסניף של האופה - בוטיק לחם בשדרות: יגאל אלון 4. כשרות וניווט."
+    },
+    "kiryat-gat": {
+      "title": "האופה בקריית גת | הרימון 70",
+      "description": "הסניף של האופה - בוטיק לחם בקריית גת: הרימון 70, בניין תיקשוב. כשרות, ישיבה במקום וניווט."
     }
-  }
+  },
+  "_readme_branches": "Branch facts for the branch pages and JSON-LD. hours: only the Netivot rows from the owner's own ordering system, shown as pending; null = not confirmed, shown as '—'. notes with tbd: true wait for the owner's approval (plan Q23). The same facts appear in the map labels of concepts/b.html: change both."
 }

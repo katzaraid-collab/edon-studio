@@ -33,6 +33,7 @@ import { readFileSync, writeFileSync, mkdirSync, rmSync, copyFileSync, existsSyn
 import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { menuPage, branchPage, branchLd } from './src/pages.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const CONCEPT = join(HERE, '..', 'concepts');
@@ -41,6 +42,7 @@ const OUT = join(HERE, 'dist');
 const PREVIEW = process.argv.includes('--preview');
 const LAUNCH = process.argv.includes('--launch');
 const site = JSON.parse(readFileSync(join(HERE, 'site.json'), 'utf8'));
+const catalogue = JSON.parse(readFileSync(join(HERE, '..', 'data', 'products.json'), 'utf8'));
 
 const problems = [];
 function fail(msg) { problems.push(msg); }
@@ -79,6 +81,34 @@ if (/data-jump=/.test(body)) fail('a data-jump link was not converted');
 body = body.replace(/data-section="([\w-]+)"/g, 'id="$1" data-section="$1"');
 body = body.replace(/\bdata-id="/g, 'id="').replace(/\bdata-labelledby="/g, 'aria-labelledby="').replace(/\bdata-controls="/g, 'aria-controls="');
 body = swap(body, '<main class="pg-main" id="main">', '<main class="pg-main" id="main" tabindex="-1">');
+
+/* the site has more pages than the one-page prototype: the header, the map labels and the footer
+   link to them (the prototype keeps its in-page links) */
+body = swap(body, '        <a href="@HOME@#boxes">מה יש בקופסה</a>\n', `        <a href="${page('menu')}">התפריט</a>\n`);
+body = swap(body, '        <a href="@HOME@#feed">מהפיד</a>\n', `        <a href="${page('about')}">הסיפור</a>\n`);
+body = swap(body, '        <a href="@HOME@#b2b">לעסקים</a>\n', `        <a href="${page('business')}">לעסקים</a>\n`);
+body = swap(body, '      <a href="@HOME@#boxes">מה יש בקופסה</a>\n', `      <a href="${page('menu')}">התפריט</a>\n`);
+body = swap(body, '      <a href="@HOME@#feed">מהפיד</a>\n', `      <a href="${page('about')}">הסיפור שלנו</a>\n`);
+body = swap(body, '      <a href="@HOME@#b2b">לעסקים ולרשתות</a>\n', `      <a href="${page('business')}">לעסקים ולרשתות</a>\n`);
+for (const b of site.branches) {
+  const at = body.indexOf(`<li class="place" data-place="${b.id}"`), dl = body.indexOf('</dl>', at) + 5;   // the label, not the pin
+  if (at < 0) { fail('map label missing for ' + b.id); continue; }
+  body = body.slice(0, dl) + `\n            <p class="lbl-more"><a href="${page(b.id)}">לעמוד הסניף ${b.inCity}</a></p>` + body.slice(dl);
+  body = swap(body, `<a href="@HOME@#${b.id}">`, `<a href="${page(b.id)}">`);
+}
+{
+  const at = body.indexOf('<li class="place place--fac" data-place="factory"'), dl = body.indexOf('</dl>', at) + 5;
+  if (at < 0) fail('map label missing for the production house');
+  body = body.slice(0, dl) + `\n            <p class="lbl-more"><a href="${page('business')}">לעסקים ולרשתות</a></p>` + body.slice(dl);
+}
+body = swap(body, '<nav class="ft-cities" aria-label="הסניפים במפה">', '<nav class="ft-cities" aria-label="הסניפים">');
+body = swap(body, '<p class="ft-b2b">לעסקים ולרשתות: <span class="tbd">איש קשר לאישורכם</span></p>',
+  `<p class="ft-b2b"><a href="${page('business')}">לעסקים ולרשתות</a> · <a href="${page('about')}">הסיפור שלנו</a> · <a href="${page('menu')}">התפריט</a></p>`);
+{ /* a way from the six boxes to the whole menu, at the end of the boxes section */
+  const order = body.indexOf('<section class="order-sec"');
+  const close = body.lastIndexOf('</section>', order), div = body.lastIndexOf('</div>', close);
+  body = body.slice(0, div) + `  <p class="boxes-more"><a class="btn-b" href="${page('menu')}">לתפריט המלא, ${catalogue.counts.products} מוצרים</a></p>\n    ` + body.slice(div);
+}
 
 /* the shared frame of every page: everything around <main> */
 const mainAt = body.indexOf('<main'), mainEnd = body.indexOf('</main>') + 7;
@@ -152,17 +182,24 @@ function frame(main, home) {
   return fix(frameTop).replace('<header class="hd">', PREVIEW_NOTE + '<header class="hd">') + main + fix(frameBottom);
 }
 
-const pages = {};
-pages[HOME_FILE] = head('index', { css: CSS, js: JS, ld: jsonld() }) + frame(homeMain.split('@HOME@').join(''), '') + '\n</body>\n</html>\n';
-
-for (const name of ['accessibility', 'privacy', '404']) {
-  const src = readFileSync(join(SRC, 'pages', name + '.html'), 'utf8').trim().split('@HOME@').join(page('index'));
-  const main = `<main class="doc" id="main" tabindex="-1"><div class="in">\n${src}\n</div></main>`;
-  let html = head(name, { css: TEXT_CSS, js: TEXT_JS }) + frame(main, page('index')) + '\n</body>\n</html>\n';
+const TEXT = { css: TEXT_CSS, js: TEXT_JS };
+const fill = html => html.split('@HOME@').join(page('index')).replace(/@P:([\w-]+)@/g, (_, n) => page(n));
+function textPage(name, inner, opts = {}) {
+  const main = `<main class="doc${opts.wide ? ' doc--wide' : ''}" id="main" tabindex="-1"><div class="in">\n${inner}\n</div></main>`;
+  let html = head(name, { ...TEXT, ld: opts.ld }) + frame(main, page('index')) + '\n</body>\n</html>\n';
+  /* the current page in the header nav */
+  html = html.split(`<a href="${page(name)}">`).join(`<a href="${page(name)}" aria-current="page">`);
   /* the 404 page is served at any missing path, so its files are addressed from the root */
   if (name === '404' && !PREVIEW) html = html.replace(/(src|href)="(assets|fonts)\//g, '$1="/$2/');
-  pages[name + '.html'] = html;
+  return html;
 }
+const fragment = name => fill(readFileSync(join(SRC, 'pages', name + '.html'), 'utf8').trim());
+
+const pages = {};
+pages[HOME_FILE] = head('index', { css: CSS, js: JS, ld: jsonld() }) + frame(homeMain.split('@HOME@').join(''), '') + '\n</body>\n</html>\n';
+pages['menu.html'] = textPage('menu', menuPage(catalogue, page), { wide: true });
+for (const b of site.branches) pages[b.id + '.html'] = textPage(b.id, branchPage(b, site.branches, page), { ld: branchLd(b, site) });
+for (const name of ['about', 'business', 'accessibility', 'privacy', '404']) pages[name + '.html'] = textPage(name, fragment(name));
 
 /* ---------- 3 files ---------- */
 rmSync(OUT, { recursive: true, force: true });
@@ -193,7 +230,8 @@ writeFileSync(join(OUT, 'robots.txt'), site.origin
   ? `User-agent: *\nAllow: /\n\nSitemap: ${site.origin}/sitemap.xml\n`
   : '# Preview: no address yet, so search engines are kept out (site.json "origin" is null).\nUser-agent: *\nDisallow: /\n');
 if (site.origin) {
-  const urls = ['/', '/accessibility', '/privacy'].map(p => `  <url><loc>${site.origin}${p}</loc></url>`).join('\n');
+  const urls = ['/', '/menu', ...site.branches.map(b => '/' + b.id), '/about', '/business', '/accessibility', '/privacy']
+    .map(p => `  <url><loc>${site.origin}${p}</loc></url>`).join('\n');
   writeFileSync(join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
 }
 
