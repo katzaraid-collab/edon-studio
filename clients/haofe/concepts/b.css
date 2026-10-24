@@ -29,19 +29,24 @@
      header     .hd  .mark (img, b)  .nav a  .chip-soon
                 .theme-btn[data-theme-toggle][aria-pressed] (.sun, .moon)  .order
                 .menu-btn[data-menu-btn][aria-expanded]  .menu[data-menu]
-     hero       .hero[data-section="top"]  .stamp (img)  .hero-text  .hero h1 (em)  .sub  .ctas
+     hero       .hero[data-section="top"]  .scene > .sc-plane (.sc-back .sc-light .sc-subject .sc-front)
+                .sc-plate  .sc-bag (.sc-shadow .sc-bag-img .sc-sticker)  .sc-wheat  .ai-note
+                .hero-text  .hero h1 (em)  .sub  .ctas
+                planes read --px/--py (pointer, -1..1) and --hp (hero scroll progress, 0..1) if a module sets them
                 .btn-b  .btn-b--main  .note-hand (svg path, span)
      ticker     .ticker[data-ticker] (.paused)  .tk-pause (.pause, .play)  .tk-view  .tk-track
                 .tk-list (first one is the real list, the rest are aria-hidden copies)  li
      boxes      .boxes  .sec-head (.hand)  .box-grid  .box[data-rv] (style="--i:n" order, --tilt, .open)
-                .ph  .lid-h  .lid[aria-expanded]  .nm  .tag  .lid .open (the "פתחו" label)  .det > div > p
+                .shot (.prod img, .ai-tag)  .lid-h  .lid[aria-expanded]  .nm  .tag  .lid .open (the "פתחו" label)  .det > div > p
      order      .order-sec  .slip[data-rv]  .logo-s  .slip-copy  .soon (i)  .acts  .btn-soon  .phone-line
                 .when-soon / .when-live (shown by [data-order])
+     story      .story  .story-card[data-rv]  .draft
      feed       .feed  .polas  .pola[data-rv] (--r)  q  small  .more
+     business   .b2b  .b2b-band[data-rv]  .b2b-copy  .b2b-facts li  .b2b-cta
      branches   .visit  .labels  .label[data-rv]  .meta  .row a
      footer     .ft          mobile bar   .bar a
      reveals    every [data-rv] gets .rv-in once it enters ctx.scroller (Shell.reveal)
-     sections   [data-section="top|boxes|order|feed|visit"] are the in-prototype jump targets
+     sections   [data-section="top|boxes|order|story|feed|b2b|visit"] are the in-prototype jump targets
    ========================================================================== */
 
 
@@ -142,7 +147,12 @@
 .pb .hd { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--paper) 94%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
 .pb .hd .in { display: flex; align-items: center; gap: 14px; min-height: 62px; }
 .pb .mark { text-decoration: none; display: flex; align-items: center; gap: 10px; }
-.pb .mark img { width: 44px; height: 44px; border-radius: 50%; display: block; box-shadow: 0 0 0 1px var(--line); }
+.pb .mark-logo { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: #FFFFFF; box-shadow: 0 0 0 1px var(--line); }
+.pb .mark-logo img { width: 44px; height: 44px; display: block; }
+.pb .for-dark { display: none !important; }
+.pb[data-mode="dark"] .for-light { display: none !important; }
+.pb[data-mode="dark"] .for-dark { display: block !important; }
+.pb[data-mode="dark"] .mark-logo { background: transparent; box-shadow: none; }
 .pb .mark b { font: 400 26px/1 var(--display); color: var(--head); }
 .pb .nav { display: none; gap: 2px; margin-inline: auto; }
 .pb .nav a { text-decoration: none; padding: 10px 12px; font-weight: 500; font-size: 15px; border-radius: 999px; }
@@ -164,11 +174,26 @@
 .pb .menu a { text-decoration: none; font: 400 28px/1.2 var(--display); padding: 10px 0; }
 
 /* hero */
-.pb .hero { background-color: var(--kraft); position: relative; overflow: hidden; }
-.pb .hero .in { display: grid; gap: 18px; padding-block: 34px 40px; position: relative; }
-.pb .stamp { width: 172px; aspect-ratio: 1; border-radius: 50%; transform: rotate(-7deg); justify-self: end; position: relative; box-shadow: 0 0 0 6px var(--paper), 0 0 0 7.5px var(--caramel), 0 18px 30px -16px rgba(60, 30, 8, .5); }
-.pb .stamp img { width: 100%; height: 100%; border-radius: 50%; display: block; }
+/* hero: text first, then the scene (phone); on desktop the scene fills the hero behind the text.
+   The plate is 16:9 with its counter edge at 69% of its height; the bag stands on that edge. */
+.pb .hero { background-color: var(--kraft); position: relative; overflow: hidden; display: flex; flex-direction: column; }
+.pb .hero .in { display: grid; gap: 18px; padding-block: 30px 22px; position: relative; z-index: 2; }
 .pb .hero-text { display: grid; gap: 16px; }
+.pb .scene { position: relative; order: 2; aspect-ratio: 4 / 4.4; max-width: 100%; overflow: hidden; isolation: isolate; }
+.pb .sc-plane { position: absolute; inset: 0; pointer-events: none; }
+.pb .sc-plate { width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; display: block; }
+.pb .sc-light { background: linear-gradient(105deg, transparent 35%, rgba(255, 214, 150, .22) 62%, rgba(255, 236, 200, .32) 80%, transparent 100%); mix-blend-mode: soft-light; }
+.pb .sc-bag { position: absolute; left: 50%; bottom: calc(31% - 6%); width: 46%; aspect-ratio: 748 / 1100; translate: -50% 0; }
+.pb .sc-bag-img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* the real logo, stuck on the blank front panel of the bag */
+.pb .sc-sticker { position: absolute; left: 50%; top: 62%; width: 40%; height: auto; translate: -50% -50%; rotate: -6deg; border-radius: 50%; filter: drop-shadow(0 2px 2px rgba(60, 35, 12, .28)); }
+.pb .sc-shadow { position: absolute; left: -6%; right: -10%; bottom: -3%; height: 9%; border-radius: 50%; background: radial-gradient(closest-side, rgba(70, 40, 15, .45), transparent); }
+.pb .sc-wheat { position: absolute; width: 34%; right: -6%; bottom: -10%; rotate: -14deg; }
+.pb .ai-note { position: absolute; z-index: 3; bottom: 10px; left: 12px; font: 600 11px/1 var(--body); color: #fff; background: rgba(36, 24, 15, .66); border: 1px dashed rgba(255, 255, 255, .7); padding: 6px 9px; border-radius: 999px; }
+/* evening: the morning light becomes lamp light */
+.pb[data-mode="dark"] .sc-plate { filter: brightness(.48) saturate(.85) sepia(.15); }
+.pb[data-mode="dark"] .sc-light { background: radial-gradient(ellipse 50% 60% at 30% 30%, rgba(255, 176, 90, .45), transparent 70%); mix-blend-mode: screen; }
+.pb[data-mode="dark"] .sc-bag-img, .pb[data-mode="dark"] .sc-wheat { filter: brightness(.78); }
 .pb .hero h1 { font-size: 48px; max-width: 12ch; }
 .pb .hero h1 em { font-style: normal; color: var(--stamp); }
 .pb .hero .sub { max-width: 40ch; color: var(--ink2); font-size: 18px; }
@@ -196,7 +221,11 @@
 .pb .box { background: var(--kraft2); border: 1.5px solid var(--line); border-radius: 10px; overflow: hidden; transform: rotate(var(--tilt, -1deg)); box-shadow: var(--shadow); display: grid; align-content: start; }
 .pb .box:nth-child(3n+2) { --tilt: .8deg; }
 .pb .box:nth-child(3n) { --tilt: -.5deg; }
-.pb .box .ph { aspect-ratio: 5 / 4; }
+.pb .shot { position: relative; aspect-ratio: 5 / 4; display: grid; place-items: center; overflow: hidden; background: radial-gradient(ellipse 75% 65% at 50% 58%, var(--paper), var(--lid) 70%, var(--kraft)); }
+.pb .shot::after { content: ""; position: absolute; left: 18%; right: 18%; bottom: 13%; height: 10%; border-radius: 50%; background: radial-gradient(closest-side, rgba(70, 40, 15, .3), transparent); z-index: 0; }
+.pb .prod { position: relative; z-index: 1; width: 84%; height: 76%; object-fit: contain; object-position: 50% 80%; display: block; }
+.pb .ai-tag { position: absolute; z-index: 2; top: 10px; right: 10px; font: 600 11px/1 var(--body); color: #fff; background: rgba(36, 24, 15, .62); border: 1px dashed rgba(255, 255, 255, .7); padding: 5px 8px; border-radius: 999px; }
+.pb[data-mode="dark"] .prod { filter: brightness(.9); }
 .pb .lid-h { font-size: 26px; }
 .pb .lid { display: flex; align-items: center; gap: 12px; padding: 14px 16px; width: 100%; background: var(--lid); border: 0; border-top: 3px dashed color-mix(in srgb, var(--caramel) 55%, transparent); color: var(--ink); font: inherit; text-align: start; cursor: pointer; min-height: 64px; }
 .pb .lid .nm { flex: 1; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font: 400 26px/1.1 var(--display); }
@@ -223,6 +252,16 @@
 .pb .btn-soon { font: 700 16px var(--body); min-height: 52px; padding: 0 22px; border-radius: 14px; display: inline-flex; align-items: center; gap: 8px; border: 2px dashed var(--caramel); color: var(--stamp); background: transparent; cursor: not-allowed; }
 .pb .phone-line { font-weight: 600; }
 .pb .phone-line a { color: var(--stamp); }
+/* phone numbers never break at their hyphens */
+.pb a[href^="tel:"], .pb bdi[dir="ltr"], .pb p[dir="ltr"] { white-space: nowrap; }
+
+/* story: a draft from the 2021 Walla article, pending the owner's approval */
+.pb .story { padding-block: 8px 48px; }
+.pb .story-card { display: grid; gap: 12px; max-width: 760px; }
+.pb .story-card h2 { font-size: 34px; }
+.pb .story-card p { color: var(--ink2); font-size: 18px; max-width: 60ch; }
+.pb .story-card .hand { font: 600 18px/1.3 var(--hand); color: var(--stamp); }
+.pb .story-card .draft { font-size: 14px; }
 
 /* feed: the Instagram captions as polaroid notes */
 .pb .feed { padding-block: 36px 48px; background-color: var(--kraft); }
@@ -234,6 +273,18 @@
 .pb .pola q { font: 400 18px/1.35 var(--hand); quotes: none; }
 .pb .pola small { font-size: 13px; color: var(--ink2); }
 .pb .feed .more { margin-top: 22px; }
+
+/* business: wholesale to supermarkets, a dark band like the ticker */
+.pb .b2b { padding-block: 0 8px; }
+.pb .b2b-band { background: var(--btn); color: var(--on-btn); border-radius: 22px; padding: 28px 22px; display: grid; gap: 20px; }
+.pb .b2b-band h2 { color: var(--on-btn); font-size: 32px; }
+.pb .b2b-copy { display: grid; gap: 10px; }
+.pb .b2b-copy p { opacity: .86; max-width: 50ch; }
+.pb .b2b-copy .hand { font: 600 18px/1.3 var(--hand); color: var(--caramel); opacity: 1; }
+.pb .b2b-facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.pb .b2b-facts li { display: flex; justify-content: space-between; gap: 12px; border-top: 1px solid color-mix(in srgb, var(--on-btn) 18%, transparent); padding-top: 10px; }
+.pb .b2b-facts b { font-weight: 700; }
+.pb .b2b-cta .btn-b { background: transparent; color: var(--on-btn); border-color: var(--on-btn); }
 
 /* branches: shipping labels */
 .pb .visit { padding-block: 48px; }
@@ -270,10 +321,14 @@
   .pb .hd .in { min-height: 74px; }
   .pb .nav { display: flex; }
   .pb .menu-btn, .pb .menu, .pb .bar { display: none !important; }
-  /* hero */
-  .pb .hero .in { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); grid-template-areas: "t s"; align-items: center; padding-block: 64px 70px; gap: 40px; }
-  .pb .hero-text { grid-area: t; gap: 20px; }
-  .pb .stamp { grid-area: s; width: 300px; justify-self: center; }
+  /* hero: the scene fills a 16:9 hero, the text sits on the sunlit wall at the start side (right) */
+  .pb .hero { display: block; aspect-ratio: 16 / 9; }
+  .pb .scene { position: absolute; inset: 0; aspect-ratio: auto; }
+  .pb .hero .in { height: 100%; align-content: center; padding-block: 0 9%; }
+  .pb .hero-text { gap: 20px; width: min(560px, 46%); }
+  .pb .sc-bag { left: 27%; bottom: calc(31% - 7%); width: 25%; }
+  .pb .sc-wheat { width: 24%; right: auto; left: -4%; bottom: -14%; rotate: 8deg; }
+  .pb .ai-note { bottom: 16px; left: 18px; }
   .pb .hero h1 { font-size: 84px; }
   .pb .note-hand { font-size: 28px; }
   /* ticker */
@@ -286,6 +341,11 @@
   .pb .slip { grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; padding: 34px 38px; gap: 28px; }
   .pb .slip h2 { font-size: 46px; }
   .pb .slip .acts { justify-content: flex-end; }
+  /* story and business */
+  .pb .story-card h2 { font-size: 46px; }
+  .pb .b2b-band { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: center; padding: 40px 44px; gap: 28px 48px; }
+  .pb .b2b-band h2 { font-size: 44px; }
+  .pb .b2b-cta { grid-column: 1 / -1; }
 }
 
 
