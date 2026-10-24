@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>האופה · כיוון ב׳ השקית</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400&family=Secular+One&family=Rubik:wght@400;500;700&family=Playpen+Sans+Hebrew:wght@400;600&display=swap">
+<link rel="stylesheet" href="shell.css">
+<style>
+/* ===== Direction B · השקית =====
+   Layout: the brand as packaging. Kraft-paper hero with a pressed stamp, a red ink ticker like the box
+   print, products as tilted "boxes" that open, the feed's own captions as handwritten notes. */
+.pb {
+  --bg: #FFFBF4;      /* white paper */
+  --kraft: #D9BC94;   /* bags and boxes, sampled */
+  --kraft2: #EAD6B6;
+  --ink: #24170F;
+  --ink2: #5A4434;
+  --stamp: #8A2614;   /* the red-brown of the box print */
+  --on-stamp: #FFF6EA;
+  --line: rgba(36, 23, 15, .22);
+  --shadow: 0 14px 24px -14px rgba(60, 30, 10, .45);
+  --display: "Secular One", "Rubik", "Arial Hebrew", sans-serif;
+  --body: "Rubik", "Arial Hebrew", Arial, sans-serif;
+  --hand: "Playpen Sans Hebrew", "Rubik", cursive;
+  --spring: cubic-bezier(.34, 1.56, .64, 1);
+  --ease: cubic-bezier(.25, .8, .25, 1);
+}
+.pb[data-mode="dark"] {
+  --bg: #17120E;      /* ink-dark counter */
+  --kraft: #2B2119;   /* kraft in shadow */
+  --kraft2: #221A14;
+  --ink: #F0E2CC;
+  --ink2: #CDB89C;
+  --stamp: #FF8566;   /* stamp ink under light */
+  --on-stamp: #1A0E08;
+  --line: rgba(240, 226, 204, .2);
+  --shadow: 0 16px 28px -14px rgba(0, 0, 0, .75);
+}
+.pb {
+  container-type: inline-size; min-height: 100%;
+  background: var(--bg); color: var(--ink); font: 400 17px/1.6 var(--body);
+  transition: background-color .35s var(--ease), color .35s var(--ease);
+}
+.pb *, .pb *::before, .pb *::after { box-sizing: border-box; }
+.pb a { color: inherit; }
+.pb :focus-visible { outline: 3px dashed var(--stamp); outline-offset: 3px; border-radius: 6px; }
+.pb h1, .pb h2, .pb h3 { font-family: var(--display); font-weight: 400; line-height: 1.08; margin: 0; text-wrap: balance; }
+.pb p { margin: 0; }
+.pb .in { padding-inline: 20px; max-width: 1240px; margin-inline: auto; }
+.pb [data-section]:focus { outline: none; }
+.pb .paper { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='k'><feTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.35  0 0 0 0 0.22  0 0 0 0 0.1  0 0 0 .22 0'/></filter><rect width='100%' height='100%' filter='url(%23k)'/></svg>"); }
+.pb[data-mode="dark"] .ph { filter: brightness(.85); }
+
+/* header */
+.pb .hd { position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 2px solid var(--ink); }
+.pb .hd .in { display: flex; align-items: center; gap: 14px; min-height: 62px; }
+.pb .mark { text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.pb .mark .dot { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--stamp); display: grid; place-items: center; color: var(--stamp); font: 400 13px/1 var(--display); }
+.pb .mark b { font: 400 26px/1 var(--display); }
+.pb .nav { display: none; gap: 2px; margin-inline: auto; }
+.pb .nav a { text-decoration: none; padding: 10px 12px; font-weight: 500; font-size: 15px; border-radius: 999px; }
+.pb .nav a:hover { background: var(--kraft2); }
+.pb .hd-actions { display: flex; gap: 8px; align-items: center; margin-inline-start: auto; }
+.pb .theme-btn { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--ink); background: transparent; color: var(--ink); display: grid; place-items: center; cursor: pointer; transition: transform .3s var(--spring); }
+.pb .theme-btn:active { transform: scale(.88); }
+.pb .theme-btn svg { width: 22px; height: 22px; }
+.pb .theme-btn .moon { display: none; }
+.pb[data-mode="dark"] .theme-btn .sun { display: none; }
+.pb[data-mode="dark"] .theme-btn .moon { display: block; }
+.pb .menu-btn { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--ink); background: var(--ink); color: var(--bg); display: grid; place-items: center; cursor: pointer; }
+.pb .menu-btn svg { width: 22px; height: 22px; }
+.pb .menu { position: absolute; inset: 100% 0 auto; background: var(--kraft); padding: 10px 20px 22px; display: grid; gap: 4px; border-bottom: 2px solid var(--ink); }
+.pb .menu a { text-decoration: none; font: 400 28px/1.2 var(--display); padding: 10px 0; }
+.pb .order { display: none; text-decoration: none; background: var(--stamp); color: var(--on-stamp); font-weight: 700; font-size: 15px; padding: 0 18px; min-height: 44px; border-radius: 999px; align-items: center; }
+
+/* hero */
+.pb .hero { background-color: var(--kraft); position: relative; overflow: hidden; }
+.pb .hero .in { display: grid; gap: 18px; padding-block: 34px 40px; position: relative; }
+.pb .stamp { width: 168px; aspect-ratio: 1; border-radius: 50%; border: 3px solid var(--stamp); color: var(--stamp); display: grid; place-items: center; text-align: center; transform: rotate(-8deg); justify-self: end; position: relative; }
+.pb .stamp::before { content: ""; position: absolute; inset: 7px; border-radius: 50%; border: 1.5px dashed var(--stamp); }
+.pb .stamp div { display: grid; gap: 2px; }
+.pb .stamp b { font: 400 40px/1 var(--display); }
+.pb .stamp small { font: 500 12px/1.3 var(--body); letter-spacing: .04em; }
+.pb .stamp .tmp { position: absolute; bottom: -14px; inset-inline: 0; margin-inline: auto; width: max-content; font: 600 10px/1 var(--body); background: var(--ink); color: var(--bg); padding: 4px 7px; border-radius: 999px; transform: rotate(8deg); }
+.pb .hero h1 { font-size: 48px; max-width: 12ch; }
+.pb .hero h1 em { font-style: normal; color: var(--stamp); }
+.pb .note-hand { font: 600 22px/1.25 var(--hand); color: var(--stamp); display: flex; align-items: center; gap: 8px; }
+.pb .note-hand svg { width: 64px; height: 40px; flex: none; }
+.pb .note-hand path { stroke: var(--stamp); }
+.pb .hero .sub { max-width: 40ch; color: var(--ink2); font-size: 18px; }
+.pb .ctas { display: flex; flex-wrap: wrap; gap: 10px; }
+.pb .btn-b { text-decoration: none; font-weight: 700; font-size: 16px; min-height: 52px; padding: 0 22px; border-radius: 14px; display: inline-flex; align-items: center; gap: 8px; border: 2px solid var(--ink); background: var(--bg); box-shadow: 4px 4px 0 var(--ink); transition: transform .25s var(--spring), box-shadow .25s var(--spring); }
+.pb .btn-b:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+.pb .btn-b:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
+.pb .btn-b--red { background: var(--stamp); color: var(--on-stamp); }
+.pb .btn-b svg { width: 20px; height: 20px; }
+
+/* ticker */
+.pb .ticker { background: var(--stamp); color: var(--on-stamp); display: flex; align-items: center; border-block: 2px solid var(--ink); }
+.pb .tk-pause { flex: none; width: 52px; height: 52px; border: 0; border-inline-end: 2px solid var(--ink); background: transparent; color: inherit; display: grid; place-items: center; cursor: pointer; }
+.pb .tk-pause svg { width: 18px; height: 18px; }
+.pb .tk-pause .play { display: none; }
+.pb .ticker.paused .tk-pause .play { display: block; }
+.pb .ticker.paused .tk-pause .pause { display: none; }
+.pb .tk-view { overflow: hidden; flex: 1; min-width: 0; direction: ltr; }
+.pb .tk-track { display: flex; width: max-content; direction: ltr; }
+.pb .tk-list { display: flex; direction: rtl; gap: 0; margin: 0; padding: 0; list-style: none; }
+.pb .tk-list li { font: 400 22px/52px var(--display); padding-inline: 18px; white-space: nowrap; display: flex; align-items: center; gap: 18px; }
+.pb .tk-list li::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: .7; }
+.pb.anim .tk-track { animation: b-tick 38s linear infinite; }
+.pb .ticker.paused .tk-track, .pb .ticker:hover .tk-track { animation-play-state: paused; }
+@keyframes b-tick { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.pb.rm .tk-track { width: auto; flex-wrap: wrap; direction: rtl; }
+.pb.rm .tk-list[aria-hidden] { display: none; }
+.pb.rm .tk-list { flex-wrap: wrap; }
+.pb.rm .tk-pause { display: none; }
+
+/* boxes */
+.pb .boxes { padding-block: 48px 28px; }
+.pb .sec-head { display: grid; gap: 8px; margin-bottom: 26px; }
+.pb .sec-head h2 { font-size: 38px; }
+.pb .sec-head p { color: var(--ink2); max-width: 52ch; }
+.pb .sec-head .hand { font: 600 18px/1.3 var(--hand); color: var(--stamp); }
+.pb .box-grid { display: grid; gap: 22px; grid-template-columns: minmax(0, 1fr); }
+.pb .box { background: var(--kraft2); border: 2px solid var(--ink); border-radius: 10px; overflow: hidden; transform: rotate(var(--tilt, -1deg)); transition: transform .4s var(--spring), box-shadow .4s var(--spring); box-shadow: var(--shadow); display: grid; align-content: start; }
+.pb .box:nth-child(3n+2) { --tilt: .8deg; } .pb .box:nth-child(3n) { --tilt: -.5deg; }
+.pb .box:hover, .pb .box:focus-within { transform: rotate(0) translateY(-6px); }
+.pb .box .ph { aspect-ratio: 5 / 4; border-bottom: 2px solid var(--ink); }
+.pb .lid { display: flex; align-items: center; gap: 12px; padding: 14px 16px; width: 100%; background: transparent; border: 0; color: var(--ink); font: inherit; text-align: start; cursor: pointer; min-height: 64px; }
+.pb .lid-h { margin: 0; font-size: 26px; }
+.pb .lid .nm { flex: 1; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font: 400 26px/1.1 var(--display); }
+.pb .lid .open { font: 600 15px var(--hand); color: var(--stamp); display: inline-flex; align-items: center; gap: 6px; }
+.pb .lid svg { width: 18px; height: 18px; transition: transform .35s var(--spring); }
+.pb .lid[aria-expanded="true"] svg { transform: rotate(180deg); }
+.pb .det { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s var(--ease); }
+.pb .det > div { overflow: hidden; }
+.pb .det p { padding: 0 16px 16px; color: var(--ink2); }
+.pb .box.open .det { grid-template-rows: 1fr; }
+.pb .tag { font: 700 12px/1 var(--body); padding: 6px 9px; border-radius: 999px; background: var(--stamp); color: var(--on-stamp); transform: rotate(-3deg); }
+
+/* feed */
+.pb .feed { padding-block: 36px 48px; background-color: var(--kraft); border-block: 2px solid var(--ink); }
+.pb .polas { display: grid; gap: 22px; grid-template-columns: minmax(0, 1fr); }
+.pb .pola { background: var(--bg); padding: 10px 10px 14px; border: 2px solid var(--ink); border-radius: 4px; transform: rotate(var(--r, 1.5deg)); box-shadow: var(--shadow); display: grid; gap: 10px; text-decoration: none; transition: transform .4s var(--spring); }
+.pb .pola:nth-child(2) { --r: -1.4deg; } .pb .pola:nth-child(3) { --r: .6deg; }
+.pb .pola:hover, .pb .pola:focus-visible { transform: rotate(0) scale(1.02); }
+.pb .pola .ph { aspect-ratio: 1; }
+.pb .pola q { font: 400 18px/1.35 var(--hand); quotes: none; }
+.pb .pola small { font-size: 13px; color: var(--ink2); }
+.pb .feed .more { margin-top: 22px; }
+
+/* labels */
+.pb .visit { padding-block: 48px; }
+.pb .labels { display: grid; gap: 18px; grid-template-columns: minmax(0, 1fr); }
+.pb .label { background: var(--bg); border: 2px dashed var(--ink); border-radius: 12px; padding: 18px 18px 20px; display: grid; gap: 8px; align-content: start; position: relative; }
+.pb .label h3 { font-size: 32px; }
+.pb .label .meta { display: grid; gap: 4px; font-size: 16px; }
+.pb .label .meta span { color: var(--ink2); }
+.pb .label .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.pb .label .row a { text-decoration: none; font-weight: 700; font-size: 15px; min-height: 44px; padding: 0 16px; border-radius: 12px; border: 2px solid var(--ink); display: inline-flex; align-items: center; }
+.pb .label .row a:first-child { background: var(--ink); color: var(--bg); }
+.pb .ft { border-top: 2px solid var(--ink); }
+.pb .ft .in { padding-block: 22px 26px; display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 14px; color: var(--ink2); }
+.pb .ft a { color: var(--ink); }
+.pb .bar { position: sticky; bottom: 0; z-index: 9; display: grid; grid-template-columns: repeat(3, 1fr); background: var(--ink); color: var(--bg); }
+.pb .bar a { text-decoration: none; display: grid; justify-items: center; gap: 2px; padding: 9px 4px 11px; font-size: 13px; font-weight: 700; min-height: 56px; }
+.pb .bar svg { width: 22px; height: 22px; }
+
+/* motion */
+.pb.anim .stamp { animation: b-stamp .55s .1s var(--spring) both; }
+@keyframes b-stamp { 0% { opacity: 0; transform: scale(1.6) rotate(6deg); } 60% { opacity: 1; } 100% { transform: rotate(-8deg); } }
+.pb.anim .stamp::after { content: ""; position: absolute; inset: -3px; border-radius: 50%; border: 3px solid var(--stamp); animation: b-ink .7s .5s ease-out both; }
+@keyframes b-ink { from { transform: scale(1); opacity: .7; } to { transform: scale(1.35); opacity: 0; } }
+.pb.anim .hero h1, .pb.anim .hero .sub, .pb.anim .hero .ctas { animation: b-up .5s var(--spring) both; }
+.pb.anim .hero .sub { animation-delay: .08s; } .pb.anim .hero .ctas { animation-delay: .16s; }
+@keyframes b-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+.pb.anim .note-hand span { animation: b-write .7s .45s steps(14, end) both; }
+@keyframes b-write { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0 0 0 0); } }
+.pb.anim .note-hand path { stroke-dasharray: 120; animation: b-draw .5s .9s ease-out both; }
+@keyframes b-draw { from { stroke-dashoffset: 120; } to { stroke-dashoffset: 0; } }
+.pb.anim [data-rv] { transition: opacity .5s var(--ease), transform .55s var(--spring); }
+.pb.anim [data-rv]:not(.rv-in) { opacity: 0; transform: translateY(26px) rotate(4deg); }
+.pb.anim .box[data-rv].rv-in { transition-delay: calc(var(--i, 0) * 70ms); }
+
+@container (min-width: 700px) {
+  .pb .box-grid, .pb .polas, .pb .labels { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pb .order { display: inline-flex; }
+}
+@container (min-width: 1000px) {
+  .pb .in { padding-inline: 48px; }
+  .pb .nav { display: flex; }
+  .pb .menu-btn, .pb .menu, .pb .bar { display: none !important; }
+  .pb .hd .in { min-height: 74px; }
+  .pb .hero .in { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); grid-template-areas: "t s"; align-items: center; padding-block: 64px 70px; gap: 40px; }
+  .pb .hero-text { grid-area: t; display: grid; gap: 20px; }
+  .pb .stamp { grid-area: s; width: 300px; justify-self: center; }
+  .pb .stamp b { font-size: 72px; }
+  .pb .stamp small { font-size: 15px; }
+  .pb .hero h1 { font-size: 84px; }
+  .pb .note-hand { font-size: 28px; }
+  .pb .box-grid, .pb .polas, .pb .labels { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .pb .sec-head h2 { font-size: 54px; }
+  .pb .tk-list li { font-size: 26px; line-height: 60px; }
+  .pb .tk-pause { width: 60px; height: 60px; }
+}
+@container (max-width: 999px) { .pb .hero-text { display: grid; gap: 16px; } }
+.pb.rm *, .pb.rm *::before, .pb.rm *::after { animation: none !important; transition-duration: .01s !important; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">דילוג לתוכן</a>
+<header class="topbar">
+  <div class="wrap">
+    <a class="crumb" href="index.html">האופה · מחקר וכיווני עיצוב</a>
+    <nav aria-label="כיוונים">
+      <a href="a.html">א׳ המקום</a>
+      <a href="b.html" aria-current="page">ב׳ השקית</a>
+      <a href="c.html">ג׳ המדף החם</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap dhead">
+    <div>
+      <p class="eyebrow">כיוון ב׳</p>
+      <h1>השקית</h1>
+      <p class="lead">המותג כמו שהוא מגיע הביתה: שקית קרפט, קופסה עם הדפס אדום־חום, חותמת עגולה. הכיוון הזה נשען גם על הקול שלכם באינסטגרם, שהוא קליל, עם הומור וקרוב לאנשים. הכתוביות שלכם מופיעות באתר כפתקים בכתב יד.</p>
+    </div>
+    <div class="facts">
+      <h2>על מה זה נשען במחקר</h2>
+      <ul>
+        <li><strong>קופסאות קרפט עם הדפס אדום־חום</strong> ושקיות קרפט עם הלוגו (ריל מ־10.10.2026 וריל מ־14.10.2026).</li>
+        <li><strong>לוגו עגול</strong> עם שיבולים, ״האופה״ ו״בוטיק לחם״, כמו חותמת (תמונת הפרופיל).</li>
+        <li><strong>קול קליל ואישי</strong>: ״תייגו אותה״, ״אז לא פספסתי נכון?״, ״דואגים לכם לשומר מסך״.</li>
+        <li>הכותרת היא משפט שלכם: ״הטעם שתמיד כיף לחזור אליו״ (15.10.2026).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="wrap stage">
+    <figure class="frame" data-frame data-w="1280" data-h="820">
+      <div class="frame-bar">
+        <span class="label">מחשב · 1280px</span>
+        <div class="seg" role="radiogroup" aria-label="מצב תצוגה במחשב">
+          <input type="radio" name="b-mode" id="b-l" value="light" checked><label for="b-l">בהיר</label>
+          <input type="radio" name="b-mode" id="b-d" value="dark"><label for="b-d">כהה</label>
+        </div>
+        <label class="chk"><input type="checkbox" id="rm"> הדמיית הפחתת תנועה</label>
+        <button type="button" class="btn" data-replay>הפעלה מחדש של הפתיחה</button>
+        <button type="button" class="btn btn--solid" data-full>מסך מלא</button>
+      </div>
+      <div class="frame-box"><div class="vp" tabindex="0" aria-label="תצוגת מחשב של כיוון ב׳. אפשר לגלול."></div></div>
+      <figcaption>אפשר לגלול בתוך המסגרת, לפתוח קופסאות ולעצור את הסרט האדום.</figcaption>
+    </figure>
+
+    <div class="phones">
+      <figure class="frame frame--phone" data-frame data-w="390" data-h="780" data-mode="light">
+        <div class="frame-bar"><span class="label">מובייל · בהיר</span></div>
+        <div class="frame-box"><div class="vp" tabindex="0" aria-label="תצוגת מובייל בהירה. אפשר לגלול."></div></div>
+      </figure>
+      <figure class="frame frame--phone" data-frame data-w="390" data-h="780" data-mode="dark">
+        <div class="frame-bar"><span class="label">מובייל · כהה</span></div>
+        <div class="frame-box"><div class="vp" tabindex="0" aria-label="תצוגת מובייל כהה. אפשר לגלול."></div></div>
+      </figure>
+      <aside class="howto">
+        <h2>הדגמה אינטראקטיבית</h2>
+        <ul>
+          <li><b>החותמת ״נלחצת״</b> בפתיחה, ופתק בכתב יד נכתב ליד הכפתור.</li>
+          <li><b>״פתחו״ על כל קופסה</b> פותח את פרטי המוצר. עובד בלחיצה, ב־Enter וברווח.</li>
+          <li><b>הסרט האדום</b> נע לאט עם שמות המוצרים. אפשר לעצור אותו בכפתור (דרישת WCAG 2.2.2), והוא נעצר גם כשהעכבר עליו.</li>
+          <li>בהפחתת תנועה הסרט הופך לרשימה סטטית והקופסאות לא מסתובבות.</li>
+        </ul>
+        <p class="note">התמונות הן מקומות שמורים בצבעים מהפוסטים, מסומנים ״צילום זמני״. גם החותמת היא סימן זמני ולא הלוגו שלכם.</p>
+      </aside>
+    </div>
+  </div>
+
+  <div class="wrap specs">
+    <section aria-labelledby="pal-b">
+      <h2 id="pal-b">פלטה</h2>
+      <p class="note prose">קרפט מהשקיות והקופסאות, ואדום־חום מההדפס. במצב כהה הקרפט נשאר כגוון של משטחים, והאדום מתבהר לגוון אלמוגי כדי לעבור ניגודיות.</p>
+      <div class="swatches">
+        <div class="swset"><h3>בהיר · נייר וקרפט</h3>
+          <div class="swrow">
+            <div class="sw"><i style="background:#FFFBF4"></i><div><b>נייר</b><code>#FFFBF4</code></div></div>
+            <div class="sw"><i style="background:#D9BC94"></i><div><b>קרפט</b><code>#D9BC94</code></div></div>
+            <div class="sw"><i style="background:#24170F"></i><div><b>דיו · טקסט</b><code>#24170F · 16.9:1</code></div></div>
+            <div class="sw"><i style="background:#8A2614"></i><div><b>חותמת</b><code>#8A2614 · 8.6:1 / 4.9:1 על קרפט</code></div></div>
+            <div class="sw"><i style="background:#5A4434"></i><div><b>טקסט משני</b><code>#5A4434 · 5.0:1 על קרפט</code></div></div>
+          </div>
+        </div>
+        <div class="swset"><h3>כהה · דלפק בערב</h3>
+          <div class="swrow">
+            <div class="sw"><i style="background:#17120E"></i><div><b>דלפק</b><code>#17120E</code></div></div>
+            <div class="sw"><i style="background:#2B2119"></i><div><b>קרפט בצל</b><code>#2B2119</code></div></div>
+            <div class="sw"><i style="background:#F0E2CC"></i><div><b>שמנת · טקסט</b><code>#F0E2CC · 14.6:1</code></div></div>
+            <div class="sw"><i style="background:#FF8566"></i><div><b>חותמת מוארת</b><code>#FF8566 · 7.8:1</code></div></div>
+            <div class="sw"><i style="background:#CDB89C"></i><div><b>טקסט משני</b><code>#CDB89C · 9.7:1</code></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="type-b">
+      <h2 id="type-b">טיפוגרפיה</h2>
+      <div class="type-grid">
+        <div class="type-card">
+          <p class="meta">כותרות · Secular One</p>
+          <p style="font:400 46px/1.05 'Secular One',sans-serif">מה יש בקופסה</p>
+          <p class="note">עבה, עגלגל ונגיש. נראה טוב בגדלים ענקיים ועל הסרט האדום.</p>
+        </div>
+        <div class="type-card">
+          <p class="meta">גוף · Rubik 400/500/700</p>
+          <p style="font:400 18px/1.6 'Rubik',sans-serif">שדרות ירושלים 136, נתיבות · <span dir="ltr">08-9752093</span> · @haofe_bakery</p>
+          <p class="note">ידידותי, יציב, משתלב טוב עם מספרים ולטינית.</p>
+        </div>
+        <div class="type-card">
+          <p class="meta">פתקים · Playpen Sans Hebrew</p>
+          <p style="font:600 24px/1.3 'Playpen Sans Hebrew',cursive;color:#8A2614">תבחרו סניף ובואו לבקר!</p>
+          <p class="note">כתב יד קריא, רק לציטוטים ולהערות קצרות. אף פעם לא לטקסט מידע.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="mot-b">
+      <h2 id="mot-b">תנועה</h2>
+      <p class="note prose">אופי: מוחשי וקופצני, כמו לפתוח קופסה. עקומת קפיץ <span class="mono">cubic-bezier(.34,1.56,.64,1)</span> לתנועות קצרות (250 עד 550 מ״ש), ועקומה רכה לשינויי גובה. הקפיץ מוגבל להזזות קטנות כדי שלא יעייף.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>רכיב</th><th>מתי</th><th>מה קורה</th><th>משך</th><th>למה</th><th>בהפחתת תנועה</th></tr></thead>
+          <tbody>
+            <tr><td>חותמת</td><td>טעינה</td><td>נוחתת מגודל 160% לסיבוב של 8°־, וטבעת דיו מתפשטת ונעלמת</td><td>550 + 700 מ״ש</td><td>רגע מותג אחד, ברור</td><td>סטטית</td></tr>
+            <tr><td>פתק בכתב יד</td><td>טעינה</td><td>נחשף מימין לשמאל כמו כתיבה, והחץ מצויר</td><td>700 + 500 מ״ש</td><td>מפנה את העין לכפתור</td><td>גלוי מראש</td></tr>
+            <tr><td>סרט המוצרים</td><td>תמידי</td><td>נע משמאל לימין, בכיוון הקריאה בעברית; נעצר בריחוף ובכפתור</td><td>38 שניות לסבב</td><td>מראה את המבחר בלי לתפוס מקום</td><td>רשימה סטטית</td></tr>
+            <tr><td>קופסת מוצר</td><td>ריחוף או פוקוס</td><td>מתיישרת מהטיה ועולה 6px</td><td>400 מ״ש</td><td>תחושת מדבקה שמרימים</td><td>בלי הטיה</td></tr>
+            <tr><td>״פתחו״</td><td>לחיצה</td><td>הפרטים נפתחים בגובה, החץ מתהפך</td><td>350 מ״ש</td><td>פירוט בלי לעזוב את העמוד</td><td>פתיחה מיידית</td></tr>
+            <tr><td>כפתורים</td><td>ריחוף ולחיצה</td><td>הצל הקשיח מתקצר, הכפתור ״נלחץ״ פנימה</td><td>250 מ״ש</td><td>משוב מגע ברור</td><td>שינוי צבע בלבד</td></tr>
+            <tr><td>כניסה בגלילה</td><td>כניסה למסך</td><td>נכנס עם סיבוב קטן ומתיישב בהטיה שלו, 70 מ״ש בין פריטים</td><td>550 מ״ש</td><td>תחושת פיזור על השולחן</td><td>גלוי מראש</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="tmp-b">
+      <h2 id="tmp-b">מה זמני בתצוגה</h2>
+      <ul class="note prose">
+        <li><b>חותמת:</b> סימן זמני שנבנה מטקסט. הלוגו העגול שלכם עם השיבולים יחליף אותו.</li>
+        <li><b>פתקי הפיד:</b> ציטוטים מהכתוביות שלכם. באתר האמיתי נציג תמונות סטטיות עם קישור לאינסטגרם, בלי הטמעה של אינסטגרם, כדי לא לטעון עוגיות של צד שלישי.</li>
+        <li><b>טקסטים בקו מקווקו</b> הם פרטים חסרים שצריך לקבל מכם.</li>
+      </ul>
+    </section>
+  </div>
+
+  <nav class="wrap pager" aria-label="מעבר בין כיוונים">
+    <a href="a.html">→ כיוון א׳: המקום</a>
+    <a href="c.html">כיוון ג׳: המדף החם ←</a>
+  </nav>
+</main>
+
+<template id="proto">
+<div class="proto pb" data-mode="light">
+  <header class="hd">
+    <div class="in">
+      <a class="mark" href="#" data-jump="top" aria-label="האופה, בוטיק לחם. לראש העמוד"><span class="dot" aria-hidden="true">ה</span><b>האופה</b></a>
+      <nav class="nav" aria-label="ראשי">
+        <a href="#" data-jump="boxes">מה יש בקופסה</a>
+        <a href="#" data-jump="feed">מהפיד</a>
+        <a href="#" data-jump="visit">סניפים</a>
+      </nav>
+      <div class="hd-actions">
+        <button type="button" class="theme-btn" data-theme-toggle aria-pressed="false" aria-label="מצב כהה">
+          <svg class="sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+        </button>
+        <a class="order" href="#" data-jump="visit">הזמנה טלפונית</a>
+        <button type="button" class="menu-btn" data-menu-btn aria-expanded="false" data-controls="menu" aria-label="תפריט">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <nav class="menu paper" data-menu data-id="menu" hidden aria-label="תפריט נייד">
+      <a href="#" data-jump="boxes">מה יש בקופסה</a>
+      <a href="#" data-jump="feed">מהפיד</a>
+      <a href="#" data-jump="visit">סניפים</a>
+      <a href="https://www.instagram.com/haofe_bakery/" target="_blank" rel="noopener">אינסטגרם</a>
+    </nav>
+  </header>
+
+  <section class="hero paper" data-section="top" data-labelledby="h1">
+    <div class="in">
+      <div class="stamp" aria-hidden="true"><div><small>בוטיק לחם</small><b>האופה</b><small>נתיבות · שדרות<br>קריית גת</small></div><span class="tmp">סימן זמני</span></div>
+      <div class="hero-text">
+        <h1 data-id="h1">הטעם שתמיד <em>כיף לחזור</em> אליו</h1>
+        <p class="sub">פרנה, פיתות, חלות לשישי, מאפים וסופגניות בעונה. בנתיבות, בשדרות ובקריית גת.</p>
+        <div class="ctas">
+          <a class="btn-b btn-b--red" href="#" data-jump="visit">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+            בחרו סניף</a>
+          <a class="btn-b" href="#" data-jump="boxes">מה יש היום</a>
+        </div>
+        <p class="note-hand"><svg viewBox="0 0 64 40" aria-hidden="true" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M60 30 C44 34 22 30 10 10 M10 10 l1 10 M10 10 l9 4"/></svg><span>תבחרו סניף ובואו לבקר!</span></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker" data-ticker>
+    <button type="button" class="tk-pause" aria-label="עצירת הסרט הנע">
+      <svg class="pause" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+      <svg class="play" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17 5v14L6 12z"/></svg>
+    </button>
+    <div class="tk-view">
+      <div class="tk-track">
+        <ul class="tk-list" aria-label="מוצרים"><li>פרנה</li><li>פיתות</li><li>באגטים</li><li>חלות לשישי</li><li>מאפי עלים</li><li>סופגניות בעונה</li><li>עוגות קרות</li><li>קפה</li></ul>
+        <ul class="tk-list" aria-hidden="true"><li>פרנה</li><li>פיתות</li><li>באגטים</li><li>חלות לשישי</li><li>מאפי עלים</li><li>סופגניות בעונה</li><li>עוגות קרות</li><li>קפה</li></ul>
+        <ul class="tk-list" aria-hidden="true"><li>פרנה</li><li>פיתות</li><li>באגטים</li><li>חלות לשישי</li><li>מאפי עלים</li><li>סופגניות בעונה</li><li>עוגות קרות</li><li>קפה</li></ul>
+        <ul class="tk-list" aria-hidden="true"><li>פרנה</li><li>פיתות</li><li>באגטים</li><li>חלות לשישי</li><li>מאפי עלים</li><li>סופגניות בעונה</li><li>עוגות קרות</li><li>קפה</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <section class="boxes" data-section="boxes" data-labelledby="bx">
+    <div class="in">
+      <div class="sec-head" data-rv>
+        <p class="hand">מהמדפים שלנו</p>
+        <h2 data-id="bx">מה יש בקופסה</h2>
+        <p>מבחר לפי מה שמופיע בפיד שלכם. המחירים והרשימה המלאה ייכנסו מהתפריט.</p>
+      </div>
+      <div class="box-grid">
+        <article class="box" data-rv style="--i:0">
+          <div class="ph ph--frena" role="img" aria-label="צילום זמני: פרנה על מדף העץ"><span class="ph-tag">צילום זמני</span><span class="ph-cap">פרנה על מדף העץ</span></div>
+          <h3 class="lid-h"><button type="button" class="lid" aria-expanded="false" data-controls="d1"><span class="nm">פרנה</span><span class="open">פתחו <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button></h3>
+          <div class="det" data-id="d1"><div><p>לחם מרוקאי רך, עם כתמי התנור מבחוץ. ״הפרנה המושלמת שלנו״, כמו שכתבתם בפוסט.</p></div></div>
+        </article>
+        <article class="box" data-rv style="--i:1">
+          <div class="ph ph--sufgania" role="img" aria-label="צילום זמני: סופגניות"><span class="ph-tag">צילום זמני</span><span class="ph-cap">סופגניות בשוקולד וקרם</span></div>
+          <h3 class="lid-h"><button type="button" class="lid" aria-expanded="false" data-controls="d2"><span class="nm">סופגניות <span class="tag">בעונה</span></span><span class="open">פתחו <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button></h3>
+          <div class="det" data-id="d2"><div><p>שוקולד, קרם ואבקת סוכר. <span class="tbd">טעמים ומחירים לעונה</span></p></div></div>
+        </article>
+        <article class="box" data-rv style="--i:2">
+          <div class="ph ph--challah" role="img" aria-label="צילום זמני: חלות"><span class="ph-tag">צילום זמני</span><span class="ph-cap">חלות לשישי</span></div>
+          <h3 class="lid-h"><button type="button" class="lid" aria-expanded="false" data-controls="d3"><span class="nm">חלות <span class="tag">לשישי</span></span><span class="open">פתחו <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button></h3>
+          <div class="det" data-id="d3"><div><p><span class="tbd">סוגים, ימים והזמנה מראש</span></p></div></div>
+        </article>
+        <article class="box" data-rv style="--i:3">
+          <div class="ph ph--pita" role="img" aria-label="צילום זמני: פיתות"><span class="ph-tag">צילום זמני</span><span class="ph-cap">פיתות</span></div>
+          <h3 class="lid-h"><button type="button" class="lid" aria-expanded="false" data-controls="d4"><span class="nm">פיתות</span><span class="open">פתחו <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button></h3>
+          <div class="det" data-id="d4"><div><p><span class="tbd">סוגים ותיאור מהאופים</span></p></div></div>
+        </article>
+        <article class="box" data-rv style="--i:4">
+          <div class="ph ph--pastry" role="img" aria-label="צילום זמני: מאפי עלים"><span class="ph-tag">צילום זמני</span><span class="ph-cap">מגש מאפים מהריל של 20.10</span></div>
+          <h3 class="lid-h"><button type="button" class="lid" aria-expanded="false" data-controls="d5"><span class="nm">מאפים</span><span class="open">פתחו <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button></h3>
+          <div class="det" data-id="d5"><div><p><span class="tbd">שמות המאפים והמילויים</span></p></div></div>
+        </article>
+        <article class="box" data-rv style="--i:5">
+          <div class="ph ph--coffee" role="img" aria-label="צילום זמני: קפה"><span class="ph-tag">צילום זמני</span><span class="ph-cap">קפה של בוקר</span></div>
+          <h3 class="lid-h"><button type="button" class="lid" aria-expanded="false" data-controls="d6"><span class="nm">קפה</span><span class="open">פתחו <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button></h3>
+          <div class="det" data-id="d6"><div><p>״הקפה של הבוקר״, עם משהו מהמדף. <span class="tbd">תפריט שתייה</span></p></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="feed paper" data-section="feed" data-labelledby="fd">
+    <div class="in">
+      <div class="sec-head" data-rv><p class="hand">@haofe_bakery</p><h2 data-id="fd">מהפיד</h2></div>
+      <div class="polas">
+        <a class="pola" data-rv href="https://www.instagram.com/haofe_bakery/" target="_blank" rel="noopener">
+          <div class="ph ph--frena" role="img" aria-label="צילום זמני: פרנה"><span class="ph-tag">צילום זמני</span></div>
+          <q>הפרנה המושלמת שלנו, יש דברים שפשוט כיף שיש קרוב לבית</q><small>פוסט · 15.10.2026</small></a>
+        <a class="pola" data-rv href="https://www.instagram.com/haofe_bakery/" target="_blank" rel="noopener">
+          <div class="ph ph--sufgania" role="img" aria-label="צילום זמני: סופגניות על מגש"><span class="ph-tag">צילום זמני</span></div>
+          <q>רגע לפני שהן הופכות לסופגניות שאתם כל כך אוהבים…</q><small>ריל · 18.10.2026</small></a>
+        <a class="pola" data-rv href="https://www.instagram.com/haofe_bakery/" target="_blank" rel="noopener">
+          <div class="ph ph--pastry" role="img" aria-label="צילום זמני: מגש מאפים מהייצור"><span class="ph-tag">צילום זמני</span></div>
+          <q>העובדת שיודעת לעשות הכל</q><small>ריל · 20.10.2026</small></a>
+      </div>
+      <p class="more"><a class="btn-b" href="https://www.instagram.com/haofe_bakery/" target="_blank" rel="noopener">לכל הפוסטים באינסטגרם</a></p>
+    </div>
+  </section>
+
+  <section class="visit" data-section="visit" data-labelledby="vi">
+    <div class="in">
+      <div class="sec-head" data-rv><p class="hand">איפה אנחנו</p><h2 data-id="vi">שלושה סניפים</h2></div>
+      <div class="labels">
+        <article class="label" data-rv>
+          <h3>נתיבות</h3>
+          <div class="meta"><p>שדרות ירושלים 136</p><p dir="ltr" style="text-align:right">08-9752093</p><p><span>שעות: </span><span class="tbd">לאימות</span></p></div>
+          <div class="row"><a href="https://www.google.com/maps/search/?api=1&amp;query=%D7%A9%D7%93%D7%A8%D7%95%D7%AA+%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D+136+%D7%A0%D7%AA%D7%99%D7%91%D7%95%D7%AA" target="_blank" rel="noopener">ניווט</a><a href="tel:+97289752093">חיוג</a></div>
+        </article>
+        <article class="label" data-rv>
+          <h3>שדרות</h3>
+          <div class="meta"><p>יגאל אלון 4 <span class="tbd">לאימות</span></p><p dir="ltr" style="text-align:right">08-6491122</p><p><span>שעות: </span><span class="tbd">לאימות</span></p></div>
+          <div class="row"><a href="https://www.google.com/maps/search/?api=1&amp;query=%D7%99%D7%92%D7%90%D7%9C+%D7%90%D7%9C%D7%95%D7%9F+4+%D7%A9%D7%93%D7%A8%D7%95%D7%AA" target="_blank" rel="noopener">ניווט</a><a href="tel:+97286491122">חיוג</a></div>
+        </article>
+        <article class="label" data-rv>
+          <h3>קריית גת</h3>
+          <div class="meta"><p><span class="tbd">כתובת חסרה</span></p><p><span class="tbd">טלפון חסר</span></p><p><span>שעות: </span><span class="tbd">לאימות</span></p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <footer class="ft"><div class="in">
+    <span>האופה · בוטיק לחם</span>
+    <a href="https://www.instagram.com/haofe_bakery/" target="_blank" rel="noopener">אינסטגרם</a>
+    <a href="#" data-jump="top">הצהרת נגישות <span class="tbd">תיכתב אחרי הבדיקה</span></a>
+    <a href="#" data-jump="top">מדיניות פרטיות <span class="tbd">לפי מה שהאתר אוסף</span></a>
+  </div></footer>
+
+  <nav class="bar" aria-label="פעולות מהירות">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=%D7%A9%D7%93%D7%A8%D7%95%D7%AA+%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D+136+%D7%A0%D7%AA%D7%99%D7%91%D7%95%D7%AA" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>ניווט</a>
+    <a href="tel:+97289752093"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>חיוג</a>
+    <a href="https://www.instagram.com/haofe_bakery/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor"/></svg>אינסטגרם</a>
+  </nav>
+</div>
+</template>
+
+<script>
+window.PROTO = {
+  init: function (root) {
+    root.querySelectorAll('.lid').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var open = b.getAttribute('aria-expanded') !== 'true';
+        b.setAttribute('aria-expanded', open ? 'true' : 'false');
+        b.closest('.box').classList.toggle('open', open);
+      });
+    });
+    var tk = root.querySelector('[data-ticker]');
+    var pb = tk.querySelector('.tk-pause');
+    pb.addEventListener('click', function () {
+      var p = !tk.classList.contains('paused');
+      tk.classList.toggle('paused', p);
+      pb.setAttribute('aria-label', p ? 'הפעלת הסרט הנע' : 'עצירת הסרט הנע');
+    });
+  }
+};
+</script>
+<script src="shell.js"></script>
+</body>
+</html>

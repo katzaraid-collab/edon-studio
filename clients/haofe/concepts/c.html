@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>האופה · כיוון ג׳ המדף החם</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400&family=Karantina:wght@700&family=IBM+Plex+Sans+Hebrew:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="shell.css">
+<style>
+/* ===== Direction C · המדף החם =====
+   Layout: documentary. Full-bleed close-ups of crust and char, tall condensed type like rack labels,
+   a horizontal rack of products, the process in four real steps, branches as a schedule board. */
+.pc {
+  --bg: #F4F4F1;      /* white production tile */
+  --surface: #FFFFFF;
+  --ink: #151311;     /* char */
+  --ink2: #565C61;    /* steel */
+  --ember: #B4441A;   /* the oven's orange, deepened for text */
+  --on-ember: #FFFFFF;
+  --steel: #C9CED1;
+  --scrim: rgba(12, 9, 7, .62);
+  --display: "Karantina", "Arial Narrow", "Arial Hebrew", sans-serif;
+  --body: "IBM Plex Sans Hebrew", "Arial Hebrew", Arial, sans-serif;
+  --ease: cubic-bezier(.16, 1, .3, 1);
+}
+.pc[data-mode="dark"] {
+  --bg: #121110;
+  --surface: #1B1A18;
+  --ink: #EEEBE6;
+  --ink2: #A3A9AD;
+  --ember: #FF8A4C;
+  --on-ember: #1A0B03;
+  --steel: #34322F;
+  --scrim: rgba(0, 0, 0, .7);
+}
+.pc {
+  container-type: inline-size; min-height: 100%;
+  background: var(--bg); color: var(--ink); font: 400 16.5px/1.65 var(--body);
+  transition: background-color .3s var(--ease), color .3s var(--ease);
+}
+.pc *, .pc *::before, .pc *::after { box-sizing: border-box; }
+.pc a { color: inherit; }
+.pc :focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; }
+.pc h1, .pc h2, .pc h3 { font-family: var(--display); font-weight: 700; line-height: .92; margin: 0; letter-spacing: .005em; }
+.pc p { margin: 0; }
+.pc .in { padding-inline: 20px; max-width: 1280px; margin-inline: auto; }
+.pc [data-section]:focus { outline: none; }
+.pc[data-mode="dark"] .ph { filter: brightness(.8) contrast(1.08); }
+.pc .lbl { font: 500 12px/1 var(--body); letter-spacing: .12em; color: var(--ink2); }
+
+/* header */
+.pc .hd { position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--steel); }
+.pc .hd .in { display: flex; align-items: center; gap: 14px; min-height: 58px; }
+.pc .mark { text-decoration: none; display: flex; align-items: baseline; gap: 10px; }
+.pc .mark b { font: 700 38px/1 var(--display); }
+.pc .mark span { font-size: 12px; letter-spacing: .1em; color: var(--ink2); }
+.pc .nav { display: none; gap: 26px; margin-inline: auto; }
+.pc .nav a { text-decoration: none; font-weight: 500; font-size: 15px; padding: 10px 0; background: linear-gradient(var(--ember), var(--ember)) right bottom / 0 2px no-repeat; transition: background-size .4s var(--ease); }
+.pc .nav a:hover { background-size: 100% 2px; }
+.pc .hd-actions { display: flex; gap: 8px; align-items: center; margin-inline-start: auto; }
+.pc .tg { font: 500 14px var(--body); color: var(--ink); background: transparent; border: 1px solid var(--steel); min-height: 44px; padding: 0 12px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.pc .tg i { width: 30px; height: 16px; border-radius: 999px; background: var(--steel); position: relative; }
+.pc .tg i::after { content: ""; position: absolute; top: 2px; right: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--ink); transition: transform .35s var(--ease), background-color .3s; }
+.pc .tg[aria-pressed="true"] i::after { transform: translateX(-14px); background: var(--ember); }
+.pc .menu-btn { width: 44px; height: 44px; border: 1px solid var(--steel); background: transparent; color: var(--ink); display: grid; place-items: center; cursor: pointer; }
+.pc .menu-btn svg { width: 22px; height: 22px; }
+.pc .menu { position: absolute; inset: 100% 0 auto; background: var(--ink); color: var(--bg); padding: 6px 20px 22px; display: grid; }
+.pc .menu a { text-decoration: none; font: 700 44px/1.1 var(--display); padding: 6px 0; border-bottom: 1px solid rgba(128,128,128,.3); }
+.pc .cta { display: none; text-decoration: none; background: var(--ember); color: var(--on-ember); font-weight: 600; font-size: 15px; padding: 0 18px; min-height: 44px; align-items: center; }
+
+/* hero */
+.pc .hero { position: relative; }
+.pc .hero .ph { width: 100%; aspect-ratio: 4 / 5; padding: 14px 20px; justify-content: flex-start; align-items: flex-start; }
+.pc .hero-type { position: absolute; inset: auto 0 0; padding: 0 20px 22px; color: #fff; background: linear-gradient(0deg, var(--scrim) 30%, transparent); }
+.pc .hero h1 { font-size: 104px; display: grid; }
+.pc .hero h1 .ln { display: block; overflow: hidden; padding-bottom: 6px; }
+.pc .hero h1 .ln span { display: block; }
+.pc .hero h1 .ln:nth-child(2) { color: #FFB27F; }
+.pc .hero-meta { display: grid; gap: 16px; padding-block: 20px 26px; border-bottom: 1px solid var(--steel); }
+.pc .hero-meta p { font-size: 18px; max-width: 46ch; }
+.pc .ctas { display: flex; flex-wrap: wrap; gap: 10px; }
+.pc .btn-c { text-decoration: none; font-weight: 600; font-size: 16px; min-height: 50px; padding: 0 22px; display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--ink); transition: background-color .3s var(--ease), color .3s var(--ease); }
+.pc .btn-c svg { width: 18px; height: 18px; transition: transform .4s var(--ease); }
+.pc .btn-c:hover svg { transform: translateX(-4px); }
+.pc .btn-c--fill { background: var(--ink); color: var(--bg); }
+.pc .btn-c--fill:hover { background: var(--ember); border-color: var(--ember); color: var(--on-ember); }
+.pc .btn-c:not(.btn-c--fill):hover { background: var(--ink); color: var(--bg); }
+
+/* rack */
+.pc .rack { padding-block: 44px 36px; }
+.pc .sec-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 14px 24px; margin-bottom: 20px; }
+.pc .sec-head h2 { font-size: 72px; }
+.pc .sec-head p { color: var(--ink2); max-width: 44ch; }
+.pc .rack-ctrl { display: flex; gap: 8px; align-items: center; }
+.pc .rbtn { width: 48px; height: 48px; border: 1px solid var(--ink); background: transparent; color: var(--ink); display: grid; place-items: center; cursor: pointer; transition: background-color .25s, color .25s; }
+.pc .rbtn:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+.pc .rbtn:disabled { opacity: .35; cursor: default; }
+.pc .rbtn svg { width: 20px; height: 20px; }
+.pc .track { display: grid; grid-auto-flow: column; grid-auto-columns: 78%; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 20px 18px; margin-inline: -20px; scrollbar-width: none; overscroll-behavior-x: contain; }
+.pc .track::-webkit-scrollbar { display: none; }
+.pc .item { scroll-snap-align: start; display: grid; gap: 12px; align-content: start; }
+.pc .item .shot { overflow: hidden; }
+.pc .item .ph { aspect-ratio: 3 / 4; transition: transform .8s var(--ease); }
+.pc .item:hover .ph { transform: scale(1.04); }
+.pc .item h3 { font-size: 54px; display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.pc .item h3 small { font: 600 12px/1 var(--body); letter-spacing: .08em; color: var(--ember); border: 1px solid var(--ember); padding: 5px 7px; }
+.pc .item p { color: var(--ink2); font-size: 15px; border-top: 1px solid var(--steel); padding-top: 10px; }
+.pc .progress { height: 2px; background: var(--steel); position: relative; margin-top: 6px; }
+.pc .progress i { position: absolute; inset: 0 0 0 auto; width: 100%; background: var(--ember); transform-origin: right; transform: scaleX(var(--p, .2)); transition: transform .2s linear; }
+
+/* process */
+.pc .process { background: var(--ink); color: var(--bg); padding-block: 48px; }
+.pc .process .lbl { color: var(--steel); }
+.pc[data-mode="dark"] .process { background: #1B1A18; color: var(--ink); }
+.pc .process .in { display: grid; gap: 28px; }
+.pc .process h2 { font-size: 72px; }
+.pc .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: s; }
+.pc .step { display: grid; grid-template-columns: 56px 1fr; gap: 4px 14px; padding-block: 18px; border-top: 1px solid rgba(160, 160, 160, .35); opacity: .5; transition: opacity .4s var(--ease); }
+.pc .step.on, .pc.rm .step { opacity: 1; }
+.pc .step b { font: 700 48px/1 var(--display); color: #FF9A62; grid-row: span 2; }
+.pc .step h3 { font-size: 42px; }
+.pc .step p { font-size: 15px; opacity: .85; }
+.pc .reel { position: relative; }
+.pc .reel .ph { aspect-ratio: 9 / 12; width: 100%; }
+.pc .reel .cap { position: absolute; inset: auto 12px 12px; font-size: 13px; background: rgba(0,0,0,.6); color: #fff; padding: 6px 9px; }
+
+/* board */
+.pc .visit { padding-block: 48px; }
+.pc .board { border-top: 2px solid var(--ink); }
+.pc .brow { display: grid; gap: 8px 20px; padding-block: 20px; border-bottom: 1px solid var(--steel); grid-template-columns: minmax(0, 1fr); align-items: center; }
+.pc .brow h3 { font-size: 64px; }
+.pc .brow dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 14px; font-size: 15px; }
+.pc .brow dt { color: var(--ink2); }
+.pc .brow dd { margin: 0; font-weight: 500; }
+.pc .brow .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.pc .brow .acts a { text-decoration: none; font-weight: 600; font-size: 15px; min-height: 44px; padding: 0 16px; border: 1px solid var(--ink); display: inline-flex; align-items: center; }
+.pc .brow .acts a:first-child { background: var(--ink); color: var(--bg); }
+.pc .ft .in { padding-block: 22px 28px; display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 14px; color: var(--ink2); }
+.pc .ft a { color: var(--ink); }
+.pc .bar { position: sticky; bottom: 0; z-index: 9; display: grid; grid-template-columns: repeat(3, 1fr); background: #151311; color: #F4F4F1; }
+.pc .bar a { text-decoration: none; display: grid; justify-items: center; gap: 2px; padding: 9px 4px 11px; font-size: 13px; font-weight: 600; min-height: 56px; }
+.pc .bar svg { width: 22px; height: 22px; color: #FF9A62; }
+
+/* motion */
+.pc.anim .hero h1 .ln span { animation: c-up .9s var(--ease) both; }
+.pc.anim .hero h1 .ln:nth-child(2) span { animation-delay: .09s; } .pc.anim .hero h1 .ln:nth-child(3) span { animation-delay: .18s; }
+@keyframes c-up { from { transform: translateY(105%); } to { transform: none; } }
+.pc.anim .hero .ph { animation: c-zoom 1.6s var(--ease) both; }
+@keyframes c-zoom { from { background-size: 112% 112%; filter: saturate(.6); } to { filter: none; } }
+.pc.anim [data-rv] { transition: clip-path .9s var(--ease), opacity .6s var(--ease), transform .9s var(--ease); }
+.pc.anim [data-rv]:not(.rv-in) { opacity: 0; transform: translateY(24px); }
+/* the mask sits on the image inside the observed box: a fully clipped target never reports an intersection */
+.pc.anim .shot[data-rv]:not(.rv-in), .pc.anim .reel[data-rv]:not(.rv-in) { opacity: 1; transform: none; }
+.pc.anim .shot .ph, .pc.anim .reel .ph { transition: clip-path .9s var(--ease), transform .8s var(--ease); clip-path: inset(0 0 0 0); }
+.pc.anim .shot[data-rv]:not(.rv-in) .ph, .pc.anim .reel[data-rv]:not(.rv-in) .ph { clip-path: inset(0 0 100% 0); }
+
+@container (min-width: 700px) {
+  .pc .track { grid-auto-columns: 42%; }
+  .pc .cta { display: inline-flex; }
+  .pc .brow { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
+  .pc .brow .acts { grid-column: 2; }
+}
+@container (min-width: 1000px) {
+  .pc .in { padding-inline: 48px; }
+  .pc .nav { display: flex; }
+  .pc .menu-btn, .pc .menu, .pc .bar { display: none !important; }
+  .pc .hero .ph { aspect-ratio: 16 / 7.4; padding: 18px 48px; }
+  .pc .hero-type { padding: 0 48px 26px; }
+  .pc .hero h1 { font-size: 196px; grid-auto-flow: column; justify-content: start; gap: 28px; }
+  .pc .hero-meta { grid-template-columns: minmax(0, 1fr) auto; align-items: center; padding-block: 24px; }
+  .pc .track { grid-auto-columns: calc((100% - 3 * 14px) / 4.3); padding-inline: 48px; margin-inline: -48px; }
+  .pc .sec-head h2, .pc .process h2 { font-size: 104px; }
+  .pc .process .in { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: start; gap: 56px; }
+  .pc .process .head { grid-column: 1 / -1; }
+  .pc .reel { position: sticky; top: 90px; }
+  .pc .brow { grid-template-columns: 260px minmax(0, 1fr) auto; }
+  .pc .brow .acts { grid-column: auto; }
+  .pc .brow h3 { font-size: 80px; }
+}
+.pc.rm *, .pc.rm *::before, .pc.rm *::after { animation: none !important; transition-duration: .01s !important; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">דילוג לתוכן</a>
+<header class="topbar">
+  <div class="wrap">
+    <a class="crumb" href="index.html">האופה · מחקר וכיווני עיצוב</a>
+    <nav aria-label="כיוונים">
+      <a href="a.html">א׳ המקום</a>
+      <a href="b.html">ב׳ השקית</a>
+      <a href="c.html" aria-current="page">ג׳ המדף החם</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap dhead">
+    <div>
+      <p class="eyebrow">כיוון ג׳</p>
+      <h1>המדף החם</h1>
+      <p class="lead">צילום תיעודי מקרוב: קרום, כתמי תנור, עגלות מדפים מנירוסטה. ״האופה״ הוא גם בית ייצור, והסרטונים שלכם מאחורי הקלעים מראים את זה. הכיוון הזה שם את העבודה במרכז, עם אותיות גבוהות וצרות כמו תוויות על עגלת מדפים.</p>
+    </div>
+    <div class="facts">
+      <h2>על מה זה נשען במחקר</h2>
+      <ul>
+        <li><strong>בית ייצור</strong>: הביו מתאר רשת מאפיות ובית ייצור, וכתבה מ־2021 מזכירה מפעל שמספק לחנויות ויצוא.</li>
+        <li><strong>צילום מקרוב של פרנה</strong> על לוחות עץ בעגלת מתכת (15.10.2026).</li>
+        <li><strong>מאחורי הקלעים</strong>: ״רגע לפני שהן הופכות לסופגניות…״ (18.10.2026), ״העובדת שיודעת לעשות הכל״ (20.10.2026).</li>
+        <li>תאורה לבנה וחללי ייצור נקיים בריל, ולכן פלטה של אריח לבן, נירוסטה וכתום של תנור.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="wrap stage">
+    <figure class="frame" data-frame data-w="1280" data-h="820">
+      <div class="frame-bar">
+        <span class="label">מחשב · 1280px</span>
+        <div class="seg" role="radiogroup" aria-label="מצב תצוגה במחשב">
+          <input type="radio" name="c-mode" id="c-l" value="light" checked><label for="c-l">בהיר</label>
+          <input type="radio" name="c-mode" id="c-d" value="dark"><label for="c-d">כהה</label>
+        </div>
+        <label class="chk"><input type="checkbox" id="rm"> הדמיית הפחתת תנועה</label>
+        <button type="button" class="btn" data-replay>הפעלה מחדש של הפתיחה</button>
+        <button type="button" class="btn btn--solid" data-full>מסך מלא</button>
+      </div>
+      <div class="frame-box"><div class="vp" tabindex="0" aria-label="תצוגת מחשב של כיוון ג׳. אפשר לגלול."></div></div>
+      <figcaption>גללו בתוך המסגרת: המדף זז בכפתורים או בגלילה אופקית, והשלבים נדלקים בזה אחר זה.</figcaption>
+    </figure>
+
+    <div class="phones">
+      <figure class="frame frame--phone" data-frame data-w="390" data-h="780" data-mode="light">
+        <div class="frame-bar"><span class="label">מובייל · בהיר</span></div>
+        <div class="frame-box"><div class="vp" tabindex="0" aria-label="תצוגת מובייל בהירה. אפשר לגלול."></div></div>
+      </figure>
+      <figure class="frame frame--phone" data-frame data-w="390" data-h="780" data-mode="dark">
+        <div class="frame-bar"><span class="label">מובייל · כהה</span></div>
+        <div class="frame-box"><div class="vp" tabindex="0" aria-label="תצוגת מובייל כהה. אפשר לגלול."></div></div>
+      </figure>
+      <aside class="howto">
+        <h2>הדגמה אינטראקטיבית</h2>
+        <ul>
+          <li><b>הכותרת עולה מתוך מסכה</b>, שורה אחר שורה, והצילום מתחדד.</li>
+          <li><b>המדף</b>: כפתורי הקודם והבא, גלילה אופקית או החלקה במגע. פס ההתקדמות הכתום עוקב אחרי המיקום. הכפתורים הם החלופה לגרירה (WCAG 2.5.7).</li>
+          <li><b>״איך זה קורה״</b>: כל שלב נדלק כשמגיעים אליו, והכיתוב על הריל מתחלף.</li>
+          <li>בהפחתת תנועה כל השלבים מוצגים מלאים ואין מסכות.</li>
+        </ul>
+        <p class="note">התמונות הן מקומות שמורים מסומנים. בכיוון הזה הצילום הוא העיקר, ולכן הוא דורש צילום מקצועי בייצור ובסניף.</p>
+      </aside>
+    </div>
+  </div>
+
+  <div class="wrap specs">
+    <section aria-labelledby="pal-c">
+      <h2 id="pal-c">פלטה</h2>
+      <p class="note prose">אריח לבן ונירוסטה מחללי הייצור, שחור של כתמי התנור, וכתום אחד של אש. הצבע החם מגיע בעיקר מהצילום עצמו.</p>
+      <div class="swatches">
+        <div class="swset"><h3>בהיר · אולם הייצור</h3>
+          <div class="swrow">
+            <div class="sw"><i style="background:#F4F4F1"></i><div><b>אריח</b><code>#F4F4F1</code></div></div>
+            <div class="sw"><i style="background:#151311"></i><div><b>פחם · טקסט</b><code>#151311 · 16.8:1</code></div></div>
+            <div class="sw"><i style="background:#565C61"></i><div><b>נירוסטה · משני</b><code>#565C61 · 6.2:1</code></div></div>
+            <div class="sw"><i style="background:#B4441A"></i><div><b>אש</b><code>#B4441A · 5.0:1</code></div></div>
+            <div class="sw"><i style="background:#C9CED1"></i><div><b>קווים</b><code>#C9CED1</code></div></div>
+          </div>
+        </div>
+        <div class="swset"><h3>כהה · התנור בלילה</h3>
+          <div class="swrow">
+            <div class="sw"><i style="background:#121110"></i><div><b>פחם</b><code>#121110</code></div></div>
+            <div class="sw"><i style="background:#EEEBE6"></i><div><b>קמח · טקסט</b><code>#EEEBE6 · 15.9:1</code></div></div>
+            <div class="sw"><i style="background:#A3A9AD"></i><div><b>נירוסטה · משני</b><code>#A3A9AD · 7.9:1</code></div></div>
+            <div class="sw"><i style="background:#FF8A4C"></i><div><b>גחלת</b><code>#FF8A4C · 8.1:1</code></div></div>
+            <div class="sw"><i style="background:#34322F"></i><div><b>קווים</b><code>#34322F</code></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="type-c">
+      <h2 id="type-c">טיפוגרפיה</h2>
+      <div class="type-grid">
+        <div class="type-card">
+          <p class="meta">כותרות · Karantina 700</p>
+          <p style="font:700 72px/.9 'Karantina',sans-serif">מהתנור למדף</p>
+          <p class="note">צרה וגבוהה, מאפשרת כותרות ענקיות גם במובייל. משמשת רק מ־40px ומעלה.</p>
+        </div>
+        <div class="type-card">
+          <p class="meta">גוף · IBM Plex Sans Hebrew 400/500/600</p>
+          <p style="font:400 17px/1.6 'IBM Plex Sans Hebrew',sans-serif">שדרות ירושלים 136, נתיבות · <span dir="ltr">08-9752093</span></p>
+          <p class="note">אופי טכני ונקי של בית ייצור, ספרות אחידות ברוחב.</p>
+        </div>
+        <div class="type-card">
+          <p class="meta">סקאלה</p>
+          <p class="note">כותרת פתיחה 196/104 · אזור 104/72 · מוצר 54 · גוף 16.5 · תוויות 12 במרווח רחב.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="mot-c">
+      <h2 id="mot-c">תנועה</h2>
+      <p class="note prose">אופי: מדויק וקולנועי. עקומת יציאה חדה <span class="mono">cubic-bezier(.16,1,.3,1)</span>, משכים ארוכים יחסית (600 עד 900 מ״ש) אבל בלי קפיצות. הגלילה נשארת טבעית: אין חטיפת גלילה, ואין אנימציה שקשורה לגלילה מלבד פס ההתקדמות.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>רכיב</th><th>מתי</th><th>מה קורה</th><th>משך</th><th>למה</th><th>בהפחתת תנועה</th></tr></thead>
+          <tbody>
+            <tr><td>כותרת הפתיחה</td><td>טעינה</td><td>שלוש שורות עולות מתוך מסכה, 90 מ״ש ביניהן</td><td>900 מ״ש</td><td>רגע פתיחה אחד חזק</td><td>מוצגת מיד</td></tr>
+            <tr><td>צילום הפתיחה</td><td>טעינה</td><td>רוויה עולה מ־60% ל־100%</td><td>1.6 שניות</td><td>תחושת ״התחממות״</td><td>בלי שינוי</td></tr>
+            <tr><td>תמונות במדף ובריל</td><td>כניסה למסך</td><td>נחשפות מלמעלה למטה במסכה</td><td>900 מ״ש</td><td>קצב של סרט תיעודי</td><td>גלויות מראש</td></tr>
+            <tr><td>המדף</td><td>כפתורים, גלילה, מגע</td><td>הצמדה לפריט, פס התקדמות כתום</td><td>חלקה, לפי הדפדפן</td><td>הרבה מוצרים בלי עמוד ארוך</td><td>קפיצה בלי החלקה</td></tr>
+            <tr><td>שלבי התהליך</td><td>גלילה</td><td>השלב הפעיל מואר, השאר מעומעמים</td><td>400 מ״ש</td><td>מראה איפה הקורא נמצא</td><td>כולם מוארים</td></tr>
+            <tr><td>קישורים בכותרת</td><td>ריחוף</td><td>קו כתום נמתח מימין לשמאל</td><td>400 מ״ש</td><td>משוב עדין</td><td>מופיע מיד</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="tmp-c">
+      <h2 id="tmp-c">מה זמני בתצוגה</h2>
+      <ul class="note prose">
+        <li><b>שלבי התהליך</b> הם שלבים כלליים של אפייה. את מה שקורה אצלכם בכל שלב נכתוב רק לפי מה שתספרו לנו.</li>
+        <li><b>תמונות וריל</b>: מקומות שמורים. הכיוון הזה תלוי בצילום חדש, איכותי ואחיד.</li>
+        <li><b>טקסטים בקו מקווקו</b> הם פרטים חסרים.</li>
+      </ul>
+    </section>
+  </div>
+
+  <nav class="wrap pager" aria-label="מעבר בין כיוונים">
+    <a href="b.html">→ כיוון ב׳: השקית</a>
+    <a href="index.html">חזרה להשוואה ולהמלצה ←</a>
+  </nav>
+</main>
+
+<template id="proto">
+<div class="proto pc" data-mode="light">
+  <header class="hd">
+    <div class="in">
+      <a class="mark" href="#" data-jump="top" aria-label="האופה, בוטיק לחם. לראש העמוד"><b>האופה</b><span>בוטיק לחם</span></a>
+      <nav class="nav" aria-label="ראשי">
+        <a href="#" data-jump="rack">על המדף</a>
+        <a href="#" data-jump="process">איך זה קורה</a>
+        <a href="#" data-jump="visit">סניפים</a>
+      </nav>
+      <div class="hd-actions">
+        <button type="button" class="tg" data-theme-toggle aria-pressed="false" aria-label="מצב כהה"><i aria-hidden="true"></i><span>כהה</span></button>
+        <a class="cta" href="#" data-jump="visit">ניווט לסניף</a>
+        <button type="button" class="menu-btn" data-menu-btn aria-expanded="false" data-controls="menu" aria-label="תפריט">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+    <nav class="menu" data-menu data-id="menu" hidden aria-label="תפריט נייד">
+      <a href="#" data-jump="rack">על המדף</a>
+      <a href="#" data-jump="process">איך זה קורה</a>
+      <a href="#" data-jump="visit">סניפים</a>
+      <a href="https://www.instagram.com/haofe_bakery/" target="_blank" rel="noopener">אינסטגרם</a>
+    </nav>
+  </header>
+
+  <section class="hero" data-section="top" data-labelledby="h1">
+    <div class="ph ph--frena" role="img" aria-label="צילום זמני: פרנה מקרוב עם כתמי התנור"><span class="ph-tag">צילום זמני · פרנה מקרוב, אור צד</span></div>
+    <div class="hero-type">
+      <h1 data-id="h1"><span class="ln"><span>מהתנור</span></span><span class="ln"><span>למדף</span></span><span class="ln"><span>אליכם</span></span></h1>
+    </div>
+  </section>
+  <div class="in hero-meta">
+    <p>בית ייצור ושלושה סניפים: נתיבות, שדרות וקריית גת. פרנה, פיתות, חלות, מאפים וסופגניות בעונה.</p>
+    <div class="ctas">
+      <a class="btn-c btn-c--fill" href="#" data-jump="visit">הסניפים והשעות <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></a>
+      <a class="btn-c" href="#" data-jump="rack">מה על המדף</a>
+    </div>
+  </div>
+
+  <section class="rack" data-section="rack" data-labelledby="rk">
+    <div class="in">
+      <div class="sec-head">
+        <div><p class="lbl">על המדף</p><h2 data-id="rk">מה יוצא מהתנור</h2></div>
+        <div class="rack-ctrl">
+          <button type="button" class="rbtn" data-prev aria-label="הפריט הקודם"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 6l6 6-6 6"/></svg></button>
+          <button type="button" class="rbtn" data-next aria-label="הפריט הבא"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 6l-6 6 6 6"/></svg></button>
+        </div>
+      </div>
+      <div class="track" data-track tabindex="0" role="region" aria-label="מוצרים. אפשר לגלול לצדדים או להשתמש בכפתורים">
+        <article class="item"><div class="shot" data-rv><div class="ph ph--frena" role="img" aria-label="צילום זמני: פרנה"><span class="ph-tag">צילום זמני</span></div></div><h3>פרנה</h3><p>לחם מרוקאי רך, עם כתמי התנור מבחוץ.</p></article>
+        <article class="item"><div class="shot" data-rv><div class="ph ph--pita" role="img" aria-label="צילום זמני: פיתות"><span class="ph-tag">צילום זמני</span></div></div><h3>פיתות</h3><p><span class="tbd">סוגים ותיאור</span></p></article>
+        <article class="item"><div class="shot" data-rv><div class="ph ph--challah" role="img" aria-label="צילום זמני: חלות"><span class="ph-tag">צילום זמני</span></div></div><h3>חלות <small>לשישי</small></h3><p><span class="tbd">סוגים והזמנה מראש</span></p></article>
+        <article class="item"><div class="shot" data-rv><div class="ph ph--sufgania" role="img" aria-label="צילום זמני: סופגניות"><span class="ph-tag">צילום זמני</span></div></div><h3>סופגניות <small>בעונה</small></h3><p>שוקולד, קרם ואבקת סוכר. <span class="tbd">טעמים</span></p></article>
+        <article class="item"><div class="shot" data-rv><div class="ph ph--baguette" role="img" aria-label="צילום זמני: באגטים"><span class="ph-tag">צילום זמני</span></div></div><h3>באגטים</h3><p>קרום פריך, לכריך או לשולחן.</p></article>
+        <article class="item"><div class="shot" data-rv><div class="ph ph--pastry" role="img" aria-label="צילום זמני: מאפים"><span class="ph-tag">צילום זמני</span></div></div><h3>מאפים</h3><p><span class="tbd">שמות ומילויים</span></p></article>
+        <article class="item"><div class="shot" data-rv><div class="ph ph--cake" role="img" aria-label="צילום זמני: עוגות קרות"><span class="ph-tag">צילום זמני</span></div></div><h3>עוגות קרות</h3><p><span class="tbd">מבחר</span></p></article>
+      </div>
+      <div class="progress" aria-hidden="true"><i data-prog></i></div>
+    </div>
+  </section>
+
+  <section class="process" data-section="process" data-labelledby="pr">
+    <div class="in">
+      <div class="head"><p class="lbl">מאחורי הקלעים</p><h2 data-id="pr">איך זה קורה</h2></div>
+      <ol class="steps">
+        <li class="step on" data-step="0"><b aria-hidden="true">1</b><h3>בצק</h3><p><span class="tbd">מה מכניסים ואיך לשים, במילים של האופים</span></p></li>
+        <li class="step" data-step="1"><b aria-hidden="true">2</b><h3>התפחה</h3><p><span class="tbd">כמה זמן ולמה</span></p></li>
+        <li class="step" data-step="2"><b aria-hidden="true">3</b><h3>תנור</h3><p>כאן נוצרים כתמי התנור של הפרנה.</p></li>
+        <li class="step" data-step="3"><b aria-hidden="true">4</b><h3>מדף</h3><p>לעגלות, לסניפים, אליכם.</p></li>
+      </ol>
+      <div class="reel" data-rv>
+        <div class="ph ph--reel" role="img" aria-label="ריל זמני מאחורי הקלעים"><span class="ph-tag">ריל זמני · וידאו שקט עם כפתור עצירה</span></div>
+        <p class="cap" data-cap>שלב 1: בצק</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="visit" data-section="visit" data-labelledby="vi">
+    <div class="in">
+      <div class="sec-head"><div><p class="lbl">סניפים</p><h2 data-id="vi">איפה למצוא אותנו</h2></div><p>שעות הפתיחה יתפרסמו אחרי אימות.</p></div>
+      <div class="board">
+        <article class="brow" data-rv>
+          <h3>נתיבות</h3>
+          <dl><dt>כתובת</dt><dd>שדרות ירושלים 136</dd><dt>טלפון</dt><dd dir="ltr" style="text-align:right">08-9752093</dd><dt>שעות</dt><dd><span class="tbd">לאימות</span></dd></dl>
+          <div class="acts"><a href="https://www.google.com/maps/search/?api=1&amp;query=%D7%A9%D7%93%D7%A8%D7%95%D7%AA+%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D+136+%D7%A0%D7%AA%D7%99%D7%91%D7%95%D7%AA" target="_blank" rel="noopener">ניווט</a><a href="tel:+97289752093">חיוג</a></div>
+        </article>
+        <article class="brow" data-rv>
+          <h3>שדרות</h3>
+          <dl><dt>כתובת</dt><dd>יגאל אלון 4 <span class="tbd">לאימות</span></dd><dt>טלפון</dt><dd dir="ltr" style="text-align:right">08-6491122</dd><dt>שעות</dt><dd><span class="tbd">לאימות</span></dd></dl>
+          <div class="acts"><a href="https://www.google.com/maps/search/?api=1&amp;query=%D7%99%D7%92%D7%90%D7%9C+%D7%90%D7%9C%D7%95%D7%9F+4+%D7%A9%D7%93%D7%A8%D7%95%D7%AA" target="_blank" rel="noopener">ניווט</a><a href="tel:+97286491122">חיוג</a></div>
+        </article>
+        <article class="brow" data-rv>
+          <h3>קריית גת</h3>
+          <dl><dt>כתובת</dt><dd><span class="tbd">חסרה</span></dd><dt>טלפון</dt><dd><span class="tbd">חסר</span></dd><dt>שעות</dt><dd><span class="tbd">לאימות</span></dd></dl>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <footer class="ft"><div class="in">
+    <span>האופה · בוטיק לחם</span>
+    <a href="https://www.instagram.com/haofe_bakery/" target="_blank" rel="noopener">אינסטגרם</a>
+    <a href="#" data-jump="top">הצהרת נגישות <span class="tbd">תיכתב אחרי הבדיקה</span></a>
+    <a href="#" data-jump="top">מדיניות פרטיות <span class="tbd">לפי מה שהאתר אוסף</span></a>
+  </div></footer>
+
+  <nav class="bar" aria-label="פעולות מהירות">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=%D7%A9%D7%93%D7%A8%D7%95%D7%AA+%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D+136+%D7%A0%D7%AA%D7%99%D7%91%D7%95%D7%AA" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>ניווט</a>
+    <a href="tel:+97289752093"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>חיוג</a>
+    <a href="https://www.instagram.com/haofe_bakery/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor"/></svg>אינסטגרם</a>
+  </nav>
+</div>
+</template>
+
+<script>
+window.PROTO = {
+  init: function (root, ctx) {
+    /* rack: buttons as the drag alternative, progress bar follows scroll position (RTL scrollLeft is <= 0) */
+    var track = root.querySelector('[data-track]');
+    var prev = root.querySelector('[data-prev]'), next = root.querySelector('[data-next]');
+    var prog = root.querySelector('[data-prog]');
+    function step() { var it = track.querySelector('.item'); return it ? it.getBoundingClientRect().width / (track.getBoundingClientRect().width / track.clientWidth) + 14 : 300; }
+    function update() {
+      var max = track.scrollWidth - track.clientWidth;
+      var pos = Math.abs(track.scrollLeft);
+      var p = max > 0 ? pos / max : 1;
+      prog.style.setProperty('--p', Math.max(0.08, p).toFixed(3));
+      prev.disabled = pos < 4;
+      next.disabled = pos > max - 4;
+    }
+    function go(dir) { track.scrollBy({ left: -dir * step(), behavior: ctx.reduced ? 'auto' : 'smooth' }); }
+    next.addEventListener('click', function () { go(1); });
+    prev.addEventListener('click', function () { go(-1); });
+    track.addEventListener('scroll', update, { passive: true });
+    track.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(-1); }
+    });
+    requestAnimationFrame(update);
+
+    /* process: the step nearest the middle of the viewport is lit; caption on the reel follows */
+    var steps = [].slice.call(root.querySelectorAll('[data-step]'));
+    var cap = root.querySelector('[data-cap]');
+    var names = ['בצק', 'התפחה', 'תנור', 'מדף'];
+    if ('IntersectionObserver' in window && !ctx.reduced) {
+      var io = new IntersectionObserver(function (en) {
+        en.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          var i = +e.target.getAttribute('data-step');
+          steps.forEach(function (s, j) { s.classList.toggle('on', j === i); });
+          cap.textContent = 'שלב ' + (i + 1) + ': ' + names[i];
+        });
+      }, { root: ctx.scroller, rootMargin: '-45% 0px -45% 0px' });
+      steps.forEach(function (s) { io.observe(s); });
+    }
+  }
+};
+</script>
+<script src="shell.js"></script>
+</body>
+</html>
