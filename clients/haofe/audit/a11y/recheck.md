@@ -253,3 +253,79 @@ node motion.js; node mapseq.js
 node reflow.js; node ftscan.js; node verify-fix.js      # verify-fix.js injects fix-recheck.css (= recheck-fix.css)
 node forced.js; node forced2.js; node index-check.js; node axe-page.js
 ```
+
+---
+
+## Round 2 · independent verification of iteration 3.1 · 24.10.2026, 12:36 to 13:35 UTC
+
+Verifier role: independent and read-only on `concepts/` and `site-plan/`. SHA-256 of `b.html b.css b.js b-motion-* shell.* index.*`, the skeleton `page.css` and its test file were the same at the start and at the end (`…/scratchpad/agents4/verify5/hashes-start.txt`, `hashes-end.txt`).
+
+**Method.** I copied this audit's scripts to `…/scratchpad/agents4/verify5/a11y/` and changed only one thing: the concepts path became an environment variable. Then I ran each script twice:
+- on an exact copy of iteration 3, to reproduce the failure. The copy is `verify5/base/`, rebuilt from `qa/cc` plus the original scroll module from `shell5/cc0`. Every file matches the hashes in `a11y-hashes-recheck-start.txt`.
+- on the live files, to show the fix.
+
+`behaviors.js` got one tolerance: the first Tab stop may now be the skip link. Raw output is in `verify5/a11y/out` (live files) and `out-base` (iteration 3). The logs are `*-now.log` and `*-base.log`.
+
+### R2.1 Verdict
+
+Iteration 3.1 fixes all eight new findings, N1 to N8, and nothing regressed. One new medium issue came with the in-flow map labels: with WCAG text spacing on a wide map, the Netivot opening hours run past their label (R2.4, N9). Apart from that, the prototype passes every check I ran in this round. The open items A11Y-13, 16 and 22 are still waiting for the owner, legal or the build, as expected.
+
+### R2.2 N1 to N8
+
+| ID | status | iteration 3 (reproduced) | iteration 3.1 |
+|---|---|---|---|
+| N1 footer reflow and overlap | **fixed** | `ftscan.js`: the number was clipped by 80, 70, 60, 50, 40, 30, 20 and 10 px at 300 to 370. The side column covered the main one by 6,651 px² at 700, falling to 71 at 870. `reflow.js` at 720×450: "קריית גת" fully covered (5/5 points) by `ul.ft-social`, forward and backward. | `ftscan.js`: no failing width from 300 to 1200. `reflow.js` at 720×450: 0 fully covered stops (one polaroid is partly covered at 1 of 5 points, as in iteration 3). QA `ftnum.js`: footer number 74..300 inside a 20..300 column at 320, and the receipt number 51..279 inside a 18..302 slip. |
+| N2 text spacing | **fixed** (but see N9) | `verify-fix.js`, no injection: label overlap 18,746 px² at 1280 and 8,747 at 1440. Footer overlap 381 and 525. At 320, 9 clipped items (receipt h2, number, status, footer). At 390, 5. | Every case 0: footer overlap, clipped items and label overlap, at 320, 360, 720, 768, 860 and 1440, and with spacing at 320, 390, 1280 and 1440. `verify5/qa/mapcol5.js`: no label touches a pin, chip, tag, the route, the arrow north, "לסופרים בכל הארץ", the north arrow or the scale, at 13 widths, in dark and with spacing at 1000, 1280, 1440 and 1920. |
+| N3 leader contrast | **fixed** (the leaders were removed) | leaders 2.95 to 2.99:1 | No leaders are drawn (`.leaders` has no geometry). Pins and labels are tied by the same mark, checked at every width: 1/2/3, the square, the dotted ring. Pixel contrast: pin chips 7.80:1 (#17100B on caramel), label chips 7.49:1 (#FFFAF2 on #7A4520). |
+| N4 overlay `.vp` Tab stop | **fixed** | 1st stop after "סגירה" was the `.vp`, with 0% of its ring visible | The overlay `.vp` has no `tabindex`, and the first Tab goes to the skip link (1440 and 390). PageDown, ArrowDown, End and Home still scroll it from focus inside (scrollTop 0 → 596 → 636 → 3963 → 0, `verify5/qa/kbscroll.js`). The keyboard walk has one stop fewer (32 against 33 at 1440 motion). A page frame's focused `.vp` now shows a 3px #23408C ring on the frame box (`verify5/shots/frame-ring.png`). |
+| N5 jump offset | **fixed** | QA `hd.js`: label top 64 to 65 under a 75px header at 1440 and 1280. `behaviors.js`: "לעסקים" and the footer cities had their heading at 128 to 133, under a header bottom of 133. Skip and logo jumps stopped at scrollTop 11. | Label top at 87 to 88 under 75 (1440, 1280) and 75 to 76 under 63 (390). Every jump, in 4 runs (1440 and 390, motion and reduced), lands with its heading clear of the header (gap 8 to 13px) and above the bar. Skip and logo jumps reach scrollTop 0. |
+| N6 map entrance length | **fixed** | `mapseq.js` (screenshot diff after rest): last moving frame at 5,392 ms (1440) and 4,039 ms (390) | 3,059 ms (1440) and 3,044 ms (390). The QA probe: complete at 2.5 s, against 3.5 to 3.6 s before. |
+| N7 presentation-page table | **fixed** | `axe-page.js` 390: `scrollable-region-focusable` (serious) on `.tbl-wrap` | Gone. `.tbl-wrap` has `role=region tabindex=0 aria-labelledby` pointing to a hidden caption. The remaining items are the known artefacts of three mounted copies: landmark ×3, ×1 and ×8, and `target-size` ×4 in the scaled desktop frame. |
+| N8 English phrase | **fixed** | no `lang` | `<span lang="en" dir="ltr">© OpenStreetMap contributors</span>`. The bidi scan finds 0 problems in the overlay at 1440 and 390 and on the presentation page. |
+
+Still open by design: A11Y-13 (the statement link is still `href="#"` with "תיכתב אחרי הבדיקה"), A11Y-16 (all 7 Instagram links still go to the profile) and A11Y-22. A11Y-20 is advisory and unchanged.
+
+### R2.3 Fresh regression sweep (live files)
+
+| check | result |
+|---|---|
+| axe-core 4.10.2 (cdnjs copy, sha256 `b511cd9d…`), overlay, 14 runs (8 configurations, 2 launch-day, 4 with the phone menu open) | only `landmark-banner/contentinfo/main-is-top-level`, 1 node each, the shell-wrapper artefact, the same as before. `axe-bare.js` with the shell roles removed: **0** at 1440 light and 390 dark. |
+| pixel text contrast, 8 configurations plus launch-day and menu states (2,428 text lines) | 0 real failures. One measured group is below 4.5 at the 5th percentile: the first caption line of the 1st polaroid, 390 dark, p05 3.55 (median 14.42). It is a line-box artefact. The caption's axis-aligned line box clips the corner of the photo on the rotated card. The card geometry is the same as in iteration 3 within 1px (`verify5/qa/polacmp.js`), and the glyphs clear the photo (`verify5/shots/pola-now-dark.png`). The smallest real margin is unchanged: footer `.ft-b2b` / `.tbd` in light at 1.13× the requirement. |
+| keyboard walk, focus visibility under sticky bars (8 configurations, `keyboard.js` + `ring.py`) | 32/31 stops at 1440 and 30/29 at 390 (motion/reduced), all `:focus-visible`. Ring visibility and contrast are identical to the iteration-3 run, apart from the removed `.vp` stop. The only "covered" stop is the production-house phone at 1 of 5 points, already in iteration 3: a sample point falls in the gap of the wrapped inline link. Shift+Tab from "סגירה" goes to `body` with the page behind inert. |
+| behaviour (`behaviors.js`, 4 runs) | Skip link visible and on top. Theme Enter/Space keeps focus. Menu: open, Tab past the end closes it, Esc on the button and in the panel, choosing a link, and Shift+Tab all pass. Phone rail polaroids fully inside. Overlay Esc returns focus. Soon state: the live link is `display:none` with no `href`, and no app URL is shown. |
+| text spacing | see N2, plus N9 below |
+| reflow 320 and zoom 200/300/400 % (`reflow.js`, 7 sizes, Tab forward and back) | no horizontal scroll, and 0 fully covered stops at any size. The only items "past the viewport" are the phone feed rail's off-screen cards, a sideways rail by design. The visually hidden `.order-n` is reported as "clipped", as before. |
+| motion (`motion.js`) | Every document-timeline animation has ended by 4 to 5 s; after that only scroll-linked ones remain. The dust canvas is `display:none`. 0 rAF callbacks per second at 10 s. 0.0% of pixels change between 8.0 and 9.5 s (ticker masked). The ticker pauses with Enter, stays still while scrolling, and its top rate while scrolling is 1.36 to 1.45 (under the 1.5 cap). Reduced motion, from the switch and the system setting: 0 animations, no module classes, route complete, 0 hidden pins. |
+| content left hidden after scroll patterns (QA `patterns.js` at 1440 light, 390 dark, 1280 dark; QA matrix at 20 configurations) | 0 hidden after a fling to the end, scrolling back up, and every nav, menu, footer, bar and logo jump (at 2 s). A stop mid-boxes clears by 500 to 800 ms. After the full scroll-through, nothing is hidden in any configuration. |
+| console | 0 console errors, 0 page errors and 0 failed requests in every run. |
+| horizontal scroll | none at 17 widths from 320 to 1920 (QA `layout.js`, light and dark). |
+| skeleton suite (run on a scratch copy, `verify5/sk`, so `site-plan/` was not written) | 23/23 passed, including "skip link first", "lands below the sticky header", "no horizontal scroll at 320/390/768/1280" and the contract-2 module checks. |
+
+### R2.4 New finding
+
+**N9 · Text spacing: the Netivot opening hours run past their label on a wide map · medium**
+1.4.12 Text Spacing (AA) **(2.1)**
+
+- **Where.** The labels now stand in grid tracks. Netivot's track is 26% of the map (it was a 29% absolute box). Each row of `ul.hrs li` is `display:flex` with no wrap, and its `bdi[dir=ltr]` is `nowrap`.
+- **Measured** (`verify5/qa/lblover.js`, text-node rectangles against the label box). With the WCAG spacing values, "20:00–23:00" runs past the label's start edge by:
+
+  | width | overflow |
+  |---|---|
+  | 1000 and 1100 | 3.9 px |
+  | 1280 | 6.6 px |
+  | 1366 | 4.6 px |
+  | 1440 and 1920 | 1.1 px |
+
+  "05:00–15:00" and "05:00–22:00" run into the padding. Past the box the dark text sits on the dark map, so at 1280 the leading "2" disappears and the time reads "0:00–23:00" (`verify5/shots/netivot-hrs-1280sp.png`). Iteration 3 was clean at the same sizes. Default spacing is clean.
+- **Fix** (b.css): `.pb .hrs li { flex-wrap: wrap; column-gap: 10px; }`, so the time drops under its day when the row cannot fit. The other option is a slightly wider Netivot track (`minmax(26%, max-content)`). After either change, rerun `lblover.js` and `mapcol5.js`.
+
+### R2.5 How to reproduce
+
+From `…/scratchpad/agents4/verify5/a11y/` (prefix `A11Y_OUT=out-base CONCEPTS=…/verify5/base` for iteration 3):
+```
+node ftscan.js; node verify-fix.js; node reflow.js; node axe-run.js; node axe-page.js; node axe-bare.js
+node behaviors.js; node keyboard.js && python3 -I ring.py out keyboard.json
+node contrast-collect.js && node heroColors.js && python3 -I contrast-analyze.py out
+node mapseq.js; node motion.js; node bidi.js; node targets.js; node tree.js
+```
+From `…/verify5/qa/` (prefix `QA_OUT=out-base QA_URL=file://…/verify5/base/b.html` for iteration 3): `node ftnum.js; node hd.js; node layout.js; node patterns.js; node matrix5.js; node mapcol5.js; node lblover.js; node kbscroll.js; node polacmp.js`.

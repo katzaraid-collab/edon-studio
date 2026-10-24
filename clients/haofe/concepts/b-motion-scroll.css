@@ -19,10 +19,11 @@
          map copy        heading rises, the quote is written in from the start side, lines follow
                          (.here-copy)
          map             the dotted route draws with scroll (Ofakim > Netivot > Sderot > Kiryat
-                         Gat); each pin is stamped, its oven glow flaring, when the line reaches it;
-                         then the production house, its bread leaving north, "לסופרים בכל הארץ".
-                         At rest it plays the rest by itself and ends within about 3.2 s; after a
-                         jump to the map it plays at double tempo
+                         Gat), dot by dot (the route's own dash pattern, set by the JS); each pin is
+                         stamped, its oven glow flaring, when the line reaches it; then the
+                         production house, its bread leaving north, "לסופרים בכל הארץ". At rest it
+                         plays the rest by itself and ends within about 3 s; after a jump to the
+                         map it plays at double tempo from the click
          place labels    swing in on a nail (.place): on a map with the labels on it (b.css
                          --map-labels: on) right after their pin, the production house last; under
                          a narrow map as the list scrolls in
@@ -45,13 +46,16 @@
          .shot::after          transform here (waiting, landing); scale and opacity are micro's
          .pin                  transform + opacity here (b.css centres it with `translate`); its
                                ::before glow is not animated here any more (it rides the pin's stamp)
-         .route, .out          a JS mask (stroke-dashoffset on the mask path) while drawing
+         .route                visibility + stroke-dasharray, inline, while drawing (the first n
+                               dots of b.css's own "0 8" pattern, then one long gap); removed after
+         .out                  a JS mask (stroke-dashoffset on the mask path) while it draws
        Everything is composite 'replace', so the compositor runs it (an 'add' animation falls back
        to the main thread). One animation per element and entrance where opacity and movement go
        together (property-specific keyframes), so an entrance costs as few animated elements as it
-       can. While the line draws, its mask repaints the map's svg each frame; the svg is not given a
-       layer of its own (measured: with the labels on top of it that cost more paint and layerize
-       work than it saved). Nothing here uses will-change: the compositor promotes an element only
+       can. While the line draws only the route path repaints, once per new dot (3.1: the mask it
+       had before re-rastered the whole map each frame, about 1.5 ms a frame on a desktop); the svg
+       is not given a layer of its own (measured: with the labels on top of it that cost more paint
+       and layerize work than it saved). Nothing here uses will-change: the compositor promotes an element only
        while its animation runs.
      - nothing here under .rm: the JS adds no classes and no nodes there; the map is complete, and
        b.css section 6 turns the ticker into a static wrapping list
@@ -75,8 +79,8 @@
      .pin      .sx-on (stamped)
      .map-art  .rv-done (the map has played; a reboot does not replay it)
      injected  .sx-layer > img.sx-fly (aria-hidden copies of the three leaping products, removed on
-               landing); svg > mask#sx-mask-N (the route's and the arrow's reveal), removed when the
-               map is done
+               landing); svg > mask#sx-mask-N (the arrow's reveal, and the route's if its dash
+               pattern is not b.css's round dots), removed when the map is done
    ========================================================================== */
 
 

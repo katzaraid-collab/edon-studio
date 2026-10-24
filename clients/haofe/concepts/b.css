@@ -121,10 +121,8 @@
                   of their own at their pin's height, Sderot > production house > Ofakim stacked in the
                   west column. A label that grows pushes the next one (or the section) down, and nothing
                   overlaps. The chips stay on the pins; the tags go (the labels name the places).
-                  .places is never position: absolute now, so b-motion-scroll.js's overlay test
-                  (getComputedStyle(places).position === 'absolute') reads false at every width and the
-                  labels take the list path (each swings in as it scrolls in). The wide layout sets
-                  --map-labels: on on .places: test that to bring back "each label right after its pin".
+                  The wide layout sets --map-labels: on on .places; b-motion-scroll.js reads it to swing
+                  each label in right after its pin (narrower maps: the list enters as it scrolls in).
                 The scroll module draws the route through a mask over .route, stamps the pins in route
                 order and lights .pin::before; under .rm the map is simply complete.
      feed       .feed (::before = serrated bag edge)  .polas (a rail under 700px: scroll-snap,
@@ -231,7 +229,7 @@
   --line: rgba(247, 241, 230, .14);
   --line-strong: rgba(247, 241, 230, .45);
   --shadow: 0 16px 28px -14px rgba(0, 0, 0, .75);
-  --map-bg: #100B07;  /* a step below the page, edged by a line on top, so the map is its own ground (design 13) */
+  --map-bg: #0B0705;  /* clearly below the page (#17100B) even with the grain on top, plus a line: the map is its own ground (design 13) */
   color-scheme: dark;
   /* light text on a dark ground needs a little more air (design finding 7) */
   line-height: 1.66;
@@ -557,7 +555,7 @@
 .pb .lbl dt { color: var(--ink2); font-weight: 500; }
 .pb .lbl dd { min-width: 0; }
 .pb .hrs { list-style: none; margin: 0; padding: 0; font-variant-numeric: tabular-nums; }
-.pb .hrs li { display: flex; gap: 10px; justify-content: space-between; max-width: 15em; }
+.pb .hrs li { display: flex; flex-wrap: wrap; column-gap: 10px; justify-content: space-between; max-width: 15em; }  /* wraps under WCAG text spacing (N9) */
 .pb .lbl a { font-weight: 600; text-underline-offset: 3px; }
 .pb .lbl .go { display: inline-flex; align-items: center; min-height: 30px; padding: 0 12px; border-radius: 10px; background: var(--btn); color: var(--on-btn); text-decoration: none; font-weight: 700; font-size: 13px; }
 .pb .lbl-note { font-size: 12px; line-height: 1.4; color: var(--ink2); }
@@ -722,7 +720,7 @@
   .pb .places {
     --map-labels: on;
     grid-area: 1 / 1; align-self: start; position: relative; z-index: 1; margin: 0; pointer-events: none;
-    grid-template-columns: 2% 26% 26% minmax(0, 1fr) 29.5% 1.5%; align-items: start; gap: 2.2cqw 0;
+    grid-template-columns: 2% 26% 26% minmax(0, 1fr) 29.5% 1.5%; align-items: start; gap: 2.2cqw 1cqw;
     /* on a big map the west stack spreads: the production house's label starts no higher than about
        130px above its square (y 400 = 50cqw), Ofakim's follows; on a 760-800px map the stack is tight */
     grid-template-rows: minmax(calc(50cqw - 130px), auto) auto auto;

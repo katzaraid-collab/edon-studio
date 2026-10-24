@@ -19,8 +19,9 @@
    plop (--spring-settle). The boxes, their names and lists are never hidden: only the images wait.
 
    THE MAP  ("אנחנו כאן.", the page's peak of pride) the dotted route Ofakim > Netivot > Sderot >
-   Kiryat Gat draws itself as the visitor scrolls (stroke-dashoffset on a mask over the dotted
-   path, so the dots stay dots). The scroll only ever adds to it, and a short catch-up keeps the line
+   Kiryat Gat draws itself as the visitor scrolls, dot by dot (the first n dots of its own dash
+   pattern, then one long gap; a mask only if b.css ever changes the pattern). The scroll only ever
+   adds to it, and a short catch-up keeps the line
    smooth between wheel steps. The range is measured so the line starts when Ofakim is on screen
    and ends while Kiryat Gat still is. Each stop stamps its logo pin when the line reaches it and
    its oven lights up (the pin's glow). On a map wide enough for the labels to stand on it (b.css:
@@ -29,10 +30,11 @@
    production house is stamped, its bread leaves the map northward (the arrow draws) and "לסופרים
    בכל הארץ" arrives last, with its label.
      - pause with part of the map in view: the rest plays by itself, and the whole entrance has
-       ended within about 3.2 s of coming to rest (a11y N6: under 4 s)
+       ended within about 3 s of coming to rest (a11y N6: under 4 s)
      - a jump to the map (hero "בחרו סניף", "סניפים", the bar's "ניווט": the shell focuses
-       section.here): it plays at double tempo as soon as the map is in view, every label readable
-       about 1 s after the click (design 5)
+       section.here as its smooth scroll starts): it starts at once at double tempo, the map arrives
+       with its last pins and labels landing, every label readable about 1 s after the click
+       (design 5)
      - a jump to a label (footer cities, "לעסקים": the shell focuses the label), keyboard focus in
        a label, or a jump past the map: it is complete at once
 
@@ -714,23 +716,25 @@
           here: here, art: art, svg: svg, route: route, places: here.querySelector('.places'),
           pins: qa('.pin', art), stops: [], tail: [], anims: [], masks: [],
           p: 0, goal: 0, last: -1, auto: false, fast: false, done: false, vis: false, tailOn: false, geomOk: false,
-          top: 0, h: 0, visTop: 0, s0: 0, s1: 1, y0: .7, y1: .075, overlay: false, mp: null, dots: 0
+          top: 0, h: 0, visTop: 0, s0: 0, s1: 1, y0: .7, y1: .075, overlay: false, mp: null, dots: 0, gap: 0
         };
         here.classList.add('sx-map');
         /* the dotted line grows dot by dot through its own dash pattern (design 10: a mask over the
            route re-rastered the whole map every frame of the draw, about 1.5 ms a frame on a desktop);
            a pattern this cannot read falls back to the mask */
-        m.dots = routeDots(route);
+        routeDots(m);
         if (m.dots) route.style.visibility = 'hidden'; else m.mp = addMask(m, route);
         return m;
       }
       /* b.css draws the route as round dots: stroke-dasharray "0 G" on pathLength="L", so the dots sit
-         at 0, G, 2G ... L: L / G + 1 of them. Returns that count, or 0 for any other pattern */
-      function routeDots(route) {
-        var da = (getComputedStyle(route).strokeDasharray || '').split(/[\s,]+/).map(parseFloat).filter(isFinite);
-        var L = parseFloat(route.getAttribute('pathLength'));
-        if (da.length !== 2 || da[0] !== 0 || !(da[1] > 0) || !(L > 0)) return 0;
-        return Math.floor(L / da[1] + 1e-6) + 1;
+         at 0, G, 2G ... up to L: floor(L / G) + 1 of them. Sets m.dots and m.gap (G), or leaves
+         m.dots at 0 for any other pattern */
+      function routeDots(m) {
+        var da = (getComputedStyle(m.route).strokeDasharray || '').split(/[\s,]+/).map(parseFloat).filter(isFinite);
+        var L = parseFloat(m.route.getAttribute('pathLength'));
+        if (da.length !== 2 || da[0] !== 0 || !(da[1] > 0) || !(L > 0)) return;
+        m.gap = da[1];
+        m.dots = Math.floor(L / da[1] + 1e-6) + 1;
       }
       /* the dotted path is revealed by a solid stroke in a mask, so the dots stay round dots while
          the line grows (the mask path keeps user units: vector-effect none) */
@@ -837,9 +841,9 @@
           if (!n) { r.style.visibility = 'hidden'; return; }
           r.style.visibility = '';
           if (n >= m.dots) { r.style.removeProperty('stroke-dasharray'); return; }
-          var gap = (parseFloat(r.getAttribute('pathLength')) || 1000) / (m.dots - 1), parts = [];
-          for (var i = 1; i < n; i++) parts.push('0 ' + gap);
-          parts.push('0 ' + (2 * (gap * m.dots + 1)));
+          var parts = [];
+          for (var i = 1; i < n; i++) parts.push('0 ' + m.gap);
+          parts.push('0 ' + (2 * (m.gap * m.dots + 1)));
           r.style.strokeDasharray = parts.join(' ');
           return;
         }

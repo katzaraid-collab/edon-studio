@@ -61,6 +61,13 @@
   --b-pool-l: 58.62% 51.72%; /* scene 60% 52%, in the light layer */
   --b-glow: 30% 40%;         /* the glow's reach, in the light layer */
 }
+@container pb (min-width: 700px) {
+  .pb .hero {
+    --b-pivot: 50% 88%;        /* tablet: b.css .sc-bag { left: 50%; bottom: 12% } */
+    --b-pivot-o: 50% 86.89%;
+    --b-pivot-l: 50% 82.76%;
+  }
+}
 @container pb (min-width: 1000px) {
   .pb .hero {
     --b-wide: 1;

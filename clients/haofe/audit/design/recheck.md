@@ -210,3 +210,99 @@ At 390, 4 of the 5 wrapped lines start with a wheat mark (`out/spots/tk-390-rm.p
 - **Confirmed fixed:** the hero loops end within 5 s; the scroll and micro modules no longer touch the removed structure; the jump-past safety net, the dwell rule, and the late boot on a real page all work.
 - **Not reproduced:** "content left hidden after a jump" does not happen in any of the patterns I tried.
 - **Still open from the implementers:** the skeleton tests (`unported modules skipped` and the 327px overflow at 320) belong to the site owner. The real-device and Firefox/WebKit measurements are still missing.
+
+---
+
+## Round 2 · independent verification of iteration 3.1 · 24.10.2026, 12:36 to 13:35 UTC
+
+I am the independent verifier. I was read-only on `concepts/` and `site-plan/`. The file hashes were identical at the start and at the end (`…/scratchpad/agents4/verify5/hashes-start.txt`, `hashes-end.txt`).
+
+**Method.** This review's scripts were copied to `…/scratchpad/agents4/verify5/qa/`. In `common.js` the only change is that the output folder became an environment variable. Each check ran twice, both in Playwright Chromium with `[data-full]`:
+- on an exact copy of iteration 3 (`verify5/base/`, with hashes equal to the iteration-3 set), to reproduce the problem;
+- on the live files.
+
+Logs: `verify5/qa/*-base.log` and `*-now.log`. Screenshots: `verify5/qa/out`, `out-base` and `verify5/shots` (base/now pairs are in `shots/pair/`).
+
+### R2.1 Verdict
+
+Iteration 3.1 delivers most of this list:
+- **14 of 17 findings are fixed**, among them both HIGH items and the peak.
+- **#10 (frame times) is not fixed.** Interleaved runs show no change on the throttled phone or on the desktop; the laptop at CPU ×2 improved a little.
+- **#13 (dark map edge) is not fixed in effect.** The prescribed values are in, but the result looks the same as iteration 3.
+- **#17** is fixed for the orphan word and the tape. The phone page is still above the ~5,000px target.
+
+I found two new problems with the in-flow map labels:
+- a text-spacing overflow in the Netivot hours (medium, also N9 in the a11y report);
+- the Kiryat Gat and Netivot labels touching edge to edge (low).
+
+There are also some stale comments.
+
+### R2.2 The 17 findings
+
+| # | status | iteration 3 (reproduced) | iteration 3.1 |
+|---|---|---|---|
+| 1 peak on laptop/desktop | **fixed** | `leap.js` gave the same table as above: 1280 none at any speed, 1440 fast none, and the challah never leapt at 1000px or wider | **18 of 18** runs have the frena, the challah and the baguette leap: 1440, 1280, 1920, 1100, 768 and 390, each slow, medium and fast. Screencast frames (`verify5/qa/out/peak5/`, sheets `shots/peak5-1280.png` and `peak5-1440.png`): on desktop the copies arc in from under the header into their windows, and nothing crosses the "מה יש בקופסה" heading. |
+| 2 footer and receipt number on small phones | **fixed** | `ftnum.js` at 320: footer number −60..208 and receipt number 3..273 with the slip at 17 | Footer number 74..300 in a 20..300 column, receipt number 51..279 in an 18..302 slip. Inside at 320, 360, 375, 384, 390 and 412. Sticker on top below 420px (`shots/pair/ft-320.png`, `slip-320.png`). |
+| 3 tablet footer overlap | **fixed** | a11y `ftscan.js`: 6,651 px² at 700, falling to 71 at 870 | 0 from 300 to 1200. Three columns only from 1000px (`shots/pair/ft-760.png`). |
+| 4 jumps under the header | **fixed** | `hd.js`: label top 64 to 65 under a 75px header. Logo jump stopped at scrollTop 11. | Label top 87 to 88 under 75 (1440, 1280) and 75 to 76 under 63 (390). Logo and skip jumps reach scrollTop 0. Every jump lands its heading 8 to 13px under the header. |
+| 5 map late after "בחרו סניף" / "סניפים" | **fixed** | `verify5/qa/jumpmap5.js`: everything in view was visible only 4.0 to 4.3 s after the click (1440 hero and nav, 1280, 390 hero and bar) | Everything in view is visible 1.46 to 1.52 s after the click on desktop and 1.20 to 1.36 s on the phone, about 0.3 s after the smooth scroll rests. The scroll owner's "readable at 0.84 to 0.96 s" is a little optimistic: in my probe 4 to 5 map items are still fading at 1.0 s. |
+| 6 tablet hero | **fixed** | hero 1,103px tall at 768 and 1,369px at 999 | 684px at 768 and 829px at 999. The breads stay under the buttons and the AI note (`shots/hero768-zoom.png`). The hero owner's `overlap.js`, run from a copy at 700, 768 and 999: **0** wheat-over-bag pixels through the opening (18 times), the scroll (8 positions) and the pointer lean (5 positions). Residual for the hero owner: `--b-pivot` is still 50% 80% at 700 to 999 while the bag's contact point is 50% 88%, about 1px of drift. At 999×800 the sticker is half under the bottom bar at load (cosmetic). |
+| 7 map taller than the screen | **fixed** at the two named sizes | map 872 vs 767 visible (1440×900), 765 vs 668 (1280×800) | 720 vs 767 (1440×900) and 636 vs 667 (1280×800), from `verify5/qa/mapcol5.js`. Still a little taller than the screen: 1366×768 (679 vs 635) and 1000 to 1250 (693 vs 667 to 687). In both cases the route itself (y 40 to 543 of 660) fits. Every pin is still on the route (distance from pin centre to path 0 to 2.5px, the sampling step). |
+| 8 1180 to 1260 list beside an empty corner | **fixed** | the section was 1,509px (1180) and 1,567px (1250), with the copy column starting about 530px down | The copy sits above a centred 840px map with the labels on it. The section is 1,285 and 1,301px (`qa/out/mapcol/1250x820-light.png`). |
+| 9 lone receipt at the far left | **fixed** | receipt at the end side, band 550px | Receipt centred, band 435px. One `--sec` between the shelf and the receipt (`shots/pair/order-1440.png`, `shelf-order-1440.png`). |
+| 10 frame times | **not fixed** | (measured as below) | See R2.4. Phone CPU ×4 scroll mean was 31.8 ms on iteration 3 and is 31.9 ms now, p50 33.3 ms in both. Desktop ×1: 23.7 against 23.5 ms. Laptop ×2: 26.0 against 24.6 ms. Composited layers are unchanged (about 100 with motion, 46 to 48 reduced). The drift was removed and the route mask replaced; the throttled phone still scrolls at about 30 fps. |
+| 11 theme switch | **fixed** (the view-transition path checked by structure only) | screencast of the in-page toggle at 1440: the logo is nearly blank at 806 ms (ink share 0.055 against 0.33 at rest, `shots/logo-toggle-base.png`), and 3 frames of dark headline on a darkened wall | The in-page toggle now runs one scoped view transition on the `.vp` (`b-micro-dusk` 450 ms on `::view-transition-old(root)`), with mode, `aria-pressed` and focus correct and 0 errors. No blank logo frame on either path (`shots/logo-toggle-now.png`, `logo-setMode-now.png`). The token-fade path (`Shell.setMode`) shows 1 to 2 low-contrast hero frames, against 3 before (`shots/hero-setMode-*.png`). Headless capture cannot show the view-transition snapshot itself, so a quick look in a headed browser is still worth doing. |
+| 12 footer edge | **fixed** | flat seam under a straight inset shadow | Upward teeth with a hairline, visible in light and dark (`shots/ftedge-zoom.png`). |
+| 13 dark map edge | **not fixed** (no visible change) | iteration 3 already had `--map-bg #110B07` and a 1px top line in dark | `#100B07` and the same line. Measured on screen at 1440 dark: page ground 23,16,11, map ground 22,17,13 now against 23,17,13 before. The map's texture lifts its ground to the page's colour, so the edge is still only the 1px line (53,47,42), exactly as before (`shots/pair/seam-1440-dark.png`). **Fix:** a perceptible step, for example `--map-bg #0B0705`, or a lighter grain on `.here` in dark, or the line at about 0.22 alpha. Then compare the medians again. |
+| 14 phone pin chips over the logo | **fixed** | chips covered about 40% of the badge | The chips sit outside the badge on caramel and the badge is whole (`shots/map390-2x-now-light.png`). Chip text 7.80:1. |
+| 15 reduced-motion tape | **fixed** | 4 of 5 lines started with a wheat mark | No line starts with a mark. The tape at 390 is 136px tall (was 208) (`shots/pair/tk-390-rm.png`). |
+| 16 b.css housekeeping | **fixed** for the listed items | stale notes, dead scrim, duplicate comment | "NOTES FOR THE MOTION FILES", the dead `.hero::before` scrim and its `content:none`, `.b-hold .sc-shade`, the dark `.sc-bag-img` filter and the duplicate comment are gone. New stale text, because two owners worked in parallel, is listed under R2.3. |
+| 17 phone length and orphan | **fixed** for the orphan and the tape; the length stays above target | 5,432 / 5,580px (motion / reduced), "בעונה." alone | Phone page 5,359 / 5,435px, still about 7 to 9% above the ~5,000 target (a design call, not a defect). `text-wrap: pretty`: the subtitle ends with "וסופגניות בעונה." on its second line (`shots/pair/sub-390.png`). |
+
+Owner rules are intact and match iteration 3 exactly:
+- the online order is "בקרוב" only, the phone 1700-55-22-55 leads, and no app URL appears in the soon state;
+- the production house and "לחמים לסופרים בכל הארץ" are on the map;
+- the story is still "טיוטה … לאישורכם";
+- the counts in `b.html` are unchanged: 16 `.tbd`, 14 "הדמיית AI", 6 "בקרוב";
+- light is the default, and dark is fully styled.
+
+Prototype rules hold: no `position: fixed` and no window scroll in the modules, and the scoped ids are kept.
+
+### R2.3 New problems
+
+1. **MEDIUM · the Netivot hours run past their label with WCAG text spacing (1000 to 1920px).** The Netivot track is now 26% of the map and `.hrs li` does not wrap, so "20:00–23:00" sticks out of the label by 1 to 6.6px. At 1280 its "2" disappears on the dark map (`verify5/shots/netivot-hrs-1280sp.png`, `verify5/qa/lblover.js`). Iteration 3 was clean. **Fix** (b.css): `.pb .hrs li { flex-wrap: wrap; column-gap: 10px; }`.
+2. **LOW · the Kiryat Gat and Netivot labels touch.** On wide maps the two columns have no gap (`gap: 2.2cqw 0`), so the cards meet with 0 to 1px between them over 10 to 40px of height at 1280 to 1920 (`verify5/shots/kg-netivot-1440.png`, `kg-netivot-1280d.png`). **Fix:** give `.places` a small column gap, about 1cqw, taking it from the 1fr route track, then rerun `mapcol5.js`.
+3. **LOW · stale comments.**
+   - b.css lines 124 to 129 still say the scroll module tests `position === 'absolute'` and draws the route through a mask that lights `.pin::before`. It now tests `--map-labels` and draws dot by dot.
+   - b-motion-micro.css line 55 says `.pin::before` gets "transform + opacity = scroll".
+   - Lines 455 to 460 of the same file still say b.css's `position: absolute` wins on the wide map.
+4. **LOW · hero pivot on tablets.** `--b-pivot` is 50% 80% at 700 to 999 while the bag's contact point is 50% 88% (hero owner, about 1px).
+
+### R2.4 Fresh sweep (live files)
+
+- **The peak:** 18 of 18, as in #1.
+- **The map route:**
+  - It draws dot by dot and is complete after the sequence: no inline visibility or `stroke-dasharray` left, 0 masks.
+  - A single instant jump also completes it (a11y `mapseq.js`).
+  - Reduced motion shows it whole.
+  - The whole map entrance ends 3.04 to 3.06 s after rest (was 4.0 to 5.4 s).
+- **Motion within 5 s:** every document-timeline animation has ended by 4 to 5 s. 0 rAF callbacks at 10 s, 0.0% pixel change from 8 to 9.5 s. Only the ticker loops, and it can be paused.
+- **Frame times.** Interleaved iteration-3 and live runs, same machine, light mode, `perf.js` method (`verify5/qa/perf5.js`, `perf5l.js`; `out/perf5*.json`):
+
+  | config | runs | scroll mean (ms) | p50 | slow frames over 34 ms | long tasks |
+  |---|---|---|---|---|---|
+  | phone 390, CPU ×4, iteration 3 | 3 | 33.8 / 30.1 / 31.5 | 33.3 | 25 / 17 / 23 % | 18 / 2 / 10 |
+  | phone 390, CPU ×4, 3.1 | 3 | 32.9 / 28.6 / 34.3 | 33.3 | 27 / 14 / 27 % | 6 / 2 / 26 |
+  | desktop 1440 ×1, iteration 3 | 3 | 24.0 / 23.2 / 23.8 | 16.7 | 6.9 / 5.7 / 8.2 % | 0 |
+  | desktop 1440 ×1, 3.1 | 3 | 23.1 / 24.1 / 23.3 | 16.7 | 5.6 / 7.1 / 7.0 % | 0 |
+  | laptop 1280 ×2, iteration 3 | 3 | 25.7 / 25.4 / 26.8 | 16.7 | 10.2 / 10.7 / 12.0 % | 0 |
+  | laptop 1280 ×2, 3.1 | 3 | 24.5 / 24.4 / 24.8 | 16.7 | 8.3 / 6.3 / 8.7 % | 0 to 1 |
+
+  Reduced motion is about 16.7 to 17.6 ms in both. The opening is unchanged.
+- **Errors:** 0 console errors, page errors and failed requests in every run, including the 20-configuration matrix.
+  - Matrix configurations: 1440×900, 1280×800, 768×1024, 390×844 and 320×640, each light and dark, motion and reduced (`#rm` then `[data-replay]`); `verify5/qa/matrix5.js`, sheets `verify5/shots/m5/`.
+  - After the scroll-through nothing is hidden, and nothing is left over: no hold, copy or mask.
+- **Horizontal scroll:** none at 17 widths from 320 to 1920 (`layout.js`, light and dark).
+- **Scroll patterns:** a fling, scrolling back up, a stop mid-boxes, and every nav, menu, footer, bar and logo jump at 1440, 390 and 1280: nothing hidden at 2 s (`patterns.js`).
+- **Theme:** see #11.
+- **Skeleton suite:** 23/23, run on a scratch copy.

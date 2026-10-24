@@ -46,13 +46,13 @@
                     translate / rotate = the scroll module's landing rock (WAAPI, composes)
      .prod          transform = this file on hover, ONLY once its box has landed (.rv-done) or when
                     the scroll module is not running (no .sx), so it never meets a landing
-                    the landing's transform (WAAPI, fill backwards) and translate (drift) = scroll
+                    the landing's transform (WAAPI, fill backwards) = scroll (no scroll drift since 3.1)
      .shot::after   scale, opacity = this file (hover)      transform = scroll (waiting, landing)
      .pola, .place  transform = this file (hover, pairing)  translate/rotate/scale/opacity = scroll
                     entrance; .place rotate is also this file's sway (WAAPI), never while an
                     entrance runs on it
      .pin           scale = this file (pairing)   transform + opacity = scroll (stamp)   translate = b.css
-     .pin::before   scale = this file             transform + opacity = scroll (the oven lighting)
+     .pin::before   scale = this file             (scroll no longer animates it: the glow rides the pin's stamp)
      .pin img       box-shadow = this file (the rim, switched, not animated)
      .place::after  everything = this file (the lifted label's longer shadow, faded by opacity)
      .order-status  transform-ish WAAPI (scale, rotate, opacity) = this file on the live switch;
@@ -456,8 +456,8 @@
    compositor's job): animating the label's large blurred box-shadow repainted it on every frame (one
    pointer pass over all pins and labels, Chromium trace at 1440: 1.37 s of main-thread work that
    way, 0.75 s this way). isolation keeps that layer just under the
-   label's own paint; :where() keeps the position at zero specificity, so on the wide map b.css's
-   `position: absolute` still wins (relative only applies to the list under a narrow map). */
+   label's own paint; :where() keeps the position at zero specificity, so b.css can still place the
+   label (on a wide map the labels stand on the map in flow; under a narrow map they are a list). */
 :where(.pb .place) { position: relative; }
 .pb .place { isolation: isolate; transform-origin: 50% -14px; transition: transform var(--dur-slow) var(--spring-settle); }
 .pb .place::after {
