@@ -1,0 +1,51 @@
+{
+  "_readme": "Site settings and the verified business facts the build writes into <head> (JSON-LD). Only facts with a source go here; hours and kashrut stay out until the owner confirms them (plan Q10, Q13). origin: the site's address, null until the owner picks a domain (Q5); while it is null the build writes no canonical, og:url or sitemap, and robots.txt keeps search engines out.",
+  "origin": null,
+  "name": "האופה - בוטיק לחם",
+  "orderLine": { "display": "1700-55-22-55", "tel": "1700-55-22-55", "source": "TikTok bio @haofe_bakery1, 24.10.2026" },
+  "sameAs": [
+    "https://www.instagram.com/haofe_bakery/",
+    "https://www.tiktok.com/@haofe_bakery1"
+  ],
+  "branches": [
+    {
+      "id": "netivot", "name": "האופה - בוטיק לחם נתיבות",
+      "street": "שדרות ירושלים 136", "city": "נתיבות",
+      "telephone": "+972-8-975-2093",
+      "geo": [31.4182247, 34.585906],
+      "source": "Google Maps, Badatz Beit Yosef, Walla 2021, netivotonline.com (24.10.2026)"
+    },
+    {
+      "id": "sderot", "name": "האופה - בוטיק לחם שדרות",
+      "street": "יגאל אלון 4", "city": "שדרות",
+      "telephone": null,
+      "geo": [31.5230457, 34.5957709],
+      "source": "Instagram 15.10.2026, Google Maps, Badatz Beit Yosef, Walla 2021"
+    },
+    {
+      "id": "kiryat-gat", "name": "האופה - בוטיק לחם קריית גת",
+      "street": "הרימון 70", "city": "קריית גת",
+      "telephone": null,
+      "geo": [31.6086063, 34.7699476],
+      "source": "branch post 6.10.2026, Google Maps, Badatz Beit Yosef"
+    }
+  ],
+  "pages": {
+    "index": {
+      "title": "האופה - בוטיק לחם | מאפייה בנתיבות, שדרות וקריית גת",
+      "description": "לחמים, חלות לשישי, פרנה, בורקס ורוגלאך מהתנור של האופה. שלושה סניפים: שדרות ירושלים 136 נתיבות, יגאל אלון 4 שדרות והרימון 70 קריית גת."
+    },
+    "accessibility": {
+      "title": "הצהרת נגישות | האופה - בוטיק לחם",
+      "description": "מה עשינו כדי שהאתר של האופה יהיה נגיש, מה עוד לא מושלם, ואיך לפנות אלינו."
+    },
+    "privacy": {
+      "title": "מדיניות פרטיות | האופה - בוטיק לחם",
+      "description": "איזה מידע האתר של האופה אוסף (כמעט כלום), מה נשמר בדפדפן שלכם, ואיך לפנות אלינו."
+    },
+    "404": {
+      "title": "העמוד לא נמצא | האופה - בוטיק לחם",
+      "description": "העמוד שחיפשתם לא נמצא."
+    }
+  }
+}
