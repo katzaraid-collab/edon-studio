@@ -1,0 +1,16 @@
+{
+ "unicodeRange": "U+0020-0040, U+005B-0060, U+007B-007E, U+00A0, U+00B7, U+0590-05FF, U+200C-2011, U+2013-2014, U+2018-201A, U+201C-201E, U+2026, U+20AA, U+25CC, U+FB1D-FB4F",
+ "files": {
+  "Secular One · static · Hebrew only": 3952,
+  "Secular One · static · Hebrew+digits+punct": 7288,
+  "Rubik · 400..700 · Hebrew only": 7004,
+  "Rubik · 400..700 · Hebrew+digits+punct": 16700,
+  "Playpen · static 600 · Hebrew only": 21080,
+  "Playpen · static 600 · Hebrew+digits+punct": 40492,
+  "Playpen · static 600 · Hebrew+digits+punct, no calt": 13224,
+  "Playpen · static 400 · Hebrew only": 20912,
+  "Playpen · static 400 · Hebrew+digits+punct": 40116,
+  "Playpen · static 400 · Hebrew+digits+punct, no calt": 12896,
+  "Playpen · variable 400..600 · Hebrew+digits+punct": 63992
+ }
+}

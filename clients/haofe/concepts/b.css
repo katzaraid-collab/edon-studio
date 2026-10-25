@@ -1,0 +1,760 @@
+/* ==========================================================================
+   Direction B · השקית — prototype styles (static look only). Version 3.1, 24.10.2026.
+
+   The brand as packaging: a kraft bag on the counter with the logo pressed on like a sticker,
+   a chocolate sealing tape (the ticker), kraft boxes with a window and the product list printed
+   on the face, a phone-order receipt, a to-scale map of the three ovens on the evening counter
+   ("אנחנו כאן."), the feed's own captions pinned on a board, and a folded bag bottom as the
+   footer. Source: clients/haofe/plan/plan.md section 2.1, with the owner overrides O2-O6
+   (supermarkets live on the map). Ordering is by phone only: on 24.10.2026 the owner took the
+   ordering app out of the site, so there is no online-ordering nav item, chip, status or switch.
+   3.1 answers the v3 rechecks (audit/a11y/recheck.md N1-N3, N7, N8 and audit/design/recheck.md
+   2, 3, 6-9, 12-17): footer and receipt reflow, the map's labels in flow on a cropped frame, the
+   tablet hero, the centred receipt, the footer edge, the reduced-motion tape.
+
+   FILE MAP (b.html loads them in this order)
+     shell.css            presentation page + shared photo slots (.ph, .ph--*, .ph-tag, .ph-cap, .tbd)
+     b.css                this file: tokens, layout and every static style of the prototype
+     b-motion-hero.css    opening: logo sticker press + ink ring, hero text rise, evening dim
+     b-motion-scroll.css  [data-rv] scroll reveals, ticker loop, section entrances
+     b-motion-micro.css   hover/press, theme toggle, menu
+     b.js                 PROTO.init: ticker pause, feed rail focus (no box lids)
+     b-motion-*.js        motion modules (window.ProtoModules), one per motion css file
+     shell.js             mounts <template id="proto"> into every frame (loaded last)
+   No animation, transition, :hover/:active movement or @keyframes belongs in this file;
+   it lives in the b-motion-*.css file that owns it.
+
+   SECTIONS OF THIS FILE
+     1 tokens (light, then dark)   2 base, focus, .sr-only, skip link   3 layout and shared pieces
+     4 components in page order: header, menu, hero, ticker (tape), boxes, order receipt,
+       map "אנחנו כאן.", feed board, footer (bag bottom), mobile bar
+     5 page container queries (@container pb: up to 419px, 700px, 1000px, 1000-1279px, 1180px,
+       1280px) and the map's own (@container map: below 760px, 760px)   6 reduced motion
+     7 short screens (max-height: 500px)
+
+   PAGE ORDER (data-section = in-prototype jump target, used by a[data-jump])
+     a.skip (first child, data-jump="top") · header.hd · main.pg-main: hero [top] · ticker ·
+     boxes [boxes] · order receipt [order] · map .here [visit] (its labels: [netivot] [sderot]
+     [kiryat-gat], the production-house label [b2b]) · feed [feed] · /main · footer.ft · nav.bar
+     REMOVED in v3, do not target: .story .story-card .draft, .b2b .b2b-band .b2b-copy .b2b-facts
+     .b2b-cta, .visit .labels .label .meta .row, .lid .lid-h .open .det, .note-hand, .logo-s,
+     .soon (pill and its dot), .btn-soon, .phone-line, .hero.paper, style="--i:n" on the boxes;
+     3.2: .chip-soon, .when-soon / .when-live, [data-order], the live order button.
+
+   HOOKS MOTION MODULES MAY RELY ON (keep names stable)
+     root       .proto.pb   .anim (motion allowed) | .rm (reduced motion)   [data-mode="light|dark"]
+                .menu-open (set by Shell.menu)
+                containers: .pb is `container: pb`; .map-wrap is `container: map`. Inside .map-wrap
+                an unnamed @container query (and cqi/cqw) resolves against the map, so page-width
+                conditions there must say `@container pb (...)`.
+                tokens: --focus (ring), --band / --on-band / --band-accent (tape, bar), --map-* (the map
+                ground: the evening counter in both modes), --sec, --h-a, --h-b, --r-paper, --r-ctl
+     header     .hd  .mark (img, b)  .nav a
+                .theme-btn[data-theme-toggle][aria-pressed] (.sun, .moon)  .order (.order-n = the
+                number, visually hidden below 1180px)  .menu-btn[data-menu-btn][aria-expanded]
+                .menu[data-menu] (a, a.menu-small)
+     hero       .hero[data-section="top"]  .scene > .sc-plane (.sc-back .sc-light .sc-subject .sc-front)
+                .sc-plate  .sc-bag (.sc-shadow .sc-bag-img .sc-shade .sc-sticker; ::before = contact
+                line; ::after stays free for the hero module's ink ring)  .sc-wheat
+                .hero-text  .hero h1 (.h1-kicker, .sr-only ": ", em)  .sub  .ctas  .btn-b  .btn-b--main
+                .ai-note comes after .in in the source: below 1000px it is a flex item under the buttons
+                (order: 1, on the wall's fade), from 1000px it is absolute at the wall's top-left.
+                The evening text-side scrim (1000px and up) is the hero css's .sc-back::after; this
+                file paints none, and .hero::before is free.
+                Each scene <img> sits in a <picture> (display: contents), so img.parentElement is the
+                <picture>: use closest('.sc-bag') / closest('.sc-plane').
+                Scene geometry, for --b-pivot in the hero css (the contact point is the centre of the
+                bag's base; the bag's `left` is its centre: translate: -50% 0):
+                  below 700px   scene 4 / 4.6 under the text (margin-top -80px), bag 50% wide, 50% 80%
+                  700-999px     scene 16 / 10 under the text (margin-top -96px), bag 36% wide, 50% 88%
+                  1000px up     the scene fills the 16:9 hero, bag 31% wide, 25% 85%
+                Below 1000px the hero css fades the whole back plane in from the top (mask). Wheat:
+                height auto, blurred, 32% wide (19% from 1000px), never across the bag. .sc-shade (the
+                bag's left-side shade, masked by an inline 128px silhouette of bag-480.webp) rides
+                .sc-bag-img's rise in the hero css.
+     ticker     .ticker[data-ticker] (.paused)  .tk-pause (.pause, .play)  .tk-view  .tk-track
+                .tk-list (first one is the real list, the rest are aria-hidden copies)  li
+                the tape is tilted (rotate: -1.2deg on .ticker, never animate that); while it runs the
+                separators are li::after (a wheat mark). Under .rm the list wraps, every li carries its
+                mark as li::before, and the list starts one mark + gap beyond the clipping .tk-view, so
+                the mark that would open a line is never seen (design 15)
+     boxes      .boxes  .sec-head  .box-grid  .box[data-rv] (--tilt)  .box--fri (first box; spans two
+                rows from 1000px, full width below)
+                .shot (::before = the window cut in the box, ::after = contact shadow)  picture > img.prod
+                .face  .face .nm (h3)  .tag  .list  .box-note  .ai-tag (printed text on the face,
+                aria-hidden: the alt carries "הדמיית AI")
+                Box order: 1 Friday (TWO .prod: frena first, then challah), 2 breads (baguette),
+                3 dairy, 4 parve (rugelach), 5 sufganiyot. box.querySelector('.prod') returns the frena;
+                the challah is box.querySelectorAll('.prod')[1]. Nothing in a box is focusable now.
+     order      .order-sec (no top padding right after .boxes: one --sec between shelf and slip)
+                .slip[data-rv] (a receipt, rotate: -1deg, centred in its band; ::before / ::after = torn
+                edges)  .slip-copy (h2, p.order-num > a[href^="tel:"] > bdi, p)  .acts (dotted divider)
+                p.order-status (.st = "הסניפים:", stamped by the scroll module)  a.btn-b[data-jump=visit]
+                The display numbers (.order-num, .ft-num) scale with the width below 420px. As a last
+                resort (text spacing, zoom) their bdi wraps at the <wbr> after a hyphen; it never clips.
+     map        .here[data-section="visit"] (--focus: --map-head)  .here-copy.sec-head[data-rv]
+                (h2, blockquote.here-q > p + footer, .here-story, .here-facts, .here-src)
+                .map-wrap (container: map; a one-column grid) > .map-art[role="img"] (aspect 800 / 660;
+                children of role=img are presentational)
+                  FRAME  every coordinate is in 800x660 map units, 15 units per km, equirectangular:
+                  x = (lon - 34.50) * 94.85 km, y = (31.648 - lat) * 111.2 km. That is v3's 800x800
+                  survey frame with 20 units cut at the top and 120 at the bottom (design 7): each y is
+                  the survey y minus 20 and every pin keeps its surveyed place. The svg's viewBox is
+                  0 0 800 660 (origin unchanged), so arithmetic on viewBox width/height stays exact.
+                  svg: .map-grid  .route-base  .route (dotted, Ofakim > Netivot > Sderot > Kiryat Gat,
+                       south to north; pathLength="1000")  .out + .out-head (the production house's
+                       bread leaving north in one straight line, "לסופרים בכל הארץ")  .fac-lead +
+                       .fac-dot (the house's true point; its square is a callout)  .leaders (kept as an
+                       empty hook with no geometry: since 3.1 the pins carry numbers instead)  .north
+                       .scale (10 km = 150 units)
+                  .pin[data-place] (netivot sderot kiryat-gat: logo badge img + b.pin-n, the number chip
+                       just outside the badge on its east side, + .pin-tag after the chip, Kiryat Gat's
+                       under its pin at the map's edge; ::before = the oven glow)  .pin--fac (square)  .pin--past (Ofakim, dotted ring)  .map-out
+                       .map-north  .map-scale. Pin centres: --x / --y in this file (% of the frame).
+                > ul.places > li.place[data-place][data-rv] (h3 with span.pin-n, or for .place--fac /
+                  .place--past the square / dotted ring as h3::before, so every label shows its pin's
+                  mark; p.since, dl.lbl with dt/dd rows כתובת · טלפון · שעות (ul.hrs) · כשרות · ניווט
+                  (a.go), p.lbl-note)  .place--fac (data-section="b2b")  .place--past (Ofakim, the draft
+                  story's start)
+                  map narrower than 760px: a list under the map, the pins show their chips and tags.
+                  map 760px and wider: the labels stand on the map IN FLOW (WCAG 1.4.12): .places shares
+                  .map-art's grid cell and is a grid of its own: Kiryat Gat and Netivot each in a column
+                  of their own at their pin's height, Sderot > production house > Ofakim stacked in the
+                  west column. A label that grows pushes the next one (or the section) down, and nothing
+                  overlaps. The chips stay on the pins; the tags go (the labels name the places).
+                  The wide layout sets --map-labels: on on .places; b-motion-scroll.js reads it to swing
+                  each label in right after its pin (narrower maps: the list enters as it scrolls in).
+                The scroll module draws the route through a mask over .route, stamps the pins in route
+                order and lights .pin::before; under .rm the map is simply complete.
+     feed       .feed (::before = serrated bag edge)  .polas (a rail under 700px: scroll-snap,
+                overflow-x; a pinned board from 700px: overlapping cards, the middle one larger)
+                .pola[data-rv] (--r, z-index 1-3; :hover / :focus-within lift it to 5)  q  small  .more
+     footer     .ft (::before = serrated bag edge, outlined)  .ft-sticker  .ft-main (.ft-name .ft-label
+                .ft-num > bdi, .ft-cities a[data-jump], .ft-b2b)  .ft-side (.ft-social, .ft-legal)
+                one column below 420px; sticker + text from 420px with the side row across both; three
+                columns from 1000px (design 3, a11y N1)
+     mobile bar .bar a   (ניווט is data-jump="visit")
+     reveals    every [data-rv] gets .rv-in once it enters ctx.scroller (Shell.reveal)
+     sections   [data-section="top|boxes|order|visit|netivot|sderot|kiryat-gat|b2b|feed"]
+
+   CHANGES IN 3.1 THAT THE MOTION FILES SHOULD KNOW
+     - scroll: the map frame above (viewBox 0 0 800 660, the pins' --y re-based, the arrow north is
+       one straight line from the production house) and the labels in flow (the overlay test now
+       reads false: see map).
+     - hero: the tablet scene (700-999px) has its bag contact at 50% 88%, while --b-pivot there is
+       still the phone's 50% 80%. b.css's copy of the evening scrim (.hero::before) and the hero
+       css's `content: none` for it are both gone.
+     - micro: .pin > .pin-n sits off the badge now (design 14); pairing (.mi-pair) is unchanged.
+   ========================================================================== */
+
+
+/* ---------- 1 tokens ---------- */
+.pb {
+  /* palette from the logo (caramel ring and wheat, chocolate wordmark) and the bakery's existing digital brand */
+  --bg: #F7F1E6;      /* brand background */
+  --paper: #FFFCF6;   /* brand cards */
+  --kraft: #EADBC2;   /* light kraft: the bag and the boxes, toned down */
+  --kraft2: #FFFCF6;  /* box window */
+  --lid: #F6E8D2;     /* app notice cream */
+  --ink: #24180F;     /* app text */
+  --ink2: #5F4E3B;
+  --head: #4A1D0B;    /* logo wordmark chocolate */
+  --caramel: #B0702A; /* logo ring and wheat: graphics only, never small text */
+  --stamp: #7A4520;   /* caramel deepened for text */
+  --on-stamp: #FFFAF2;
+  --btn: #2A1D14;     /* app primary button */
+  --on-btn: #FBF4EA;
+  /* the chocolate bands (ticker tape, mobile bar), split from --btn so buttons can go cream at night */
+  --band: #2A1D14;
+  --on-band: #FBF4EA;
+  --band-accent: #D99A52;
+  /* one focus ring colour (a11y A11Y-06, plan R2): 7.8:1 or more on every surface it lands on */
+  --focus: var(--head);
+  --line: rgba(74, 50, 28, .2);
+  --line-strong: rgba(74, 50, 28, .55);  /* borders that are a control's only outline */
+  --shadow: 0 14px 24px -14px rgba(74, 40, 12, .38);
+  /* the map ground is the evening counter in both modes (design finding 2) */
+  --map-bg: #17100B;
+  --map-ink: #F7F1E6;
+  --map-ink2: #CDBBA3;
+  --map-head: #F6E3C4;
+  --map-accent: #D99A52;   /* graphics */
+  --map-accent-t: #E6AE6C; /* text, 9.5:1 */
+  --map-mute: #A8967E;     /* small print, 6.3:1 */
+  --map-line: rgba(247, 241, 230, .16);
+
+  /* rhythm (design finding 3) and radii (finding 21) */
+  --sec: clamp(56px, 8cqi, 136px);
+  --h-a: clamp(40px, 6.2cqi, 92px);   /* products and map headings */
+  --h-b: clamp(30px, 3.4cqi, 48px);   /* order and feed headings */
+  --r-paper: 4px;
+  --r-ctl: 14px;
+
+  --display: "Secular One", "Rubik", "Arial Hebrew", sans-serif;
+  --body: "Rubik", "Arial Hebrew", Arial, sans-serif;
+  --hand: "Playpen Sans Hebrew", "Rubik", cursive;   /* weight 600 only (R10) */
+
+  /* motion tokens, from the bakery's existing digital brand */
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-in: cubic-bezier(.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --ease-spring: cubic-bezier(.34, 1.3, .64, 1);
+  --spring-settle: linear(0, .04, .131, .243, .358, .466, .562, .645, .715, .774, .821, .859, .89, .914, .934, .949, .96, .97, .977, .982, .986, .99, .992, .994, 1);
+  --spring-bounce: linear(0, .056, .189, .358, .533, .693, .827, .931, 1.004, 1.051, 1.076, 1.083, 1.08, 1.069, 1.055, 1.041, 1.027, 1.016, 1.007, 1, .996, .994, .993, .993, 1);
+  --dur-spring: .36s;
+  --dur-spring-bounce: .55s;
+  --dur-slow: .4s;
+  --press-scale: .97;
+  --press-scale-soft: .985;
+  --stagger: 40ms;
+  color-scheme: light;
+}
+.pb[data-mode="dark"] {
+  /* the same shop in the evening. Surface ladder, darkest to lightest: bg < kraft < paper < lid */
+  --bg: #17100B;      /* chocolate counter at night */
+  --paper: #2A1E15;
+  --kraft: #1E1610;
+  --kraft2: #2A1E15;
+  --lid: #36271B;
+  --ink: #F7F1E6;
+  --ink2: #CDBBA3;
+  --head: #F6E3C4;
+  --caramel: #D99A52;
+  --stamp: #E6AE6C;   /* caramel under lamp light */
+  --on-stamp: #1B0F07;
+  --btn: #F2E5D0;
+  --on-btn: #1B120C;
+  --band: #4A1D0B;    /* the logo's wordmark chocolate (R3) */
+  --on-band: #F7F1E6;
+  --band-accent: #E6AE6C;
+  --line: rgba(247, 241, 230, .14);
+  --line-strong: rgba(247, 241, 230, .45);
+  --shadow: 0 16px 28px -14px rgba(0, 0, 0, .75);
+  --map-bg: #0B0705;  /* clearly below the page (#17100B) even with the grain on top, plus a line: the map is its own ground (design 13) */
+  color-scheme: dark;
+  /* light text on a dark ground needs a little more air (design finding 7) */
+  line-height: 1.66;
+  letter-spacing: .005em;
+}
+
+
+/* ---------- 2 base ---------- */
+.pb {
+  container: pb / inline-size; min-height: 100%;
+  background: var(--bg); color: var(--ink); font: 400 17px/1.6 var(--body);
+  overflow-x: clip;   /* the tilted ticker tape bleeds past both edges (on the real site: on body) */
+}
+.pb[data-mode="dark"] { line-height: 1.66; }
+.pb *, .pb *::before, .pb *::after { box-sizing: border-box; }
+.pb a { color: inherit; }
+.pb ::selection { background: color-mix(in srgb, var(--caramel) 35%, transparent); color: inherit; }
+/* focus: one token that follows the ground; no border-radius, outlines follow each element's own */
+.pb :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.pb .ticker, .pb .bar { --focus: var(--on-band); }
+.pb .tk-pause:focus-visible, .pb .bar a:focus-visible { outline-offset: -6px; }
+.pb h1, .pb h2, .pb h3 { font-family: var(--display); font-weight: 400; line-height: 1.08; margin: 0; text-wrap: balance; color: var(--head); }
+.pb p { margin: 0; }
+.pb [data-section]:focus { outline: none; }
+/* text only screen readers get: "(נפתח בחלון חדש)", the h1 separator, a missing value */
+.pb .sr-only {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+/* skip link: the first stop, shown on focus; it jumps to the hero (data-jump="top") */
+.pb .skip {
+  position: absolute; inset-inline-start: 12px; top: 10px; z-index: 30; padding: 10px 16px;
+  border-radius: var(--r-ctl); background: var(--btn); color: var(--on-btn); font: 700 15px/1.2 var(--body);
+  text-decoration: none; transform: translateY(-180%);
+}
+.pb .skip:focus { transform: none; }
+/* kraft texture: faint wheat ears over paper grain, as in the order app */
+.pb .paper { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='120' viewBox='0 0 96 120'><g fill='none' stroke='%23B0702A' stroke-width='1.4' stroke-linecap='round' opacity='.16'><path d='M48 104V30'/><path d='M48 40c-7-2-10-8-10-14 7 2 10 8 10 14zM48 40c7-2 10-8 10-14-7 2-10 8-10 14zM48 56c-7-2-10-8-10-14 7 2 10 8 10 14zM48 56c7-2 10-8 10-14-7 2-10 8-10 14zM48 72c-7-2-10-8-10-14 7 2 10 8 10 14zM48 72c7-2 10-8 10-14-7 2-10 8-10 14zM48 30c-3-5-3-10 0-16 3 6 3 11 0 16z'/></g></svg>"), url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='k'><feTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.35  0 0 0 0 0.22  0 0 0 0 0.1  0 0 0 .22 0'/></filter><rect width='100%' height='100%' filter='url(%23k)'/></svg>"); }
+/* placeholders at night: dim the photo, not its "צילום זמני" label */
+.pb[data-mode="dark"] .ph { filter: none; box-shadow: inset 0 0 0 100vmax rgba(12, 8, 5, .16); }
+
+
+/* ---------- 3 layout and shared pieces ---------- */
+.pb .in { padding-inline: 20px; max-width: 1240px; margin-inline: auto; }
+.pb .boxes, .pb .order-sec, .pb .here, .pb .feed { padding-block: var(--sec); }
+
+/* section heading (boxes, map, feed) */
+.pb .sec-head { display: grid; gap: 10px; margin-bottom: clamp(20px, 2.2cqi, 36px); }
+.pb .sec-head p { color: var(--ink2); max-width: 52ch; }
+.pb .boxes .sec-head h2 { font-size: var(--h-a); }
+.pb .feed .sec-head h2 { font-size: var(--h-b); }
+
+/* buttons: the primary is a pressed chocolate tab with a soft shadow, the secondary paper with a rim */
+.pb .btn-b {
+  text-decoration: none; font-weight: 700; font-size: 16px; min-height: 52px; padding: 0 22px;
+  border-radius: var(--r-ctl); display: inline-flex; align-items: center; gap: 8px;
+  border: 1.5px solid var(--btn); background: var(--paper); color: var(--ink);
+}
+.pb .btn-b--main { background: var(--btn); color: var(--on-btn); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 10px 18px -12px rgba(42, 29, 20, .6); }
+.pb .btn-b svg { width: 20px; height: 20px; flex: none; }
+
+/* responsive images: <picture> must not become an extra grid or flex item */
+.pb picture { display: contents; }
+.pb picture > source { display: none; }
+/* blurred placeholder until the real file has loaded (b.html <head> drops data-lqip on load) */
+.pb img[data-lqip] { background: var(--lqip) 50% 100% / 100% 100% no-repeat; }
+.pb .sc-plate[data-lqip] { background-size: cover; }
+.pb .prod[data-lqip] { background-size: contain; background-position: 50% 80%; }
+
+/* phone numbers: only the number itself never breaks (text spacing at 320px, A11Y-12). The two display
+   numbers are sized to fit; if text spacing or zoom still squeezes them, they wrap at the <wbr> after
+   a hyphen instead of being clipped (a11y N1, N2) */
+.pb a[href^="tel:"] { white-space: normal; }
+.pb bdi[dir="ltr"] { white-space: nowrap; }
+.pb .ft-num bdi, .pb .order-num bdi { white-space: normal; overflow-wrap: break-word; }
+
+
+/* ---------- 4 components, in page order ---------- */
+
+/* header */
+.pb .hd { position: sticky; top: 0; z-index: 10; background: var(--paper); border-bottom: 1px solid var(--line); }
+.pb .hd .in { display: flex; align-items: center; gap: 14px; min-height: 62px; }
+.pb .mark { text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.pb .mark-logo { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: #FFFFFF; box-shadow: 0 0 0 1px var(--line); }
+.pb .mark-logo img { width: 44px; height: 44px; display: block; }
+.pb .for-dark { display: none !important; }
+.pb[data-mode="dark"] .for-light { display: none !important; }
+.pb[data-mode="dark"] .for-dark { display: block !important; }
+.pb[data-mode="dark"] .mark-logo { background: transparent; box-shadow: none; }
+.pb .mark b { font: 400 26px/1 var(--display); color: var(--head); }
+.pb .nav { display: none; gap: 2px; margin-inline: auto; }
+.pb .nav a { text-decoration: none; padding: 10px 12px; font-weight: 500; font-size: 15px; border-radius: 999px; white-space: nowrap; }
+.pb .nav a:hover { background: var(--lid); }
+.pb .hd-actions { display: flex; gap: 8px; align-items: center; margin-inline-start: auto; }
+.pb .theme-btn { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--line-strong); background: transparent; color: var(--ink); display: grid; place-items: center; cursor: pointer; }
+.pb .theme-btn svg { width: 22px; height: 22px; }
+.pb .theme-btn .moon { display: none; }
+.pb[data-mode="dark"] .theme-btn .sun { display: none; }
+.pb[data-mode="dark"] .theme-btn .moon { display: block; }
+.pb .order { display: none; text-decoration: none; background: var(--btn); color: var(--on-btn); font-weight: 700; font-size: 15px; padding: 0 18px; min-height: 44px; border-radius: 999px; align-items: center; gap: 6px; white-space: nowrap; }
+.pb .order-n { font-weight: 500; }
+.pb .menu-btn { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--btn); background: var(--btn); color: var(--on-btn); display: grid; place-items: center; cursor: pointer; }
+.pb .menu-btn svg { width: 22px; height: 22px; }
+
+/* menu (mobile disclosure, opened by Shell.menu) */
+.pb .menu { position: absolute; inset: 100% 0 auto; background-color: var(--paper); padding: 10px 20px 22px; display: grid; gap: 2px; border-bottom: 1px solid var(--line); box-shadow: var(--shadow); max-height: calc(100vh - 80px); overflow-y: auto; }
+.pb .menu a { text-decoration: none; font: 400 26px/1.2 var(--display); padding: 9px 0; }
+.pb .menu .menu-small { font: 500 16px/1.3 var(--body); padding: 12px 0; color: var(--ink2); }
+.pb .menu .menu-small + .menu-small { padding-top: 4px; }
+
+/* hero: one scene on phones (text over the wall that fades in from the kraft), the scene fills
+   a 16:9 hero behind the text on desktop. The plate is 16:9 with its counter edge at 69% of its
+   height; the bag stands on the counter in front of that edge. */
+.pb .hero { background-color: var(--kraft); position: relative; overflow: hidden; display: flex; flex-direction: column; }
+.pb .hero .in { display: grid; gap: 18px; padding-block: 26px 22px; position: relative; z-index: 2; width: 100%; }
+.pb .hero-text { display: grid; gap: 14px; }
+.pb .scene { position: relative; order: 2; aspect-ratio: 4 / 4.6; margin-top: -80px; max-width: 100%; overflow: hidden; isolation: isolate; }
+.pb .sc-plane { position: absolute; inset: 0; pointer-events: none; }
+.pb .sc-plate { width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; display: block; }
+.pb .sc-light { background: linear-gradient(105deg, transparent 35%, rgba(255, 214, 150, .22) 62%, rgba(255, 236, 200, .32) 80%, transparent 100%); mix-blend-mode: soft-light; }
+.pb .sc-bag { position: absolute; left: 50%; bottom: 20%; width: 50%; aspect-ratio: 748 / 1100; translate: -50% 0; }
+.pb .sc-bag-img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* light from the right: the bag casts its shadow to the left and back along the counter */
+.pb .sc-shadow { position: absolute; left: -62%; right: 46%; bottom: -2.5%; height: 11%; border-radius: 50%; transform: skewX(52deg); background: radial-gradient(closest-side, rgba(70, 40, 15, .5), rgba(70, 40, 15, .2) 60%, transparent); }
+/* contact line where the bag meets the counter */
+.pb .sc-bag::before { content: ""; position: absolute; left: 4%; right: 4%; bottom: -.5%; height: 2.2%; border-radius: 50%; background: rgba(50, 28, 10, .55); filter: blur(3px); }
+/* the bag's left side, away from the window light */
+.pb .sc-shade {
+  position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply;
+  background: linear-gradient(90deg, rgba(60, 35, 12, .28), transparent 45%);
+  -webkit-mask: var(--bag-mask) center / 100% 100% no-repeat;
+  mask: var(--bag-mask) center / 100% 100% no-repeat;
+  /* the bag's silhouette, 128px, from assets/ai/r/bag-480.webp (inline: a mask URL is fetched with CORS).
+     It rides the bag's rise in the hero css, which also keeps it hidden while the opening holds */
+  --bag-mask: url("data:image/webp;base64,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");
+}
+/* the real logo, stuck on the blank front panel of the bag */
+.pb .sc-sticker { position: absolute; left: 50%; top: 62%; width: 40%; height: auto; translate: -50% -50%; rotate: -6deg; border-radius: 50%; filter: drop-shadow(0 2px 2px rgba(60, 35, 12, .28)); }
+/* the wheat is the nearest, out-of-focus layer: it recedes instead of competing with the bag */
+.pb .sc-wheat { position: absolute; width: 32%; height: auto; right: -8%; bottom: -10%; rotate: -14deg; filter: blur(1.6px) brightness(.9) saturate(.85); }
+/* the required AI label, printed as a caption on the dark wood (design finding 19) */
+/* phones: a line under the buttons, on the wall's fade (always on the first screen, never under the bar) */
+.pb .ai-note { position: relative; z-index: 3; order: 1; align-self: flex-start; margin-inline: 20px; font: 500 12px/1.2 var(--body); color: #fffc; text-shadow: 0 1px 2px #0009; }
+/* by day the caption lies on the sunlit wall: print it in ink. At night it lies in the lamp glow: a faint slip */
+.pb[data-mode="light"] .ai-note { color: var(--ink); text-shadow: 0 0 6px rgba(255, 248, 236, .9); }
+.pb[data-mode="dark"] .ai-note { background: rgba(17, 11, 7, .62); padding: 2px 6px; border-radius: 2px; text-shadow: none; }
+/* evening: the morning light becomes lamp light; the bag is dimmed as one object (R13) */
+.pb[data-mode="dark"] .sc-plate { filter: brightness(.48) saturate(.85) sepia(.15); }
+.pb[data-mode="dark"] .sc-light { background: radial-gradient(ellipse 30% 48% at 34% 52%, rgba(255, 176, 90, .42), transparent 70%); mix-blend-mode: screen; }
+.pb[data-mode="dark"] .sc-bag { filter: brightness(.8) sepia(.12); }
+.pb[data-mode="dark"] .sc-wheat { filter: blur(1.6px) brightness(.66) saturate(.85); }
+.pb .hero h1 { font-size: 46px; max-width: 12ch; }
+.pb .h1-kicker { display: block; font: 500 15px/1.4 var(--body); margin-bottom: 12px; text-wrap: pretty; }
+.pb .hero h1 em { font-style: normal; color: var(--stamp); }
+/* the hero's secondary text sits on the photo or its fade: one step closer to --ink than --ink2 (R4) */
+.pb .hero .sub, .pb .h1-kicker { color: color-mix(in srgb, var(--ink2) 55%, var(--ink)); }
+.pb .hero .sub { max-width: 40ch; font-size: 16px; text-wrap: pretty; }   /* no lone "בעונה." (design 17) */
+.pb .ctas { display: flex; flex-wrap: wrap; gap: 14px; }
+
+/* ticker: sealing tape across the seam under the hero. Four copies of the list side by side;
+   the motion file slides the track by half its width */
+.pb .ticker {
+  background: var(--band); color: var(--on-band); display: flex; align-items: center;
+  rotate: -1.2deg; margin-block: -12px; margin-inline: -2%; padding-inline: 2%;
+  position: relative; z-index: 3; box-shadow: 0 8px 16px -10px rgba(40, 20, 5, .55);
+}
+.pb .tk-pause { flex: none; width: 52px; height: 52px; border: 0; border-inline-end: 1px solid color-mix(in srgb, var(--on-band) 25%, transparent); background: transparent; color: inherit; display: grid; place-items: center; cursor: pointer; }
+.pb .tk-pause svg { width: 18px; height: 18px; }
+.pb .tk-pause .play { display: none; }
+.pb .ticker.paused .tk-pause .play { display: block; }
+.pb .ticker.paused .tk-pause .pause { display: none; }
+.pb .tk-view { overflow: hidden; flex: 1; min-width: 0; direction: ltr; }
+.pb .tk-track { display: flex; width: max-content; }
+.pb .tk-list { display: flex; direction: rtl; margin: 0; padding: 0; list-style: none; }
+.pb .tk-list li { font: 400 22px/52px var(--display); padding-inline: 18px; white-space: nowrap; display: flex; align-items: center; gap: 18px; }
+/* separator: a wheat ear printed in caramel on the tape (after each item while it runs; before each
+   item in the static, wrapping list of section 6, where the one that opens a line is clipped) */
+.pb .tk-list li::after, .pb.rm .tk-list li::before {
+  content: ""; flex: none; width: 12px; height: 18px; background: var(--band-accent);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 36'><g fill='%23000'><rect x='11' y='9' width='2' height='27' rx='1'/><path d='M12 1c2.2 2.4 2.2 5.6 0 8-2.2-2.4-2.2-5.6 0-8zM11.6 14C8 13 6 10.2 6 7c3.6 1 5.6 3.8 5.6 7zM12.4 14c3.6-1 5.6-3.8 5.6-7-3.6 1-5.6 3.8-5.6 7zM11.6 21C8 20 6 17.2 6 14c3.6 1 5.6 3.8 5.6 7zM12.4 21c3.6-1 5.6-3.8 5.6-7-3.6 1-5.6 3.8-5.6 7zM11.6 28C8 27 6 24.2 6 21c3.6 1 5.6 3.8 5.6 7zM12.4 28c3.6-1 5.6-3.8 5.6-7-3.6 1-5.6 3.8-5.6 7z'/></g></svg>") center / contain no-repeat;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 36'><g fill='%23000'><rect x='11' y='9' width='2' height='27' rx='1'/><path d='M12 1c2.2 2.4 2.2 5.6 0 8-2.2-2.4-2.2-5.6 0-8zM11.6 14C8 13 6 10.2 6 7c3.6 1 5.6 3.8 5.6 7zM12.4 14c3.6-1 5.6-3.8 5.6-7-3.6 1-5.6 3.8-5.6 7zM11.6 21C8 20 6 17.2 6 14c3.6 1 5.6 3.8 5.6 7zM12.4 21c3.6-1 5.6-3.8 5.6-7-3.6 1-5.6 3.8-5.6 7zM11.6 28C8 27 6 24.2 6 21c3.6 1 5.6 3.8 5.6 7zM12.4 28c3.6-1 5.6-3.8 5.6-7-3.6 1-5.6 3.8-5.6 7z'/></g></svg>") center / contain no-repeat;
+}
+
+/* boxes: kraft boxes with a window; the name and the product list are printed on the face */
+.pb .box-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+.pb .box {
+  background: var(--kraft); border: 1px solid var(--line); border-radius: var(--r-paper);
+  transform: rotate(var(--tilt, -1deg)); box-shadow: var(--shadow); display: flex; flex-direction: column; min-width: 0;
+}
+.pb .box:nth-child(2) { --tilt: .8deg; }
+.pb .box:nth-child(3) { --tilt: -.5deg; }
+.pb .box:nth-child(4) { --tilt: .6deg; }
+.pb .box:nth-child(5) { --tilt: -.9deg; }
+.pb .box--fri { --tilt: -.6deg; grid-column: 1 / -1; }
+.pb .shot { position: relative; aspect-ratio: 5 / 4; display: grid; place-items: center; }
+/* the window cut into the box, with a little depth on its top edge */
+.pb .shot::before {
+  content: ""; position: absolute; inset: 9% 7% 3%; z-index: 0;
+  border-radius: 40% 40% 6px 6px / 22% 22% 6px 6px; background: var(--kraft2);
+  box-shadow: inset 0 2px 6px rgba(74, 40, 12, .25);
+}
+.pb .shot::after { content: ""; position: absolute; left: 18%; right: 18%; bottom: 9%; height: 10%; border-radius: 50%; background: radial-gradient(closest-side, rgba(70, 40, 15, .3), transparent); z-index: 0; }
+.pb .prod { position: relative; z-index: 1; width: 80%; height: 74%; object-fit: contain; object-position: 50% 80%; display: block; }
+.pb .box--fri .shot { aspect-ratio: 16 / 9; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.pb .box--fri .prod { width: 88%; height: 80%; filter: drop-shadow(0 10px 8px rgba(70, 40, 15, .2)); }
+.pb[data-mode="dark"] .shot::before { background: radial-gradient(ellipse 75% 65% at 50% 58%, var(--lid), var(--kraft2) 72%); box-shadow: inset 0 2px 8px rgba(0, 0, 0, .5); }
+.pb[data-mode="dark"] .shot::after { background: radial-gradient(closest-side, rgba(0, 0, 0, .5), transparent); }
+.pb[data-mode="dark"] .prod { filter: brightness(.9); }
+.pb[data-mode="dark"] .box--fri .prod { filter: brightness(.9) drop-shadow(0 10px 8px rgba(0, 0, 0, .4)); }
+.pb .face { display: grid; gap: 6px; padding: 10px 12px 12px; align-content: start; }
+.pb .face .nm { font-size: 19px; line-height: 1.1; display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
+.pb .face .list { font-size: 13.5px; line-height: 1.42; color: var(--ink2); }
+.pb .box-note { font-size: 13px; line-height: 1.4; color: var(--ink2); }
+.pb .ai-tag { font: 500 11px/1.2 var(--body); color: var(--ink2); }
+.pb .tag { font: 700 12px/1 var(--body); padding: 6px 9px; border-radius: 999px; background: var(--stamp); color: var(--on-stamp); transform: rotate(-3deg); }
+
+/* order receipt: phone ordering, with a short line pointing to the branches. The slip lies centred on the counter,
+   one --sec under the shelf: the band and the shelf share the cream ground, so there is no second
+   section gap between them (design 9, and the empty gap under the products) */
+.pb .boxes + .order-sec { padding-top: 0; }
+.pb .slip {
+  position: relative; max-width: 520px; margin-inline: auto; rotate: -1deg;
+  background: var(--paper); border-inline: 1px solid var(--line); border-radius: 2px;
+  padding: 36px 26px 40px; display: grid; gap: 22px; box-shadow: var(--shadow);
+}
+/* torn top and bottom edges: bites in the page colour */
+.pb .slip::before, .pb .slip::after { content: ""; position: absolute; inset-inline: 0; height: 10px; pointer-events: none; }
+.pb .slip::before { top: -1px; background: radial-gradient(circle at 10px 0, var(--bg) 6.5px, transparent 7px) 0 0 / 20px 10px repeat-x; }
+.pb .slip::after { bottom: -1px; background: radial-gradient(circle at 10px 100%, var(--bg) 6.5px, transparent 7px) 0 100% / 20px 10px repeat-x; }
+.pb .slip-copy { display: grid; gap: 10px; }
+.pb .slip h2 { font-size: var(--h-b); }
+.pb .order-num { font: 400 clamp(40px, 5cqi, 64px)/1.05 var(--display); color: var(--head); }
+.pb .order-num a { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 8px; text-decoration-color: color-mix(in srgb, var(--head) 35%, transparent); }
+.pb .slip p:not(.order-num) { color: var(--ink2); max-width: 46ch; }
+.pb .slip .acts { display: grid; gap: 14px; justify-items: start; border-top: 2px dotted var(--line-strong); padding-top: 18px; }
+.pb .order-status { font-weight: 500; color: var(--ink); }
+.pb .order-status .st { font-weight: 700; color: var(--stamp); }
+
+/* map "אנחנו כאן.": the three ovens on a to-scale map, drawn like a print on a bag, always on
+   the evening counter. Wide maps stand the labels on the map in flow, narrow ones list them under
+   it; either way each label carries its pin's mark (number chip, square or dotted ring) */
+.pb .here {
+  --focus: var(--map-head);
+  position: relative; color: var(--map-ink);
+  background-color: var(--map-bg);
+  background-image:
+    radial-gradient(ellipse 60% 70% at 30% 55%, rgba(217, 154, 82, .10), transparent 70%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='k'><feTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 .9  0 0 0 0 .8  0 0 0 .05 0'/></filter><rect width='100%' height='100%' filter='url(%23k)'/></svg>");
+}
+/* at night the order band and the map are both dark: a line marks where the map's ground begins */
+.pb[data-mode="dark"] .here { border-block-start: 1px solid var(--line); }
+.pb .here .in { display: grid; gap: 28px; }
+.pb .here-copy { margin-bottom: 0; gap: 12px; align-content: start; }
+.pb .here h2 { font-size: var(--h-a); color: var(--map-head); line-height: 1; }
+.pb .here-q { margin: 0; font: 600 20px/1.4 var(--hand); color: var(--map-accent-t); }
+.pb .here-q p { color: inherit; }
+.pb .here-q footer { font: 500 13px/1.5 var(--body); color: var(--map-mute); margin-top: 6px; }
+.pb .here-copy p { color: var(--map-ink2); max-width: 44ch; }
+.pb .here-copy .here-src { font-size: 12.5px; line-height: 1.5; color: var(--map-mute); }
+/* one column: the art, then the labels (a wide map puts both in the same cell, see section 5) */
+.pb .map-wrap { container: map / inline-size; position: relative; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); }
+/* the 800x660 frame (design 7): cropped so the whole map fits the screen at 1280x800 and 1440x900 */
+.pb .map-art { position: relative; aspect-ratio: 800 / 660; }
+.pb .map-art svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.pb .map-art svg * { vector-effect: non-scaling-stroke; fill: none; }
+.pb .map-grid { stroke: rgba(247, 241, 230, .05); stroke-width: 1; }
+.pb .route-base { stroke: rgba(217, 154, 82, .22); stroke-width: 1; }
+.pb .route { stroke: var(--map-accent); stroke-width: 2.6; stroke-linecap: round; stroke-dasharray: 0 8; }
+.pb .out { stroke: var(--map-accent); stroke-width: 1.5; stroke-dasharray: 9 7; opacity: .7; }
+.pb .out-head { stroke: var(--map-accent); stroke-width: 1.5; stroke-linejoin: round; opacity: .7; }
+.pb .fac-lead { stroke: var(--map-head); stroke-width: 1; opacity: .6; }
+.pb .map-art .fac-dot { fill: var(--map-head); }
+.pb .north, .pb .scale { stroke: var(--map-mute); stroke-width: 1.5; }
+/* pins: HTML over the svg, centred in % of the 800x660 frame (map units; survey y in brackets) */
+.pb .pin { position: absolute; left: var(--x); top: var(--y); width: clamp(22px, 4.5cqw, 40px); aspect-ratio: 1; translate: -50% -50%; }
+.pb .pin[data-place="netivot"] { --x: 38.163%; --y: 54.1818%; }     /* 305.3, 357.6 (377.6) */
+.pb .pin[data-place="sderot"] { --x: 39.942%; --y: 27.6818%; }      /* 319.5, 182.7 (202.7) */
+.pb .pin[data-place="kiryat-gat"] { --x: 70.918%; --y: 6.0606%; }   /* 567.4, 40 (60) */
+.pb .pin[data-place="factory"] { --x: 32.75%; --y: 60.6061%; }      /* 262, 400 (420): a callout; the true point is .fac-dot */
+.pb .pin[data-place="ofakim"] { --x: 43.935%; --y: 82.3333%; }      /* 351.5, 543.4 (563.4) */
+/* the oven light on each branch */
+.pb .pin::before { content: ""; position: absolute; left: 50%; top: 50%; width: 420%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 180, 90, .5), rgba(217, 154, 82, .16) 42%, transparent); pointer-events: none; }
+.pb .pin img { position: relative; width: 100%; height: 100%; display: block; border-radius: 50%; box-shadow: 0 2px 8px rgba(0, 0, 0, .5); }
+.pb[data-mode="dark"] .pin img { filter: brightness(.93) sepia(.1); }
+.pb .pin-n { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; font: 700 12px/1 var(--body); }
+/* the pin's number sits off the badge on its east side, caramel, so the logo stays whole (design 14);
+   the place name follows it */
+.pb .pin > .pin-n { position: absolute; top: 50%; left: calc(100% + 3px); translate: 0 -50%; background: var(--map-accent); color: var(--map-bg); box-shadow: 0 1px 4px rgba(0, 0, 0, .5); }
+.pb .pin-tag { position: absolute; top: 50%; left: calc(100% + 8px); translate: 0 -50%; font: 600 13px/1 var(--body); color: var(--map-ink); white-space: nowrap; text-shadow: 0 1px 3px #000; }
+.pb .pin-n + .pin-tag { left: calc(100% + 28px); }
+/* Kiryat Gat is at the map's east edge: its name goes under the pin, clear of the route arriving from the west */
+.pb .pin[data-place="kiryat-gat"] .pin-tag { left: 50%; top: calc(100% + 3px); translate: -50% 0; }
+.pb .pin--fac { width: clamp(10px, 1.8cqw, 15px); border: 2px solid var(--map-head); rotate: 8deg; }
+.pb .pin--past { width: clamp(12px, 2.3cqw, 19px); border: 1.6px dotted var(--map-ink2); border-radius: 50%; }
+.pb .pin--fac::before, .pb .pin--past::before { content: none; }
+.pb .pin--fac .pin-tag { left: auto; right: calc(100% + 8px); }
+.pb .map-out, .pb .map-north, .pb .map-scale { position: absolute; font: 500 13px/1.2 var(--body); color: var(--map-ink2); white-space: nowrap; }
+/* "לסופרים בכל הארץ" at the head of the arrow north (262, 46): above it on a narrow map, beside it on a wide one */
+.pb .map-out { left: 32.75%; top: 0; translate: -50% 0; }
+.pb .map-north { left: 96.5%; top: 83.64%; translate: -50% 0; color: var(--map-mute); font-size: 12px; }   /* under the arrow, 552: above the scale's figure even on a 280px map */
+.pb .map-scale { left: 85.625%; bottom: 3.03%; translate: -50% 0; color: var(--map-mute); font-size: 12px; }   /* over the bar, 640 */
+/* labels: one layout for every place (design finding 11) */
+.pb .places { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); align-items: start; }
+.pb .place {
+  --focus: var(--head);
+  background: var(--paper); color: var(--ink); border-radius: var(--r-paper); padding: 10px 12px 11px;
+  box-shadow: 0 18px 30px -16px rgba(0, 0, 0, .8), inset 0 1px 0 rgba(255, 255, 255, .5);
+  display: grid; gap: 4px; align-content: start; font-size: 13.5px; line-height: 1.35;
+}
+.pb[data-mode="dark"] .place { box-shadow: 0 18px 30px -16px rgba(0, 0, 0, .9), inset 0 0 0 1px var(--line); }
+.pb .place h3 { font-size: 21px; line-height: 1.1; display: flex; align-items: center; gap: 8px; }
+/* the pin's mark at the head of its label: the number (caramel, as on the pin), the square, the ring */
+.pb .place h3 .pin-n { background: var(--stamp); color: var(--on-stamp); }
+.pb .place--fac h3::before { content: ""; flex: none; width: 13px; aspect-ratio: 1; border: 2px solid currentColor; rotate: 8deg; }
+.pb .place--past h3::before { content: ""; flex: none; width: 16px; aspect-ratio: 1; border: 1.6px dotted currentColor; border-radius: 50%; }
+.pb .place .since { color: var(--ink2); font-size: 13px; }
+.pb .lbl { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 12px; }
+.pb .lbl dt, .pb .lbl dd { margin: 0; padding-block: 3px; border-top: 1px solid var(--line); }
+.pb .lbl dt { color: var(--ink2); font-weight: 500; }
+.pb .lbl dd { min-width: 0; }
+.pb .hrs { list-style: none; margin: 0; padding: 0; font-variant-numeric: tabular-nums; }
+.pb .hrs li { display: flex; flex-wrap: wrap; column-gap: 10px; justify-content: space-between; max-width: 15em; }  /* wraps under WCAG text spacing (N9) */
+.pb .lbl a { font-weight: 600; text-underline-offset: 3px; }
+.pb .lbl .go { display: inline-flex; align-items: center; min-height: 30px; padding: 0 12px; border-radius: 10px; background: var(--btn); color: var(--on-btn); text-decoration: none; font-weight: 700; font-size: 13px; }
+.pb .lbl-note { font-size: 12px; line-height: 1.4; color: var(--ink2); }
+.pb .place--past { background: transparent; color: var(--map-ink2); box-shadow: none; border: 1px dashed rgba(205, 187, 163, .55); --focus: var(--map-head); }
+.pb .place--past h3 { color: var(--map-ink2); }
+.pb .place--past .lbl dt { color: var(--map-mute); }
+.pb .place--past .lbl dt, .pb .place--past .lbl dd { border-top-color: rgba(205, 187, 163, .3); }
+.pb .place--past .lbl-note { color: var(--map-ink2); }
+
+/* feed: the Instagram captions pinned on a kraft board */
+.pb .feed { position: relative; background-color: var(--kraft); }
+/* the bag's serrated top edge, the only section edge on the page (design finding 5a) */
+.pb .feed::before, .pb .ft::before {
+  content: ""; position: absolute; inset: -8px 0 auto; height: 8px; pointer-events: none;
+  background: conic-gradient(from -45deg at 50% 100%, var(--edge) 90deg, #0000 0) 0 0 / 16px 8px repeat-x;
+}
+.pb .feed { --edge: var(--kraft); }
+.pb .feed .sec-head .hand { font: 600 17px/1.3 var(--body); color: var(--head); }
+.pb .polas { display: grid; gap: 14px; grid-auto-flow: column; grid-auto-columns: 74%; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; margin-inline: -20px; padding: 14px 20px 22px; scrollbar-width: none; }
+.pb .polas::-webkit-scrollbar { display: none; }
+.pb .pola { position: relative; background: var(--paper); padding: 10px 10px 14px; border: 1px solid var(--line); border-radius: var(--r-paper); transform: rotate(var(--r, 1.5deg)); box-shadow: var(--shadow); display: grid; gap: 10px; align-content: start; text-decoration: none; scroll-snap-align: center; }
+.pb .pola:nth-child(1) { --r: -4deg; z-index: 1; }
+.pb .pola:nth-child(2) { --r: 2deg; z-index: 2; }
+.pb .pola:nth-child(3) { --r: 5deg; z-index: 3; }
+.pb .pola:hover, .pb .pola:focus-within { z-index: 5; }   /* an overlapping card never covers the focus (2.4.11) */
+.pb .pola .ph { aspect-ratio: 1; }
+.pb .pola q { font: 600 17px/1.4 var(--hand); quotes: none; }
+.pb .pola small { font-size: 13px; color: var(--ink2); }
+.pb .feed .more { margin-top: 18px; }
+
+/* footer: the folded bag bottom. The sticker closes the bag, the phone number is the last word.
+   The teeth of its edge carry a hairline, so the fold reads against the feed's kraft; no straight
+   shadow under them (design 12) */
+.pb .ft { --ft-bg: color-mix(in srgb, var(--kraft) 86%, var(--caramel)); --edge: var(--ft-bg); --ft-tooth: rgba(60, 35, 12, .34); position: relative; background: var(--ft-bg); }
+.pb[data-mode="dark"] .ft { --ft-tooth: rgba(247, 241, 230, .2); }
+.pb .ft::before {
+  /* the footer's own teeth point up (solid along the footer, peaks into the feed), so the hairline
+     traces a zigzag; the shared rule's teeth meet in a straight top line, which a hairline would trace */
+  background: conic-gradient(from 135deg at 50% 0, var(--edge) 90deg, #0000 0) 0 0 / 16px 8px repeat-x;
+  filter: drop-shadow(0 -1px 0 var(--ft-tooth));
+}
+.pb .ft .in { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px 16px; padding-block: var(--sec) 28px; align-items: start; }
+.pb .ft-side { grid-column: 1 / -1; }
+.pb .ft-sticker { width: 76px; height: 76px; rotate: -6deg; border-radius: 50%; box-shadow: 0 8px 16px -8px rgba(60, 35, 12, .55); }
+.pb[data-mode="dark"] .ft-sticker { filter: brightness(.93) sepia(.1); }
+.pb .ft-main { display: grid; gap: 6px; }
+.pb .ft-name { font: 400 22px/1.2 var(--display); color: var(--head); }
+.pb .ft-label { font-weight: 500; color: var(--ink2); margin-top: 8px; }
+.pb .ft-num { font: 400 clamp(40px, 4.6cqi, 60px)/1 var(--display); color: var(--head); text-decoration: none; justify-self: start; }
+.pb .ft-cities { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-top: 10px; }
+.pb .ft-cities a { font-weight: 700; min-height: 32px; display: inline-flex; align-items: center; text-underline-offset: 4px; }
+.pb .ft-b2b { font-size: 14px; color: var(--ink2); margin-top: 4px; }
+.pb .ft-side { display: grid; gap: 14px; align-content: end; }
+.pb .ft-side ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.pb .ft-social a { font-weight: 600; min-height: 32px; display: inline-flex; align-items: center; }
+.pb .ft-legal { font-size: 13px; color: var(--ink2); }
+.pb .ft-legal a { color: var(--ink); }
+
+/* mobile bar (sticky inside the prototype, never position: fixed) */
+.pb .bar { position: sticky; bottom: 0; z-index: 9; display: grid; grid-template-columns: repeat(3, 1fr); background: var(--band); color: var(--on-band); }
+.pb .bar a { text-decoration: none; display: grid; justify-items: center; gap: 2px; padding: 9px 4px 11px; font-size: 13px; font-weight: 700; min-height: 56px; }
+.pb .bar svg { width: 22px; height: 22px; color: var(--band-accent); }
+
+
+/* ---------- 5 container queries ---------- */
+/* small phones: the display numbers scale with the width, so even with WCAG text spacing they fit
+   on one line at 300px and up (a11y N1/N2, design 2); the footer stacks, the sticker on top */
+@container pb (max-width: 419.98px) {
+  .pb .ft .in { grid-template-columns: minmax(0, 1fr); }
+  .pb .ft-sticker { width: 64px; height: 64px; }
+  .pb .ft-num { font-size: min(40px, 10.5cqi); }
+  .pb .slip { padding: 30px 20px 34px; }
+  .pb .order-num { font-size: min(40px, 10.5cqi); }
+}
+@container pb (min-width: 700px) {
+  .pb .order { display: inline-flex; }
+  .pb .order-n { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .pb .box-grid { gap: 22px; }
+  .pb .face { padding: 12px 16px 14px; }
+  .pb .face .nm { font-size: 24px; }
+  .pb .face .list { font-size: 15px; }
+  /* the feed becomes a pinned board: the cards overlap, one is a size larger */
+  .pb .polas { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1fr); overflow: visible; margin-inline: 0; padding: 10px 0 0; align-items: center; max-width: 1040px; }
+  .pb .pola + .pola { margin-inline-start: -40px; }
+  /* the end side of the first two cards lies under the next one: keep their captions clear of it */
+  .pb .pola:not(:last-child) q, .pb .pola:not(:last-child) small { padding-inline-end: 40px; }
+  /* tablet hero: the phone scene keeps a 16:10 frame instead of growing with the width (design 6) */
+  .pb .scene { aspect-ratio: 16 / 10; margin-top: -96px; }   /* the breads stay under the buttons */
+  .pb .sc-bag { width: 36%; bottom: 12%; }
+  /* footer: still sticker + text, the side row under both (three columns only from 1000px) */
+  .pb .ft-sticker { width: 120px; height: 120px; align-self: center; }
+}
+@container pb (min-width: 1000px) {
+  .pb .in { padding-inline: 48px; }
+  /* header */
+  .pb .hd .in { min-height: 74px; }
+  .pb .nav { display: flex; }
+  .pb .menu-btn, .pb .menu, .pb .bar { display: none !important; }
+  /* hero: the scene fills a 16:9 hero, the text sits on the sunlit wall at the start side (right) */
+  .pb .hero { display: block; aspect-ratio: 16 / 9; }
+  .pb .scene { position: absolute; inset: 0; aspect-ratio: auto; margin-top: 0; }
+  .pb .hero .in { height: 100%; align-content: center; padding-block: 0 8%; }
+  .pb .hero-text { gap: 20px; width: min(580px, 46%); }
+  .pb .sc-bag { left: 25%; bottom: 15%; width: 31%; }
+  .pb .sc-wheat { width: 19%; right: auto; left: -5%; bottom: -4%; rotate: 8deg; }
+  .pb .ai-note { position: absolute; top: 18px; left: 18px; margin: 0; }
+  .pb[data-mode="dark"] .ai-note { background: none; padding: 0; text-shadow: 0 1px 2px #0009; }   /* top of the wall: in view at load even when the 16:9 hero runs past the fold */
+  .pb[data-mode="dark"] .h1-kicker { color: var(--ink); }
+  /* the evening text-side scrim is the hero css's (.sc-back::after) */
+  .pb .hero h1 { font-size: clamp(56px, 5.5cqi, 80px); }
+  .pb .h1-kicker { font-size: 17px; margin-bottom: 16px; }
+  .pb .hero .sub { font-size: 18px; }
+  /* ticker */
+  .pb .tk-list li { font-size: 26px; line-height: 60px; }
+  .pb .tk-pause { width: 60px; height: 60px; }
+  /* boxes: a shelf; the Friday box holds frena and challah and spans two rows */
+  .pb .box-grid { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1fr); gap: 26px; align-items: stretch; }
+  .pb .box--fri { grid-column: auto; grid-row: span 2; }
+  .pb .box--fri .shot { flex: 1; aspect-ratio: auto; min-height: 0; grid-template-columns: none; grid-template-rows: repeat(2, minmax(0, 1fr)); }
+  .pb .box--fri .shot::after { bottom: 7%; }
+  .pb .box--fri .face .nm { font-size: 30px; }
+  /* order receipt */
+  .pb .slip { padding: 40px 36px 44px; }
+  /* feed */
+  .pb .feed .sec-head .hand { font-size: 18px; }
+  .pb .pola q { font-size: 18px; }
+  /* footer: sticker · name and number · social and legal. The middle column never gets narrower than
+     its own content, so the number never runs under the side column, even with text spacing (N1) */
+  .pb .ft .in { grid-template-columns: auto minmax(max-content, 1fr) minmax(0, max-content); align-items: end; column-gap: 40px; }
+  .pb .ft-side { grid-column: auto; }
+}
+/* the single-column map (1000-1279px) stays small enough to be seen whole on a laptop screen */
+@container pb (min-width: 1000px) and (max-width: 1279.98px) {
+  .pb .map-wrap { width: min(100%, 840px); justify-self: center; }
+}
+@container pb (min-width: 1180px) {
+  .pb .order-n { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
+}
+@container pb (min-width: 1280px) {
+  /* map: copy at the start side, the map at the end side, a little wider than the page column. Only
+     from 1280px is that column 760px or more, wide enough for the labels to stand on the map; below,
+     the copy sits above a full-width map (design 8: no list beside an empty corner at 1180-1279) */
+  .pb .here .in { max-width: 1440px; grid-template-columns: minmax(0, 3.4fr) minmax(0, 7fr); column-gap: 48px; align-items: center; }
+  .pb .here h2 { font-size: clamp(56px, 5.4cqi, 84px); }
+  .pb .here-copy { gap: 16px; }
+  .pb .here-q { font-size: 22px; }
+}
+
+/* a narrow map: "צפון" beside its arrow (512-548), so on a 260px map it never meets the scale's figure */
+@container map (max-width: 759.98px) {
+  .pb .map-north { left: auto; right: calc(3.5% + 6px); top: 80.3%; translate: 0 -50%; }
+}
+/* the map's own width decides where the labels go. From 760px they stand on the map, in flow: their
+   grid shares the art's cell, so a label that grows (text spacing, zoom) pushes the next one, or the
+   section, down and never covers another (a11y N2, design 7). Tracks, east to west (the first is on
+   the right): edge 2% · Kiryat Gat 26%, under its pin · Netivot 26%, beside its pin and level with it
+   · the route 1fr · Sderot, production house, Ofakim 29.5% · edge 1.5%. The route, the pins and the
+   arrow north (x 262) lie in the 1fr track, the scale and the north arrow under Kiryat Gat. No
+   leaders: each pin keeps its mark (number, square, ring) and its label shows the same mark */
+@container map (min-width: 760px) {
+  .pb .map-art { grid-area: 1 / 1; }
+  .pb .places {
+    --map-labels: on;
+    grid-area: 1 / 1; align-self: start; position: relative; z-index: 1; margin: 0; pointer-events: none;
+    grid-template-columns: 2% 26% 26% minmax(0, 1fr) 29.5% 1.5%; align-items: start; gap: 2.2cqw 1cqw;
+    /* on a big map the west stack spreads: the production house's label starts no higher than about
+       130px above its square (y 400 = 50cqw), Ofakim's follows; on a 760-800px map the stack is tight */
+    grid-template-rows: minmax(calc(50cqw - 130px), auto) auto auto;
+  }
+  .pb .place { pointer-events: auto; font-size: clamp(12.3px, 1.62cqw, 14px); }
+  .pb .place h3 { font-size: clamp(18px, 2.4cqw, 21px); }
+  .pb .place[data-place="kiryat-gat"] { grid-area: 1 / 2 / span 3; margin-top: 12cqw; }   /* pin at y 40 */
+  .pb .place[data-place="netivot"] { grid-area: 1 / 3 / span 3; margin-top: 41.5cqw; }    /* pin at y 357.6 */
+  .pb .place[data-place="sderot"] { grid-area: 1 / 5; margin-top: 3cqw; }
+  .pb .place[data-place="factory"] { grid-area: 2 / 5; }
+  .pb .place[data-place="ofakim"] { grid-area: 3 / 5; }
+  .pb .pin-tag { display: none; }
+  .pb .map-out { left: 34.25%; top: 8.33%; translate: 0 -50%; }
+}
+
+
+/* ---------- 6 reduced motion (.rm: system setting or the page's "הדמיית הפחתת תנועה") ---------- */
+/* the ticker becomes a static, wrapping list without its copies or pause button. Each item carries
+   its mark at its start, and the list reaches one mark + gap past the start edge of the clipping view,
+   so no line opens with a mark (design 15) */
+.pb.rm .tk-view { margin-inline: 16px; }
+.pb.rm .tk-track { width: auto; flex-wrap: wrap; direction: rtl; }
+.pb.rm .tk-list { flex-wrap: wrap; margin-inline-start: -24px; }
+.pb.rm .tk-list[aria-hidden] { display: none; }
+.pb.rm .tk-pause { display: none; }
+.pb.rm .tk-list li::after { content: none; }
+.pb.rm .tk-list li { font-size: 19px; line-height: 40px; padding-inline: 0 12px; gap: 12px; }
+/* phones: a smaller print keeps the static tape short (design 17) */
+@container pb (max-width: 699.98px) {
+  .pb.rm .tk-list { margin-inline-start: -22px; }
+  .pb.rm .tk-list li { font-size: 17px; line-height: 32px; padding-inline-end: 10px; gap: 10px; }
+}
+/* safety net over every motion file: nothing animates, state changes land at once */
+.pb.rm *, .pb.rm *::before, .pb.rm *::after { animation: none !important; transition-duration: .01s !important; }
+
+
+/* ---------- 7 short screens (zoomed in, landscape phones): the bars stop sticking (A11Y-02) ---------- */
+@media (max-height: 500px) {
+  .pb .hd, .pb .bar { position: relative; }
+}

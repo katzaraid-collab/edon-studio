@@ -1,0 +1,160 @@
+/* ==========================================================================
+   האופה · page-level rules: what a real page needs that the prototype got from shell.css or from
+   its scrolling frame. Loaded after b.css and the motion files.
+
+   The root of the site is <html class="pb">: it carries the tokens, data-mode and .anim/.rm, and it
+   is the query container (b.css: `.pb { container: pb / inline-size }`), so every @container rule
+   in b.css and b-motion-*.css works unchanged. An element cannot query itself, so the few rules
+   that style <html> itself (scroll padding) use @media.
+   ========================================================================== */
+
+/* theme: form controls and scrollbars follow the site's mode, not the OS (light by default) */
+:root, :root[data-mode="light"] { color-scheme: light; }
+:root[data-mode="dark"] { color-scheme: dark; }
+
+/* b.css sets 17px on .pb; on <html> a px size would ignore the visitor's own default text size.
+   106.25% is the same 17px at the browser default of 16px. */
+html.pb { font-size: 106.25%; }
+/* the tilted ticker tape bleeds past both edges. On <html> overflow goes to the viewport, so the clip
+   lives on body (not a scroll container: the sticky header and bar keep working) */
+body { margin: 0; overflow-x: clip; }
+
+/* the hidden attribute beats component display rules; the menu keeps painting while
+   b-motion-micro folds it away (.mi-closing) */
+[hidden]:not(.mi-closing) { display: none !important; }
+
+/* in-page links land below the sticky header and above the mobile bar (audit A11Y-02) */
+html { scroll-padding-top: 88px; }
+@media (max-width: 999.98px) { html { scroll-padding-top: 76px; scroll-padding-bottom: calc(76px + env(safe-area-inset-bottom)); } }
+html.anim { scroll-behavior: smooth; }
+/* zoomed in or on a short screen the two sticky bars would cover most of it (A11Y-02, A11Y-18) */
+@media (max-height: 500px) { .pb .hd, .pb .bar { position: relative; } }
+.pb main:focus { outline: none; }
+
+/* feed photo slots until real, licensed photos exist: abstract colour studies sampled from the
+   bakery's own posts, each labelled "צילום זמני". Delete with the placeholders. */
+.pb .ph {
+  position: relative; overflow: hidden; isolation: isolate; background-color: #CDB08A;
+  display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start;
+  padding: 10px; min-height: 120px; max-width: 100%;
+}
+.pb .ph::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .5; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.12  0 0 0 0 0.05  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.pb .ph-tag {
+  font: 600 11px/1 var(--body); letter-spacing: .02em; color: #fff; background: rgba(20, 14, 10, .62);
+  border: 1px dashed rgba(255, 255, 255, .7); padding: 5px 8px; border-radius: 999px;
+}
+.pb .ph--frena {
+  background-color: #D7B98F;
+  background-image:
+    radial-gradient(circle at 22% 30%, #2E1A12 0 1.6%, transparent 3.2%),
+    radial-gradient(circle at 31% 26%, #4A2A19 0 1%, transparent 2.6%),
+    radial-gradient(circle at 64% 38%, #2E1A12 0 2%, transparent 3.8%),
+    radial-gradient(circle at 72% 33%, #5B331D 0 1.2%, transparent 3%),
+    radial-gradient(circle at 46% 70%, #3B2216 0 1.4%, transparent 3%),
+    radial-gradient(circle at 80% 72%, #2E1A12 0 1.1%, transparent 2.6%),
+    radial-gradient(ellipse 46% 26% at 30% 34%, #B9733D 0, #D49A5F 45%, transparent 72%),
+    radial-gradient(ellipse 40% 24% at 70% 38%, #A8642F 0, #D9A469 48%, transparent 74%),
+    radial-gradient(ellipse 44% 22% at 52% 74%, #B46F38 0, #DDB07A 50%, transparent 75%),
+    linear-gradient(180deg, #6E4A31 0 6%, #E4CFAE 6% 52%, #6E4A31 52% 56%, #E2C9A2 56%);
+}
+.pb .ph--sufgania {
+  background-color: #5A3A26;
+  background-image:
+    radial-gradient(circle at 25% 30%, #4A2716 0 5%, #F4EEE6 5.5% 7%, #C88A3C 7.5% 15%, transparent 15.5%),
+    radial-gradient(circle at 62% 26%, #4A2716 0 5%, #F4EEE6 5.5% 7%, #CD9244 7.5% 15%, transparent 15.5%),
+    radial-gradient(circle at 42% 66%, #4A2716 0 5%, #F4EEE6 5.5% 7%, #C68637 7.5% 15%, transparent 15.5%),
+    radial-gradient(circle at 82% 70%, #4A2716 0 5%, #F4EEE6 5.5% 7%, #CC8E40 7.5% 15%, transparent 15.5%),
+    radial-gradient(circle at 8% 78%, #4A2716 0 5%, #F4EEE6 5.5% 7%, #C88A3C 7.5% 15%, transparent 15.5%),
+    linear-gradient(180deg, #7A5638, #4A2F1F);
+}
+.pb .ph--pastry {
+  background-color: #E0A659;
+  background-image:
+    repeating-linear-gradient(115deg, rgba(255, 236, 196, .55) 0 6px, transparent 6px 15px),
+    radial-gradient(ellipse 60% 40% at 50% 50%, #F0C47E, transparent 70%),
+    linear-gradient(180deg, #B97A33, #E8B566 60%, #9C6227);
+}
+
+/* a detail still waiting for the owner's confirmation: dashed underline. Preview builds only;
+   a launch build refuses to run while any is left (build.mjs --launch) */
+.pb .tbd {
+  border-bottom: 2px dashed currentColor; padding-inline: 2px;
+  background: color-mix(in srgb, currentColor 9%, transparent); border-radius: 3px 3px 0 0;
+}
+
+/* preview ribbon: says plainly that this is not the live site yet */
+.pb .preview-note p { margin: 0; }
+.pb .preview-note {
+  padding: 8px max(16px, env(safe-area-inset-left)); text-align: center;
+  font: 500 14px/1.4 var(--body); background: var(--band); color: var(--on-band);
+}
+
+/* text pages (accessibility statement, privacy policy, 404): same header, footer and bar */
+.pb .doc { padding-block: calc(var(--sec) * .7) var(--sec); min-height: 70vh; }   /* a short page keeps the footer clear of the phone bar */
+.pb .doc .in { max-width: 760px; }
+.pb .doc h1 { font: 400 clamp(36px, 6cqi, 60px)/1.05 var(--display); color: var(--head); margin: 0 0 12px; text-wrap: balance; }
+.pb .doc h2 { font: 400 clamp(24px, 3.2cqi, 32px)/1.2 var(--display); color: var(--head); margin: 1.8em 0 .45em; text-wrap: balance; }
+.pb .doc h3 { font-size: 1.05em; margin: 1.5em 0 .3em; }
+.pb .doc p, .pb .doc li { max-width: 65ch; }
+.pb .doc ul, .pb .doc ol { padding-inline-start: 1.3em; }
+.pb .doc li + li { margin-top: .35em; }
+.pb .doc .lead { font-size: 1.12em; color: var(--ink2); }
+.pb .doc .meta { color: var(--ink2); font-size: .94em; }
+.pb .doc table { border-collapse: collapse; width: 100%; font-size: .95em; }
+.pb .doc th, .pb .doc td { text-align: start; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.pb .doc .tbl { overflow-x: auto; }
+.pb .doc .info-card { border: 1px solid var(--line-strong); border-radius: var(--r-paper, 4px); padding: 14px 16px; background: var(--paper); }
+
+/* the current page in the header nav */
+.pb .nav a[aria-current="page"] { background: var(--lid); color: var(--head); }
+.pb .menu a[aria-current="page"] { color: var(--head); }
+
+/* home: the way from the six boxes to the whole menu; map labels: the way to each branch page */
+.pb .boxes-more { margin: 28px 0 0; text-align: center; }
+.pb .lbl-more { margin: 8px 0 0; font-weight: 600; }
+.pb .lbl-more a { text-underline-offset: 4px; }
+
+/* wide text pages (the menu) */
+.pb .doc--wide .in { max-width: 1120px; }
+.pb .doc--wide p, .pb .doc--wide li { max-width: none; }
+.pb .crumbs { margin: 0 0 8px; font-size: .92em; color: var(--ink2); }
+.pb .crumbs a { color: inherit; }
+
+/* menu: one kraft card per group, the list printed on its face (like the home page boxes) */
+/* columns, not a grid: cards of very different lengths pack without holes */
+.pb .menu-cats { columns: 3 280px; column-gap: 18px; }
+.pb .menu-card {
+  display: grid; gap: 12px; align-content: start; padding: 18px 20px 20px; break-inside: avoid; margin: 0 0 18px;
+  background: var(--kraft); border: 1px solid var(--line); border-radius: var(--r-paper, 4px); box-shadow: var(--shadow);
+}
+.pb .menu-card figure { position: relative; margin: 0; display: grid; place-items: center; padding: 12px; background: var(--kraft2); border-radius: 90px 90px 4px 4px; }
+.pb .menu-card figure img { width: min(78%, 300px); height: auto; filter: drop-shadow(0 10px 10px rgba(60, 35, 12, .22)); }
+.pb .menu-card figcaption { position: absolute; inset-block-end: 6px; inset-inline-start: 10px; }
+.pb .menu-card h3 { margin: 0; font: 400 24px/1.15 var(--display); color: var(--head); display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.pb .menu-card h3 .n { font: 500 13px/1 var(--body); color: var(--ink2); }
+.pb .menu-card ul { list-style: none; margin: 0; padding: 0; columns: 2 9em; column-gap: 18px; }
+.pb .menu-card li { break-inside: avoid; padding: 6px 0; border-bottom: 1px solid var(--line); margin: 0; }
+.pb .doc .menu-card li + li { margin-top: 0; }
+.pb .doc--wide .info-card { margin-top: 32px; max-width: 520px; }
+
+/* branch pages */
+.pb .branch-acts { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0 26px; }
+.pb .branch-dl {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0 18px; margin: 0 0 12px;
+  background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-paper, 4px); padding: 6px 18px; box-shadow: var(--shadow);
+}
+.pb .branch-dl dt, .pb .branch-dl dd { padding: 12px 0; border-bottom: 1px solid var(--line); margin: 0; }
+.pb .branch-dl dt { font-weight: 700; color: var(--ink2); }
+.pb .branch-dl dt:last-of-type, .pb .branch-dl dd:last-of-type { border-bottom: 0; }
+
+/* about: the path from Ofakim, and their own words */
+.pb .timeline { list-style: none; padding: 0; margin: 22px 0; border-inline-start: 2px dotted var(--caramel); }
+.pb .doc .timeline li { position: relative; display: grid; gap: 2px; padding: 0 22px 18px; margin: 0; }
+.pb .timeline li::before { content: ""; position: absolute; inset-inline-start: -7px; top: .45em; width: 12px; height: 12px; border-radius: 50%; background: var(--caramel); }
+.pb .timeline b { color: var(--head); }
+.pb .quote { margin: 28px 0; padding: 18px 22px; border-inline-start: 4px solid var(--caramel); background: var(--paper); }
+.pb .quote p { margin: 0; font: 600 clamp(20px, 2.6cqi, 26px)/1.4 var(--hand); color: var(--head); }
+.pb .quote footer { margin-top: 8px; font-size: .9em; color: var(--ink2); }

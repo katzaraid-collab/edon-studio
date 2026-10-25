@@ -1,0 +1,29 @@
+[
+ {
+  "file": "haofe-logo-badge.svg",
+  "in": 59629,
+  "out": 20351,
+  "inBr": 17897,
+  "outBr": 7468,
+  "diffPct": 0.137,
+  "meanAbs": 0.53
+ },
+ {
+  "file": "haofe-logo-clean.svg",
+  "in": 28645,
+  "out": 10977,
+  "inBr": 9259,
+  "outBr": 4237,
+  "diffPct": 0.016,
+  "meanAbs": 0.207
+ },
+ {
+  "file": "haofe-logo-mono-cream.svg",
+  "in": 28645,
+  "out": 10929,
+  "inBr": 9259,
+  "outBr": 4238,
+  "diffPct": 0.05,
+  "meanAbs": 0.273
+ }
+]

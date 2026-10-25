@@ -1,0 +1,943 @@
+{
+ "generated": "2026-10-24",
+ "generator": "clients/haofe/audit/perf/tools/gen.py (with tools/imgq.py) (Pillow 13.0.0, libavif 1.4.2, libwebp 1.6.0)",
+ "rules": "Responsive variants for concepts/assets/ai -> concepts/assets/ai/r (+ manifest.json).\n\nRules\n  widths   480, 800, 1200 kept only when <= source width; the source width itself is added when the\n           largest kept width is < 85% of it (bag 748). plate also gets 1920 (= its source width)\n           because its slot is 100vw on desktop. plate-m is an art-direction crop of plate.webp:\n           exactly the region object-fit:cover + object-position:50% 100% shows in the 4/4.4\n           mobile scene (.pb .scene below the 1000px container query).\n  quality  per variant, the lowest quality on a fixed ladder whose SSIM (luma, 7x7) against the\n           Lanczos-resized source reaches TARGET, scored on the worse of two composites\n           (light #FFFCF6 and dark #221812 slot backgrounds), so cutout edges count in both modes.\n  alpha    kept. WebP alpha lossless (alpha_quality 100) unless alpha_quality 70 or 50 is smaller AND still\n           meets TARGET with mean alpha error <= 0.6/255. AVIF alpha at the same quality; for alpha\n           images the encoder also tries a push-pull colour bleed under alpha==0 and keeps the\n           smaller file (pixels under alpha 0 are invisible either way).\n  lqip     longest side 16 px, Lanczos, WebP q40 (alpha kept), base64 data URI.",
+ "ssimTarget": 0.975,
+ "note": "AI renders (הדמיית AI), temporary; regenerate with gen.py when real photography replaces them. Paths in \"src\" are relative to concepts/.",
+ "images": [
+  {
+   "name": "bag",
+   "source": "assets/ai/bag.webp",
+   "sourceBytes": 97130,
+   "intrinsic": {
+    "width": 748,
+    "height": 1100
+   },
+   "aspect": 0.68,
+   "alpha": true,
+   "use": "hero subject plane (.sc-bag-img)",
+   "widths": [
+    480,
+    748
+   ],
+   "formats": [
+    "avif",
+    "webp"
+   ],
+   "files": [
+    {
+     "file": "bag-480.avif",
+     "src": "assets/ai/r/bag-480.avif",
+     "format": "avif",
+     "width": 480,
+     "height": 706,
+     "bytes": 36567,
+     "quality": 70,
+     "ssim": 0.9793,
+     "alphaMeanErr": 0.073,
+     "fill": "plain",
+     "alpha": null,
+     "sha1": "453f46ef6a5c"
+    },
+    {
+     "file": "bag-480.webp",
+     "src": "assets/ai/r/bag-480.webp",
+     "format": "webp",
+     "width": 480,
+     "height": 706,
+     "bytes": 41092,
+     "quality": 85,
+     "ssim": 0.9758,
+     "alphaMeanErr": 0.136,
+     "fill": null,
+     "alpha": "alpha_quality=50",
+     "sha1": "cfa9bbdb7586"
+    },
+    {
+     "file": "bag-748.avif",
+     "src": "assets/ai/r/bag-748.avif",
+     "format": "avif",
+     "width": 748,
+     "height": 1100,
+     "bytes": 56016,
+     "quality": 60,
+     "ssim": 0.9774,
+     "alphaMeanErr": 0.07,
+     "fill": "bleed",
+     "alpha": null,
+     "sha1": "200b820d0556"
+    },
+    {
+     "file": "bag-748.webp",
+     "src": "assets/ai/r/bag-748.webp",
+     "format": "webp",
+     "width": 748,
+     "height": 1100,
+     "bytes": 61848,
+     "quality": 78,
+     "ssim": 0.9772,
+     "alphaMeanErr": 0.129,
+     "fill": null,
+     "alpha": "alpha_quality=50",
+     "sha1": "5eb8ff53fb41"
+    }
+   ],
+   "lqip": "data:image/webp;base64,UklGRsIAAABXRUJQVlA4WAoAAAAQAAAACgAADwAAQUxQSEoAAAART6CokSQ1thYYDn8cEQE4vmdfk8EokiRFs3zP08A2Tg3pwPkv60ULEf2fgBXSC3oYIGz/Hpl3MUZlY2KSzmZMoup0lWnrbkREBVZQOCBSAAAAEAIAnQEqCwAQAAOAWiWwAnQA4Y4SFAKAAAD+tWW22AiiMCNzBdOzgi4lxZf9I7nCIww0gmosMOY+WvLs90Or6+nLqCXr5bvI8AnfuRK3C5AAAA==",
+   "lqipBytes": 202,
+   "lqipSize": {
+    "width": 11,
+    "height": 16
+   },
+   "color": "#CA9D77"
+  },
+  {
+   "name": "baguette",
+   "source": "assets/ai/baguette.webp",
+   "sourceBytes": 111686,
+   "intrinsic": {
+    "width": 900,
+    "height": 559
+   },
+   "aspect": 1.61,
+   "alpha": true,
+   "use": "product box (.box .shot .prod)",
+   "widths": [
+    480,
+    800
+   ],
+   "formats": [
+    "avif",
+    "webp"
+   ],
+   "files": [
+    {
+     "file": "baguette-480.avif",
+     "src": "assets/ai/r/baguette-480.avif",
+     "format": "avif",
+     "width": 480,
+     "height": 298,
+     "bytes": 32273,
+     "quality": 70,
+     "ssim": 0.9839,
+     "alphaMeanErr": 0.102,
+     "fill": "plain",
+     "alpha": null,
+     "sha1": "6c80fe0a965b"
+    },
+    {
+     "file": "baguette-480.webp",
+     "src": "assets/ai/r/baguette-480.webp",
+     "format": "webp",
+     "width": 480,
+     "height": 298,
+     "bytes": 29624,
+     "quality": 80,
+     "ssim": 0.9767,
+     "alphaMeanErr": 0.151,
+     "fill": null,
+     "alpha": "alpha_quality=50",
+     "sha1": "5475a07591d2"
+    },
+    {
+     "file": "baguette-800.avif",
+     "src": "assets/ai/r/baguette-800.avif",
+     "format": "avif",
+     "width": 800,
+     "height": 497,
+     "bytes": 79354,
+     "quality": 70,
+     "ssim": 0.9841,
+     "alphaMeanErr": 0.079,
+     "fill": "plain",
+     "alpha": null,
+     "sha1": "4e46492f96a3"
+    },
+    {
+     "file": "baguette-800.webp",
+     "src": "assets/ai/r/baguette-800.webp",
+     "format": "webp",
+     "width": 800,
+     "height": 497,
+     "bytes": 77994,
+     "quality": 82,
+     "ssim": 0.9791,
+     "alphaMeanErr": 0.141,
+     "fill": null,
+     "alpha": "alpha_quality=50",
+     "sha1": "05a728779086"
+    }
+   ],
+   "lqip": "data:image/webp;base64,UklGRuoAAABXRUJQVlA4WAoAAAAQAAAADwAACQAAQUxQSFcAAAART6CgbRs2VRTt/omIAPU/Pj1gG9m2koun0IFD6nTAkLoVQCVO7K/fX0RE/ycAGgD/VdQ/hf+dAmbKv1ME1IfIA7D+RKeLgpj8xRJ/lmx8jBF6M3VZtAMAVlA4IGwAAAAwAgCdASoQAAoAA4BaJbACdAYu5y4WcqpygAD+P+QLfp+spP0SYzJEmFc0wsdKxzoUenbUDw8WqhL2EqzfNs75l90CdmVlUkA3JaAPVPncuXQ3939Ad/KqYP85DWh+jicrs9vcwN7Ffq8zoAA=",
+   "lqipBytes": 242,
+   "lqipSize": {
+    "width": 16,
+    "height": 10
+   },
+   "color": "#CE9A6D"
+  },
+  {
+   "name": "challah",
+   "source": "assets/ai/challah.webp",
+   "sourceBytes": 135506,
+   "intrinsic": {
+    "width": 900,
+    "height": 620
+   },
+   "aspect": 1.4516,
+   "alpha": true,
+   "use": "product box (.box .shot .prod)",
+   "widths": [
+    480,
+    800
+   ],
+   "formats": [
+    "avif",
+    "webp"
+   ],
+   "files": [
+    {
+     "file": "challah-480.avif",
+     "src": "assets/ai/r/challah-480.avif",
+     "format": "avif",
+     "width": 480,
+     "height": 331,
+     "bytes": 34420,
+     "quality": 65,
+     "ssim": 0.9797,
+     "alphaMeanErr": 0.112,
+     "fill": "plain",
+     "alpha": null,
+     "sha1": "5c7fb099a64e"
+    },
+    {
+     "file": "challah-480.webp",
+     "src": "assets/ai/r/challah-480.webp",
+     "format": "webp",
+     "width": 480,
+     "height": 331,
+     "bytes": 38362,
+     "quality": 78,
+     "ssim": 0.9796,
+     "alphaMeanErr": 0.178,
+     "fill": null,
+     "alpha": "alpha_quality=50",
+     "sha1": "d7a844317c20"
+    },
+    {
+     "file": "challah-800.avif",
+     "src": "assets/ai/r/challah-800.avif",
+     "format": "avif",
+     "width": 800,
+     "height": 551,
+     "bytes": 66252,
+     "quality": 60,
+     "ssim": 0.9754,
+     "alphaMeanErr": 0.106,
+     "fill": "plain",
+     "alpha": null,
+     "sha1": "f35133069402"
+    },
+    {
+     "file": "challah-800.webp",
+     "src": "assets/ai/r/challah-800.webp",
+     "format": "webp",
+     "width": 800,
+     "height": 551,
+     "bytes": 84900,
+     "quality": 78,
+     "ssim": 0.9774,
+     "alphaMeanErr": 0.168,
+     "fill": null,
+     "alpha": "alpha_quality=50",
+     "sha1": "2fc788da1d89"
+    }
+   ],
+   "lqip": "data:image/webp;base64,UklGRvIAAABXRUJQVlA4WAoAAAAQAAAADwAACgAAQUxQSF0AAAART6CgbRs2WBLt/gZhERHIK/5GGJzYtq02N2wZZGQ0jyAeS5LBo6yNLPeON38QEf2fAADRNgbMJH9wUPAmT2SIPzkjj6Ox/BIZd9GiFjEiufgPJb5k2DvA8lZJAAAAVlA4IG4AAACQAgCdASoQAAsAA4BaJbACdLoAEIgQdIxnOVGFAAD9suMZB8fSZKjYORRvmDUWQcDLlJzQnkKDK0r39rrT2mE5P8JwRegdmdC/MmDDVN1GoTXYBY4+UzfrUI1ZIrFX9ZqB/Vzs5kVWkoaWMSOAAA==",
+   "lqipBytes": 250,
+   "lqipSize": {
+    "width": 16,
+    "height": 11
+   },
+   "color": "#D07E48"
+  },
+  {
+   "name": "dairy",
+   "source": "assets/ai/dairy.webp",
+   "sourceBytes": 93916,
+   "intrinsic": {
+    "width": 900,
+    "height": 450
+   },
+   "aspect": 2.0,
+   "alpha": true,
+   "use": "product box (.box .shot .prod)",
+   "widths": [
+    480,
+    800
+   ],
+   "formats": [
+    "avif",
+    "webp"
+   ],
+   "files": [
+    {
+     "file": "dairy-480.avif",
+     "src": "assets/ai/r/dairy-480.avif",
+     "format": "avif",
+     "width": 480,
+     "height": 240,
+     "bytes": 21852,
+     "quality": 60,
+     "ssim": 0.9753,
+     "alphaMeanErr": 0.168,
+     "fill": "plain",
+     "alpha": null,
+     "sha1": "b259650b1a9d"
+    },
+    {
+     "file": "dairy-480.webp",
+     "src": "assets/ai/r/dairy-480.webp",
+     "format": "webp",
+     "width": 480,
+     "height": 240,
+     "bytes": 28482,
+     "quality": 75,
+     "ssim": 0.9752,
+     "alphaMeanErr": 0.0,
+     "fill": null,
+     "alpha": "plain",
+     "sha1": "114b1297be9b"
+    },
+    {
+     "file": "dairy-800.avif",
+     "src": "assets/ai/r/dairy-800.avif",
+     "format": "avif",
+     "width": 800,
+     "height": 400,
+     "bytes": 47373,
+     "quality": 60,
+     "ssim": 0.9774,
+     "alphaMeanErr": 0.133,
+     "fill": "plain",
+     "alpha": null,
+     "sha1": "071acfbe2af3"
+    },
+    {
+     "file": "dairy-800.webp",
+     "src": "assets/ai/r/dairy-800.webp",
+     "format": "webp",
+     "width": 800,
+     "height": 400,
+     "bytes": 55680,
+     "quality": 78,
+     "ssim": 0.9774,
+     "alphaMeanErr": 0.208,
+     "fill": null,
+     "alpha": "alpha_quality=50",
+     "sha1": "60c675a67975"
+    }
+   ],
+   "lqip": "data:image/webp;base64,UklGRtgAAABXRUJQVlA4WAoAAAAQAAAADwAABwAAQUxQSFAAAAART6CmbSQ2dhB+6336iAhkJ/0JJ5jW1t7kC00zAo452gQoIukge9FRTJD/m5cMEdH/CQCyJjI1sIldSC8W/vVKt7h0aciP9JFYki+AarhTD1ZQOCBiAAAAcAIAnQEqEAAIAAOAWiWwAnS6ABCTFKwOsnnNAADN00wP9c+gln6gSs1VdxHHlDz2WKPL03engU1VDlvXEyj8x9KMQevFbU8JoSMcNChzy/xuy4Qu+v6v3u/E8YNWVUgAAAA=",
+   "lqipBytes": 224,
+   "lqipSize": {
+    "width": 16,
+    "height": 8
+   },
+   "color": "#C88C4C"
+  },
+  {
+   "name": "frena",
+   "source": "assets/ai/frena.webp",
+   "sourceBytes": 98098,
+   "intrinsic": {
+    "width": 900,
+    "height": 554
+   },
+   "aspect": 1.6245,
+   "alpha": true,
+   "use": "product box (.box .shot .prod)",
+   "widths": [
+    480,
+    800
+   ],
+   "formats": [
+    "avif",
+    "webp"
+   ],
+   "files": [
+    {
+     "file": "frena-480.avif",
+     "src": "assets/ai/r/frena-480.avif",
+     "format": "avif",
+     "width": 480,
+     "height": 295,
+     "bytes": 29686,
+     "quality": 70,
+     "ssim": 0.9829,
+     "alphaMeanErr": 0.079,
+     "fill": "bleed",
+     "alpha": null,
+     "sha1": "8d36aa92aae0"
+    },
+    {
+     "file": "frena-480.webp",
+     "src": "assets/ai/r/frena-480.webp",
+     "format": "webp",
+     "width": 480,
+     "height": 295,
+     "bytes": 29826,
+     "quality": 82,
+     "ssim": 0.9762,
+     "alphaMeanErr": 0.119,
+     "fill": null,
+     "alpha": "alpha_quality=50",
+     "sha1": "69a3ee0ed175"
+    },
+    {
+     "file": "frena-800.avif",
+     "src": "assets/ai/r/frena-800.avif",
+     "format": "avif",
+     "width": 800,
+     "height": 492,
+     "bytes": 57320,
+     "quality": 65,
+     "ssim": 0.9761,
+     "alphaMeanErr": 0.068,
+     "fill": "bleed",
+     "alpha": null,
+     "sha1": "03683fd0abbc"
+    },
+    {
+     "file": "frena-800.webp",
+     "src": "assets/ai/r/frena-800.webp",
+     "format": "webp",
+     "width": 800,
+     "height": 492,
+     "bytes": 68312,
+     "quality": 82,
+     "ssim": 0.9784,
+     "alphaMeanErr": 0.115,
+     "fill": null,
+     "alpha": "alpha_quality=50",
+     "sha1": "1243df68e7b2"
+    }
+   ],
+   "lqip": "data:image/webp;base64,UklGRt4AAABXRUJQVlA4WAoAAAAQAAAADwAACQAAQUxQSFEAAAARR6CojSQ0diLox+ThIiJAH+0wBWxr25ZxPg2IaEABWpgJZV8s+hX44vn27ekhov8TANTRp0D2SMFRb5JUVDLDYe2vtfzk16cvmSVNAGv0CQAAVlA4IGYAAAAwAgCdASoQAAoAA4BaJbACdAYuRm+uw4q8UAD+4gwACDoF4vGgzTCS5HmOKuVP6v+SYntIE/e16cRS5prFw8R4CwnZxt+8C0ecQqDhk+/8Kd4pzaowDXri7vX1Yj42UCgLRftAAAA=",
+   "lqipBytes": 230,
+   "lqipSize": {
+    "width": 16,
+    "height": 10
+   },
+   "color": "#D2B091"
+  },
+  {
+   "name": "plate",
+   "source": "assets/ai/plate.webp",
+   "sourceBytes": 53876,
+   "intrinsic": {
+    "width": 1920,
+    "height": 1079
+   },
+   "aspect": 1.7794,
+   "alpha": false,
+   "use": "hero background plane (.sc-plate), desktop >=1000px container",
+   "widths": [
+    480,
+    800,
+    1200,
+    1920
+   ],
+   "formats": [
+    "avif",
+    "webp"
+   ],
+   "files": [
+    {
+     "file": "plate-480.avif",
+     "src": "assets/ai/r/plate-480.avif",
+     "format": "avif",
+     "width": 480,
+     "height": 270,
+     "bytes": 4416,
+     "quality": 55,
+     "ssim": 0.9754,
+     "alphaMeanErr": null,
+     "fill": null,
+     "sha1": "73b3b4eb0f6d"
+    },
+    {
+     "file": "plate-480.webp",
+     "src": "assets/ai/r/plate-480.webp",
+     "format": "webp",
+     "width": 480,
+     "height": 270,
+     "bytes": 8024,
+     "quality": 85,
+     "ssim": 0.9777,
+     "alphaMeanErr": null,
+     "fill": null,
+     "sha1": "c6df53f01765"
+    },
+    {
+     "file": "plate-800.avif",
+     "src": "assets/ai/r/plate-800.avif",
+     "format": "avif",
+     "width": 800,
+     "height": 450,
+     "bytes": 8098,
+     "quality": 50,
+     "ssim": 0.9763,
+     "alphaMeanErr": null,
+     "fill": null,
+     "sha1": "0f5d00af8b9e"
+    },
+    {
+     "file": "plate-800.webp",
+     "src": "assets/ai/r/plate-800.webp",
+     "format": "webp",
+     "width": 800,
+     "height": 450,
+     "bytes": 13678,
+     "quality": 82,
+     "ssim": 0.9757,
+     "alphaMeanErr": null,
+     "fill": null,
+     "sha1": "877af1623f5c"
+    },
+    {
+     "file": "plate-1200.avif",
+     "src": "assets/ai/r/plate-1200.avif",
+     "format": "avif",
+     "width": 1200,
+     "height": 674,
+     "bytes": 12043,
+     "quality": 45,
+     "ssim": 0.9767,
+     "alphaMeanErr": null,
+     "fill": null,
+     "sha1": "e46edc190ce7"
+    },
+    {
+     "file": "plate-1200.webp",
+     "src": "assets/ai/r/plate-1200.webp",
+     "format": "webp",
+     "width": 1200,
+     "height": 674,
+     "bytes": 20918,
+     "quality": 78,
+     "ssim": 0.9751,
+     "alphaMeanErr": null,
+     "fill": null,
+     "sha1": "86a72a6e8927"
+    },
+    {
+     "file": "plate-1920.avif",
+     "src": "assets/ai/r/plate-1920.avif",
+     "format": "avif",
+     "width": 1920,
+     "height": 1079,
+     "bytes": 18179,
+     "quality": 40,
+     "ssim": 0.9797,
+     "alphaMeanErr": null,
+     "fill": null,
+     "sha1": "390207ccb47b"
+    },
+    {
+     "file": "plate-1920.webp",
+     "src": "assets/ai/r/plate-1920.webp",
+     "format": "webp",
+     "width": 1920,
+     "height": 1079,
+     "bytes": 37136,
+     "quality": 72,
+     "ssim": 0.9842,
+     "alphaMeanErr": null,
+     "fill": null,
+     "sha1": "ca9fd1520611"
+    }
+   ],
+   "lqip": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADwAQCdASoQAAkAA4BaJaACdAERHD3UAcAA/fs8lWHc+jWsu18Ex3N0hnIS9Z3Ku/8GhVId1laXpT6IAAA=",
+   "lqipBytes": 80,
+   "lqipSize": {
+    "width": 16,
+    "height": 9
+   },
+   "color": "#C9AB8C"
+  },
+  {
+   "name": "plate-m",
+   "source": "assets/ai/plate.webp",
+   "sourceBytes": 53876,
+   "intrinsic": {
+    "width": 981,
+    "height": 1079
+   },
+   "aspect": 0.9092,
+   "alpha": false,
+   "use": "hero background plane (.sc-plate), mobile/tablet <1000px container (art-direction crop)",
+   "widths": [
+    480,
+    800,
+    981
+   ],
+   "formats": [
+    "avif",
+    "webp"
+   ],
+   "files": [
+    {
+     "file": "plate-m-480.avif",
+     "src": "assets/ai/r/plate-m-480.avif",
+     "format": "avif",
+     "width": 480,
+     "height": 528,
+     "bytes": 2781,
+     "quality": 40,
+     "ssim": 0.9776,
+     "alphaMeanErr": null,
+     "fill": null,
+     "sha1": "be174dc57672"
+    },
+    {
+     "file": "plate-m-480.webp",
+     "src": "assets/ai/r/plate-m-480.webp",
+     "format": "webp",
+     "width": 480,
+     "height": 528,
+     "bytes": 4980,
+     "quality": 72,
+     "ssim": 0.9753,
+     "alphaMeanErr": null,
+     "fill": null,
+     "sha1": "82b967496477"
+    },
+    {
+     "file": "plate-m-800.avif",
+     "src": "assets/ai/r/plate-m-800.avif",
+     "format": "avif",
+     "width": 800,
+     "height": 880,
+     "bytes": 5221,
+     "quality": 40,
+     "ssim": 0.9841,
+     "alphaMeanErr": null,
+     "fill": null,
+     "sha1": "1df8c7b11147"
+    },
+    {
+     "file": "plate-m-800.webp",
+     "src": "assets/ai/r/plate-m-800.webp",
+     "format": "webp",
+     "width": 800,
+     "height": 880,
+     "bytes": 9996,
+     "quality": 72,
+     "ssim": 0.9815,
+     "alphaMeanErr": null,
+     "fill": null,
+     "sha1": "a4efe78d3563"
+    },
+    {
+     "file": "plate-m-981.avif",
+     "src": "assets/ai/r/plate-m-981.avif",
+     "format": "avif",
+     "width": 981,
+     "height": 1079,
+     "bytes": 7189,
+     "quality": 40,
+     "ssim": 0.9859,
+     "alphaMeanErr": null,
+     "fill": null,
+     "sha1": "ddc58a6344df"
+    },
+    {
+     "file": "plate-m-981.webp",
+     "src": "assets/ai/r/plate-m-981.webp",
+     "format": "webp",
+     "width": 981,
+     "height": 1079,
+     "bytes": 13896,
+     "quality": 72,
+     "ssim": 0.9856,
+     "alphaMeanErr": null,
+     "fill": null,
+     "sha1": "269b727a6c91"
+    }
+   ],
+   "crop": {
+    "from": "assets/ai/plate.webp",
+    "box": [
+     470,
+     0,
+     1451,
+     1079
+    ],
+    "why": "object-fit:cover; object-position:50% 100% in a 4/4.4 box shows only this region"
+   },
+   "lqip": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAAAwAgCdASoPABAAA4BaJZgCdAEPh7Q+k0CwAAD+rxS/Cm+JXdrFnn11o1yuOvYzZTAjccIy+MJqzBXd14thACoAAAA=",
+   "lqipBytes": 86,
+   "lqipSize": {
+    "width": 15,
+    "height": 16
+   },
+   "color": "#D0B293"
+  },
+  {
+   "name": "rugelach",
+   "source": "assets/ai/rugelach.webp",
+   "sourceBytes": 95752,
+   "intrinsic": {
+    "width": 900,
+    "height": 395
+   },
+   "aspect": 2.2785,
+   "alpha": true,
+   "use": "product box (.box .shot .prod)",
+   "widths": [
+    480,
+    800
+   ],
+   "formats": [
+    "avif",
+    "webp"
+   ],
+   "files": [
+    {
+     "file": "rugelach-480.avif",
+     "src": "assets/ai/r/rugelach-480.avif",
+     "format": "avif",
+     "width": 480,
+     "height": 211,
+     "bytes": 23609,
+     "quality": 65,
+     "ssim": 0.9805,
+     "alphaMeanErr": 0.144,
+     "fill": "plain",
+     "alpha": null,
+     "sha1": "7337e1ab501b"
+    },
+    {
+     "file": "rugelach-480.webp",
+     "src": "assets/ai/r/rugelach-480.webp",
+     "format": "webp",
+     "width": 480,
+     "height": 211,
+     "bytes": 27188,
+     "quality": 72,
+     "ssim": 0.975,
+     "alphaMeanErr": 0.0,
+     "fill": null,
+     "alpha": "plain",
+     "sha1": "4f89e8a139f3"
+    },
+    {
+     "file": "rugelach-800.avif",
+     "src": "assets/ai/r/rugelach-800.avif",
+     "format": "avif",
+     "width": 800,
+     "height": 351,
+     "bytes": 53667,
+     "quality": 65,
+     "ssim": 0.98,
+     "alphaMeanErr": 0.117,
+     "fill": "plain",
+     "alpha": null,
+     "sha1": "4332d534b49e"
+    },
+    {
+     "file": "rugelach-800.webp",
+     "src": "assets/ai/r/rugelach-800.webp",
+     "format": "webp",
+     "width": 800,
+     "height": 351,
+     "bytes": 58778,
+     "quality": 78,
+     "ssim": 0.9781,
+     "alphaMeanErr": 0.195,
+     "fill": null,
+     "alpha": "alpha_quality=50",
+     "sha1": "fb6dabef1378"
+    }
+   ],
+   "lqip": "data:image/webp;base64,UklGRtoAAABXRUJQVlA4WAoAAAAQAAAADwAABgAAQUxQSEwAAAART6CobSM2VhLt6/aIiIDeeGYtsI1sW8n7H+iF1EndKqAAIjKIpADN9fRLERH9D4knS22VkpF+Bnv4AFgu/t8HB5ytA02XnSLrEYn4VlA4IGgAAAAQAgCdASoQAAcAA4BaJbACdAYtzVieIeVIAP5EKINw5FzVVF4uDau7Ur9iC/KpONDFsekmeKFqRMKYQuGtx2TJJbyWAlzCKVe1mIoevDnWPIvyRwFYt/Ngwin8jq1Y9D2dnsK5mAAAAA==",
+   "lqipBytes": 226,
+   "lqipSize": {
+    "width": 16,
+    "height": 7
+   },
+   "color": "#A9673D"
+  },
+  {
+   "name": "sufganiyot",
+   "source": "assets/ai/sufganiyot.webp",
+   "sourceBytes": 107240,
+   "intrinsic": {
+    "width": 900,
+    "height": 554
+   },
+   "aspect": 1.6245,
+   "alpha": true,
+   "use": "product box (.box .shot .prod)",
+   "widths": [
+    480,
+    800
+   ],
+   "formats": [
+    "avif",
+    "webp"
+   ],
+   "files": [
+    {
+     "file": "sufganiyot-480.avif",
+     "src": "assets/ai/r/sufganiyot-480.avif",
+     "format": "avif",
+     "width": 480,
+     "height": 295,
+     "bytes": 23998,
+     "quality": 60,
+     "ssim": 0.9793,
+     "alphaMeanErr": 0.139,
+     "fill": "plain",
+     "alpha": null,
+     "sha1": "214635190653"
+    },
+    {
+     "file": "sufganiyot-480.webp",
+     "src": "assets/ai/r/sufganiyot-480.webp",
+     "format": "webp",
+     "width": 480,
+     "height": 295,
+     "bytes": 25464,
+     "quality": 72,
+     "ssim": 0.9776,
+     "alphaMeanErr": 0.173,
+     "fill": null,
+     "alpha": "alpha_quality=50",
+     "sha1": "7eb169fa409a"
+    },
+    {
+     "file": "sufganiyot-800.avif",
+     "src": "assets/ai/r/sufganiyot-800.avif",
+     "format": "avif",
+     "width": 800,
+     "height": 492,
+     "bytes": 54370,
+     "quality": 60,
+     "ssim": 0.9783,
+     "alphaMeanErr": 0.11,
+     "fill": "plain",
+     "alpha": null,
+     "sha1": "abb4f25c0987"
+    },
+    {
+     "file": "sufganiyot-800.webp",
+     "src": "assets/ai/r/sufganiyot-800.webp",
+     "format": "webp",
+     "width": 800,
+     "height": 492,
+     "bytes": 59112,
+     "quality": 75,
+     "ssim": 0.9756,
+     "alphaMeanErr": 0.16,
+     "fill": null,
+     "alpha": "alpha_quality=50",
+     "sha1": "8f65cded4065"
+    }
+   ],
+   "lqip": "data:image/webp;base64,UklGRvIAAABXRUJQVlA4WAoAAAAQAAAADwAACQAAQUxQSFUAAAART6CgbRs2VBTdvxERKD95th2YxrYd5WVpgg7ARUZiI9mhBCRlIMN++6WIiP6npEm/Da/GSA9F+MoQH1JmPwE++FhOYIV0wuhfqgucmskeYCWp/qIEAFZQOCB2AAAAMAIAnQEqEAAKAAOAWiWwAnQA6TKt/ZAxFAAA/mvzO4VjMN1/QdaJBdVYTYPBSeHH+YinmHOtQgnfnyAT1w9Uf4hxKCZZ3WDaOjtRpW8jJY1uoYBysFRbYgg3u1+k3U4KMeCy/39w4PamWJftSkZ89UwXx/AAAA==",
+   "lqipBytes": 250,
+   "lqipSize": {
+    "width": 16,
+    "height": 10
+   },
+   "color": "#C49067"
+  },
+  {
+   "name": "wheat",
+   "source": "assets/ai/wheat.webp",
+   "sourceBytes": 174642,
+   "intrinsic": {
+    "width": 842,
+    "height": 1000
+   },
+   "aspect": 0.842,
+   "alpha": true,
+   "use": "hero foreground plane (.sc-wheat)",
+   "widths": [
+    480,
+    800
+   ],
+   "formats": [
+    "avif",
+    "webp"
+   ],
+   "files": [
+    {
+     "file": "wheat-480.avif",
+     "src": "assets/ai/r/wheat-480.avif",
+     "format": "avif",
+     "width": 480,
+     "height": 570,
+     "bytes": 20950,
+     "quality": 40,
+     "ssim": 0.9769,
+     "alphaMeanErr": 0.858,
+     "fill": "bleed",
+     "alpha": null,
+     "sha1": "34256e80e29d"
+    },
+    {
+     "file": "wheat-480.webp",
+     "src": "assets/ai/r/wheat-480.webp",
+     "format": "webp",
+     "width": 480,
+     "height": 570,
+     "bytes": 41240,
+     "quality": 72,
+     "ssim": 0.9904,
+     "alphaMeanErr": 0.551,
+     "fill": null,
+     "alpha": "alpha_quality=70",
+     "sha1": "4c27f9b6f367"
+    },
+    {
+     "file": "wheat-800.avif",
+     "src": "assets/ai/r/wheat-800.avif",
+     "format": "avif",
+     "width": 800,
+     "height": 950,
+     "bytes": 41365,
+     "quality": 40,
+     "ssim": 0.9806,
+     "alphaMeanErr": 0.725,
+     "fill": "bleed",
+     "alpha": null,
+     "sha1": "7f60ff8262fc"
+    },
+    {
+     "file": "wheat-800.webp",
+     "src": "assets/ai/r/wheat-800.webp",
+     "format": "webp",
+     "width": 800,
+     "height": 950,
+     "bytes": 91972,
+     "quality": 72,
+     "ssim": 0.9896,
+     "alphaMeanErr": 0.537,
+     "fill": null,
+     "alpha": "alpha_quality=70",
+     "sha1": "6440c0787a59"
+    }
+   ],
+   "lqip": "data:image/webp;base64,UklGRvwAAABXRUJQVlA4WAoAAAAQAAAADAAADwAAQUxQSF0AAAART6CgjSQ1dRoYnz8iAvCd+GlzwGls266yfvL5fyQSmRpApQ6QOAabQWYayP1SRET/AwQgD6E9KmD+iJA9ZzkG331Juv8dA7q/X43Tbwmrb/I3BfcIhi1wjsAC6AAAVlA4IHgAAAAwAgCdASoNABAAA4BaJbACdAYrJuOJqrDsAAD+ryhiYdGh3x3iSEmOm+vpg6H8pRDi1bo/TKeKEPcW6PqVwjKDVdDmrhZLpq6UuoBTn9/py+9CILTCobKEfbfbWcW1Ovd/xcWDefCmLhKks0jXpaTf4/4QjjJAAAA=",
+   "lqipBytes": 260,
+   "lqipSize": {
+    "width": 13,
+    "height": 16
+   },
+   "color": "#D2A568"
+  }
+ ],
+ "markup": "clients/haofe/audit/perf/recommended-markup.html (built from this file by tools/markup.js); sizes for .sc-wheat is \"842px\" while the wheat is drawn squeezed, see audit/perf/report.md P4"
+}

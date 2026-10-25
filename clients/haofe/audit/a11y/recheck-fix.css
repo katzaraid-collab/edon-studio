@@ -1,0 +1,30 @@
+/* Re-audit 24.10.2026 (recheck.md): CSS for the new findings N1 to N4. Every block below was injected into the
+   running prototype (file:///.../concepts/b.html, full-screen overlay, reduced motion) and re-measured:
+   footer overlap 0 px² at 700, 720, 768, 860; no clipped text at 320, 360 (default) or at 320, 390, 1280, 1440
+   (WCAG 1.4.12 spacing); map labels overlap 0 px² with spacing at 1280 and 1440. Target file: concepts/b.css.
+   Nothing in concepts/ was edited by the auditor. */
+
+/* N1 (b.css, footer): the display number is cut off at 300-370px and the side column covers the
+   main column at 700-870px. Sticker above the text below 420px; three columns only from 880px. */
+@container pb (max-width: 419.98px) { .pb .ft .in { grid-template-columns: minmax(0, 1fr); } }
+@container pb (min-width: 700px) and (max-width: 879.98px) {
+  .pb .ft .in { grid-template-columns: auto minmax(0, 1fr); }
+  .pb .ft-side { grid-column: 1 / -1; }
+}
+/* N1/N2 (b.css): display-size numbers may wrap under zoom or text spacing instead of being clipped */
+.pb .ft-num bdi, .pb .order-num bdi { white-space: normal; overflow-wrap: anywhere; }
+
+/* N2 (b.css, map labels), safe fallback: the list layout at every width, so a label that grows pushes
+   the next one down. Keeping the labels on the map needs a flow layout instead of fixed --lx/--ly
+   (for example two stacked columns at the map's edges); re-measure with text spacing after that. */
+@container map (min-width: 760px) {
+  .pb .places { position: static; display: grid; margin: 14px 0 0; pointer-events: auto; }
+  .pb .place { position: static; width: auto; }
+  .pb .leaders { display: none; }
+  .pb .pin-n { display: inline-grid; }
+  .pb .pin-tag { display: block; }
+}
+
+/* N3 (b.css): map leaders to 4.8:1 on the evening ground (now 2.95-2.99:1). Only matters if the
+   labels stay on the map. */
+.pb .leaders { stroke: rgba(247, 241, 230, .5); }

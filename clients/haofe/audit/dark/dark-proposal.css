@@ -1,0 +1,130 @@
+/* ==========================================================================
+   Direction B · השקית — proposed colour + dark-mode changes (COLOR + DARK MODE audit, 24.10.2026)
+
+   A preview overlay: load it AFTER b-motion-micro.css to see the proposal on the live prototype.
+   It is not meant to be shipped as an extra file. Each block names the rule it replaces, so the
+   owners can fold it into b.css / b-motion-*.css. Measured against a snapshot taken 03:33Z,
+   checked again at 03:45Z (b-motion-micro.css only changed .hd to opaque paper).
+
+   Principles
+     - dark mode is the same shop in the evening, not a negative: elevation = lighter (page < section
+       < card < lid), the chocolate bands stay chocolate, decorative caramel lines keep the weight
+       they have in light mode (about 4:1, not 7:1), images are dimmed like objects under one lamp
+     - every value is from the logo/app palette or a mix of two palette tokens
+     - the caramel #B0702A / #D99A52 stays graphics-only. Text and focus rings use --stamp
+   ========================================================================== */
+
+
+/* ---------- 1 tokens: b.css section 1 ---------- */
+.pb {
+  /* NEW: the big chocolate surfaces (ticker, business band, mobile bar), split from --btn so the
+     buttons can go cream at night while the bands stay chocolate */
+  --band: #2A1D14;          /* = app button, unchanged in light */
+  --on-band: #FBF4EA;
+  --band-accent: #D99A52;   /* caramel under lamp light: 6.77:1 on --band, so it may carry the 18px .hand text */
+  /* NEW: the focus ring. --stamp is the palette's text caramel, and it differs from the caramel hard shadow */
+  --ring: var(--stamp);     /* #7A4520: 5.71 kraft, 6.92 bg, 7.6 paper, 6.44 lid */
+  --ring-band: var(--band-accent);
+  /* NEW: decorative dashed caramel (labels, "soon" pill, placeholder button) */
+  --caramel-line: var(--caramel);
+  /* NEW: borders that are the only outline of a control (theme button) */
+  --line-strong: rgba(74, 50, 28, .55);   /* 3.15:1 on paper */
+  color-scheme: light;
+}
+.pb[data-mode="dark"] {
+  /* surface ladder, darkest to lightest: bg < kraft (sections) < paper (cards, header, menu) < lid.
+     Before this change kraft (#2A1E15) was lighter than paper (#221812), so the polaroids and the
+     box windows sat darker than the table they lie on */
+  --kraft: #1E1610;         /* was #2A1E15 */
+  --paper: #2A1E15;         /* was #221812 */
+  --kraft2: #2A1E15;        /* was #221812 */
+  --lid: #36271B;           /* was #2E2118 */
+  --btn: #F2E5D0;           /* was #F7F1E6: the same cream, a step warmer and softer at night. 14.84:1 with --on-btn */
+  --band: #4A1D0B;          /* the logo's wordmark chocolate. Before, the bands turned cream (#F7F1E6) */
+  --on-band: #F7F1E6;       /* 12.69:1 */
+  --band-accent: #E6AE6C;   /* 7.23:1 on --band */
+  --ring: var(--stamp);     /* #E6AE6C: 9.03 kraft, 8.21 paper, 7.27 lid, 9.54 bg */
+  --ring-band: #F6E3C4;     /* 11.35:1 on --band */
+  --caramel-line: #A8743C;  /* 4.04:1 on dark paper, so it weighs the same as light mode's 3.95:1 (was #D99A52, 7.2:1) */
+  --line: rgba(247, 241, 230, .14);
+  --line-strong: rgba(247, 241, 230, .45);  /* 4.01:1 on paper */
+  color-scheme: dark;
+}
+/* b-motion-micro.css section 1 must also register the new tokens so they cross-fade with the others:
+   @property --band { syntax: "<color>"; inherits: true; initial-value: #2A1D14; }
+   @property --on-band { syntax: "<color>"; inherits: true; initial-value: #FBF4EA; }
+   @property --band-accent { syntax: "<color>"; inherits: true; initial-value: #D99A52; }
+   @property --caramel-line { syntax: "<color>"; inherits: true; initial-value: #B0702A; }
+   (--ring and --ring-band are var() aliases. Register them too if you give them literal values) */
+
+
+/* ---------- 2 bands: ticker, business band, mobile bar (b.css section 4) ---------- */
+.pb .ticker { background: var(--band); color: var(--on-band); }                                    /* b.css l.206 */
+.pb .tk-pause { border-inline-end-color: color-mix(in srgb, var(--on-band) 25%, transparent); }     /* b.css l.207 */
+.pb .tk-list li::after { background: var(--band-accent); }                                         /* b.css l.216 */
+.pb .b2b-band { background: var(--band); color: var(--on-band); }                                  /* b.css l.279 */
+.pb .b2b-band h2 { color: var(--on-band); }                                                        /* b.css l.280 */
+.pb .b2b-copy .hand { color: var(--band-accent); }                                                 /* b.css l.283: was --caramel, 4.05:1 light / 2.15:1 dark */
+.pb .b2b-facts li { border-top-color: color-mix(in srgb, var(--on-band) 18%, transparent); }       /* b.css l.285 */
+.pb .b2b-cta .btn-b { color: var(--on-band); border-color: var(--on-band); }                       /* b.css l.287 */
+.pb .bar, .pb[data-mode="dark"] .bar { background: var(--band); color: var(--on-band); border-top: 0; } /* b.css l.307, and delete l.308 */
+.pb .bar svg { color: var(--band-accent); }                                                        /* b.css l.310 */
+
+
+/* ---------- 3 focus rings (b.css l.120, b-motion-micro.css section 2) ---------- */
+.pb :focus-visible { outline-color: var(--ring); }
+.pb .ticker :focus-visible, .pb .b2b-band :focus-visible, .pb .bar :focus-visible { outline-color: var(--ring-band); }
+/* clear of the caramel hard shadow (4px at rest, 6px when lifted), so the ring never lies on top of it,
+   and wider gaps between neighbouring buttons so the ring never lies on the next button either */
+.pb .btn-b:focus-visible { outline-offset: 7px; }
+.pb .label .row a:focus-visible { outline-offset: 5px; }
+.pb .ctas { gap: 14px; }                 /* b.css l.200, was 10px */
+.pb .label .row { gap: 10px; }           /* b.css l.297, was 8px */
+/* a 2px strip of lid between the ring and the dashed top border (was -6px, so the ring touched the border) */
+.pb .lid:focus-visible { outline-offset: -8px; }
+
+
+/* ---------- 4 controls ---------- */
+.pb .theme-btn { border-color: var(--line-strong); }                                               /* b.css l.163 */
+.pb .nav a:hover { background: var(--lid); }                                                       /* b.css l.159: was --kraft2, which equals the header (1:1) */
+.pb .label, .pb .soon, .pb .btn-soon { border-color: var(--caramel-line); }                        /* b.css l.292, 249, 252 */
+.pb ::selection { background: color-mix(in srgb, var(--caramel) 35%, transparent); color: inherit; }  /* new: ink 10.3:1, cream 8.5:1 */
+
+
+/* ---------- 5 hero: the evening scene (b.css l.194-196, b-motion-hero.css section 1) ---------- */
+/* the sticker is part of the bag: dim the bag as one object, so the white disc stops glowing.
+   Do it on .sc-bag, not on .sc-sticker, because b-hero-lift fills the sticker's filter */
+.pb[data-mode="dark"] .sc-bag-img { filter: none; }
+.pb[data-mode="dark"] .sc-bag { filter: brightness(.8) sepia(.12); }
+.pb.anim .hero .sc-bag { transition: filter .6s var(--ease-in-out); }   /* b-motion-hero.css l.78: move the transition from .sc-bag-img to .sc-bag */
+/* the foreground wheat is furthest from the lamp: darker than the bag, not brighter */
+.pb[data-mode="dark"] .sc-wheat { filter: brightness(.66); }
+@container (min-width: 1000px) {
+  /* a scrim on the text side (right in RTL) under the evening dim. It covers the morning sunbeams
+     baked into plate.webp and keeps .sub legible */
+  .pb .hero .sc-back::after {
+    background:
+      linear-gradient(to left, rgba(12, 6, 2, .5), rgba(12, 6, 2, .18) 34%, rgba(12, 6, 2, 0) 56%),
+      radial-gradient(ellipse 58% 78% at var(--b-lamp), rgba(30, 15, 6, .3), rgba(19, 10, 4, .6) 58%, rgba(12, 6, 2, .76));
+  }
+  /* .sub sits on the photo here: one step closer to --ink than --ink2 */
+  .pb .hero .sub { color: color-mix(in srgb, var(--ink2) 55%, var(--ink)); }   /* light #443627, dark #E0D3C1 */
+}
+
+
+/* ---------- 6 product boxes: a lamp pool under the bread, not a dark hole (b.css l.224-228) ---------- */
+.pb[data-mode="dark"] .shot { background: radial-gradient(ellipse 75% 65% at 50% 58%, var(--lid), var(--kraft2) 62%, var(--kraft)); }
+.pb[data-mode="dark"] .shot::after { background: radial-gradient(closest-side, rgba(0, 0, 0, .5), transparent); }
+/* the AI label keeps a visible pill on the dark window, not only its dashed border */
+.pb[data-mode="dark"] .ai-tag { background: rgba(10, 6, 3, .78); }
+
+
+/* ---------- 7 logo on the order slip (b.css l.245) ---------- */
+/* the badge's disc is #FFFFFF. At night it becomes the cream of the app (#F7F1E6 is the closest
+   palette value), so it reads as a printed sticker and stops glowing. A cleaner fix is a badge
+   variant whose disc is filled #F7F1E6 */
+.pb[data-mode="dark"] .slip .logo-s { filter: brightness(.93) sepia(.1); box-shadow: 0 0 0 4px var(--paper), 0 0 0 5px var(--caramel-line); }
+
+
+/* ---------- 8 placeholders: dim the photo, not its "צילום זמני" label (b.css l.126) ---------- */
+.pb[data-mode="dark"] .ph { filter: none; box-shadow: inset 0 0 0 100vmax rgba(12, 8, 5, .16); }

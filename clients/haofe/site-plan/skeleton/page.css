@@ -1,0 +1,66 @@
+/* ==========================================================================
+   האופה · page-level rules: what a real page needs that the prototype got from shell.css or from
+   its scrolling .vp frame. Loaded after b.css and the three motion files.
+
+   The root of the site is <html class="pb">: it carries the tokens, data-mode and .anim/.rm,
+   and it is the query container (b.css: `.pb { container-type: inline-size }`), so every
+   @container rule in b.css and b-motion-*.css works unchanged. One catch: an element cannot query
+   itself, so rules that style <html> itself (scroll padding below) use @media instead.
+   ========================================================================== */
+
+/* theme: form controls and scrollbars follow the site's mode, not the OS (light by default) */
+:root, :root[data-mode="light"] { color-scheme: light; }
+:root[data-mode="dark"] { color-scheme: dark; }
+
+/* b.css sets `font: 400 17px/1.6` on .pb; on <html> a px size would ignore the visitor's own
+   default text size. 106.25% is the same 17px at the browser default of 16px. */
+html.pb { font-size: 106.25%; }
+/* the tilted ticker tape (b.css: rotate -1.2deg on .ticker) bleeds past both edges of the page. b.css
+   clips that on .pb, but on the site .pb is <html>, whose overflow goes to the viewport, where clip
+   is read as hidden: the page still measured 327px wide at 320 (398 at 390) and could be panned
+   sideways. Clipped on body instead (not a scroll container, so the sticky header and bar keep
+   working): 320px at 320, 390px at 390 (tests/skeleton.test.mjs, "no horizontal scroll") */
+body { margin: 0; overflow-x: clip; }
+
+/* the hidden attribute beats component display rules such as `.pb .menu { display: grid }`
+   (shell.css line 55 does this for the prototype). The menu keeps painting while b-motion-micro
+   folds it away (.mi-closing), which shell.css's unconditional !important rule prevents. */
+[hidden]:not(.mi-closing) { display: none !important; }
+
+/* in-page links land below the sticky header and above the mobile bar (audit A11Y-02) */
+html { scroll-padding-top: 84px; }
+@media (max-width: 999.98px) { html { scroll-padding-bottom: calc(76px + env(safe-area-inset-bottom)); } }
+html.anim { scroll-behavior: smooth; }
+/* zoomed in or on a short screen the two sticky bars would cover most of it (A11Y-02, A11Y-18) */
+@media (max-height: 500px) { .pb .hd, .pb .bar { position: relative; } }
+
+/* skip link (A11Y-10) and the main landmark it targets */
+.pb .skip {
+  position: absolute; z-index: 30; inset-inline-start: 12px; top: -200px;
+  background: var(--btn); color: var(--on-btn); padding: 10px 16px; border-radius: 10px;
+  font-weight: 700; text-decoration: none;
+}
+.pb .skip:focus { top: 12px; }
+.pb main:focus { outline: none; }
+
+/* <picture> must not change the layout b.css wrote for the <img> (audit/perf/recommended-markup.html §4) */
+.pb picture { display: contents; }
+.pb picture > source { display: none; }
+.pb img[data-lqip] { background: var(--lqip) 50% 100% / 100% 100% no-repeat; }
+.pb .sc-plate[data-lqip] { background-size: cover; }
+.pb .prod[data-lqip] { background-size: contain; background-position: 50% 80%; }
+
+/* closed box details are hidden from screen readers too, not only clipped (A11Y-08) */
+.pb .box:not(.open) .det > div { visibility: hidden; }
+.pb.anim .det > div { transition: visibility 0s .35s; }
+.pb.anim .box.open .det > div { transition-delay: 0s; }
+
+/* feed photo slots until real, licensed photos exist (shell.css styles these in the prototype) */
+.pb .ph { position: relative; background: var(--lid); border-radius: 2px; }
+.pb .ph-tag { position: absolute; top: 8px; right: 8px; font: 600 11px/1 var(--body); color: var(--ink2); }
+
+/* text for screen readers only, e.g. "(נפתח בחלון חדש)" on links that open a new window (A11Y-15) */
+.pb .sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+/* handles and phone numbers are LTR islands inside RTL text (A11Y-09) */
+.pb bdi[dir="ltr"] { unicode-bidi: isolate; }

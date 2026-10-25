@@ -1,0 +1,9 @@
+/* האופה · self-hosted fonts (OFL 1.1, licences next to the files).
+   Subsets and unicode ranges from clients/haofe/audit/perf/report.md section 7 ("option B"):
+   Secular One and both Playpen weights = Hebrew + digits + punctuation; Rubik 400-700 = Hebrew + Basic Latin.
+   Files made by the perf agent's tools/fonts.py from the upstream google/fonts TTFs.
+   Same origin, so CSP font-src 'self' is enough and no request goes to Google. */
+@font-face { font-family: "Secular One"; src: url("SecularOne-hebp.woff2") format("woff2"); font-weight: 400; font-display: swap; unicode-range: U+0020-0040, U+005B-0060, U+007B-007E, U+00A0, U+00B7, U+0590-05FF, U+200C-2011, U+2013-2014, U+2018-201A, U+201C-201E, U+2026, U+20AA, U+25CC, U+FB1D-FB4F; }
+@font-face { font-family: "Rubik"; src: url("Rubik-400-700-heb.woff2") format("woff2"); font-weight: 400 700; font-display: swap; unicode-range: U+0020-007E, U+00A0, U+00B7, U+0590-05FF, U+200C-2011, U+2013-2014, U+2018-201A, U+201C-201E, U+2026, U+20AA, U+25CC, U+FB1D-FB4F; }
+@font-face { font-family: "Playpen Sans Hebrew"; src: url("PlaypenSansHebrew-600-hebp.woff2") format("woff2"); font-weight: 600; font-display: swap; unicode-range: U+0020-0040, U+005B-0060, U+007B-007E, U+00A0, U+00B7, U+0590-05FF, U+200C-2011, U+2013-2014, U+2018-201A, U+201C-201E, U+2026, U+20AA, U+25CC, U+FB1D-FB4F; }
+@font-face { font-family: "Playpen Sans Hebrew"; src: url("PlaypenSansHebrew-400-hebp.woff2") format("woff2"); font-weight: 400; font-display: swap; unicode-range: U+0020-0040, U+005B-0060, U+007B-007E, U+00A0, U+00B7, U+0590-05FF, U+200C-2011, U+2013-2014, U+2018-201A, U+201C-201E, U+2026, U+20AA, U+25CC, U+FB1D-FB4F; }

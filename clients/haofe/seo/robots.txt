@@ -1,0 +1,37 @@
+# robots.txt · האופה - בוטיק לחם · draft 2026-10-24
+# Replace https://haofe.example with the real canonical origin before deploy.
+# Serve at the root of the canonical host only. Staging and preview hosts get "Disallow: /" plus a password instead.
+
+# 1. Everyone may crawl everything.
+#    Nothing is blocked here on purpose: a page that must stay out of search (the 404 page) carries
+#    <meta name="robots" content="noindex"> instead, and a crawler can only obey a noindex it is allowed to fetch.
+User-agent: *
+Allow: /
+
+# 2. AI search discovery: allowed on purpose, so answer engines can cite the branch facts.
+#    (ChatGPT search, Perplexity, Claude search. Verify current names in each vendor's crawler documentation.)
+User-agent: OAI-SearchBot
+User-agent: PerplexityBot
+User-agent: Claude-SearchBot
+Allow: /
+
+# 3. Model training and Gemini grounding: the owner's choice. Default here is allow,
+#    so models learn the correct name, branches and ordering line.
+#    To opt out, change "Allow: /" to "Disallow: /" in this group only. It does not affect Google Search.
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+Allow: /
+
+# 4. Keep AI-rendered images out of image search while any are still on the site.
+#    They show no real HaOfe product. Delete this group once only real photos remain,
+#    or change the path if the build serves the renders elsewhere.
+User-agent: Googlebot-Image
+Disallow: /assets/ai/
+
+User-agent: msnbot-media
+Disallow: /assets/ai/
+
+Sitemap: https://haofe.example/sitemap.xml

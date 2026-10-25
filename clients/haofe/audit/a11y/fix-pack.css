@@ -1,0 +1,44 @@
+/* האופה · direction B · accessibility fix pack (CSS part)
+   Verified by injecting this file into the running prototype on 24.10.2026 (snapshot 02:27 UTC) and
+   re-measuring; see README.md section 4. Each block names the file it belongs in. Nothing in
+   concepts/ was edited by the audit. The JS parts (menu focusout, inert page behind the overlay)
+   are in README.md, A11Y-03 and A11Y-11. */
+
+/* ---- b.css, section 1 tokens ---- */
+.pb { --focus: var(--head); --on-btn-accent: #E6AE6C; }        /* --head: #4A1D0B light, #F6E3C4 dark */
+.pb[data-mode="dark"] { --on-btn-accent: #7A4520; }
+
+/* ---- b.css, section 2: replaces line 120 (no border-radius: outlines follow each element's own radius) ---- */
+.pb :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+/* rings drawn on dark (light mode) or cream (dark mode) bands use the band's text colour */
+.pb .ticker, .pb .b2b-band, .pb .bar { --focus: var(--on-btn); }
+.pb[data-mode="dark"] .bar { --focus: var(--head); }            /* the bar is paper, not cream, in dark mode */
+/* rings that an overflow or the viewport edge would clip are drawn inside the control */
+.pb .lid:focus-visible, .pb .tk-pause:focus-visible, .pb .bar a:focus-visible { outline-offset: -6px; }
+
+/* ---- b.css line 283: the business-band eyebrow ("לעסקים ולרשתות") ---- */
+.pb .b2b-copy .hand { color: var(--on-btn-accent); }            /* 8.28:1 light, 6.92:1 dark */
+
+/* ---- b.css after line 237: closed box details leave the accessibility tree ---- */
+.pb .box:not(.open) .det > div { visibility: hidden; }
+/* b-motion-micro.css (keeps the close animation visible; the .rm safety net shortens it) */
+.pb .det > div { transition: visibility 0s .35s; }
+.pb .box.open .det > div { transition-delay: 0s; }
+
+/* ---- b-motion-hero.css section 1 (the hero module owns the scene layers): a scrim behind the
+   text column on the desktop hero. In RTL, "to left" starts at the text side. ---- */
+@container (min-width: 1000px) {
+  .pb .hero .scene::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(to left, rgba(247,241,230,.55) 0%, rgba(247,241,230,.4) 38%, rgba(247,241,230,0) 60%); }
+  .pb[data-mode="dark"] .hero .scene::after {
+    background: linear-gradient(to left, rgba(23,16,11,.72) 0%, rgba(23,16,11,.6) 38%, rgba(23,16,11,0) 62%); }
+}
+
+/* ---- shell.css: focus never parks under the sticky header or the mobile bar (prototype scroller) ---- */
+.vp:has(> .pb) { scroll-padding-block: 84px 76px; }
+
+/* ---- real site only (the window is the scroller there) ----
+html { scroll-padding-top: 84px; }
+@media (max-width: 999px) { html { scroll-padding-bottom: calc(76px + env(safe-area-inset-bottom)); } }
+@media (max-height: 500px) { .pb .hd, .pb .bar { position: relative; } }
+*/

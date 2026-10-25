@@ -1,0 +1,87 @@
+{
+ "unicodeRange": "U+0020-007E, U+00A0, U+00B7, U+0590-05FF, U+200C-2011, U+2013-2014, U+2018-201A, U+201C-201E, U+2026, U+20AA, U+25CC, U+FB1D-FB4F",
+ "families": {
+  "Rubik": {
+   "source": "Rubik[wght].ttf",
+   "sourceBytes": 359804,
+   "metrics": {
+    "upm": 1000,
+    "hheaAscent": 935,
+    "hheaDescent": -250,
+    "lineGap": 0,
+    "typoAscender": 935,
+    "typoDescender": -250,
+    "winAscent": 1066,
+    "winDescent": 466,
+    "useTypoMetrics": true,
+    "avgHebrewAdvancePerEm": 0.5193,
+    "axes": [
+     [
+      "wght",
+      300.0,
+      900.0
+     ]
+    ],
+    "glyphs": 1174
+   },
+   "files": {
+    "variable wght 400..700, Hebrew+Basic Latin": 31724,
+    "full variable axis, Hebrew+Basic Latin": 33300,
+    "used characters only (51)": 11912
+   }
+  },
+  "Secular One": {
+   "source": "SecularOne-Regular.ttf",
+   "sourceBytes": 83916,
+   "metrics": {
+    "upm": 1000,
+    "hheaAscent": 1022,
+    "hheaDescent": -433,
+    "lineGap": 0,
+    "typoAscender": 1022,
+    "typoDescender": -433,
+    "winAscent": 1022,
+    "winDescent": 433,
+    "useTypoMetrics": true,
+    "avgHebrewAdvancePerEm": 0.5209,
+    "axes": null,
+    "glyphs": 466
+   },
+   "files": {
+    "static, Hebrew+Basic Latin": 12956,
+    "used characters only (30)": 2808
+   }
+  },
+  "Playpen Sans Hebrew": {
+   "source": "PlaypenSansHebrew[wght].ttf",
+   "sourceBytes": 648604,
+   "metrics": {
+    "upm": 1000,
+    "hheaAscent": 1070,
+    "hheaDescent": -460,
+    "lineGap": 0,
+    "typoAscender": 1070,
+    "typoDescender": -460,
+    "winAscent": 1294,
+    "winDescent": 432,
+    "useTypoMetrics": true,
+    "avgHebrewAdvancePerEm": 0.548,
+    "axes": [
+     [
+      "wght",
+      100.0,
+      800.0
+     ]
+    ],
+    "glyphs": 1255
+   },
+   "files": {
+    "variable wght 400..600, Hebrew+Basic Latin": 151164,
+    "full variable axis, Hebrew+Basic Latin": 221176,
+    "static 400, Hebrew+Basic Latin": 91024,
+    "static 600, Hebrew+Basic Latin": 92356,
+    "used characters only (38)": 46448
+   }
+  }
+ }
+}

@@ -1,0 +1,135 @@
+/* ==========================================================================
+   Direction B · השקית — motion: scroll (the peak, entrances, the map, ticker)
+   Owner: scroll motion module (pairs with b-motion-scroll.js). Version 3.1, 24.10.2026.
+
+   THE STORY  "It's the site where the bread jumps out of the bag into the boxes, and the ovens
+   light up along the family's road."
+
+   OWNS
+     - THE PEAK: when a product's window comes into view (30% for the three leaping breads), the
+       frena and the challah (the Friday box) and the baguette leap out of the hero bag (.sc-bag)
+       along an arc into their windows and land with --spring-bounce while the box rocks once (bag
+       far away: they fall in through their own box's rim instead); dairy, parve and sufganiyot drop
+       into theirs from above and plop (--spring-settle). Only the product images wait: the boxes,
+       their names, lists and the printed "הדמיית AI" are always there.
+     - entrances for every [data-rv], one device per section, never the same in two sections in a row:
+         boxes heading   rises out of a mask                         (.boxes .sec-head)
+         boxes           the peak above                              (.box > .prod)
+         order receipt   prints downward, then the status line is stamped on (.slip)
+         map copy        heading rises, the quote is written in from the start side, lines follow
+                         (.here-copy)
+         map             the dotted route draws with scroll (Ofakim > Netivot > Sderot > Kiryat
+                         Gat), dot by dot (the route's own dash pattern, set by the JS); each pin is
+                         stamped, its oven glow flaring, when the line reaches it; then the
+                         production house, its bread leaving north, "לסופרים בכל הארץ". At rest it
+                         plays the rest by itself and ends within about 3 s; after a jump to the
+                         map it plays at double tempo from the click
+         place labels    swing in on a nail (.place): on a map with the labels on it (b.css
+                         --map-labels: on) right after their pin, the production house last; under
+                         a narrow map as the list scrolls in
+         feed heading    rises out of a mask (.feed .sec-head)
+         polaroids       board: dealt from one stack onto their overlapping places; phone rail: the
+                         cards in sight slide in along the rail from its far end (.pola)
+       the JS adds .rv-done to each element when its entrance has finished
+     - the ticker loop (reading direction, left to right), its scroll surge (at most 1.5x) and hover
+       brake; two list copies instead of four while one list is wider than the band
+     - 3.1 dropped the scroll-linked drift of the product cutouts (design recheck 10: it kept every
+       product near the view on a scroll timeline, for a few px nobody saw)
+
+   RULES
+     - every waiting rule needs .sx on the root (the JS is running), so the page is complete if the
+       JS never runs; entrance rules stop matching at .rv-done, so hover/press rules from the micro
+       module apply untouched afterwards
+     - who moves what (agreed with the micro module, see its header):
+         .box, .pola, .place   translate / rotate / scale / opacity here; `transform` is micro's
+         .prod                 `transform` = the landing here (nothing at rest)
+         .shot::after          transform here (waiting, landing); scale and opacity are micro's
+         .pin                  transform + opacity here (b.css centres it with `translate`); its
+                               ::before glow is not animated here any more (it rides the pin's stamp)
+         .route                visibility + stroke-dasharray, inline, while drawing (the first n
+                               dots of b.css's own "0 8" pattern, then one long gap); removed after
+         .out                  a JS mask (stroke-dashoffset on the mask path) while it draws
+       Everything is composite 'replace', so the compositor runs it (an 'add' animation falls back
+       to the main thread). One animation per element and entrance where opacity and movement go
+       together (property-specific keyframes), so an entrance costs as few animated elements as it
+       can. While the line draws only the route path repaints, once per new dot (3.1: the mask it
+       had before re-rastered the whole map each frame, about 1.5 ms a frame on a desktop); the svg
+       is not given a layer of its own (measured: with the labels on top of it that cost more paint
+       and layerize work than it saved). Nothing here uses will-change: the compositor promotes an element only
+       while its animation runs.
+     - nothing here under .rm: the JS adds no classes and no nodes there; the map is complete, and
+       b.css section 6 turns the ticker into a static wrapping list
+     - keyframes in this file are prefixed b-scroll-; classes this module adds are prefixed sx-
+     - motion tokens from .pb (b.css): --ease-*, --spring-*, --dur-*, --stagger
+     - hooks: see "hooks motion modules may rely on" at the top of b.css
+     - page contract 2: nothing to change here
+
+   CLASSES THE JS ADDS (all sx- classes are removed by its cleanup)
+     root      .sx (module running)
+     [data-rv] .sx-go (its entrance has started)  .rv-done (finished: entrance rules stop matching;
+               kept after cleanup as a record)
+     .prod     .sx-hold (waiting to land: hidden until its leap or drop brings it in)
+     .shot     .sx-hold (its contact shadow waits at scale 0)
+     .box      .rv-done (all its products have landed)
+     .ticker   .sx-tk (JS eases the hover stop)  .sx-off (out of view: loop paused)
+               .sx-tk2 (two list copies are enough: copies 3 and 4 leave layout, 19s per loop)
+     receipt wrapper (.order-sec .in)  .sx-slot (carries the print cover while the receipt prints)
+     .here     .sx-map (the map sequence is armed: pins and the arrow wait)  .sx-tail (the
+               production house part has started)
+     .pin      .sx-on (stamped)
+     .map-art  .rv-done (the map has played; a reboot does not replay it)
+     injected  .sx-layer > img.sx-fly (aria-hidden copies of the three leaping products, removed on
+               landing); svg > mask#sx-mask-N (the arrow's reveal, and the route's if its dash
+               pattern is not b.css's round dots), removed when the map is done
+   ========================================================================== */
+
+
+/* ---------- 1 waiting states (only once the module runs) ---------- */
+/* hidden but still focusable: the JS finishes an entrance at once if keyboard focus arrives first */
+.pb.sx [data-rv]:not(.rv-done):not(.sx-go):not(.box) { opacity: 0; }
+.pb.sx .slip[data-rv]:not(.rv-done):not(.sx-go) { clip-path: inset(0 0 100% 0); }
+/* an empty window waiting for its product: the box, its name and list stay fully readable (the
+   shadow is held at scale 0 through transform, which is this module's on .shot::after) */
+.pb.sx .prod.sx-hold { opacity: 0; }
+.pb.sx .shot.sx-hold::after { transform: scale(0); }
+
+/* hanging tags pivot on a nail just above their top edge */
+.pb.sx .place[data-rv]:not(.rv-done) { transform-origin: 50% -14px; }
+
+/* the order receipt prints top to bottom: while it prints, a cover in the page colour lies over its
+   wrapper (and the receipt's torn edges and shadow) and shrinks toward the bottom */
+.pb .sx-slot { position: relative; }
+.pb .sx-slot::after {
+  content: ""; position: absolute; inset: -14px 0 -56px; pointer-events: none;
+  background: var(--bg); transform-origin: 50% 100%;
+}
+
+/* the map: pins (their oven glow, ::before, is inside them), the production house's lines and the
+   "לסופרים בכל הארץ" arrow wait for their turn; the grid, the faint road (.route-base), the north
+   arrow and the scale are the print itself and are there from the start. */
+.pb.sx .here.sx-map .pin:not(.sx-on) { opacity: 0; }
+.pb.sx .here.sx-map:not(.sx-tail) :is(.out, .out-head, .fac-lead, .fac-dot, .map-out) { opacity: 0; }
+
+/* the leaping copies of the products (the real images stay in their windows) */
+.pb .sx-layer { position: absolute; top: 0; left: 0; width: 0; height: 0; z-index: 8; pointer-events: none; }
+.pb .sx-fly { position: absolute; display: block; max-width: none; margin: 0; object-fit: contain; object-position: 50% 80%; }
+
+
+/* ---------- 2 ticker ---------- */
+/* identical lists side by side; sliding the track by half its width is seamless. Moving left to
+   right = the Hebrew reading direction: each list's first item leads. With four copies the track
+   travels two lists in 38s; with two (.sx-tk2, set by the JS when one list is wider than the band)
+   it travels one list in 19s: the same speed. */
+.pb.anim .tk-track { animation: b-scroll-tick 38s linear infinite; }
+.pb.anim .ticker.sx-tk2 .tk-track { animation-duration: 19s; }
+.pb.anim .ticker.sx-tk2 .tk-list:nth-child(n+3) { display: none; }
+@keyframes b-scroll-tick { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.pb .ticker.paused .tk-track,
+.pb .ticker.sx-off .tk-track { animation-play-state: paused; }
+/* keyboard focus on the pause button holds the band still (kept apart: an old browser without
+   :has() drops only this rule) */
+.pb .ticker:has(:focus-visible) .tk-track { animation-play-state: paused; }
+/* hover stop for fine pointers; with the JS running (.sx-tk) it eases to a stop instead */
+@media (hover: hover) and (pointer: fine) {
+  .pb .ticker:not(.sx-tk):hover .tk-track { animation-play-state: paused; }
+}
