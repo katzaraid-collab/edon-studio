@@ -53,7 +53,7 @@ function heroCard(s, ctx, isCurrent) {
   const prev = lastHero;
   lastHero = { key: s.key, saved };
   if (prev && prev.key === s.key && prev.saved === saved) valueEl.textContent = fmtMoney(saved);
-  else { valueEl.textContent = fmtMoney(prev && prev.key === s.key ? prev.saved : 0); animateNumber(valueEl, saved); }
+  else animateNumber(valueEl, saved, { from: prev && prev.key === s.key ? prev.saved : 0 });
 
   let sub;
   if (income === 0 && expense === 0) sub = 'עדיין אין תנועות בתקופה הזו';
@@ -74,7 +74,7 @@ function heroCard(s, ctx, isCurrent) {
         h('span', null, icon('target', { size: 16 }), ' ', text),
         h('span', { class: 'num' }, fmtPct(Math.max(0, Math.min(saved / goal, 9.99)))),
       ),
-      meter(Math.max(0, saved), goal, { tone: reached ? 'ok' : (saved <= 0 ? 'bad' : 'ok'), label: 'התקדמות ליעד החיסכון' }),
+      meter(Math.max(0, saved), goal, { tone: 'good', label: 'התקדמות ליעד החיסכון' }),
     );
   } else if (isCurrent) {
     goalBlock = h('button', {
@@ -89,8 +89,7 @@ function heroCard(s, ctx, isCurrent) {
   ];
   if (isCurrent && s.safeToSpendPerDay != null && s.daysLeft > 0) {
     const safe = s.safeToSpendPerDay;
-    stats.push(miniStat(goal > 0 ? 'אפשר להוציא ביום (כולל יעד)' : 'אפשר להוציא ביום',
-      safe > 0 ? money(safe) : h('span', { class: 'tone-bad' }, 'כלום — לעצור'), safe > 0 ? '' : 'is-bad'));
+    stats.push(miniStat('אפשר להוציא ביום', money(Math.max(0, safe)), safe > 0 ? '' : 'is-bad'));
   }
   if (isCurrent && s.projectedExpense != null && s.elapsedDays >= 3) {
     stats.push(miniStat('צפי הוצאות לחודש', money(s.projectedExpense),
@@ -164,7 +163,7 @@ function budgetsCard(s, ctx) {
       h('div', { class: 'grow stack gap-sm', style: { minWidth: 0 } },
         h('div', { class: 'spread' },
           h('span', { class: 'budget-name' }, c.category.name),
-          h('span', { class: 'text-sm muted' }, money(c.total), ' / ', money(c.budget)),
+          h('span', { class: 'text-sm muted' }, money(c.total), ' מתוך ', money(c.budget)),
         ),
         meter(c.total, c.budget, { label: `תקציב ${c.category.name}` }),
         h('div', { class: `text-sm ${over ? 'tone-bad' : (c.budgetRatio >= 0.8 ? 'tone-warn' : 'muted')}` },
@@ -186,7 +185,7 @@ function budgetsCard(s, ctx) {
 
 function insightsCard(list, ctx) {
   if (!list.length) return null;
-  return h('section', { class: 'section span-2' },
+  return h('section', { class: 'section span-2', style: { marginTop: 0 } },
     h('div', { class: 'spread' },
       h('h2', { class: 'section-title' }, 'תובנות'),
       actionBtn('לכל התובנות', () => ctx.navigate('insights')),
@@ -257,9 +256,9 @@ function render(root, ctx) {
 
   if (!state.transactions.length) {
     page.append(onboarding(ctx));
-    page.append(h('p', { class: 'muted text-sm', style: { textAlign: 'center', marginTop: '16px' } },
-      'המשכורת נכנסת באמצע החודש? אפשר לקבוע יום תחילת חודש ויעד חיסכון ',
-      h('button', { type: 'button', class: 'btn btn-ghost btn-sm', on: { click: () => ctx.navigate('settings') } }, 'בהגדרות'),
+    page.append(h('div', { class: 'cluster text-sm muted', style: { justifyContent: 'center', textAlign: 'center', marginTop: '16px' } },
+      h('span', null, 'המשכורת לא נכנסת ב־1 לחודש? אפשר לקבוע יום תחילת חודש ויעד חיסכון.'),
+      h('button', { type: 'button', class: 'btn btn-ghost btn-sm', on: { click: () => ctx.navigate('settings') } }, icon('settings', { size: 16 }), 'להגדרות'),
     ));
     return;
   }

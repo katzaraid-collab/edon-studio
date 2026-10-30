@@ -20,7 +20,7 @@ function card({ title, action, cls = '', body }) {
 }
 
 function stat(label, valueNode, sub, tone = '') {
-  return h('div', { class: `card stat ${tone}`.trim() },
+  return h('div', { class: `stat ${tone}`.trim() },
     h('div', { class: 'stat-label' }, label),
     h('div', { class: 'stat-value' }, valueNode),
     sub ? h('div', { class: 'stat-sub' }, sub) : null,
@@ -56,7 +56,7 @@ function savingsOverTime(hist, ctx, rerender) {
     (v) => { months = Number(v); rerender(); },
     { label: 'טווח זמן' },
   );
-  const rows = h('ul', { class: 'tx-list' }, hist.slice().reverse().map((m) => {
+  const rows = h('ul', { class: 'tx-list' }, hist.filter((m) => m.income || m.expense || m.key === ctx.period).reverse().map((m) => {
     const sel = m.key === ctx.period;
     return h('li', null,
       h('button', {
@@ -70,7 +70,7 @@ function savingsOverTime(hist, ctx, rerender) {
         ),
         h('div', { class: 'tx-amt', style: { textAlign: 'end' } },
           h('div', { class: m.saved < 0 ? 'tone-bad' : 'tone-good' }, money(m.saved, { sign: true })),
-          h('div', { class: 'text-sm muted' }, m.savingsRate == null ? '—' : `${fmtPct(m.savingsRate)} חיסכון`),
+          h('div', { class: 'text-sm muted' }, m.savingsRate == null ? '—' : (m.savingsRate < 0 ? 'חריגה' : h('span', null, h('bdi', { class: 'num' }, fmtPct(m.savingsRate)), ' חיסכון'))),
         ),
       ),
     );
@@ -121,11 +121,11 @@ function compareCard(s, ctx) {
   return card({ title: 'השוואה לחודש הקודם', body });
 }
 
-function merchantsCard(state, key, ctx) {
+function merchantsCard(state, key, ctx, hasExpense) {
   const list = topNotes(state, key, 6) || [];
   const max = list.reduce((m, x) => Math.max(m, x.total), 0) || 1;
   const body = !list.length
-    ? emptyNote('הוסיפו הערה לתנועות (למשל "שופרסל") כדי לראות כאן לאן הולך הכסף.')
+    ? emptyNote(!hasExpense ? 'אין הוצאות בתקופה הזו.' : 'הוסיפו הערה לתנועות (למשל "שופרסל") כדי לראות כאן לאן הולך הכסף.')
     : h('ul', { class: 'tx-list' }, list.map((n) => h('li', null,
       h('button', { type: 'button', class: 'tx-row', on: { click: () => ctx.navigate('tx', { q: n.note }) } },
         h('div', { class: 'tx-main' },
@@ -163,7 +163,7 @@ function calendarCard(s, state, ctx) {
   return card({
     title: 'מפת הוצאות חודשית',
     body: calendarHeat(s.byDay.map((d) => ({ date: d.date, expense: d.expense })), {
-      format: compact, onSelect: (date) => openDay(date, state, s.key, ctx),
+      format: compact, today: ctx.today, onSelect: (date) => openDay(date, state, s.key, ctx),
     }),
   });
 }
@@ -241,7 +241,7 @@ function render(root, ctx) {
     savingsOverTime(hist, ctx, rerender),
     cumulativeCard(fullHist),
     compareCard(s, ctx),
-    merchantsCard(state, key, ctx),
+    merchantsCard(state, key, ctx, s.expense > 0),
     s.count ? calendarCard(s, state, ctx) : null,
     weekdayCard(s),
     paymentCard(s),

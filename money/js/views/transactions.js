@@ -166,10 +166,10 @@ export default {
       if (F.type === 'income' || (s.expense === 0 && s.income > 0)) amountNode = money(s.income, { tone: 'income' });
       else if (F.type === 'expense' || s.income === 0) amountNode = money(s.expense);
       else amountNode = h('span', {}, 'הוצאות ', money(s.expense), ' · הכנסות ', money(s.income, { tone: 'income' }));
-      summary.replaceChildren(
+      summary.replaceChildren(...[
         h('span', { class: 'text-sm muted' }, parts.join(''), list.length ? ' · ' : '', list.length ? amountNode : null),
         hasFilters() ? h('button', { type: 'button', class: 'btn btn-ghost btn-sm', on: { click: clearFilters } }, icon('close', { size: 16 }), 'ניקוי סינון') : null,
-      );
+      ].filter(Boolean));
     }
 
     function paintList(list) {
@@ -236,7 +236,7 @@ export default {
     }
 
     function syncScope() {
-      scopeSeg.querySelectorAll('button').forEach((b, i) => b.setAttribute('aria-pressed', String((i === 0) === (F.scope === 'month'))));
+      scopeSeg.setValue?.(F.scope);
     }
 
     function doExport() {
@@ -252,13 +252,14 @@ export default {
     paintTypeChips();
     paintCatSelect();
     paintHead();
+    const empty = !state.transactions.length;
 
     root.append(h('div', { class: 'page' },
       h('div', { class: 'page-hd' },
         h('div', {}, h('h1', { class: 'page-title' }, 'תנועות'), sub),
-        h('div', { class: 'cluster' }, exportBtn, addBtn)),
-      h('div', { class: 'section' }, headStats),
-      h('div', { class: 'card tx-filters' }, h('div', { class: 'card-bd stack' },
+        h('div', { class: 'cluster' }, empty ? null : exportBtn, addBtn)),
+      empty ? null : h('div', { class: 'section' }, headStats),
+      empty ? null : h('div', { class: 'card tx-filters' }, h('div', { class: 'card-bd stack' },
         h('div', { class: 'cluster', style: 'flex-wrap:wrap;gap:12px' },
           scopeSeg,
           h('div', { class: 'input-group grow', style: 'min-width:220px' },

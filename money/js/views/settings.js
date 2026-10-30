@@ -18,6 +18,7 @@ let showArchived = false;
 let seq = 0;
 
 const pressed = (b) => String(!!b);
+const frag = (...nodes) => { const f = document.createDocumentFragment(); f.append(...nodes.filter(Boolean)); return f; };
 const payLabel = (id) => PAYMENTS.find((p) => p.id === id)?.label || 'אחר';
 const amountToInput = (a) => (!(a > 0) ? '' : a % 100 ? (a / 100).toFixed(2) : String(a / 100));
 const uidLocal = (p) => `${p}-${++seq}`;
@@ -181,9 +182,9 @@ function openCategorySheet(store, cat, type) {
   }
 
   paintPreview();
-  const footer = h('div', { class: 'cluster', style: 'width:100%' },
-    h('button', { type: 'button', class: 'btn btn-primary grow', on: { click: save } }, icon('check'), isNew ? 'הוספת קטגוריה' : 'שמירה'),
-    h('button', { type: 'button', class: 'btn btn-ghost', on: { click: () => sheet.close() } }, 'ביטול'));
+  const footer = frag(
+    h('button', { type: 'button', class: 'btn btn-ghost', on: { click: () => sheet.close() } }, 'ביטול'),
+    h('button', { type: 'button', class: 'btn btn-primary', on: { click: save } }, icon('check'), isNew ? 'הוספת קטגוריה' : 'שמירה'));
   const sheet = openSheet({ title: isNew ? (type === 'income' ? 'קטגוריית הכנסה חדשה' : 'קטגוריית הוצאה חדשה') : 'עריכת קטגוריה', content, footer });
   // Fix label target for the money input (field() labeled the wrapper)
   const lbl = content.querySelector(`label[for="${budgetWrap.id}"]`);
@@ -266,9 +267,10 @@ function openRecurringSheet(store, rec, today) {
       type: d.type, amount: v, categoryId: catSel.value, note: note.value.trim(), payment: pay.value,
       day: Number(day.value), startMonth: start.value, endMonth: end.value || null, active: d.active,
     };
-    if (isNew) store.addRecurring({ ...data, done: [] });
-    else store.updateRecurring(rec.id, data);
-    const created = store.applyRecurring?.(today) || 0;
+    const before = store.state.transactions.length;
+    if (isNew) store.addRecurring(data, today);
+    else store.updateRecurring(rec.id, data, today);
+    const created = Math.max(0, store.state.transactions.length - before);
     toast(isNew ? `נוספה ${d.type === 'income' ? 'הכנסה' : 'הוצאה'} קבועה${created ? ` · נוצרו ${created} תנועות` : ''}` : 'עודכן', { tone: 'good' });
     sheet.close();
   }
@@ -290,9 +292,9 @@ function openRecurringSheet(store, rec, today) {
     sheet.close();
   }
 
-  const footer = h('div', { class: 'cluster', style: 'width:100%;flex-wrap:wrap' },
-    h('button', { type: 'button', class: 'btn btn-primary grow', on: { click: save } }, icon('check'), isNew ? 'הוספה' : 'שמירה'),
-    isNew ? null : h('button', { type: 'button', class: 'btn btn-ghost btn-danger', on: { click: remove } }, icon('trash'), 'מחיקה'));
+  const footer = frag(
+    isNew ? null : h('button', { type: 'button', class: 'btn btn-ghost btn-danger', on: { click: remove } }, icon('trash'), 'מחיקה'),
+    h('button', { type: 'button', class: 'btn btn-primary', on: { click: save } }, icon('check'), isNew ? 'הוספה' : 'שמירה'));
   const sheet = openSheet({ title: isNew ? 'הוצאה / הכנסה קבועה' : 'עריכת תנועה קבועה', content, footer });
   setTimeout(() => amount.focus(), 40);
 }
@@ -381,17 +383,17 @@ export default {
       requestAnimationFrame(() => document.querySelector(`[data-move="${cat.id}:${dir}"]`)?.focus());
     };
 
-    const catRow = (c, i, list) => h('li', { class: 'cat-row cluster', style: 'padding:10px 0;border-bottom:1px solid var(--border);gap:12px;flex-wrap:nowrap' },
-      catBadge(c, { size: 'md' }),
-      h('div', { class: 'grow', style: 'min-width:0' },
-        h('div', { style: 'font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, c.name),
-        h('div', { class: 'text-sm muted' },
-          c.type === 'expense' ? (c.budget ? h('span', {}, 'תקציב ', money(c.budget)) : 'ללא תקציב') : '',
-          c.type === 'expense' ? ' · ' : '', `${(usage.get(c.id) || 0).toLocaleString('he-IL')} תנועות`)),
-      c.archived ? null : h('div', { class: 'cluster', style: 'gap:2px;flex-wrap:nowrap' },
-        h('button', { type: 'button', class: 'icon-btn', 'aria-label': `הזזת ${c.name} למעלה`, disabled: i === 0, dataset: { move: `${c.id}:-1` }, on: { click: () => move(c, -1) } }, icon('arrow-up', { size: 18 })),
-        h('button', { type: 'button', class: 'icon-btn', 'aria-label': `הזזת ${c.name} למטה`, disabled: i === list.length - 1, dataset: { move: `${c.id}:1` }, on: { click: () => move(c, 1) } }, icon('arrow-down', { size: 18 }))),
-      h('button', { type: 'button', class: 'icon-btn', 'aria-label': `עריכת ${c.name}`, on: { click: () => openCategorySheet(store, c, c.type) } }, icon('edit', { size: 18 })));
+    const catRow = (c, i, list) => h('li', { style: 'display:flex;align-items:center;gap:2px;min-width:0' },
+      h('button', { type: 'button', class: 'tx-row', style: 'flex:1 1 auto;min-width:0', on: { click: () => openCategorySheet(store, c, c.type) } },
+        catBadge(c),
+        h('div', { class: 'tx-main' },
+          h('div', { class: 'tx-title' }, c.name),
+          h('div', { class: 'tx-sub' }, h('span', { class: 'tx-sub-text' },
+            c.type === 'expense' ? (c.budget ? h('span', {}, 'תקציב ', money(c.budget)) : 'ללא תקציב') : '',
+            c.type === 'expense' ? ' · ' : '', `${(usage.get(c.id) || 0).toLocaleString('he-IL')} תנועות`))),
+        h('span', { class: 'sr-only' }, ' – עריכה')),
+      c.archived ? null : h('button', { type: 'button', class: 'icon-btn', 'aria-label': `הזזת ${c.name} למעלה`, disabled: i === 0, dataset: { move: `${c.id}:-1` }, on: { click: () => move(c, -1) } }, icon('arrow-up', { size: 18 })),
+      c.archived ? null : h('button', { type: 'button', class: 'icon-btn', 'aria-label': `הזזת ${c.name} למטה`, disabled: i === list.length - 1, dataset: { move: `${c.id}:1` }, on: { click: () => move(c, 1) } }, icon('arrow-down', { size: 18 })));
 
     const budgetTotal = state.categories.filter((c) => c.type === 'expense' && !c.archived).reduce((sum, c) => sum + (c.budget || 0), 0);
     const hist = history(state, 4).filter((m) => m.income > 0);
@@ -415,14 +417,14 @@ export default {
         h('button', { type: 'button', class: 'btn btn-ghost btn-sm', on: { click: () => openCategorySheet(store, null, catTab) } }, icon('plus', { size: 18 }), 'קטגוריה חדשה')),
       catTab === 'expense' ? budgetLine : null,
       activeCats.length
-        ? h('ul', { class: 'cat-list', role: 'list', style: 'list-style:none;margin:0;padding:0' }, activeCats.map((c, i) => catRow(c, i, activeCats)))
+        ? h('ul', { class: 'tx-list cat-list', role: 'list' }, activeCats.map((c, i) => catRow(c, i, activeCats)))
         : h('p', { class: 'muted' }, 'אין קטגוריות פעילות.'),
       archived.length ? h('div', {},
         h('button', {
           type: 'button', class: 'btn btn-ghost btn-sm', 'aria-expanded': String(showArchived),
           on: { click: () => { showArchived = !showArchived; ctx.setPeriod(ctx.period); } },
         }, icon(showArchived ? 'chevron-down' : 'chevron-left', { size: 18 }), `בארכיון (${archived.length})`),
-        showArchived ? h('ul', { class: 'cat-list', role: 'list', style: 'list-style:none;margin:0;padding:0;opacity:.8' }, archived.map((c, i) => catRow(c, i, archived))) : null) : null);
+        showArchived ? h('ul', { class: 'tx-list cat-list', role: 'list', style: 'opacity:.8' }, archived.map((c, i) => catRow(c, i, archived))) : null) : null);
 
     // ---- Recurring ----
     const recs = state.recurring.slice().sort((a, b) => (a.type === b.type ? 0 : a.type === 'income' ? -1 : 1) || a.day - b.day);
@@ -432,27 +434,27 @@ export default {
     const recRow = (r) => {
       const cat = catById(state, r.categoryId);
       const ended = r.endMonth && r.endMonth < today.slice(0, 7);
-      return h('li', { class: 'cluster', style: 'padding:10px 0;border-bottom:1px solid var(--border);gap:12px;flex-wrap:nowrap' },
-        catBadge(cat, { size: 'md' }),
-        h('div', { class: 'grow', style: 'min-width:0' },
-          h('div', { style: 'font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, r.note || cat.name),
-          h('div', { class: 'text-sm muted' },
-            `${r.note ? `${cat.name} · ` : ''}ב־${r.day} בכל חודש · ${payLabel(r.payment)}`,
-            ended ? ` · הסתיים ב${fmtMonth(r.endMonth)}` : r.endMonth ? ` · עד ${fmtMonth(r.endMonth)}` : '')),
-        h('span', { class: 'tx-amt' }, money(r.amount, { tone: r.type === 'income' ? 'income' : 'expense', sign: r.type === 'income' })),
+      return h('li', { style: 'display:flex;align-items:center;gap:8px;min-width:0' },
+        h('button', { type: 'button', class: 'tx-row', style: `flex:1 1 auto;min-width:0;${r.active === false || ended ? 'opacity:.6' : ''}`, on: { click: () => openRecurringSheet(store, r, today) } },
+          catBadge(cat),
+          h('div', { class: 'tx-main' },
+            h('div', { class: 'tx-title' }, r.note || cat.name),
+            h('div', { class: 'tx-sub' }, h('span', { class: 'tx-sub-text' },
+              `ב־${r.day} בכל חודש${r.note ? ` · ${cat.name}` : ''}`,
+              ended ? ` · הסתיים ב${fmtMonth(r.endMonth)}` : r.endMonth ? ` · עד ${fmtMonth(r.endMonth)}` : ''))),
+          h('div', { class: r.type === 'income' ? 'tx-amt is-income' : 'tx-amt' }, money(r.type === 'income' ? r.amount : -r.amount, { sign: true })),
+          h('span', { class: 'sr-only' }, ' – עריכה')),
         switchEl(r.active !== false, `${r.note || cat.name} פעיל`, (v) => {
-          store.updateRecurring(r.id, { active: v });
-          if (v) store.applyRecurring?.(today);
+          store.updateRecurring(r.id, { active: v }, today);
           toast(v ? 'ההוראה הופעלה' : 'ההוראה הושהתה');
-        }, { hideLabel: true }),
-        h('button', { type: 'button', class: 'icon-btn', 'aria-label': `עריכת ${r.note || cat.name}`, on: { click: () => openRecurringSheet(store, r, today) } }, icon('edit', { size: 18 })));
+        }, { hideLabel: true }));
     };
     const recurring = card('הוצאות והכנסות קבועות',
       h('div', { class: 'spread', style: 'flex-wrap:wrap;gap:12px' },
         h('p', { class: 'text-sm muted', style: 'margin:0' }, 'שכר דירה, מנויים, משכורת — נרשמים אוטומטית בכל חודש.'),
         h('button', { type: 'button', class: 'btn btn-ghost btn-sm', on: { click: () => openRecurringSheet(store, null, today) } }, icon('plus', { size: 18 }), 'הוספה')),
       recs.length
-        ? h('ul', { role: 'list', style: 'list-style:none;margin:0;padding:0' }, recs.map(recRow))
+        ? h('ul', { class: 'tx-list', role: 'list' }, recs.map(recRow))
         : emptyState({ icon: 'repeat', title: 'אין עדיין תנועות קבועות', text: 'הוסיפו כאן הוצאות שחוזרות כל חודש, או סמנו "חוזר כל חודש" בזמן הרישום.' }),
       recs.length ? h('div', { class: 'cluster text-sm', style: 'gap:6px 16px;flex-wrap:wrap' },
         h('span', {}, 'קבועות בחודש: '),

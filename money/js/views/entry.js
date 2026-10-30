@@ -17,6 +17,7 @@ function writeLast(patch) {
 
 const norm = (s) => String(s || '').trim().toLowerCase().replace(/\s+/g, ' ');
 const pressed = (b) => String(!!b);
+const frag = (...nodes) => { const f = document.createDocumentFragment(); f.append(...nodes.filter(Boolean)); return f; };
 
 function shiftDays(iso, n) {
   const d = fromISO(iso);
@@ -114,7 +115,6 @@ export function categoryCreator(st, type, { onCreate, onCancel }) {
       h('button', { type: 'button', class: 'btn btn-primary btn-sm', on: { click: create } }, icon('check'), 'יצירה'),
       h('button', { type: 'button', class: 'btn btn-ghost btn-sm', on: { click: () => onCancel?.() } }, 'ביטול')),
   );
-  setTimeout(() => name.focus(), 30);
   return box;
 }
 
@@ -244,8 +244,9 @@ export function openEntry(ctx = {}, tx = null, defaults = {}) {
         toast(`נוצרה קטגוריה: ${cat.name}`);
         amount.focus();
       },
-      onCancel: () => { creating = false; paintCreator(); paintCats(); },
+      onCancel: () => { creating = false; paintCreator(); paintCats(); catGrid.querySelector('.cat-pick.is-new')?.focus(); },
     }));
+    creatorSlot.querySelector('input')?.focus();
   }
 
   // --- Note ---------------------------------------------------------------
@@ -273,7 +274,7 @@ export function openEntry(ctx = {}, tx = null, defaults = {}) {
   });
 
   // --- Date -----------------------------------------------------------------
-  const dateInput = h('input', { class: 'input', type: 'date', id: `date-${n}`, max: shiftDays(today, 366), style: 'width:auto;min-width:0;flex:1 1 140px' });
+  const dateInput = h('input', { class: 'input', type: 'date', id: `date-${n}`, max: shiftDays(today, 366) });
   dateInput.value = date;
   const chipToday = h('button', { type: 'button', class: 'chip', on: { click: () => setDate(today) } }, 'היום');
   const chipYesterday = h('button', { type: 'button', class: 'chip', on: { click: () => setDate(shiftDays(today, -1)) } }, 'אתמול');
@@ -350,7 +351,7 @@ export function openEntry(ctx = {}, tx = null, defaults = {}) {
     type: 'button', class: 'btn btn-ghost', title: 'Shift+Enter', on: { click: () => save(true) },
   }, icon('plus'), 'שמירה והוספה נוספת');
   const delBtn = editing ? h('button', { type: 'button', class: 'btn btn-ghost btn-danger', on: { click: remove } }, icon('trash'), 'מחיקה') : null;
-  const footer = h('div', { class: 'cluster', style: 'width:100%;flex-wrap:wrap' }, saveBtn, againBtn, delBtn);
+  const footer = frag(delBtn, againBtn, saveBtn);
 
   paintCats();
   paintNotes();
@@ -440,20 +441,20 @@ function recurMonth(iso) { return iso.slice(0, 7); }
 export function createRecurring(st, data, today = todayISO()) {
   const month = recurMonth(data.date);
   const day = fromISO(data.date).getDate();
+  // addRecurring materializes due months immediately (including this one when the date is not in the future).
   const rec = st.addRecurring({
     type: data.type, amount: data.amount, categoryId: data.categoryId, note: data.note, payment: data.payment,
-    day, startMonth: month, endMonth: null, active: true, done: [month],
-  });
+    day, startMonth: month, endMonth: null, active: true,
+  }, today);
   const recurKey = `${rec.id}:${month}`;
   // If the store already materialized this month (e.g. addRecurring applies immediately), adopt that tx.
   let tx = st.state.transactions.find((t) => t.recurKey === recurKey);
   if (tx) {
-    tx = st.updateTransaction(tx.id, { date: data.date, note: data.note }) || tx;
+    if (tx.date !== data.date || tx.note !== data.note) tx = st.updateTransaction(tx.id, { date: data.date, note: data.note }) || tx;
   } else {
     tx = st.addTransaction({ ...data, recurringId: rec.id, recurKey });
   }
-  const cur = st.state.recurring.find((r) => r.id === rec.id);
-  if (cur && !(cur.done || []).includes(month)) st.updateRecurring(rec.id, { done: [...(cur.done || []), month] });
-  st.applyRecurring?.(today);
+  // Note: rec.done is managed by the store; materializeRecurring() also skips months whose recurKey
+  // already exists, so the transaction added above is never duplicated when its day arrives.
   return { rec, tx };
 }
