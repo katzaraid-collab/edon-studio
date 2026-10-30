@@ -146,11 +146,12 @@ function monotonePath(pts) {
 }
 
 function srTable(caption, headers, rows) {
-  return htmlEl('table', { class: 'chart-sr' },
+  // Wrapped in a div: a table ignores width/overflow clipping and would widen the page on narrow screens.
+  return htmlEl('div', { class: 'chart-sr' }, htmlEl('table', null,
     htmlEl('caption', null, caption),
     htmlEl('thead', null, htmlEl('tr', null, headers.map((t) => htmlEl('th', { scope: 'col' }, t)))),
     htmlEl('tbody', null, rows.map((r) => htmlEl('tr', null, r.map((c, i) => (i === 0 ? htmlEl('th', { scope: 'row' }, c) : htmlEl('td', null, bdi(c, '')))))))
-  );
+  ));
 }
 
 function emptyChart(kind, text = 'אין נתונים להצגה', height) {

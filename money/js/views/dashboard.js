@@ -197,7 +197,7 @@ function insightsCard(list, ctx) {
 function dailyCard(s, ctx) {
   if (!s.expense) return null;
   const todayIdx = s.byDay.findIndex((d) => d.date === ctx.today);
-  const items = s.byDay.map((d) => ({ label: String(Number(d.date.slice(8))), value: d.expense }));
+  const items = s.byDay.map((d) => ({ label: String(Number(d.date.slice(8))), title: fmtDate(d.date, { weekday: true }), value: d.expense }));
   const chart = barsSimple(items, { height: 150, format: compact, highlightIndex: todayIdx >= 0 ? todayIdx : undefined, maxLabels: 8 });
   return card({
     title: 'הוצאות לפי יום',
@@ -218,7 +218,7 @@ function recentCard(txs, state, ctx) {
 function onboarding(ctx) {
   return emptyState({
     icon: 'piggy',
-    title: 'ברוכים הבאים למאזן',
+    title: ctx.state.settings.name ? `היי ${ctx.state.settings.name}, ברוכים הבאים למאזן` : 'ברוכים הבאים למאזן',
     text: 'רושמים כל הוצאה והכנסה, ורואים בדיוק לאן הלך כל שקל וכמה נחסך בכל חודש. הכול נשמר רק במכשיר שלך.',
     actions: [
       h('button', { type: 'button', class: 'btn btn-primary btn-lg', on: { click: () => ctx.openEntry(null, { type: 'expense' }) } }, icon('plus'), 'הוספת הוצאה ראשונה'),

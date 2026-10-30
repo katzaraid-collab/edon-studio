@@ -50,7 +50,7 @@ function openEntry(tx = null, defaults = {}) {
 }
 
 function makeCtx() {
-  return { store, state: store.state, period, setPeriod, navigate, openEntry, today, params: route.params };
+  return { store, state: store.state, period, setPeriod, navigate, openEntry, today, params: route.params, rerender: scheduleRender };
 }
 
 function render({ scroll = 'keep' } = {}) {
@@ -90,7 +90,7 @@ function scheduleRender() {
 }
 
 function updateChrome(view) {
-  document.title = `${view.title} · מאזן`;
+  document.title = `${view.title} · המאזן של אורי`;
   document.querySelectorAll('[data-route]').forEach((a) => {
     a.href = hashFor(a.dataset.route);
     if (a.dataset.route === route.id) a.setAttribute('aria-current', 'page');

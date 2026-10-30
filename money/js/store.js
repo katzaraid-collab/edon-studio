@@ -56,7 +56,7 @@ export const DEFAULT_CATEGORIES = Object.freeze(
   ),
 );
 
-export const DEFAULT_SETTINGS = Object.freeze({ name: '', monthStartDay: 1, savingsGoal: 0, theme: 'system', onboarded: false });
+export const DEFAULT_SETTINGS = Object.freeze({ name: 'אורי', monthStartDay: 1, savingsGoal: 0, theme: 'system', onboarded: false });
 
 export function defaultState() {
   return {
@@ -517,7 +517,13 @@ export function createStore({ storage = null, win = undefined, saveDelay = SAVE_
       if (!(tx.amount > 0)) throw new RangeError('הסכום חייב להיות גדול מאפס');
       if (partial.recurringId) tx.recurringId = str(partial.recurringId, 64);
       if (partial.recurKey) tx.recurKey = str(partial.recurKey, 80);
-      commit({ ...s, transactions: [...s.transactions, tx] }, { type: 'tx:add', id: tx.id });
+      // A transaction tied to a recurring rule counts as that month's occurrence, so deleting it later never brings it back.
+      let recurring = s.recurring;
+      const mk = tx.recurKey && tx.recurKey.slice(tx.recurKey.lastIndexOf(':') + 1);
+      if (mk && tx.recurringId) {
+        recurring = recurring.map((r) => (r.id === tx.recurringId && !r.done.includes(mk) ? { ...r, done: [...r.done, mk] } : r));
+      }
+      commit({ ...s, transactions: [...s.transactions, tx], recurring }, { type: 'tx:add', id: tx.id });
       return tx;
     },
 

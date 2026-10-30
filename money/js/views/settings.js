@@ -412,7 +412,7 @@ export default {
     }
 
     const catTabs = segmented([{ value: 'expense', label: 'הוצאות' }, { value: 'income', label: 'הכנסות' }], catTab,
-      (v) => { catTab = v; showArchived = false; ctx.setPeriod(ctx.period); }, { label: 'סוג קטגוריות' });
+      (v) => { catTab = v; showArchived = false; ctx.rerender(); }, { label: 'סוג קטגוריות' });
 
     const categories = card('קטגוריות ותקציבים',
       h('div', { class: 'spread', style: 'flex-wrap:wrap;gap:12px' }, catTabs,
@@ -424,7 +424,7 @@ export default {
       archived.length ? h('div', {},
         h('button', {
           type: 'button', class: 'btn btn-ghost btn-sm', 'aria-expanded': String(showArchived),
-          on: { click: () => { showArchived = !showArchived; ctx.setPeriod(ctx.period); } },
+          on: { click: () => { showArchived = !showArchived; ctx.rerender(); } },
         }, icon(showArchived ? 'chevron-down' : 'chevron-left', { size: 18 }), `בארכיון (${archived.length})`),
         showArchived ? h('ul', { class: 'tx-list cat-list', role: 'list', style: 'opacity:.8' }, archived.map((c, i) => catRow(c, i, archived))) : null) : null);
 
