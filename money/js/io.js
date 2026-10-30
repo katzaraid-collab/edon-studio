@@ -292,7 +292,7 @@ export function importCSVText(text, state, { now = Date.now() } = {}) {
       skipped++;
       continue;
     }
-    const note = unguard(get(r, 'note')).replace(/\s+/g, ' ').slice(0, 300);
+    const note = unguard(get(r, 'note')).slice(0, 300);
     const tx = {
       id: uid(),
       type,

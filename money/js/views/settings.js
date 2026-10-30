@@ -19,7 +19,6 @@ let seq = 0;
 
 const pressed = (b) => String(!!b);
 const frag = (...nodes) => { const f = document.createDocumentFragment(); f.append(...nodes.filter(Boolean)); return f; };
-const payLabel = (id) => PAYMENTS.find((p) => p.id === id)?.label || 'אחר';
 const amountToInput = (a) => (!(a > 0) ? '' : a % 100 ? (a / 100).toFixed(2) : String(a / 100));
 const uidLocal = (p) => `${p}-${++seq}`;
 
@@ -380,7 +379,10 @@ export default {
       [ids[a], ids[b]] = [ids[b], ids[a]];
       store.reorderCategories(ids);
       // keep focus on the same control after the re-render
-      requestAnimationFrame(() => document.querySelector(`[data-move="${cat.id}:${dir}"]`)?.focus());
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        const same = document.querySelector(`[data-move="${cat.id}:${dir}"]`);
+        (same && !same.disabled ? same : document.querySelector(`[data-move="${cat.id}:${-dir}"]`))?.focus();
+      }));
     };
 
     const catRow = (c, i, list) => h('li', { style: 'display:flex;align-items:center;gap:2px;min-width:0' },
@@ -480,9 +482,13 @@ export default {
           store.replaceAll(res.state);
           toast(`שוחזרו ${res.added.toLocaleString('he-IL')} תנועות`, { tone: 'good' });
         } else {
-          if (!res.added) { toast('לא נמצאו תנועות בקובץ', { tone: 'warn' }); return; }
+          const skipped = res.skipped || 0;
+          if (!res.added) {
+            toast(skipped ? `כל ${skipped.toLocaleString('he-IL')} התנועות בקובץ כבר קיימות` : 'לא נמצאו תנועות בקובץ', { tone: 'warn' });
+            return;
+          }
           store.replaceAll(res.state);
-          toast(`יובאו ${res.added.toLocaleString('he-IL')} תנועות`, { tone: 'good' });
+          toast(`יובאו ${res.added.toLocaleString('he-IL')} תנועות${skipped ? ` (${skipped.toLocaleString('he-IL')} כפולות דולגו)` : ''}`, { tone: 'good' });
         }
       } catch (err) {
         console.error(err);

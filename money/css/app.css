@@ -1415,7 +1415,8 @@ input.amount-input { max-width: none; display: block; }
 .budget-row .spread > :last-child { flex-shrink: 0; }
 .stack > .budget-row + .budget-row { padding-top: var(--sp-3); border-top: 1px solid var(--border); }
 
-.legend { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.legend { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; margin: 0; padding: 0; list-style: none; }
+.legend > li { min-width: 0; }
 .legend-item {
   display: flex;
   align-items: center;

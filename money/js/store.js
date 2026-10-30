@@ -357,7 +357,6 @@ export function createStore({ storage = null, win = undefined, saveDelay = SAVE_
     const w = getWin();
     if (w && typeof w.addEventListener === 'function') {
       w.addEventListener('pagehide', flush);
-      w.addEventListener('beforeunload', flush);
       const doc = w.document;
       if (doc && typeof doc.addEventListener === 'function') {
         doc.addEventListener('visibilitychange', () => {
