@@ -8,7 +8,7 @@
 // • Install never fails because one precache file is missing: each file is
 //   fetched and put individually, errors are swallowed.
 
-const VERSION = 'maazan-v1';
+const VERSION = 'maazan-v2';
 const SCOPE = new URL('./', self.location).pathname; // "/money/"
 
 const SHELL = [

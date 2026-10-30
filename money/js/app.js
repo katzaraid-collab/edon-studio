@@ -184,7 +184,7 @@ function wire() {
 
 function registerSW() {
   if (!('serviceWorker' in navigator) || location.protocol !== 'https:') return;
-  navigator.serviceWorker.register('./sw.js', { scope: './' }).then((reg) => {
+  navigator.serviceWorker.register('/money/sw.js', { scope: '/money/' }).then((reg) => {
     reg.addEventListener('updatefound', () => {
       const sw = reg.installing;
       sw?.addEventListener('statechange', () => {

@@ -29,6 +29,11 @@
       "source": "/x/index.html",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/money",
+      "destination": "/money/",
+      "permanent": true
     }
   ],
   "headers": [
