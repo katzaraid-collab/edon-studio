@@ -169,10 +169,32 @@ test('recurring: delete rule keeps history; removeFuture drops future-dated ones
 test('settings are sanitized', () => {
   const { s } = fresh();
   s.updateSettings({ monthStartDay: 31, savingsGoal: -250000, theme: 'neon', name: 'נועה' });
-  assert.deepEqual(s.state.settings, { name: 'נועה', monthStartDay: 28, savingsGoal: 250000, theme: 'system', onboarded: false });
+  assert.deepEqual(s.state.settings, { name: 'נועה', monthStartDay: 28, savingsGoal: 250000, theme: 'system', onboarded: false, demo: false });
   s.updateSettings({ monthStartDay: 10, theme: 'dark', onboarded: true });
   assert.equal(s.state.settings.monthStartDay, 10);
   assert.equal(s.state.settings.theme, 'dark');
+});
+
+test('demo data is flagged, and reset clears it but keeps the name', () => {
+  const { s } = fresh();
+  s.updateSettings({ name: 'אורי', theme: 'dark' });
+  s.loadDemo('2026-10-30');
+  assert.equal(s.state.settings.demo, true);
+  assert.ok(s.state.transactions.length > 50);
+  s.reset();
+  assert.equal(s.state.settings.demo, false);
+  assert.equal(s.state.transactions.length, 0);
+  assert.equal(s.state.settings.name, 'אורי');
+  assert.equal(s.state.settings.theme, 'dark');
+});
+
+test('demo data saved before the flag existed is still recognized', () => {
+  const old = buildDemoState('2026-10-30');
+  delete old.settings.demo;
+  assert.equal(normalizeState(old).settings.demo, true);
+  const real = { ...defaultState(), transactions: [{ id: 'abc', type: 'expense', amount: 100, categoryId: 'groceries', date: '2026-10-01', note: '', payment: 'card' }] };
+  delete real.settings.demo;
+  assert.equal(normalizeState(real).settings.demo, false);
 });
 
 test('persistence: debounced write, reload, corrupted backup', async () => {

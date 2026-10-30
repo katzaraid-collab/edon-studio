@@ -56,7 +56,7 @@ export const DEFAULT_CATEGORIES = Object.freeze(
   ),
 );
 
-export const DEFAULT_SETTINGS = Object.freeze({ name: 'אורי', monthStartDay: 1, savingsGoal: 0, theme: 'system', onboarded: false });
+export const DEFAULT_SETTINGS = Object.freeze({ name: 'אורי', monthStartDay: 1, savingsGoal: 0, theme: 'system', onboarded: false, demo: false });
 
 export function defaultState() {
   return {
@@ -159,6 +159,7 @@ function normSettings(s) {
     savingsGoal: toAgorot(s.savingsGoal || 0),
     theme: THEMES.includes(s.theme) ? s.theme : 'system',
     onboarded: !!s.onboarded,
+    demo: !!s.demo,
   };
 }
 
@@ -212,7 +213,10 @@ export function normalizeState(raw, { today = todayISO(), now = Date.now() } = {
     recurring.push(rec);
   }
 
-  return { version: STATE_VERSION, transactions, categories, recurring, settings: normSettings(raw.settings) };
+  const settings = normSettings(raw.settings);
+  // Data saved before the demo flag existed: demo transactions are recognizable by their id prefix.
+  if (raw.settings && raw.settings.demo === undefined && transactions.some((t) => t.id.startsWith('demo'))) settings.demo = true;
+  return { version: STATE_VERSION, transactions, categories, recurring, settings };
 }
 
 // ---------------------------------------------------------------------------
@@ -689,11 +693,12 @@ export function createStore({ storage = null, win = undefined, saveDelay = SAVE_
       return next;
     },
 
-    /** Back to defaults (keeps only the theme preference). */
+    /** Back to defaults (keeps the theme preference and the name). */
     reset() {
       const s = S();
       const next = defaultState();
       next.settings.theme = s.settings.theme;
+      next.settings.name = s.settings.name;
       commit(next, { type: 'reset' });
       flush();
     },
@@ -702,7 +707,7 @@ export function createStore({ storage = null, win = undefined, saveDelay = SAVE_
     loadDemo(today = todayISO()) {
       const s = S();
       const demo = buildDemoState(today);
-      demo.settings = { ...demo.settings, theme: s.settings.theme, onboarded: s.settings.onboarded, name: s.settings.name };
+      demo.settings = { ...demo.settings, theme: s.settings.theme, onboarded: s.settings.onboarded, name: s.settings.name, demo: true };
       commit(demo, { type: 'demo' });
       flush();
       return demo;

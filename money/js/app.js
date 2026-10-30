@@ -2,7 +2,7 @@
 import { store } from './store.js';
 import { currentPeriod } from './model.js';
 import { addMonths, fmtMonth, todayISO } from './format.js';
-import { toast } from './ui.js';
+import { toast, h, icon, confirmDialog } from './ui.js';
 import dashboard from './views/dashboard.js';
 import transactions from './views/transactions.js';
 import insights from './views/insights.js';
@@ -60,6 +60,7 @@ function render({ scroll = 'keep' } = {}) {
   cleanup = null;
   root.replaceChildren();
   root.dataset.view = route.id;
+  if (store.state.settings.demo) root.append(demoBanner());
   try {
     cleanup = view.render(root, makeCtx()) || null;
   } catch (err) {
@@ -81,6 +82,29 @@ function render({ scroll = 'keep' } = {}) {
   updateChrome(view);
   if (scroll === 'top') window.scrollTo(0, 0);
   else window.scrollTo(0, y);
+}
+
+// Demo data looks real, so say so on every screen and offer a one-tap way out.
+function demoBanner() {
+  const clear = async () => {
+    const ok = await confirmDialog({
+      title: 'מחיקת נתוני הדוגמה',
+      text: 'כל נתוני הדוגמה יימחקו והאפליקציה תחזור להיות ריקה, מוכנה להוצאות האמיתיות שלך.',
+      confirmLabel: 'מחיקה והתחלה מאפס',
+      danger: true,
+    });
+    if (!ok) return;
+    store.reset();
+    toast('נתוני הדוגמה נמחקו. אפשר להתחיל לרשום הוצאות אמיתיות', { tone: 'good' });
+  };
+  return h('div', { class: 'page', style: { paddingBottom: 0 } },
+    h('div', { class: 'insight is-warn', role: 'note', style: { alignItems: 'center' } },
+      icon('info'),
+      h('div', { class: 'grow' },
+        h('p', { class: 'bold' }, 'אלה נתוני דוגמה, לא הנתונים שלך'),
+        h('p', { class: 'text-sm muted' }, 'הם כאן רק כדי להראות איך האפליקציה נראית.')),
+      h('button', { type: 'button', class: 'btn btn-sm btn-primary', on: { click: clear } }, 'מחיקה והתחלה'),
+    ));
 }
 
 function scheduleRender() {
