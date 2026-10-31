@@ -36,8 +36,18 @@
       "permanent": true
     },
     {
+      "source": "/faisal",
+      "destination": "/faisal/",
+      "permanent": true
+    },
+    {
       "source": "/timur",
-      "destination": "/timur/",
+      "destination": "/faisal/",
+      "permanent": true
+    },
+    {
+      "source": "/timur/",
+      "destination": "/faisal/",
       "permanent": true
     }
   ],

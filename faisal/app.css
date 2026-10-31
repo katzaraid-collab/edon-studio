@@ -1,5 +1,5 @@
 /* =====================================================================
-   הרשות לפיקוח על פייסלים — מעקב יומי לאלעזר המלשין
+   הרשות לפיקוח על פייסלים — פנקס הפייסלים
    Layout: one phone-width column styled like a parody medical-cannabis
    prescription: licence card on top, burning joint as the daily meter,
    then week chart, munchies, log.
@@ -491,3 +491,17 @@ a.btn-save { text-decoration: none; display: inline-flex; align-items: center; }
 .ach-e { font-size: 24px; line-height: 1; flex: none; display: inline-block; }
 .ach b { display: block; font-size: 14px; }
 .ach small { display: block; font-size: 12px; color: var(--ink-2); }
+
+/* onboarding */
+.stamp.pending { border-style: dashed; color: var(--ink-2); border-color: var(--ink-2); transform: rotate(6deg); }
+.ob-form form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.ob-form label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--ink-2); }
+.ob-form .full { grid-column: 1 / -1; }
+.ob-form input:not([type="checkbox"]) {
+  border: 1px solid var(--line); background: var(--bg); border-radius: 8px;
+  padding: 12px; font-size: 16px; color: var(--ink);
+}
+.ob-form #ob-name { font: 400 20px/1.2 var(--f-display); }
+.ob-form label.check { flex-direction: row; align-items: center; gap: 8px; font-size: 14px; color: var(--ink); }
+.ob-form label.check input { width: 20px; height: 20px; accent-color: var(--leaf); }
+@media (max-width: 380px) { .ob-form form { grid-template-columns: 1fr; } }

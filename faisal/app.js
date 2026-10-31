@@ -33,7 +33,7 @@
   var HALF_QUIPS = [
     "<b>חצי נרשם.</b> שם החבר הועבר לרשויות. סתם. אולי.",
     "<b>חצי חצי.</b> שיתוף זה אכפתיות. גם הדיווח עליו.",
-    "<b>נרשם חצי.</b> אלעזר לא מלשין, אלעזר רק מתעד. יש הבדל.",
+    "<b>נרשם חצי.</b> המלשין לא מלשין, הוא רק מתעד. יש הבדל.",
     "<b>חצי עם חבר.</b> החבר לא יודע שהוא בדו״ח. עכשיו הוא יודע.",
     "<b>אושר.</b> חצי מהפייסל, חצי מהאשמה."
   ];
@@ -44,7 +44,7 @@
     { n: "ספה פרימיום", t: "אינדיקה", d: "הספה מתקשרת אליך בעצמה ומבקשת שתבוא." },
     { n: "חרמון הייז", t: "סאטיבה", d: "קריר ובהיר. מתאים לפילוסופיה בשלוש בלילה." },
     { n: "בורקס דרים", t: "היברידי", d: "תופעת לוואי ידועה: בורקס. הרבה בורקס." },
-    { n: "מלשין ספיישל", t: "הזן הרשמי", d: "כל שאיפה נרשמת בדו״ח. אלעזר מאשר." },
+    { n: "מלשין ספיישל", t: "הזן הרשמי", d: "כל שאיפה נרשמת בדו״ח. המלשין מאשר." },
     { n: "קופת חולים קוש", t: "אינדיקה", d: "פתאום התור לרופא מרגיש קצר." },
     { n: "במבה טרופית", t: "סאטיבה", d: "אחרי זה תאכל במבה. זאת לא שאלה." },
     { n: "שבת שלום OG", t: "אינדיקה", d: "יושבים בשקט בארוחת שישי ומחייכים לדודה." }
@@ -78,7 +78,7 @@
         if (s && Array.isArray(s.j)) {
           if (!Array.isArray(s.h)) s.h = [];
           if (!s.f) s.f = { spins: 0 };
-          if (s.cfg && s.cfg.name === "טימור") s.cfg.name = "אלעזר המלשין";
+          if (s.ob === undefined) s.ob = !s.demo;
           return s;
         }
       }
@@ -89,7 +89,7 @@
     try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ }
   }
   function blank() {
-    return { j: [], m: [], demo: false, cfg: { name: "אלעזר המלשין", grams: 40, gpj: 0.35 }, h: [], f: { spins: 0 } };
+    return { j: [], m: [], demo: false, cfg: { name: "", grams: 40, gpj: 0.35 }, h: [], f: { spins: 0 }, ob: false };
   }
   function seed() {
     var s = blank();
@@ -228,7 +228,7 @@
     var munchTxt = Object.keys(munch).map(function (k) { return k + (munch[k] > 1 ? " ×" + munch[k] : ""); }).join(", ") || "אין. חשוד.";
     return [
       "🕵️ דו״ח מלשינות רשמי",
-      "נבדק: " + (S.cfg.name || "אלעזר המלשין"),
+      "נבדק: " + (S.cfg.name || "אלמוני"),
       "תאריך: " + new Date(now).toLocaleDateString("he-IL"),
       "פייסלים היום: " + fmt(todayCount) + " (מכסה: " + fmt(allowance()) + ")",
       "חצאים עם חברים: " + halves + (halves ? ". שמות החברים שמורים בתיק." : ""),
@@ -236,7 +236,7 @@
       "סטטוס: " + lv.t,
       "המלצת המלשין: לשתות מים ולא לנהוג.",
       "",
-      "edon-studio.vercel.app/timur"
+      "גם אתה רוצה תיק? edon-studio.vercel.app/faisal"
     ].join("\n");
   }
 
@@ -249,7 +249,35 @@
   var lastQuip = "";
   var resetArmed = false;
 
+  function renderOnboarding() {
+    document.title = "פנקס הפייסלים";
+    document.documentElement.classList.remove("high");
+    app.innerHTML =
+      '<header class="licence ob">' +
+        '<div class="licence-top">' +
+          '<div>' +
+            '<div class="eyebrow">הרשות לפיקוח על פייסלים · טופס 420</div>' +
+            '<h1>פנקס הפייסלים</h1>' +
+            '<p class="sub">בקשה לפתיחת תיק אישי. כמה פייסלים ביום, כמה נשאר מהמרשם, ומה נאכל בדרך. הכל נשמר רק בטלפון שלך.</p>' +
+          '</div>' +
+          '<div class="stamp pending" aria-hidden="true">ממתין<small>לאישור</small></div>' +
+        '</div>' +
+      '</header>' +
+      '<section class="card ob-form" aria-labelledby="h-ob">' +
+        '<h2 id="h-ob">פרטי מבקש הרישיון</h2>' +
+        '<form id="ob">' +
+          '<label class="full">איך קוראים לך? (שם או כינוי)<input id="ob-name" name="name" maxlength="20" autocomplete="nickname" placeholder="למשל: אלעזר המלשין" required></label>' +
+          '<label>מכסה חודשית (גרם)<input id="ob-grams" name="grams" type="number" inputmode="decimal" min="1" max="500" step="1" value="40"></label>' +
+          '<label>גרם לפייסל<input id="ob-gpj" name="gpj" type="number" inputmode="decimal" min="0.05" max="3" step="0.05" value="0.35"></label>' +
+          '<label class="check full"><input id="ob-demo" type="checkbox"> להתחיל עם נתוני דוגמה כדי לראות איך זה נראה</label>' +
+          '<button class="btn-light full" type="submit">הגש בקשה וקבל רישיון 🌿</button>' +
+        '</form>' +
+        '<p class="fine">לא יודע את המכסה? 40 גרם זה ממוצע, אפשר לשנות אחר כך בהגדרות.</p>' +
+      '</section>';
+  }
+
   function render() {
+    if (!S.ob) { renderOnboarding(); return; }
     var now = Date.now();
     var today = startOfDay(now);
     var todayCount = countOn(now);
@@ -293,7 +321,8 @@
       .sort(function (a, b) { return b.t - a.t; });
 
     var licNo = "THC-" + String(4200 + (S.cfg.name.length * 7) % 100).padStart(4, "0");
-    var name = esc(S.cfg.name || "אלעזר המלשין");
+    var name = esc(S.cfg.name || "אלמוני");
+    document.title = "הפייסלים של " + (S.cfg.name || "אלמוני");
 
     app.innerHTML =
       '<header class="licence">' +
@@ -420,7 +449,7 @@
           '<label class="full">שם בעל הרישיון<input id="f-name" name="name" maxlength="20" value="' + name + '"></label>' +
           '<label>מכסה חודשית (גרם)<input id="f-grams" name="grams" type="number" inputmode="decimal" min="1" max="500" step="1" value="' + S.cfg.grams + '"></label>' +
           '<label>גרם לפייסל<input id="f-gpj" name="gpj" type="number" inputmode="decimal" min="0.05" max="3" step="0.05" value="' + S.cfg.gpj + '"></label>' +
-          '<div class="row-btns full"><button class="btn-save" type="submit">שמור</button><button class="btn-danger" type="button" data-act="reset">' + (resetArmed ? "בטוח? לחץ שוב למחיקה" : "מחק את כל הנתונים") + '</button></div>' +
+          '<div class="row-btns full"><button class="btn-save" type="submit">שמור</button><button class="btn-danger" type="button" data-act="reset">' + (resetArmed ? "בטוח? לחץ שוב למחיקה" : "מחק הכל והתחל מחדש") + '</button></div>' +
         '</form>' +
       '</section>' +
 
@@ -477,7 +506,8 @@
     var b = e.target.closest("[data-act]");
     if (!b) return;
     var act = b.getAttribute("data-act");
-    var settingsOpen = !document.getElementById("settings").hidden;
+    var setEl0 = document.getElementById("settings");
+    var settingsOpen = !!setEl0 && !setEl0.hidden;
 
     if (act === "light") {
       S.j.push(Date.now());
@@ -545,7 +575,7 @@
       S = blank();
       lastQuip = "";
       save(); render();
-      toast("הכל נמחק. דף חדש");
+      toast("הכל נמחק. אפשר לפתוח תיק חדש");
       return;
     }
     if (settingsOpen) document.getElementById("settings").hidden = false;
@@ -592,13 +622,29 @@
   }
 
   app.addEventListener("submit", function (e) {
+    if (e.target.id === "ob") {
+      e.preventDefault();
+      var on = document.getElementById("ob-name").value.trim();
+      var og = parseFloat(document.getElementById("ob-grams").value);
+      var op = parseFloat(document.getElementById("ob-gpj").value);
+      if (!on) { toast("צריך שם, אפילו כינוי"); document.getElementById("ob-name").focus(); return; }
+      if (!(og > 0) || !(op > 0)) { toast("צריך מספרים חיוביים במכסה ובגרם לפייסל"); return; }
+      var withDemo = document.getElementById("ob-demo").checked;
+      var cfg = { name: on, grams: og, gpj: op };
+      S = withDemo ? seed() : blank();
+      S.cfg = cfg; S.ob = true; S.ach = Object.keys(earned());
+      lastQuip = "<b>הרישיון אושר.</b> ברוך הבא למערכת, " + esc(on) + ".";
+      save(); render();
+      if (window.FX) { var c = FX.centerOf(document.querySelector(".stamp")); FX.burst(c.x, c.y, { n: 50 }); }
+      return;
+    }
     if (e.target.id !== "cfg") return;
     e.preventDefault();
     var g = parseFloat(document.getElementById("f-grams").value);
     var p = parseFloat(document.getElementById("f-gpj").value);
     var n = document.getElementById("f-name").value.trim();
     if (!(g > 0) || !(p > 0)) { toast("צריך מספרים חיוביים בשני השדות"); return; }
-    S.cfg = { name: n || "אלעזר המלשין", grams: g, gpj: p };
+    S.cfg = { name: n || "אלמוני", grams: g, gpj: p };
     save(); render();
     toast("המרשם עודכן");
   });
@@ -610,9 +656,7 @@
   setInterval(function () {
     if (startOfDay(Date.now()) !== renderedDay) {
       renderedDay = startOfDay(Date.now());
-      var open = !document.getElementById("settings").hidden;
       render();
-      document.getElementById("settings").hidden = !open;
       return;
     }
     var el = document.getElementById("since");
