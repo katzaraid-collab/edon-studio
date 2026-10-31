@@ -31,10 +31,10 @@
   ];
   var MUNCH_EMOJI = { bamba: "🥜", bisli: "🥨", shoko: "🥛", pizza: "🍕", ice: "🍦", burekas: "🥐", malawach: "🫓", cereal: "🥣" };
   var HALF_QUIPS = [
-    "<b>חצי נרשם.</b> שם החבר הועבר לרשויות. סתם. אולי.",
+    "<b>חצי נרשם.</b> השם של אילון הועבר לרשויות. סתם. אולי.",
     "<b>חצי חצי.</b> שיתוף זה אכפתיות. גם הדיווח עליו.",
     "<b>נרשם חצי.</b> המלשין לא מלשין, הוא רק מתעד. יש הבדל.",
-    "<b>חצי עם חבר.</b> החבר לא יודע שהוא בדו״ח. עכשיו הוא יודע.",
+    "<b>חצי עם אילון.</b> אילון לא יודע שהוא בדו״ח. עכשיו הוא יודע.",
     "<b>אושר.</b> חצי מהפייסל, חצי מהאשמה."
   ];
   var STRAINS = [
@@ -51,7 +51,7 @@
   ];
   var ACH = [
     { id: "first", e: "🌱", n: "ההדלקה הראשונה", d: "נרשם הפייסל הראשון במערכת" },
-    { id: "half5", e: "🤝", n: "חצי בן אדם", d: "5 חצאים עם חברים" },
+    { id: "half5", e: "🤝", n: "חצי בן אדם", d: "5 חצאים עם אילון" },
     { id: "early", e: "🌅", n: "בוקר של אלופים", d: "פייסל לפני 9 בבוקר" },
     { id: "owl", e: "🦉", n: "ינשוף ממלכתי", d: "פייסל בין 1 ל־5 בלילה" },
     { id: "munch5", e: "🍕", n: "מאנצ׳יז מאסטר", d: "5 פינוקים ביום אחד" },
@@ -233,7 +233,7 @@
       "נבדק: " + (S.cfg.name || "אלמוני"),
       "תאריך: " + new Date(now).toLocaleDateString("he-IL"),
       "פייסלים היום: " + fmt(todayCount) + " (מכסה: " + fmt(allowance()) + ")",
-      "חצאים עם חברים: " + halves + (halves ? ". שמות החברים שמורים בתיק." : ""),
+      "חצאים עם אילון: " + halves + (halves ? ". אילון נמצא בתיק." : ""),
       "פינוקים: " + munchTxt,
       "סטטוס: " + lv.t,
       "המלצת המלשין: לשתות מים ולא לנהוג.",
@@ -321,7 +321,7 @@
 
     // log: today's joints + munchies
     var logItems = S.j.filter(function (t) { return sameDay(t, now); }).map(function (t) { return { t: t, k: "🌿 פייסל" }; })
-      .concat(S.h.filter(function (t) { return sameDay(t, now); }).map(function (t) { return { t: t, k: "🤝 חצי עם חבר" }; }))
+      .concat(S.h.filter(function (t) { return sameDay(t, now); }).map(function (t) { return { t: t, k: "🤝 חצי עם אילון" }; }))
       .concat(munchToday.map(function (x) {
         var item = MUNCHIES.find(function (m) { return m.k === x.k; });
         return { t: x.t, k: "פינוק: " + (item ? item.n : x.k) };
@@ -369,7 +369,7 @@
         '</div>' +
         '<div class="actions">' +
           '<button type="button" class="btn-light" data-act="light">הדלקתי אחד 🔥</button>' +
-          '<button type="button" class="btn-half" data-act="half">עישנתי חצי עם חבר 🤝</button>' +
+          '<button type="button" class="btn-half" data-act="half">עישנתי חצי עם אילון 🤝</button>' +
           '<button type="button" class="btn-undo" data-act="undo"' + (todayCount ? "" : " disabled") + '>ביטול</button>' +
         '</div>' +
         '<p class="quip" aria-live="polite">' + lastQuip + '</p>' +
