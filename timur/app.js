@@ -29,12 +29,37 @@
     "<b>נספר.</b> הפייסל הזה מוקדש לפקיד בקופת חולים.",
     "<b>רשום אצלנו.</b> נא לא להפעיל מכונות כבדות. גם לא את המיקרוגל."
   ];
+  var MUNCH_EMOJI = { bamba: "🥜", bisli: "🥨", shoko: "🥛", pizza: "🍕", ice: "🍦", burekas: "🥐", malawach: "🫓", cereal: "🥣" };
   var HALF_QUIPS = [
     "<b>חצי נרשם.</b> שם החבר הועבר לרשויות. סתם. אולי.",
     "<b>חצי חצי.</b> שיתוף זה אכפתיות. גם הדיווח עליו.",
     "<b>נרשם חצי.</b> אלעזר לא מלשין, אלעזר רק מתעד. יש הבדל.",
     "<b>חצי עם חבר.</b> החבר לא יודע שהוא בדו״ח. עכשיו הוא יודע.",
     "<b>אושר.</b> חצי מהפייסל, חצי מהאשמה."
+  ];
+  var STRAINS = [
+    { n: "קוש ירושלמי", t: "אינדיקה", d: "תוך עשר דקות אתה בעד כולם וגם נגד כולם." },
+    { n: "אמנזיה של סבתא", t: "סאטיבה", d: "גורם לך להתקשר לסבתא ולשכוח למה התקשרת." },
+    { n: "OG בת ים", t: "היברידי", d: "מגיע עם ריח של ים ושל מישהו שצועק \"אחי\" מרחוק." },
+    { n: "ספה פרימיום", t: "אינדיקה", d: "הספה מתקשרת אליך בעצמה ומבקשת שתבוא." },
+    { n: "חרמון הייז", t: "סאטיבה", d: "קריר ובהיר. מתאים לפילוסופיה בשלוש בלילה." },
+    { n: "בורקס דרים", t: "היברידי", d: "תופעת לוואי ידועה: בורקס. הרבה בורקס." },
+    { n: "מלשין ספיישל", t: "הזן הרשמי", d: "כל שאיפה נרשמת בדו״ח. אלעזר מאשר." },
+    { n: "קופת חולים קוש", t: "אינדיקה", d: "פתאום התור לרופא מרגיש קצר." },
+    { n: "במבה טרופית", t: "סאטיבה", d: "אחרי זה תאכל במבה. זאת לא שאלה." },
+    { n: "שבת שלום OG", t: "אינדיקה", d: "יושבים בשקט בארוחת שישי ומחייכים לדודה." }
+  ];
+  var ACH = [
+    { id: "first", e: "🌱", n: "ההדלקה הראשונה", d: "נרשם הפייסל הראשון במערכת" },
+    { id: "half5", e: "🤝", n: "חצי בן אדם", d: "5 חצאים עם חברים" },
+    { id: "early", e: "🌅", n: "בוקר של אלופים", d: "פייסל לפני 9 בבוקר" },
+    { id: "owl", e: "🦉", n: "ינשוף ממלכתי", d: "פייסל בין 1 ל־5 בלילה" },
+    { id: "munch5", e: "🍕", n: "מאנצ׳יז מאסטר", d: "5 פינוקים ביום אחד" },
+    { id: "over3", e: "🚨", n: "חורג סדרתי", d: "3 ימים מעל המכסה בשבוע" },
+    { id: "clean", e: "✨", n: "יום נקי", d: "אתמול: אפס. מי אתה?" },
+    { id: "snitch", e: "🕵️", n: "מלשין מצטיין", d: "שלחת את הדו״ח היומי" },
+    { id: "spin", e: "🎰", n: "מהמר זנים", d: "סובבת את הרולטה 3 פעמים" },
+    { id: "high", e: "🌀", n: "ראיתי צבעים", d: "הפעלת את מצב ההיי" }
   ];
   var LEVELS = [
     { max: 0, t: "פיכח לגמרי. חשוד.", c: "var(--ink-2)" },
@@ -52,6 +77,7 @@
         var s = JSON.parse(raw);
         if (s && Array.isArray(s.j)) {
           if (!Array.isArray(s.h)) s.h = [];
+          if (!s.f) s.f = { spins: 0 };
           if (s.cfg && s.cfg.name === "טימור") s.cfg.name = "אלעזר המלשין";
           return s;
         }
@@ -63,7 +89,7 @@
     try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ }
   }
   function blank() {
-    return { j: [], m: [], demo: false, cfg: { name: "אלעזר המלשין", grams: 40, gpj: 0.35 }, h: [] };
+    return { j: [], m: [], demo: false, cfg: { name: "אלעזר המלשין", grams: 40, gpj: 0.35 }, h: [], f: { spins: 0 } };
   }
   function seed() {
     var s = blank();
@@ -150,8 +176,75 @@
     return parts.join("");
   }
 
+  /* ---------- achievements ---------- */
+  function earned() {
+    var out = {};
+    var times = allTimes();
+    if (times.length) out.first = 1;
+    if (S.h.length >= 5) out.half5 = 1;
+    times.forEach(function (t) {
+      var h = new Date(t).getHours();
+      if (h >= 5 && h < 9) out.early = 1;
+      if (h >= 1 && h < 5) out.owl = 1;
+    });
+    var perDay = {};
+    S.m.forEach(function (x) { var d = startOfDay(x.t); perDay[d] = (perDay[d] || 0) + 1; if (perDay[d] >= 5) out.munch5 = 1; });
+    var today = startOfDay(Date.now()), allow = allowance(), over = 0;
+    for (var i = 0; i < 7; i++) if (countOn(today - i * DAY) > allow) over++;
+    if (over >= 3) out.over3 = 1;
+    var y = today - DAY;
+    if (countOn(y) === 0 && times.some(function (t) { return t < y; })) out.clean = 1;
+    if (S.f.snitch) out.snitch = 1;
+    if (S.f.spins >= 3) out.spin = 1;
+    if (S.f.high) out.high = 1;
+    return out;
+  }
+  function checkAch() {
+    var got = earned();
+    var fresh = ACH.filter(function (a) { return got[a.id] && S.ach.indexOf(a.id) === -1; });
+    fresh.forEach(function (a) { S.ach.push(a.id); });
+    if (fresh.length) {
+      save();
+      var setEl = document.getElementById("settings");
+      var open = setEl && !setEl.hidden;
+      render();
+      if (open) document.getElementById("settings").hidden = false;
+      var a = fresh[0];
+      setTimeout(function () {
+        toast("🏆 הישג חדש: " + a.n);
+        if (window.FX) { var c = FX.centerOf(null); FX.burst(c.x, c.y * 0.6, { n: 18, emoji: a.e }); FX.burst(c.x, c.y * 0.6, { n: 18 }); }
+      }, 350);
+    }
+  }
+
+  function report(todayCount, lv) {
+    var now = Date.now();
+    var halves = S.h.filter(function (t) { return sameDay(t, now); }).length;
+    var munch = {};
+    S.m.filter(function (x) { return sameDay(x.t, now); }).forEach(function (x) {
+      var it = MUNCHIES.find(function (m) { return m.k === x.k; });
+      var n = it ? it.n : x.k; munch[n] = (munch[n] || 0) + 1;
+    });
+    var munchTxt = Object.keys(munch).map(function (k) { return k + (munch[k] > 1 ? " ×" + munch[k] : ""); }).join(", ") || "אין. חשוד.";
+    return [
+      "🕵️ דו״ח מלשינות רשמי",
+      "נבדק: " + (S.cfg.name || "אלעזר המלשין"),
+      "תאריך: " + new Date(now).toLocaleDateString("he-IL"),
+      "פייסלים היום: " + fmt(todayCount) + " (מכסה: " + fmt(allowance()) + ")",
+      "חצאים עם חברים: " + halves + (halves ? ". שמות החברים שמורים בתיק." : ""),
+      "פינוקים: " + munchTxt,
+      "סטטוס: " + lv.t,
+      "המלצת המלשין: לשתות מים ולא לנהוג.",
+      "",
+      "edon-studio.vercel.app/timur"
+    ].join("\n");
+  }
+
   /* ---------- render ---------- */
   var S = load();
+  if (!Array.isArray(S.ach)) { S.ach = []; S.ach = Object.keys(earned()); save(); }
+  var strainPick = null;
+  var spinning = false;
   var app = document.getElementById("app");
   var lastQuip = "";
   var resetArmed = false;
@@ -219,6 +312,8 @@
         '</dl>' +
       '</header>' +
 
+      '<div class="mode-row"><button type="button" class="btn-high' + (S.f.high ? " on" : "") + '" data-act="high" aria-pressed="' + (S.f.high ? "true" : "false") + '"><span class="swirl" aria-hidden="true">🌀</span> ' + (S.f.high ? "מצב היי: פועל" : "הפעל מצב היי") + '</button></div>' +
+
       (S.demo ? '<div class="demo" role="note"><span>אלה נתוני דוגמה כדי שתראה איך זה נראה.</span><button type="button" data-act="clear-demo">מחק דוגמה והתחל</button></div>' : "") +
 
       '<section class="today" aria-label="היום">' +
@@ -283,6 +378,35 @@
           : "עוד אין פינוקים היום. המקרר מחכה.") + '</p>' +
       '</section>' +
 
+      '<section class="card roulette" aria-labelledby="h-spin">' +
+        '<div class="card-head"><h2 id="h-spin">רולטת הזנים</h2><p>מה מעשנים עכשיו? המזל יחליט</p></div>' +
+        '<div class="wheel-row">' +
+          '<button type="button" class="wheel" data-act="spin" aria-label="סובב את הרולטה"><svg viewBox="-50 -50 100 100" aria-hidden="true">' + wheelSVG() + '</svg></button>' +
+          '<div class="strain" aria-live="polite">' +
+            (strainPick
+              ? '<span class="strain-type">' + strainPick.t + '</span><b id="strain-name">' + strainPick.n + '</b><span>' + strainPick.d + '</span>'
+              : '<span class="strain-type">ממתין להימור</span><b id="strain-name">? ? ?</b><span>לחץ על הגלגל כדי לסובב.</span>') +
+          '</div>' +
+        '</div>' +
+      '</section>' +
+
+      '<section class="card" aria-labelledby="h-rep">' +
+        '<div class="card-head"><h2 id="h-rep">הדו״ח של המלשין</h2><p>מוכן לשליחה לקבוצה</p></div>' +
+        '<pre class="report" id="report">' + esc(report(todayCount, lv)) + '</pre>' +
+        '<div class="row-btns">' +
+          '<a class="btn-save wa" data-act="snitch" href="https://wa.me/?text=' + encodeURIComponent(report(todayCount, lv)) + '" target="_blank" rel="noopener">הלשן בוואטסאפ</a>' +
+          '<button type="button" class="icon-btn" data-act="copy">העתק דו״ח</button>' +
+        '</div>' +
+      '</section>' +
+
+      '<section class="card" aria-labelledby="h-ach">' +
+        '<div class="card-head"><h2 id="h-ach">הישגים</h2><p>' + S.ach.length + ' מתוך ' + ACH.length + ' נפתחו</p></div>' +
+        '<ul class="ach">' + ACH.map(function (a) {
+          var on = S.ach.indexOf(a.id) > -1;
+          return '<li class="' + (on ? "on" : "off") + '"><span class="ach-e" aria-hidden="true">' + (on ? a.e : "🔒") + '</span><span><b>' + a.n + '</b><small>' + a.d + '</small></span></li>';
+        }).join("") + '</ul>' +
+      '</section>' +
+
       '<section class="card" aria-labelledby="h-log">' +
         '<div class="card-head"><h2 id="h-log">יומן היום</h2><p>' + new Date(now).toLocaleDateString("he-IL", { weekday: "long", day: "numeric", month: "long" }) + '</p></div>' +
         (logItems.length
@@ -301,9 +425,34 @@
       '</section>' +
 
       '<div class="row-btns" style="justify-content:center"><button type="button" class="icon-btn" data-act="toggle-settings">⚙︎ הגדרות מרשם</button></div>' +
-      '<p class="fine">הנתונים נשמרים רק בטלפון הזה. האפליקציה סאטירית ולא מחליפה ייעוץ רפואי. שתה מים, אל תנהג אחרי.</p>' +
-      '<div class="toast" id="toast" role="status"></div>';
+      '<p class="fine">הנתונים נשמרים רק בטלפון הזה. האפליקציה סאטירית ולא מחליפה ייעוץ רפואי. שתה מים, אל תנהג אחרי.</p>';
+    document.documentElement.classList.toggle("high", !!S.f.high);
+    if (window.FX) FX.setHigh(!!S.f.high);
   }
+
+  function wheelSVG() {
+    var n = 10, out = [], cols = ["var(--leaf)", "var(--leaf-soft)"];
+    for (var i = 0; i < n; i++) {
+      var a0 = (i / n) * Math.PI * 2, a1 = ((i + 1) / n) * Math.PI * 2;
+      out.push('<path d="M0 0 L' + (46 * Math.cos(a0)).toFixed(2) + ' ' + (46 * Math.sin(a0)).toFixed(2) + ' A46 46 0 0 1 ' + (46 * Math.cos(a1)).toFixed(2) + ' ' + (46 * Math.sin(a1)).toFixed(2) + ' Z" fill="' + cols[i % 2] + '" stroke="var(--ink)" stroke-width="1"/>');
+    }
+    out.push('<circle r="46" fill="none" stroke="var(--ink)" stroke-width="2"/>');
+    out.push('<circle r="9" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"/>');
+    out.push('<text y="4" text-anchor="middle" font-size="11">🌿</text>');
+    return out.join("");
+  }
+
+  function lightFx(btnSel, n) {
+    if (!window.FX) return;
+    var b = document.querySelector(btnSel), c = FX.centerOf(b);
+    FX.burst(c.x, c.y - 10, { n: n });
+    var ember = document.querySelector(".ember-glow");
+    if (ember) { var e = FX.centerOf(ember); FX.smoke(e.x, e.y - 6, 10); FX.ring(e.x, e.y - 10); setTimeout(function () { FX.ring(e.x, e.y - 10); }, 380); }
+  }
+
+  var toastEl = document.createElement("div");
+  toastEl.className = "toast"; toastEl.id = "toast"; toastEl.setAttribute("role", "status");
+  document.body.appendChild(toastEl);
 
   function bump() {
     var c = document.getElementById("count");
@@ -311,8 +460,7 @@
   }
 
   function toast(msg) {
-    var el = document.getElementById("toast");
-    if (!el) return;
+    var el = toastEl;
     el.textContent = msg;
     el.classList.add("show");
     clearTimeout(toast._t);
@@ -335,12 +483,12 @@
       S.j.push(Date.now());
       lastQuip = pickQuip();
       save(); render();
-      bump();
+      bump(); lightFx("[data-act=light]", 34);
     } else if (act === "half") {
       S.h.push(Date.now());
       lastQuip = HALF_QUIPS[Math.floor(Math.random() * HALF_QUIPS.length)];
       save(); render();
-      bump();
+      bump(); lightFx("[data-act=half]", 16);
     } else if (act === "undo") {
       var now = Date.now();
       var idx = -1, best = -1;
@@ -350,9 +498,31 @@
       });
       if (arr) { arr.splice(idx, 1); lastQuip = "בוטל. נעשה כאילו זה לא קרה."; save(); render(); }
     } else if (act === "munch") {
-      S.m.push({ t: Date.now(), k: b.getAttribute("data-k") });
+      var mk = b.getAttribute("data-k");
+      S.m.push({ t: Date.now(), k: mk });
       save(); render();
+      if (window.FX) {
+        var mc = FX.centerOf(document.querySelector('[data-act=munch][data-k="' + mk + '"]'));
+        FX.burst(mc.x, mc.y, { n: 12, emoji: MUNCH_EMOJI[mk] || "😋" });
+      }
       toast("נרשם פינוק. בתיאבון");
+    } else if (act === "high") {
+      S.f.high = !S.f.high;
+      save(); render();
+      toast(S.f.high ? "מצב היי הופעל. תחזיק חזק" : "חזרת לקרקע. ברוך שובך");
+      if (S.f.high && window.FX) { var hc = FX.centerOf(document.querySelector("[data-act=high]")); FX.burst(hc.x, hc.y, { n: 40 }); }
+    } else if (act === "spin") {
+      spin();
+      return;
+    } else if (act === "snitch") {
+      S.f.snitch = 1; save();
+    } else if (act === "copy") {
+      var txt = document.getElementById("report").textContent;
+      var done = function () { toast("הדו״ח הועתק. עכשיו תלשין"); S.f.snitch = 1; save(); checkAch(); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(done, function () { selectReport(); });
+      } else selectReport();
+      return;
     } else if (act === "clear-demo") {
       var cfg = S.cfg;
       S = blank(); S.cfg = cfg;
@@ -379,7 +549,47 @@
       return;
     }
     if (settingsOpen) document.getElementById("settings").hidden = false;
+    checkAch();
   });
+
+  function selectReport() {
+    var el = document.getElementById("report");
+    var range = document.createRange(); range.selectNodeContents(el);
+    var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    toast("הדו״ח מסומן. העתק ידנית");
+  }
+
+  function spin() {
+    if (spinning) return;
+    spinning = true;
+    var wheel = document.querySelector(".wheel svg");
+    var nameEl = document.getElementById("strain-name");
+    var pick = STRAINS[Math.floor(Math.random() * STRAINS.length)];
+    var turns = 1440 + Math.floor(Math.random() * 360);
+    if (wheel && !(window.FX && FX.reduce)) {
+      wheel.style.transition = "transform 2.4s cubic-bezier(.15,.7,.2,1)";
+      wheel.style.transform = "rotate(" + turns + "deg)";
+    }
+    var steps = (window.FX && FX.reduce) ? 0 : 18, i = 0;
+    function tick() {
+      if (i < steps) {
+        if (nameEl) nameEl.textContent = STRAINS[i % STRAINS.length].n;
+        i++;
+        setTimeout(tick, 40 + i * i * 0.8);
+        return;
+      }
+      strainPick = pick;
+      S.f.spins = (S.f.spins || 0) + 1;
+      save();
+      spinning = false;
+      var open = !document.getElementById("settings").hidden;
+      render();
+      document.getElementById("settings").hidden = !open;
+      if (window.FX) { var c = FX.centerOf(document.querySelector(".strain")); FX.burst(c.x, c.y, { n: 26 }); }
+      checkAch();
+    }
+    tick();
+  }
 
   app.addEventListener("submit", function (e) {
     if (e.target.id !== "cfg") return;
