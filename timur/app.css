@@ -1,5 +1,5 @@
 /* =====================================================================
-   הרשות לפיקוח על פייסלים — מעקב יומי לטימור
+   הרשות לפיקוח על פייסלים — מעקב יומי לאלעזר המלשין
    Layout: one phone-width column styled like a parody medical-cannabis
    prescription: licence card on top, burning joint as the daily meter,
    then week chart, munchies, log.
@@ -192,7 +192,7 @@ button { cursor: pointer; }
 .today { display: flex; flex-direction: column; gap: 14px; }
 .count-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .count {
-  font: 400 clamp(84px, 26vw, 128px)/.85 var(--f-display);
+  font: 400 clamp(72px, 21vw, 120px)/.85 var(--f-display);
   letter-spacing: -.02em;
   font-variant-numeric: tabular-nums;
 }
@@ -230,6 +230,16 @@ button { cursor: pointer; }
 @keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.12); } 100% { transform: scale(1); } }
 
 .actions { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+.actions .btn-half { grid-column: 1 / -1; grid-row: 2; }
+.btn-half {
+  border: 1.5px solid var(--leaf);
+  background: var(--leaf-soft);
+  color: var(--ink);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  font: 400 18px/1 var(--f-display);
+}
+.btn-half:active { transform: translateY(2px); }
 .btn-light {
   border: 0;
   background: var(--leaf);

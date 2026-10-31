@@ -29,6 +29,13 @@
     "<b>נספר.</b> הפייסל הזה מוקדש לפקיד בקופת חולים.",
     "<b>רשום אצלנו.</b> נא לא להפעיל מכונות כבדות. גם לא את המיקרוגל."
   ];
+  var HALF_QUIPS = [
+    "<b>חצי נרשם.</b> שם החבר הועבר לרשויות. סתם. אולי.",
+    "<b>חצי חצי.</b> שיתוף זה אכפתיות. גם הדיווח עליו.",
+    "<b>נרשם חצי.</b> אלעזר לא מלשין, אלעזר רק מתעד. יש הבדל.",
+    "<b>חצי עם חבר.</b> החבר לא יודע שהוא בדו״ח. עכשיו הוא יודע.",
+    "<b>אושר.</b> חצי מהפייסל, חצי מהאשמה."
+  ];
   var LEVELS = [
     { max: 0, t: "פיכח לגמרי. חשוד.", c: "var(--ink-2)" },
     { max: 0.5, t: "במינון. הרופא היה גאה", c: "var(--ok)" },
@@ -43,7 +50,11 @@
       var raw = localStorage.getItem(KEY);
       if (raw) {
         var s = JSON.parse(raw);
-        if (s && Array.isArray(s.j)) return s;
+        if (s && Array.isArray(s.j)) {
+          if (!Array.isArray(s.h)) s.h = [];
+          if (s.cfg && s.cfg.name === "טימור") s.cfg.name = "אלעזר המלשין";
+          return s;
+        }
       }
     } catch (e) { /* storage blocked: run in memory */ }
     return seed();
@@ -52,7 +63,7 @@
     try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ }
   }
   function blank() {
-    return { j: [], m: [], demo: false, cfg: { name: "טימור", grams: 40, gpj: 0.35 } };
+    return { j: [], m: [], demo: false, cfg: { name: "אלעזר המלשין", grams: 40, gpj: 0.35 }, h: [] };
   }
   function seed() {
     var s = blank();
@@ -81,7 +92,13 @@
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function daysInMonth(t) { var d = new Date(t); return new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate(); }
   function monthStart(t) { var d = new Date(t); return new Date(d.getFullYear(), d.getMonth(), 1).getTime(); }
-  function countOn(day) { return S.j.filter(function (t) { return sameDay(t, day); }).length; }
+  function countOn(day) {
+    var full = S.j.filter(function (t) { return sameDay(t, day); }).length;
+    var half = S.h.filter(function (t) { return sameDay(t, day); }).length;
+    return full + half / 2;
+  }
+  function allTimes() { return S.j.concat(S.h); }
+  function lastTime() { var a = allTimes(); return a.length ? Math.max.apply(null, a) : null; }
   function allowance() { return S.cfg.grams / daysInMonth(Date.now()) / S.cfg.gpj; }
   function level(ratio, count) {
     if (count === 0) return LEVELS[0];
@@ -146,11 +163,11 @@
     var allow = allowance();
     var ratio = allow > 0 ? todayCount / allow : 0;
     var lv = level(ratio, todayCount);
-    var last = S.j.length ? Math.max.apply(null, S.j) : null;
+    var last = lastTime();
 
     // month
     var mStart = monthStart(now);
-    var monthJ = S.j.filter(function (t) { return t >= mStart; }).length;
+    var monthJ = S.j.filter(function (t) { return t >= mStart; }).length + S.h.filter(function (t) { return t >= mStart; }).length / 2;
     var usedG = monthJ * S.cfg.gpj;
     var leftG = Math.max(0, S.cfg.grams - usedG);
     var dim = daysInMonth(now);
@@ -175,6 +192,7 @@
 
     // log: today's joints + munchies
     var logItems = S.j.filter(function (t) { return sameDay(t, now); }).map(function (t) { return { t: t, k: "🌿 פייסל" }; })
+      .concat(S.h.filter(function (t) { return sameDay(t, now); }).map(function (t) { return { t: t, k: "🤝 חצי עם חבר" }; }))
       .concat(munchToday.map(function (x) {
         var item = MUNCHIES.find(function (m) { return m.k === x.k; });
         return { t: x.t, k: "פינוק: " + (item ? item.n : x.k) };
@@ -182,7 +200,7 @@
       .sort(function (a, b) { return b.t - a.t; });
 
     var licNo = "THC-" + String(4200 + (S.cfg.name.length * 7) % 100).padStart(4, "0");
-    var name = esc(S.cfg.name || "טימור");
+    var name = esc(S.cfg.name || "אלעזר המלשין");
 
     app.innerHTML =
       '<header class="licence">' +
@@ -190,7 +208,7 @@
           '<div>' +
             '<div class="eyebrow">הרשות לפיקוח על פייסלים · רישיון רפואי</div>' +
             '<h1>הפייסלים של ' + name + '</h1>' +
-            '<p class="sub">מעקב יומי, ממלכתי ורגוע לגמרי.</p>' +
+            '<p class="sub">מעקב יומי, ממלכתי ורגוע. הכל מתועד, אז אין טעם להסתיר.</p>' +
           '</div>' +
           '<div class="stamp" aria-hidden="true">מאושר<small>' + licNo + '</small></div>' +
         '</div>' +
@@ -206,7 +224,7 @@
       '<section class="today" aria-label="היום">' +
         '<div class="count-row">' +
           '<div>' +
-            '<div class="count" id="count">' + todayCount + '</div>' +
+            '<div class="count" id="count">' + fmt(todayCount) + '</div>' +
           '</div>' +
           '<div style="flex:1;min-width:0">' +
             '<p class="count-label">פייסלים היום</p>' +
@@ -215,10 +233,11 @@
           '</div>' +
         '</div>' +
         '<div class="joint-box">' + jointSVG(allow > 0 ? todayCount / allow : 0) +
-          '<div class="joint-legend"><span>מד המכסה היומית</span><span class="mono">' + todayCount + ' / ' + fmt(allow) + '</span></div>' +
+          '<div class="joint-legend"><span>מד המכסה היומית</span><span class="mono">' + fmt(todayCount) + ' / ' + fmt(allow) + '</span></div>' +
         '</div>' +
         '<div class="actions">' +
           '<button type="button" class="btn-light" data-act="light">הדלקתי אחד 🔥</button>' +
+          '<button type="button" class="btn-half" data-act="half">עישנתי חצי עם חבר 🤝</button>' +
           '<button type="button" class="btn-undo" data-act="undo"' + (todayCount ? "" : " disabled") + '>ביטול</button>' +
         '</div>' +
         '<p class="quip" aria-live="polite">' + lastQuip + '</p>' +
@@ -230,14 +249,14 @@
           '<div class="week">' + week.map(function (w) {
             var h = Math.max(2, (w.c / weekMax) * 100);
             var cls = "bar" + (w.c > allow ? " over" : "") + (w.d === today ? " is-today" : "");
-            return '<div class="' + cls + '"><span class="v">' + w.c + '</span><span class="col" style="height:calc((150px - 40px) * ' + (h / 100).toFixed(3) + ')"></span><span class="d">' + DAYS[new Date(w.d).getDay()] + '</span></div>';
+            return '<div class="' + cls + '"><span class="v">' + fmt(w.c) + '</span><span class="col" style="height:calc((150px - 40px) * ' + (h / 100).toFixed(3) + ')"></span><span class="d">' + DAYS[new Date(w.d).getDay()] + '</span></div>';
           }).join("") + '</div>' +
           '<div class="quota-line" style="bottom:calc(20px + (150px - 40px) * ' + (allow / weekMax).toFixed(3) + ')"><span>' + fmt(allow) + '</span></div>' +
         '</div>' +
         '<div class="stats">' +
           '<div class="stat"><b>' + fmt(avg) + '</b><span>ממוצע ליום</span></div>' +
           '<div class="stat"><b>' + weekTotal + '</b><span>סה״כ בשבוע</span></div>' +
-          '<div class="stat"><b>' + record + '</b><span>שיא שבועי</span></div>' +
+          '<div class="stat"><b>' + fmt(record) + '</b><span>שיא שבועי</span></div>' +
         '</div>' +
       '</section>' +
 
@@ -286,6 +305,11 @@
       '<div class="toast" id="toast" role="status"></div>';
   }
 
+  function bump() {
+    var c = document.getElementById("count");
+    if (c) { c.classList.remove("bump"); void c.offsetWidth; c.classList.add("bump"); }
+  }
+
   function toast(msg) {
     var el = document.getElementById("toast");
     if (!el) return;
@@ -311,13 +335,20 @@
       S.j.push(Date.now());
       lastQuip = pickQuip();
       save(); render();
-      var c = document.getElementById("count");
-      if (c) { c.classList.remove("bump"); void c.offsetWidth; c.classList.add("bump"); }
+      bump();
+    } else if (act === "half") {
+      S.h.push(Date.now());
+      lastQuip = HALF_QUIPS[Math.floor(Math.random() * HALF_QUIPS.length)];
+      save(); render();
+      bump();
     } else if (act === "undo") {
       var now = Date.now();
       var idx = -1, best = -1;
-      S.j.forEach(function (t, i) { if (sameDay(t, now) && t > best) { best = t; idx = i; } });
-      if (idx > -1) { S.j.splice(idx, 1); lastQuip = "בוטל. נעשה כאילו זה לא קרה."; save(); render(); }
+      var arr = null;
+      [S.j, S.h].forEach(function (a) {
+        a.forEach(function (t, i) { if (sameDay(t, now) && t > best) { best = t; idx = i; arr = a; } });
+      });
+      if (arr) { arr.splice(idx, 1); lastQuip = "בוטל. נעשה כאילו זה לא קרה."; save(); render(); }
     } else if (act === "munch") {
       S.m.push({ t: Date.now(), k: b.getAttribute("data-k") });
       save(); render();
@@ -357,7 +388,7 @@
     var p = parseFloat(document.getElementById("f-gpj").value);
     var n = document.getElementById("f-name").value.trim();
     if (!(g > 0) || !(p > 0)) { toast("צריך מספרים חיוביים בשני השדות"); return; }
-    S.cfg = { name: n || "טימור", grams: g, gpj: p };
+    S.cfg = { name: n || "אלעזר המלשין", grams: g, gpj: p };
     save(); render();
     toast("המרשם עודכן");
   });
@@ -375,6 +406,6 @@
       return;
     }
     var el = document.getElementById("since");
-    if (el && S.j.length) el.textContent = since(Math.max.apply(null, S.j));
+    if (el && lastTime()) el.textContent = since(lastTime());
   }, 30000);
 })();
