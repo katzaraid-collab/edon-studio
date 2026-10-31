@@ -34,6 +34,11 @@
       "source": "/money",
       "destination": "/money/",
       "permanent": true
+    },
+    {
+      "source": "/timur",
+      "destination": "/timur/",
+      "permanent": true
     }
   ],
   "headers": [
