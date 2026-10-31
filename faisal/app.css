@@ -505,3 +505,27 @@ a.btn-save { text-decoration: none; display: inline-flex; align-items: center; }
 .ob-form label.check { flex-direction: row; align-items: center; gap: 8px; font-size: 14px; color: var(--ink); }
 .ob-form label.check input { width: 20px; height: 20px; accent-color: var(--leaf); }
 @media (max-width: 380px) { .ob-form form { grid-template-columns: 1fr; } }
+
+/* name picking */
+.name-row { display: flex; gap: 8px; }
+.name-row input { flex: 1; min-width: 0; }
+.dice {
+  flex: none; width: 52px;
+  border: 1px solid var(--line); background: var(--paper);
+  border-radius: 8px; font-size: 22px;
+}
+@media (prefers-reduced-motion: no-preference) { .dice:active { transform: rotate(90deg); transition: transform .15s; } }
+.nicks { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.nicks span { font-size: 13px; color: var(--ink-2); margin-inline-end: 2px; }
+.nick {
+  border: 1px solid var(--line); background: var(--bg);
+  border-radius: 999px; padding: 5px 12px; font-size: 13px; font-weight: 500;
+}
+.nick:hover { border-color: var(--ink-2); }
+.nick.on { background: var(--leaf); color: var(--paper); border-color: var(--leaf); }
+.keep { margin: 0; font-size: 14px; color: var(--ink-2); background: var(--leaf-soft); border-radius: 8px; padding: 8px 12px; }
+.edit-name {
+  border: 0; background: transparent; color: var(--ink-2);
+  font: 400 .55em/1 var(--f-body); padding: 4px; vertical-align: middle;
+}
+.edit-name:hover { color: var(--stamp); }
