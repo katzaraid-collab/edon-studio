@@ -79,6 +79,8 @@
           if (!Array.isArray(s.h)) s.h = [];
           if (!s.f) s.f = { spins: 0 };
           if (s.ob === undefined) s.ob = !s.demo;
+          // the name used to be hardcoded; let people who never picked one choose their own
+          if (!s.named && s.cfg && (s.cfg.name === "אלעזר המלשין" || s.cfg.name === "טימור")) s.ob = false;
           return s;
         }
       }
@@ -249,6 +251,9 @@
   var lastQuip = "";
   var resetArmed = false;
 
+  var NICKS = ["הגלגלן", "פרופסור ספה", "הדוקטור הירוק", "רב־סרן במבה", "הקוש הלאומי", "המלשין", "שר המאנצ׳יז", "קפטן עשן", "הרב סטלן", "נסיך הקופסה"];
+  function hasRealData() { return !S.demo && (S.j.length + S.h.length + S.m.length) > 0; }
+
   function renderOnboarding() {
     document.title = "פנקס הפייסלים";
     document.documentElement.classList.remove("high");
@@ -266,11 +271,14 @@
       '<section class="card ob-form" aria-labelledby="h-ob">' +
         '<h2 id="h-ob">פרטי מבקש הרישיון</h2>' +
         '<form id="ob">' +
-          '<label class="full">איך קוראים לך? (שם או כינוי)<input id="ob-name" name="name" maxlength="20" autocomplete="nickname" placeholder="למשל: אלעזר המלשין" required></label>' +
-          '<label>מכסה חודשית (גרם)<input id="ob-grams" name="grams" type="number" inputmode="decimal" min="1" max="500" step="1" value="40"></label>' +
-          '<label>גרם לפייסל<input id="ob-gpj" name="gpj" type="number" inputmode="decimal" min="0.05" max="3" step="0.05" value="0.35"></label>' +
-          '<label class="check full"><input id="ob-demo" type="checkbox"> להתחיל עם נתוני דוגמה כדי לראות איך זה נראה</label>' +
-          '<button class="btn-light full" type="submit">הגש בקשה וקבל רישיון 🌿</button>' +
+          '<label class="full">איך קוראים לך? (שם או כינוי)<span class="name-row"><input id="ob-name" name="name" maxlength="20" autocomplete="nickname" placeholder="כתוב כאן את השם שלך" value="' + (S.named ? esc(S.cfg.name || "") : "") + '" required><button type="button" class="dice" data-act="dice" aria-label="כינוי אקראי">🎲</button></span></label>' +
+          '<div class="full nicks" role="group" aria-label="רעיונות לכינוי"><span>או בחר כינוי:</span>' + NICKS.map(function (n) { return '<button type="button" class="nick" data-act="nick" data-n="' + n + '">' + n + '</button>'; }).join("") + '</div>' +
+          '<label>מכסה חודשית (גרם)<input id="ob-grams" name="grams" type="number" inputmode="decimal" min="1" max="500" step="1" value="' + S.cfg.grams + '"></label>' +
+          '<label>גרם לפייסל<input id="ob-gpj" name="gpj" type="number" inputmode="decimal" min="0.05" max="3" step="0.05" value="' + S.cfg.gpj + '"></label>' +
+          (hasRealData()
+            ? '<p class="full keep">הנתונים שכבר רשמת נשמרים. רק השם משתנה.</p>'
+            : '<label class="check full"><input id="ob-demo" type="checkbox"> להתחיל עם נתוני דוגמה כדי לראות איך זה נראה</label>') +
+          '<button class="btn-light full" type="submit">' + (hasRealData() ? "עדכן את התיק 🌿" : "הגש בקשה וקבל רישיון 🌿") + '</button>' +
         '</form>' +
         '<p class="fine">לא יודע את המכסה? 40 גרם זה ממוצע, אפשר לשנות אחר כך בהגדרות.</p>' +
       '</section>';
@@ -329,7 +337,7 @@
         '<div class="licence-top">' +
           '<div>' +
             '<div class="eyebrow">הרשות לפיקוח על פייסלים · רישיון רפואי</div>' +
-            '<h1>הפייסלים של ' + name + '</h1>' +
+            '<h1>הפייסלים של ' + name + ' <button type="button" class="edit-name" data-act="edit-name" aria-label="שנה שם">✎</button></h1>' +
             '<p class="sub">מעקב יומי, ממלכתי ורגוע. הכל מתועד, אז אין טעם להסתיר.</p>' +
           '</div>' +
           '<div class="stamp" aria-hidden="true">מאושר<small>' + licNo + '</small></div>' +
@@ -506,6 +514,23 @@
     var b = e.target.closest("[data-act]");
     if (!b) return;
     var act = b.getAttribute("data-act");
+    if (act === "nick" || act === "dice") {
+      var inp = document.getElementById("ob-name");
+      var pick = act === "nick" ? b.getAttribute("data-n") : NICKS[Math.floor(Math.random() * NICKS.length)];
+      if (act === "dice" && pick === inp.value) pick = NICKS[(NICKS.indexOf(pick) + 1) % NICKS.length];
+      inp.value = pick;
+      Array.prototype.forEach.call(document.querySelectorAll(".nick"), function (x) { x.classList.toggle("on", x.getAttribute("data-n") === pick); });
+      if (window.FX) { var dc = FX.centerOf(b); FX.burst(dc.x, dc.y, { n: 10 }); }
+      return;
+    }
+    if (act === "edit-name") {
+      resetArmed = false;
+      document.getElementById("settings").hidden = false;
+      var fn = document.getElementById("f-name");
+      fn.scrollIntoView({ block: "center", behavior: "smooth" });
+      fn.focus(); fn.select();
+      return;
+    }
     var setEl0 = document.getElementById("settings");
     var settingsOpen = !!setEl0 && !setEl0.hidden;
 
@@ -629,10 +654,13 @@
       var op = parseFloat(document.getElementById("ob-gpj").value);
       if (!on) { toast("צריך שם, אפילו כינוי"); document.getElementById("ob-name").focus(); return; }
       if (!(og > 0) || !(op > 0)) { toast("צריך מספרים חיוביים במכסה ובגרם לפייסל"); return; }
-      var withDemo = document.getElementById("ob-demo").checked;
       var cfg = { name: on, grams: og, gpj: op };
-      S = withDemo ? seed() : blank();
-      S.cfg = cfg; S.ob = true; S.ach = Object.keys(earned());
+      if (!hasRealData()) {
+        var demoBox = document.getElementById("ob-demo");
+        S = demoBox && demoBox.checked ? seed() : blank();
+      }
+      S.cfg = cfg; S.ob = true; S.named = true;
+      if (!Array.isArray(S.ach) || !S.ach.length) S.ach = Object.keys(earned());
       lastQuip = "<b>הרישיון אושר.</b> ברוך הבא למערכת, " + esc(on) + ".";
       save(); render();
       if (window.FX) { var c = FX.centerOf(document.querySelector(".stamp")); FX.burst(c.x, c.y, { n: 50 }); }
@@ -645,6 +673,7 @@
     var n = document.getElementById("f-name").value.trim();
     if (!(g > 0) || !(p > 0)) { toast("צריך מספרים חיוביים בשני השדות"); return; }
     S.cfg = { name: n || "אלמוני", grams: g, gpj: p };
+    S.named = true;
     save(); render();
     toast("המרשם עודכן");
   });
