@@ -1,0 +1,280 @@
+<!doctype html>
+<!--
+  REFERENCE COMPOSITION — the proven structure, geometry and timeline patterns.
+
+  This is a teaching file, not a template to render. Copy the PATTERNS: the layer order,
+  the CSS specificity workarounds, the transform origins, the one-frame boundary rule,
+  the hard kills. Replace every source path, every time and every string.
+
+  Layer order (bottom → top) is load-bearing:
+      5   hook backdrop (blurred)
+      6   hook wash (gradient over the backdrop)
+     10   graphics that live BEHIND the subject
+     20   A-roll / B-roll body layers
+     30   #matte — the rotoscoped subject
+     40   graphics that live IN FRONT of the subject
+     50   captions (or an external alpha layer — see references/hyperframes.md)
+
+  Every rule with a comment above it exists because the obvious alternative failed.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Reference composition</title>
+
+    <!-- Vendor GSAP locally. A CDN load times the renderer out. -->
+    <script src="assets/vendor/gsap.min.js"></script>
+
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+
+      /* A variable font needs the full weight RANGE in the face declaration, or Chrome
+         clamps it to one instance and every weight renders identically. */
+      @font-face { font-family: "Brand"; src: url("assets/fonts/Rubik.ttf") format("truetype");
+                   font-weight: 100 1000; }
+
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      video { position: absolute; inset: 0; width: 1080px; height: 1920px; object-fit: cover; }
+
+      /* ================================================================ HOOK
+         Backdrop = the SAME hook clip, blurred, at NATIVE scale. No scale, no crop,
+         no eq. The blur is BAKED into the asset, never a live CSS filter: Chrome
+         re-blurs 1080x1920 every frame and a 34px blur on an 11s backdrop can take a
+         10-minute render past 90 minutes. */
+      #hookbg { z-index: 5; }
+
+      /* The wash goes over the backdrop, under the subject. */
+      #hookwash {
+        position: absolute; inset: 0; z-index: 6;
+        background:
+          radial-gradient(90% 62% at 22% 14%, rgba(46,196,214,0.34) 0%, rgba(46,196,214,0) 62%),
+          radial-gradient(88% 66% at 84% 30%, rgba(48,110,232,0.36) 0%, rgba(48,110,232,0) 60%),
+          linear-gradient(168deg, rgba(9,38,58,0.62) 0%, rgba(6,22,40,0.70) 52%, rgba(4,12,24,0.80) 100%);
+      }
+
+      /* THE MATTE.
+         This example mattes a source WIDER than the frame (1292 hung at left:-212)
+         because the roto is scaled down. If the subject touches the frame edge in the
+         source — a gesturing arm almost always does at the bottom left — the alpha has
+         a dead-straight cut at x=0. At native scale that cut IS the frame edge and is
+         invisible; at scale 0.80 it lands at x=108 and reads as a hard mask crop.
+
+         transform-origin must then be the FRAME's bottom-centre expressed in ELEMENT
+         coordinates: (540 + 212) / 1292 = 58.2%. Leaving it at 50% pivots off-centre
+         and the subject slides sideways as it scales.
+
+         `inset: auto` FIRST, or the global `video { inset: 0; width: 1080px }` rule
+         overrides left/top/width. */
+      #matte {
+        z-index: 30; inset: auto; left: -212px; top: 0;
+        width: 1292px; height: 1920px; object-fit: fill;
+        transform-origin: 58.2% 100%;
+      }
+
+      /* ============================================================== BODY A-ROLL
+         origin 50% 30% so `y` moves the head predictably:
+           screen_y = 576 + (raw_head_y - 576) * scale + y
+         scale >= 1.02 so no black side bars can appear. */
+      #aroll { z-index: 20; transform-origin: 50% 30%; }
+
+      /* ============================================== B-ROLL: FULL FRAME AND PANEL
+         A `.toppanel` height rule LOSES to the global media rule on specificity:
+         `video, img.bimg { inset:0; height:1920px }` is (0,1,1) and `.toppanel` is
+         (0,1,0). Qualify it to (0,2,1) and set left/top explicitly — `inset:0` also
+         pins `bottom`. */
+      video.full, img.bimg.full { z-index: 20; }
+      video.toppanel, img.bimg.toppanel {
+        z-index: 22; inset: auto; left: 0; top: 0; width: 1080px; height: 900px;
+        object-fit: cover;
+      }
+
+      /* ================================================================ GRAPHICS
+         EVERY card surface must set font-family itself. `.cap` sets it, but a new
+         `.card` class does NOT inherit it and the whole card silently renders in the
+         default SERIF. Name Inter as the fallback, not Helvetica/Arial: the renderer
+         aliases those to Inter anyway, so naming Inter is what makes preview match
+         render. */
+      .card {
+        position: absolute; z-index: 40;
+        font-family: "Brand", "Inter", Arial, sans-serif;
+        background:
+          radial-gradient(96% 90% at 50% 0%, rgba(38,168,190,.30), rgba(38,168,190,0) 70%),
+          linear-gradient(163deg, rgba(14,56,78,.96), rgba(6,26,40,.97) 55%, rgba(3,14,22,.98));
+        border-radius: 34px; border: 2px solid rgba(64,214,222,.30);
+        box-shadow: 0 34px 92px rgba(0,0,0,.82), 0 0 90px rgba(26,140,180,.20);
+        /* Leave the caption band empty — a card is a BACKGROUND for a caption, not a
+           competitor. A full-frame card shares the frame with a centred caption at ~930. */
+        padding-bottom: 200px;
+      }
+      .card .kicker { font-size: 34px; color: #4fe6d8; font-weight: 700; }
+      .card .huge   { font-size: 168px; color: #fff; font-weight: 900;
+                      text-shadow: 0 0 46px rgba(79,230,216,.55); }
+      .card .sub    { font-size: 40px; color: #7fd4e8; font-weight: 600; }
+
+      /* Contents frosted, card edge crisp: reveals are an UN-BLUR, not a pop. */
+      .card .inner { filter: blur(20px); }
+
+      /* An inline <svg class="clip"> renders its strokes across the WHOLE video —
+         `.clip` does not hide svg. Start it hidden and drive opacity from the timeline. */
+      svg.wires { position: absolute; z-index: 40; opacity: 0; left: 0; top: 0; }
+
+      /* Any position:absolute element you only move with GSAP still needs a base
+         left/top. Without them it anchors at 0,0 and your x/y tweens fly it off-frame. */
+      #tile { position: absolute; z-index: 10; left: 540px; top: 300px;
+              width: 400px; height: 400px; border-radius: 88px; opacity: 0; }
+      /* When you scale a container, scale the MARK inside it too — the mark should fill
+         ~80% of the tile (316 inside 400) or the logo looks smaller than before. */
+      #tile svg { width: 316px; height: 316px; margin: 42px; }
+
+      /* ================================================================ CAPTIONS
+         Black on a translucent white plate, no stroke. The plate must HUG the text:
+         style the inline-block span, never the full-width div, or you get a band. */
+      .cap { position: absolute; left: 0; right: 0; z-index: 50; text-align: center;
+             direction: ltr; font-family: "Brand", "Inter", Arial, sans-serif;
+             font-weight: 800; line-height: 1.0; }
+      .cap .p { display: inline-block; color: #0a0a0a; font-size: 70px;
+                background: rgba(255,255,255,0.82); border-radius: 22px;
+                padding: 20px 34px 26px; box-shadow: 0 10px 34px rgba(0,0,0,0.42);
+                white-space: nowrap; }
+      .cap.hook  { top: 1310px; }
+      .cap.std   { top: 1300px; }
+      .cap.panel { top: 780px; }
+      .cap.ctr   { top: 930px; }
+      .cap.hi    { top: 520px; }
+      .ltr { unicode-bidi: isolate; direction: ltr; }
+
+      /* Flares screen-blend. Tint them to match a cold grade — the stock flare is warm
+         and washes the whole frame amber for ~0.3s against a cool film. */
+      .flare { z-index: 60; mix-blend-mode: screen; filter: hue-rotate(152deg) saturate(0.9); }
+    </style>
+  </head>
+
+  <body>
+    <div id="root" data-composition-id="reference" data-duration="20.00">
+
+      <!-- ============================================ HOOK  (0 → 8.28)
+           THE ONE-FRAME BOUNDARY RULE: HyperFrames ends a <video> clip INCLUSIVE of
+           the frame at start+duration, but a timed <div> EXCLUSIVE of it. So the hook's
+           VIDEOS get cut-0.04 and its overlay DIVS get cut — both then land their last
+           paint on the same frame. Using the same number on both leaves a frame of
+           un-washed roto; using cut-0.04 on both kills the wash a frame early.
+           Prove it on the ENCODED file at cut-0.08 / -0.04 / cut / +0.04. -->
+      <video id="hookbg" class="clip" src="assets/hook_blurred.mp4"
+             data-start="0" data-duration="8.24" data-track-index="0" muted playsinline></video>
+      <div id="hookwash" class="clip"
+           data-start="0" data-duration="8.28" data-track-index="1"></div>
+
+      <!-- Graphics BEHIND the subject are occluded where the body covers them — that IS
+           the look. Measure the union of the matte alpha across the hook to find the
+           free bands (typically x 0-185 left, x 740-950 right, between y 230-760). -->
+      <div id="tile" class="clip tile"
+           data-start="3.86" data-duration="4.42" data-track-index="2">
+        <svg viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#D97757"/></svg>
+      </div>
+      <svg class="clip wires" width="1080" height="1920" viewBox="0 0 1080 1920"
+           data-start="5.10" data-duration="3.18" data-track-index="3">
+        <!-- strokeDasharray must be ~= the REAL path length. Far longer and the stroke
+             finishes drawing early, so the wire snaps in and then sits still. -->
+        <path id="w1" d="M540 500 L360 300" stroke="#4fe6d8" stroke-width="6" fill="none"/>
+      </svg>
+
+      <video id="matte" class="clip" src="assets/matte.webm"
+             data-start="0" data-duration="8.24" data-track-index="4" muted playsinline></video>
+
+      <!-- ======================================== BODY  (8.28 → END) -->
+      <video id="aroll" class="clip" src="assets/aroll.mp4"
+             data-start="0" data-duration="20.00" data-track-index="5" playsinline></video>
+
+      <!-- B-ROLL HARD-CUTS IN AND SITS THERE. No whip-pan, no scale-in, no slide, no
+           zoom — not on a panel, not full frame. Alternate track indices so adjacent
+           clips never share a track. Pad the source ~0.3s past its window
+           (tpad=stop_mode=clone): the coverage gate aborts below 95%. -->
+      <video id="b01" class="clip full" src="assets/broll/b01.mp4"
+             data-start="11.56" data-duration="3.34" data-track-index="6" muted playsinline></video>
+      <video id="b02" class="clip toppanel" src="assets/broll/b02.mp4"
+             data-start="14.90" data-duration="2.60" data-track-index="7" muted playsinline></video>
+
+      <!-- ================================================================ AUDIO
+           An <audio> element REQUIRES an id or it renders silent.
+           Two elements off the SAME file for a music cut-out: the second's
+           data-media-start = first_media_start + resume_time, so the track continues
+           where it WOULD have been instead of rewinding and the phrasing survives. -->
+      <audio id="bgm1" class="clip" src="assets/music/bed.mp3"
+             data-start="0" data-duration="11.06" data-media-start="0.125"
+             data-track-index="8"></audio>
+      <audio id="bgm2" class="clip" src="assets/music/bed.mp3"
+             data-start="14.88" data-duration="5.12" data-media-start="15.005"
+             data-track-index="9"></audio>
+
+      <!-- The riser is aligned by its ENVELOPE, not its file length: measure the last
+           50ms bucket above -20 dB rel peak and set start = cut - that offset. -->
+      <audio id="riser" class="clip" src="assets/sfx/riser_long.wav"
+             data-start="13.19" data-duration="1.69" data-track-index="10"></audio>
+      <audio id="impact" class="clip" src="assets/sfx/shutter_impact.wav"
+             data-start="14.88" data-duration="0.62" data-track-index="11"></audio>
+
+      <video id="flare1" class="clip flare" src="assets/flares/flare1_v.mp4"
+             data-start="14.88" data-duration="1.20" data-track-index="12" muted playsinline></video>
+
+      <!-- ============================================================== CAPTIONS
+           ALL captions on ONE track index. duration = next_start - this_start - 0.005:
+           the clip window is inclusive at both ends, so without the 0.005 both cards
+           render on the boundary frame and you get a frame of stacked text. 0.005 can
+           never open a gap, because frame times are 0.04s apart.
+
+           Or omit them entirely and composite an external alpha layer — see
+           references/hyperframes.md §caption ghosting. -->
+      <div class="clip cap hook" id="c01" data-start="0" data-duration="1.195"
+           data-track-index="15"><span class="p">first three words</span></div>
+      <div class="clip cap hook" id="c02" data-start="1.20" data-duration="1.395"
+           data-track-index="15"><span class="p">then the next</span></div>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+
+      // ---------------------------------------------------------------- HOOK
+      // ONE STATIC TRANSFORM for the whole hook. A fromTo scale drift of 0.74→0.77
+      // reads as "you changed my position on the third second". Never tween it.
+      // A bare hook = no transform at all; this one carries a graphics cluster, so the
+      // subject shrinks to open a clean band above the hairline.
+      //   head_top = 1920 - (1920 - src_head_top) * scale + y
+      // Solve for the tile's clearance (20-40px), never eyeball it.
+      tl.set("#matte", { scale: 0.80, y: -31 }, 0);
+
+      // Graphics: pop, then hold. Every pop gets its own SFX on the SAME frame.
+      tl.fromTo("#tile", { scale: 0.35, opacity: 0 },
+                { scale: 1.10, opacity: 1, duration: 0.26, ease: "power4.out" }, 3.86)
+        .to("#tile", { scale: 1.0, duration: 0.20, ease: "back.out(3)" }, 4.12);
+
+      // A timed <svg> needs opacity driven from the timeline — `.clip` does not hide it.
+      tl.set("svg.wires", { opacity: 1 }, 5.10);
+      tl.fromTo("#w1", { strokeDasharray: 269, strokeDashoffset: 269 },
+                { strokeDashoffset: 0, duration: 0.46, ease: "power2.inOut" }, 5.10);
+      tl.set("svg.wires", { opacity: 0 }, 8.28);
+      // GSAP exits that end at a clip boundary need a `tl.set` HARD KILL
+      // (lint: gsap_exit_missing_hard_kill).
+      tl.set("#tile", { opacity: 0 }, 8.28);
+
+      // ---------------------------------------------------------------- BODY
+      // Cuts between layout states are HARD SETS, exactly on sentence starts.
+      // A cut must never land mid-silence or before the sentence begins.
+      tl.set("#aroll", { scale: 1.02, y: 770 }, 8.28);     // split state, under a 900px panel
+      tl.set("#aroll", { scale: 1.02, y: 0 }, 11.56);      // full-screen state
+
+      // A slow push on FULL-FRAME A-roll is allowed (scaling UP from a centre origin
+      // can never expose an edge). A crash zoom is not, and B-roll gets neither.
+      tl.fromTo("#aroll", { scale: 1.02 }, { scale: 1.09, ease: "none", duration: 4.0 }, 11.56);
+
+      // ------------------------------------------------------------ REVEALS
+      // An UN-BLUR, not a pop. The card is on screen from the start of its beat group
+      // with its CONTENTS frosted, so the card's own rounded edge stays crisp.
+      tl.to(".card .inner", { filter: "blur(0px)", duration: 0.34, ease: "power2.out" }, 14.90);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

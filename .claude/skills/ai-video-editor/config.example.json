@@ -1,0 +1,77 @@
+{
+  "_comment": "Copy this to your project as config.json. Nothing personal belongs in the skill itself.",
+
+  "project": {
+    "name": "my-reel",
+    "topic": "short-topic-name",
+    "fps": 25,
+    "width": 1080,
+    "height": 1920
+  },
+
+  "language": {
+    "code": "en",
+    "direction": "ltr",
+    "whisper_model": "mlx-community/whisper-large-v3-turbo",
+    "typos": {},
+    "merge_next": {},
+    "locked_phrases": [],
+    "clause_openers": []
+  },
+
+  "brand": {
+    "font_family": "Rubik",
+    "font_dir": "assets/fonts",
+    "accent": "#4fe6d8",
+    "accent_alt": "#3d8bff",
+    "accent_warm": "#D97757",
+    "good": "#35e06b",
+    "caption_size": 70,
+    "caption_plate": "rgba(255,255,255,0.82)",
+    "caption_ink": "#0a0a0a"
+  },
+
+  "cutting": {
+    "onset_db": -26.0,
+    "speech_lead": 0.04,
+    "gap_ratio": 0.60,
+    "gap_min": 0.15,
+    "gap_max": 0.32,
+    "gap_topic_boundary": 0.26,
+    "lead": 0.06,
+    "tail_min": 0.09,
+    "tail_last": 0.45,
+    "fade_in": 0.02,
+    "fade_out": 0.055,
+    "drop": [],
+    "merge": []
+  },
+
+  "matting": {
+    "backbone": "resnet50",
+    "downsample_ratio": 0.45,
+    "crf": 10,
+    "alpha_floor": 0.06,
+    "alpha_span": 0.88
+  },
+
+  "audio": {
+    "bgm_under_voice": 0.056,
+    "bgm_after_flare": 0.135,
+    "sfx_target_db_below_voice": 7.0,
+    "music_dir": "",
+    "sfx_dir": "assets/sfx"
+  },
+
+  "render": {
+    "video_bitrate": "32M",
+    "target_peak_db": -1.5
+  },
+
+  "paths": {
+    "archive_root": "",
+    "exports": "",
+    "projects": "",
+    "assets": ""
+  }
+}
