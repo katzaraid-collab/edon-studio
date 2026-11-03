@@ -1,0 +1,44 @@
+MIT License
+
+Copyright (c) 2026 Omer Yaron
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+THIRD-PARTY ASSETS
+
+This skill ships no third-party media. `scripts/setup_assets.py` fetches or
+generates everything at install time:
+
+  Fonts    Rubik / Inter, downloaded from the Google Fonts repository under the
+           SIL Open Font License 1.1. Not redistributed as part of this package.
+
+  SFX      Synthesised from scratch by scripts/setup_assets.py. No third-party
+           audio is included, and nothing is sampled from any library.
+
+  Flares   Generated procedurally by scripts/setup_assets.py.
+
+  GSAP     Downloaded at setup time from a public CDN. GSAP is distributed by
+           Webflow under its own licence; review it for your use case at
+           https://gsap.com/licensing/ — it is not covered by the MIT licence
+           above and is not redistributed here.
+
+Music is never bundled. Point `audio.music_dir` in your config.json at a library
+you are licensed to use.
