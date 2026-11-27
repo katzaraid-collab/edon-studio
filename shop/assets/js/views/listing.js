@@ -2,7 +2,7 @@
    Filters and sort live in the address (?f=sale,new&sort=price-asc&cat=home) so a filtered page can be shared. */
 import { BASE, html, str, icon, $ } from '../lib.js';
 import { grid, crumbs, setMeta, breadcrumbLd, catUrl, soldOut, pctOff, absUrl } from '../ui.js';
-import { favs } from '../state.js';
+import { favs, subscribe } from '../state.js';
 import { searchProducts } from '../app.js';
 
 const SORTS = [
@@ -14,7 +14,7 @@ const SORTS = [
 ];
 const FILTERS = [['sale', 'במבצע'], ['new', 'חדשים'], ['stock', 'במלאי בלבד']];
 
-export default function listing({ catalog, params, query }) {
+export default function listing({ catalog, params, query, go }) {
   const mode = params.mode;
   const cat = params.cat;
   let base, title, intro = '', crumbItems = [], empty;
@@ -59,6 +59,12 @@ export default function listing({ catalog, params, query }) {
     <header class="list-hd">
       <h1>${title}</h1>
       ${intro ? html`<p class="lead">${intro}</p>` : ''}
+      ${mode === 'search' ? html`<form class="search-form page-search" role="search" action="${BASE}/search" id="page-search">
+        <label class="vh" for="page-q">חיפוש מוצרים</label>
+        ${icon('search')}
+        <input id="page-q" name="q" type="search" value="${params.q}" placeholder="מה מחפשים?" autocomplete="off" enterkeyhint="search">
+        <button class="btn sm" type="submit">חיפוש</button>
+      </form>` : ''}
     </header>
     ${mode === 'cat' || mode === 'all' ? html`<nav class="cat-chips" aria-label="מעבר בין קטגוריות"><ul role="list">
       <li><a href="${BASE}/all" ${mode === 'all' ? html`aria-current="page"` : ''}>הכל</a></li>
@@ -78,6 +84,12 @@ export default function listing({ catalog, params, query }) {
   return {
     name: 'listing', body,
     mount(root) {
+      const ps = $('#page-search', root);
+      if (ps) ps.addEventListener('submit', e => {
+        e.preventDefault();
+        const q = ps.q.value.trim();
+        if (q) go(`${BASE}/search?q=${encodeURIComponent(q)}`);
+      });
       const form = $('#toolbar', root);
       if (!form) return;
       // restore the controls from the address
@@ -124,6 +136,28 @@ export default function listing({ catalog, params, query }) {
         }
       });
       paint(true);
+
+      if (mode !== 'fav') return;
+      return subscribe(w => {
+        if (w !== 'fav') return;
+        const ids = favs();
+        if (!ids.length) {
+          go(location.pathname, { replace: true });
+          const h1 = document.querySelector('main h1');
+          if (h1) { h1.setAttribute('tabindex', '-1'); h1.focus(); }
+          return;
+        }
+        // keep the keyboard on the neighbouring card's heart
+        const hearts = [...root.querySelectorAll('#results [data-fav]')];
+        const at = hearts.indexOf(document.activeElement);
+        base = ids.map(id => catalog.products.find(p => p.id === id)).filter(Boolean);
+        paint(false);
+        if (at >= 0) {
+          const next = root.querySelectorAll('#results [data-fav]');
+          const el = next[Math.min(at, next.length - 1)] || root.querySelector('h1');
+          if (el) el.focus();
+        }
+      });
     },
   };
 }

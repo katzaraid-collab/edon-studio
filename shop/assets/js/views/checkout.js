@@ -5,11 +5,12 @@
 import { BASE, html, str, raw, money, icon, $, $$, session, uid } from '../lib.js';
 import { crumbs, setMeta, productMedia, toast, say } from '../ui.js';
 import * as S from '../state.js';
-import { summary, wireCoupon } from './cart.js';
+import { summary, wireCoupon, stockNote, resetCouponFlash } from './cart.js';
 
 const DRAFT = 'shop-checkout-draft';
 export const LAST = 'shop-last-order';
-const DOMAINS = ['gmail.com', 'walla.co.il', 'walla.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com', 'live.com', 'bezeqint.net', 'netvision.net.il', 'zahav.net.il'];
+const DOMAINS = ['gmail.com', 'walla.co.il', 'walla.com', 'yahoo.com', 'yahoo.co.il', 'hotmail.com', 'outlook.com', 'icloud.com', 'me.com', 'live.com', 'msn.com', 'aol.com',
+  'mail.com', 'gmx.com', 'proton.me', 'protonmail.com', 'bezeqint.net', 'netvision.net.il', 'zahav.net.il', '012.net.il', '013net.net', 'smile.net.il', 'inter.net.il'];
 
 let apiReady = null; // cached per page load: true, false, or a pending promise
 function checkApi() {
@@ -25,7 +26,11 @@ const RULES = {
   phone: v => {
     const d = v.replace(/\D/g, '');
     if (!d) return 'צריך מספר טלפון כדי שנוכל לאשר את ההזמנה';
-    if (!/^\+?[0-9()\-. ]+$/.test(v) || d.length < 9 || d.length > 15) return 'מספר הטלפון לא נראה תקין, למשל 050-123-4567';
+    const ok = /^\+?[0-9()\-. ]+$/.test(v) && (
+      /^0\d{8,9}$/.test(d) ||                        // 050-123-4567, 03-123-4567
+      /^972\d{8,9}$/.test(d) ||                      // +972 50 123 4567
+      (v.trim().startsWith('+') && d.length >= 9 && d.length <= 15)); // other countries
+    if (!ok) return 'מספר הטלפון לא נראה תקין, למשל 050-123-4567';
     return '';
   },
   email: v => !v ? 'צריך כתובת מייל לאישור ההזמנה' : (v.length > 120 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) ? 'כתובת המייל לא נראית תקינה, למשל name@gmail.com' : '',
@@ -51,7 +56,8 @@ function field(name, label, { type = 'text', auto = 'off', mode = '', req = true
 export default function checkout({ catalog, go }) {
   const st = catalog.store;
   setMeta({ title: 'קופה', description: 'השלמת ההזמנה' });
-  const q0 = S.tidyCart();
+  resetCouponFlash();
+  const q0 = S.tidyCart(); // the quote from before tidying: still lists what was dropped or capped
 
   if (!q0.items.length) {
     return {
@@ -68,6 +74,7 @@ export default function checkout({ catalog, go }) {
   const body = html`<div class="wrap page co">
     ${crumbs([{ name: 'סל הקניות', url: `${BASE}/cart` }, { name: 'קופה', url: `${BASE}/checkout` }])}
     <h1>השלמת ההזמנה</h1>
+    ${stockNote(q0)}
     <p class="lead">כמה פרטים ואנחנו מסודרים. אחרי שליחת ההזמנה נחזור אליכם לאישור ולתשלום, ורק אז היא יוצאת לדרך.</p>
 
     <details class="co-mob-sum only-m" id="mob-sum"><summary><span>${icon('cart')}סיכום ההזמנה</span><b id="mob-total">${money(q0.total)}</b>${icon('down')}</summary><div class="co-mob-bd" id="mob-sum-bd"></div></details>
@@ -96,7 +103,7 @@ export default function checkout({ catalog, go }) {
           <div class="fields" id="addr">
             ${field('city', 'עיר או יישוב', { auto: 'address-level2', cls: 'half' })}
             ${field('street', 'רחוב', { auto: 'address-line1', cls: 'half' })}
-            ${field('house', 'מספר בית', { auto: 'off', max: 10, cls: 'third', mode: 'numeric' })}
+            ${field('house', 'מספר בית', { auto: 'off', max: 10, cls: 'third' })}
             ${field('apt', 'דירה / כניסה', { req: false, max: 10, cls: 'third' })}
             ${field('zip', 'מיקוד', { req: false, auto: 'postal-code', mode: 'numeric', max: 10, cls: 'third', dir: 'ltr' })}
           </div>
@@ -233,6 +240,10 @@ export default function checkout({ catalog, go }) {
         const n = e.target.name;
         if (!n || !NAMES.includes(n)) return;
         if (n === 'phone') e.target.value = prettyPhone(e.target.value);
+        if (n === 'street' && !val('house')) {
+          const m = val('street').match(/^(.*\D)\s+(\d+[\u05D0-\u05EA]?)$/);
+          if (m) { form.street.value = m[1].trim(); form.house.value = m[2]; touched.add('house'); setErr('house', ''); saveDraft(); }
+        }
         if (val(n) || touched.has(n)) { touched.add(n); setErr(n, check(n)); }
       });
       form.addEventListener('change', e => {
@@ -273,6 +284,14 @@ export default function checkout({ catalog, go }) {
 
         const q = S.tidyCart();
         if (!q.items.length) { toast('הסל התרוקן בינתיים'); go(`${BASE}/cart`); return; }
+        // stock moved while the form was open: show what changed and the new total before sending anything
+        if (q.dropped.length || q.items.some(i => i.capped)) {
+          paintSummary();
+          $('#co-fail', root).innerHTML = str(stockNote(q));
+          $('#co-fail', root).querySelector('.note').setAttribute('tabindex', '-1');
+          $('#co-fail', root).querySelector('.note').focus();
+          return;
+        }
         const customer = {};
         for (const n of ['first', 'last', 'phone', 'email', 'notes', ...ADDRESS]) customer[n] = courier() || !ADDRESS.includes(n) ? val(n) : '';
         const payment = (form.querySelector('input[name="payment"]:checked') || {}).value;
@@ -294,6 +313,7 @@ export default function checkout({ catalog, go }) {
           subtotal: q.subtotal, discount: q.discount, coupon: order.coupon, shipping: q.shipping, total: q.total,
           method: q.method.label, payment: (st.payments.find(p => p.id === payment) || {}).label || '',
           wa: waText(st, q, customer, order, payment),
+          lines: q.items.map(i => ({ id: i.id, qty: i.qty, opt: i.opt })),
         };
 
         const btn = $('#co-btn', root), fail = $('#co-fail', root);
@@ -380,9 +400,10 @@ export function waText(st, q, c, order, payment) {
     `שם: ${c.first} ${c.last}`,
     `טלפון: ${c.phone}`,
     `מייל: ${c.email}`,
-    ...(q.method.id === 'pickup' ? ['איסוף עצמי'] : [`כתובת: ${c.street} ${c.house}${c.apt ? ', ' + c.apt : ''}, ${c.city}${c.zip ? ' ' + c.zip : ''}`]),
+    ...(q.method.id === 'pickup' ? ['איסוף עצמי'] : [`כתובת: ${c.street} ${c.house}${c.apt ? ', דירה ' + c.apt : ''}, ${c.city}${c.zip ? ', מיקוד ' + c.zip : ''}`]),
     `תשלום: ${(st.payments.find(p => p.id === payment) || {}).label || ''}`,
     ...(c.notes ? ['', `הערות: ${c.notes}`] : []),
+    ...(order.news ? ['', 'אשמח לקבל עדכונים ומבצעים במייל'] : []),
   ];
   return lines.join('\n');
 }

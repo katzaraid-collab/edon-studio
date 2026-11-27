@@ -152,7 +152,8 @@ export default function product({ catalog, params }) {
         if (badge) gMain.appendChild(badge);
       });
 
-      // on phones, a slim add-to-cart bar appears once the main button has scrolled away above.
+      // on phones, a slim add-to-cart bar shows whenever the main button is off screen (the gallery
+      // pushes it below the fold on arrival, and it scrolls away above later).
       // A scroll check rather than an IntersectionObserver: a fast flick can jump the button from
       // below the screen to above it in one frame, and the observer would never fire.
       const sticky = $('#sticky-buy', root);
@@ -162,7 +163,8 @@ export default function product({ catalog, params }) {
         let shown = false;
         const check = () => {
           frame = 0;
-          const show = row.getBoundingClientRect().bottom < 0;
+          const r = row.getBoundingClientRect();
+          const show = r.bottom < 0 || r.top > innerHeight;
           if (show === shown) return;
           shown = show;
           sticky.classList.toggle('on', show);

@@ -151,16 +151,20 @@ test('coupon minimum and unknown codes', () => {
   assert.equal(q.couponError, '');
 });
 
-test('free shipping is judged after the discount', () => {
+test('free shipping is judged on the goods before the coupon', () => {
   let q = quote(C, [{ id: 'plain', qty: 3 }], { shipping: 'courier' });
   assert.equal(q.shipping, 0);
   assert.equal(q.total, 300);
+  // a coupon that takes the total under the threshold does not bring the shipping fee back
   q = quote(C, [{ id: 'plain', qty: 3 }], { shipping: 'courier', coupon: 'TEN' });
   assert.equal(q.subtotal, 300);
   assert.equal(q.discount, 30);
+  assert.equal(q.shipping, 0);
+  assert.equal(q.freeShippingLeft, 0);
+  assert.equal(q.total, 270);
+  q = quote(C, [{ id: 'plain', qty: 2 }], { shipping: 'courier', coupon: 'TEN' });
   assert.equal(q.shipping, 29);
-  assert.equal(q.freeShippingLeft, 29);
-  assert.equal(q.total, 299);
+  assert.equal(q.freeShippingLeft, 99);
   q = quote(C, [{ id: 'exact', qty: 1 }], { shipping: 'courier' });
   assert.equal(q.shipping, 0, 'the threshold itself ships free');
   assert.equal(q.freeShippingLeft, 0);

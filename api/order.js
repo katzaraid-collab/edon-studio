@@ -84,7 +84,8 @@ function quote(catalog, lines, { shipping, coupon } = {}) {
   const methods = store.shipping || [];
   const method = methods.find(m => m.id === shipping) || methods[0] || { id: 'none', price: 0 };
   const freeFrom = Number(store.freeShippingFrom) || 0;
-  const free = freeFrom > 0 && afterDiscount >= freeFrom;
+  // free shipping is judged on the goods before any coupon, so a coupon never costs the shipper's fee back
+  const free = freeFrom > 0 && subtotal >= freeFrom;
   const shippingCost = count === 0 ? 0 : (free ? 0 : round(method.price || 0));
 
   return {
@@ -92,7 +93,7 @@ function quote(catalog, lines, { shipping, coupon } = {}) {
     discount, coupon: applied, couponError,
     method, shipping: shippingCost,
     freeShippingFrom: freeFrom,
-    freeShippingLeft: freeFrom > 0 ? Math.max(0, round(freeFrom - afterDiscount)) : 0,
+    freeShippingLeft: freeFrom > 0 ? Math.max(0, round(freeFrom - subtotal)) : 0,
     total: round(afterDiscount + shippingCost),
   };
 }

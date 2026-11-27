@@ -5,6 +5,27 @@ import { shipBar, lineRow, handleLineEvents } from '../app.js';
 
 export const COUPON_ERR = { unknown: 'הקוד לא מוכר. כדאי לבדוק שאין רווח או אות חסרה.', min: 'הקוד תקף בהזמנה גדולה יותר' };
 
+/* A code that doesn't exist is shown with its error once and then forgotten, so it doesn't greet the
+   visitor in red on every later visit. A real code that needs a bigger cart is kept: it switches on by
+   itself once the cart is big enough. */
+let flash = null;
+export const resetCouponFlash = () => { flash = null; };
+
+/* What changed in the cart because of stock since the visitor last saw it, by name.
+   q0 is the quote from before tidyCart() (it still has the dropped lines and the capped flags). */
+export function stockNote(q0) {
+  const cat = S.getCatalog();
+  const gone = q0.dropped.map(l => (cat.products.find(p => p.id === (l && l.id)) || {}).name).filter(Boolean);
+  const unknown = q0.dropped.length - gone.length;
+  const capped = q0.items.filter(i => i.capped);
+  if (!gone.length && !unknown && !capped.length) return '';
+  return html`<div class="note warn" role="status">${icon('alert')}<div>
+    ${gone.length ? html`<p>${gone.length === 1 ? `${gone[0]} אזל מהמלאי והוסר מהסל.` : `אזלו מהמלאי והוסרו מהסל: ${gone.join(', ')}.`}</p>` : ''}
+    ${unknown ? html`<p>${unknown === 1 ? 'מוצר אחד כבר לא נמכר והוסר מהסל.' : `${unknown} מוצרים כבר לא נמכרים והוסרו מהסל.`}</p>` : ''}
+    ${capped.map(i => html`<p>מ${i.product.name} ${i.qty === 1 ? 'נשאר רק אחד במלאי' : `נשארו רק ${i.qty} במלאי`}, אז עדכנו את הכמות.</p>`)}
+  </div></div>`;
+}
+
 /* the order summary box, shared by the cart page and the checkout */
 export function summary(q, { coupon = true, shipKnown = false } = {}) {
   return html`
@@ -23,15 +44,24 @@ export function couponForm(q) {
   if (q.coupon) {
     return html`<div class="coupon on"><p>${icon('tag')}<span>הקוד <b>${q.coupon.code}</b> הופעל: ${q.coupon.label}</span></p><button type="button" class="link-btn" data-coupon-off aria-label="${'הסרת הקוד ' + q.coupon.code}">הסרה</button></div>`;
   }
-  const err = code && q.couponError ? COUPON_ERR[q.couponError] + (q.couponError === 'min' ? ` (מ־${money(S.getCatalog().store.coupons.find(c => c.code.toUpperCase() === code).min)})` : '') : '';
-  return html`<form class="coupon" data-coupon novalidate>
-    <label for="coupon-in">קוד קופון</label>
-    <div class="coupon-row">
-      <input id="coupon-in" name="code" autocomplete="off" autocapitalize="characters" spellcheck="false" value="${code}" ${err ? html`aria-invalid="true" aria-describedby="coupon-err"` : ''}>
-      <button type="submit" class="btn ghost">הפעלה</button>
-    </div>
-    ${err ? html`<p class="err" id="coupon-err">${err}</p>` : ''}
-  </form>`;
+  let err = '', value = code;
+  if (flash) { err = COUPON_ERR.unknown; value = flash.code; }
+  else if (code && q.couponError === 'min') {
+    const cp = S.getCatalog().store.coupons.find(c => c.code.toUpperCase() === code);
+    err = `${COUPON_ERR.min} (מ־${money(cp.min)}). הוא יופעל לבד כשהסל יגיע לסכום.`;
+  }
+  // tucked away until asked for, so the field doesn't send people hunting for codes
+  return html`<details class="coupon-box" ${err || code ? html`open` : ''}>
+    <summary>יש לכם קוד קופון?${icon('down')}</summary>
+    <form class="coupon" data-coupon novalidate>
+      <label for="coupon-in">קוד קופון</label>
+      <div class="coupon-row">
+        <input id="coupon-in" name="code" autocomplete="off" autocapitalize="characters" spellcheck="false" value="${value}" ${err ? html`aria-invalid="true" aria-describedby="coupon-err"` : ''}>
+        <button type="submit" class="btn ghost">הפעלה</button>
+      </div>
+      ${err ? html`<p class="err" id="coupon-err">${err}</p>` : ''}
+    </form>
+  </details>`;
 }
 
 export function wireCoupon(root, after) {
@@ -39,25 +69,29 @@ export function wireCoupon(root, after) {
     const f = e.target.closest('[data-coupon]');
     if (!f) return;
     e.preventDefault();
-    S.setCoupon(f.code.value);
+    const typed = String(f.code.value || '').trim().toUpperCase();
+    flash = null;
+    S.setCoupon(typed);
     const q = S.cartQuote();
-    say(q.coupon ? `הקוד ${q.coupon.code} הופעל: ${q.coupon.label}` : S.getCoupon() ? COUPON_ERR[q.couponError] || 'הקוד לא הופעל' : 'לא הוזן קוד');
+    if (typed && !q.coupon && q.couponError === 'unknown') { flash = { code: typed }; S.setCoupon(''); }
+    say(q.coupon ? `הקוד ${q.coupon.code} הופעל: ${q.coupon.label}` : typed ? (COUPON_ERR[q.couponError] || 'הקוד לא הופעל') : 'לא הוזן קוד');
     after && after('coupon');
   });
   root.addEventListener('click', e => {
-    if (e.target.closest('[data-coupon-off]')) { S.setCoupon(''); say('הקוד הוסר'); after && after('coupon-off'); }
+    if (e.target.closest('[data-coupon-off]')) { flash = null; S.setCoupon(''); say('הקוד הוסר'); after && after('coupon-off'); }
   });
 }
 
 export default function cart({ catalog }) {
   setMeta({ title: 'סל הקניות', description: 'סל הקניות שלכם' });
-  const q0 = S.tidyCart();
-  const dropped = q0.dropped.length;
+  resetCouponFlash();
+  const q0 = S.cartQuote();
+  S.tidyCart();
 
   const body = html`<div class="wrap page cart-page">
     ${crumbs([{ name: 'סל הקניות', url: `${BASE}/cart` }])}
     <h1>סל הקניות</h1>
-    ${dropped ? html`<p class="note warn" role="status">${icon('alert')} ${dropped === 1 ? 'פריט אחד כבר לא זמין והוסר מהסל.' : `${dropped} פריטים כבר לא זמינים והוסרו מהסל.`}</p>` : ''}
+    ${stockNote(q0)}
     <div id="cart-view"></div>
   </div>`;
 
@@ -98,7 +132,7 @@ export default function cart({ catalog }) {
         draw(root, kind === 'coupon-off' ? '#coupon-in' : (S.cartQuote().coupon ? '[data-coupon-off]' : '#coupon-in'));
       });
       return S.subscribe(w => {
-        if (w !== 'cart' && w !== 'ship') return;
+        if (w !== 'cart' && w !== 'ship' && w !== 'coupon') return;
         // redraw but keep focus on the same control
         const a = document.activeElement;
         const line = a && a.closest && a.closest('[data-line]');

@@ -21,13 +21,13 @@ function flat(v) {
 }
 export const str = v => flat(v);
 
-const ILS = new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 });
-const ILS_AG = new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', minimumFractionDigits: 2, maximumFractionDigits: 2 });
-/* "₪149" kept as one left-to-right unit inside Hebrew text (LRI … PDI). Whole shekels print bare,
-   anything with agorot prints both digits (297.20), never a lone 297.2 */
+const NUM = new Intl.NumberFormat('he-IL', { maximumFractionDigits: 0 });
+const NUM_AG = new Intl.NumberFormat('he-IL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+/* "₪149", the sign first as the store's copy writes it ("משלוח חינם מ־₪299"), kept as one left-to-right
+   unit inside Hebrew text (LRI ... PDI). Whole shekels print bare, agorot always print both digits (₪297.20). */
 export const money = n => {
   const v = Math.round((Number(n) || 0) * 100) / 100;
-  return '\u2066' + (Number.isInteger(v) ? ILS : ILS_AG).format(v).replace(/[\u200e\u200f\s]/g, '') + '\u2069';
+  return '\u2066' + (v < 0 ? '\u2212' : '') + '₪' + (Number.isInteger(v) ? NUM : NUM_AG).format(Math.abs(v)) + '\u2069';
 };
 export const plural = (n, one, many) => n === 1 ? one : n + ' ' + many;
 
@@ -57,9 +57,10 @@ export const reducedMotion = () => { try { return matchMedia('(prefers-reduced-m
 /* Hebrew-friendly search normalising: drops niqqud and punctuation, folds final letters, lower-cases Latin */
 const FINALS = { 'ך': 'כ', 'ם': 'מ', 'ן': 'נ', 'ף': 'פ', 'ץ': 'צ' };
 export const norm = s => String(s || '').toLowerCase()
-  .replace(/[֑-ׇ]/g, '')
-  .replace(/[ךםןףץ]/g, c => FINALS[c])
-  .replace(/[״׳"'`\-–—_.,:;!?()[\]{}]/g, ' ')
+  .replace(/\u05BE/g, ' ')                       // maqaf (Hebrew hyphen) separates words
+  .replace(/[\u0591-\u05C7]/g, '')               // niqqud and cantillation marks
+  .replace(/[\u05DA\u05DD\u05DF\u05E3\u05E5]/g, c => FINALS[c])   // ך ם ן ף ץ → כ מ נ פ צ
+  .replace(/[\u05F3\u05F4"'`\u201C\u201D\u201E\-\u2013\u2014_.,:;!?()[\]{}]/g, ' ')  // geresh, gershayim, quotes, dashes, punctuation
   .replace(/\s+/g, ' ').trim();
 
 function hash(s) {

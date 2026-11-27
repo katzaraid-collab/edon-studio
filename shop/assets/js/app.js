@@ -1,7 +1,7 @@
 /* Store entry point: loads the catalogue, draws the frame (header, menu, footer, cart drawer, search)
    and routes /shop/... addresses to views without full page loads. Vercel rewrites every /shop/* path
    that isn't under /shop/assets/ to this page, so deep links and refreshes land here too. */
-import { BASE, html, str, raw, money, icon, $, $$, debounce, norm, reducedMotion } from './lib.js';
+import { BASE, html, str, raw, money, icon, $, $$, debounce, norm, reducedMotion, session } from './lib.js';
 import * as S from './state.js';
 import { toast, say, openSheet, closeSheet, sheetOpen, wireSheets, productUrl, catUrl, productMedia, stepper, soldOut } from './ui.js';
 import home from './views/home.js';
@@ -19,11 +19,20 @@ let catalog, cleanup = null, lastPath = null;
 /* ---------- routing ---------- */
 const RESERVED = { all: 1, search: 1, favorites: 1, cart: 1, checkout: 1, thanks: 1, info: 1, assets: 1 };
 function resolve(url) {
-  const rest = url.pathname.replace(/\/+$/, '').slice(BASE.length).split('/').filter(Boolean).map(decodeURIComponent);
+  let rest;
+  try { rest = url.pathname.replace(/\/+$/, '').slice(BASE.length).split('/').filter(Boolean).map(decodeURIComponent); }
+  catch (e) { return { view: notFound }; }
   const q = url.searchParams;
   const [a, b] = rest;
   if (!a) return { view: home };
-  if (rest.length === 1 && a === 'all') return { view: listing, params: { mode: 'all' } };
+  if (rest.length === 1 && a === 'all') {
+    const c = q.get('cat');
+    if (c && catalog.categories.some(x => x.slug === c)) {
+      const p = new URLSearchParams(q); p.delete('cat');
+      return { redirect: `${BASE}/${c}${p.toString() ? '?' + p : ''}` };
+    }
+    return { view: listing, params: { mode: 'all' } };
+  }
   if (rest.length === 1 && a === 'search') return { view: listing, params: { mode: 'search', q: q.get('q') || '' } };
   if (rest.length === 1 && a === 'favorites') return { view: listing, params: { mode: 'fav' } };
   if (rest.length === 1 && a === 'cart') return { view: cart };
@@ -55,14 +64,18 @@ export function go(href, { replace = false } = {}) {
   render({ fresh: true });
 }
 
-const scrolls = new Map();
-function saveScroll() { const k = history.state && history.state.key; if (k) scrolls.set(k, scrollY); }
+/* Each history entry remembers its own scroll. The entry being left is saved before every move
+   (link, back, forward), and the map survives a reload of the tab. */
+const scrolls = new Map(Object.entries(session.get('shop-scrolls', {}) || {}));
+let currentKey = null;
+function saveScroll() { if (currentKey) scrolls.set(currentKey, scrollY); }
 
 function render({ fresh = false, pop = false } = {}) {
   const url = new URL(location.href);
   const r = resolve(url);
   if (r.redirect) { history.replaceState(history.state, '', r.redirect); return render({ fresh }); }
   if (cleanup) { try { cleanup(); } catch (e) { console.error(e); } cleanup = null; }
+  currentKey = history.state && history.state.key;
   const pageKey = url.pathname + url.search;
   const samePage = lastPath === pageKey;
   lastPath = pageKey;
@@ -74,15 +87,18 @@ function render({ fresh = false, pop = false } = {}) {
   let out;
   try { out = r.view({ catalog, params: r.params || {}, query: url.searchParams, url, go }); }
   catch (e) { console.error(e); out = notFound({ catalog, error: true }); }
-  main.innerHTML = str(out.body);
+  const view = document.createElement('div');
+  view.className = 'view';
+  view.innerHTML = str(out.body);
+  main.replaceChildren(view);
   main.dataset.view = out.name || '';
   document.body.dataset.view = out.name || '';
-  if (out.mount) cleanup = out.mount(main) || null;
+  if (out.mount) cleanup = out.mount(view) || null;
   markNav(url);
 
   // scroll: back/forward restores where the visitor was; a new page starts at the top or at its #anchor
   const k = history.state && history.state.key;
-  if (pop && k && scrolls.has(k)) scrollTo(0, scrolls.get(k));
+  if (pop) scrollTo(0, k && scrolls.has(k) ? scrolls.get(k) : 0);
   else if (url.hash && document.getElementById(url.hash.slice(1))) document.getElementById(url.hash.slice(1)).scrollIntoView();
   else if (fresh && !samePage) scrollTo(0, 0);
 
@@ -113,9 +129,9 @@ document.addEventListener('click', e => {
   e.preventDefault();
   go(url.href);
 });
-addEventListener('popstate', () => render({ pop: true }));
+addEventListener('popstate', () => { saveScroll(); render({ pop: true }); });
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-addEventListener('pagehide', saveScroll);
+addEventListener('pagehide', () => { saveScroll(); session.set('shop-scrolls', Object.fromEntries([...scrolls].slice(-60))); });
 
 /* ---------- frame ---------- */
 function drawFrame() {
@@ -194,7 +210,7 @@ export function lineRow(i, { compact = false } = {}) {
       <a class="line-name" href="${productUrl(p)}">${p.name}</a>
       ${i.opt ? html`<p class="line-opt">${p.options.name}: ${i.opt}</p>` : ''}
       ${!compact ? html`<p class="line-unit">${money(i.unit)} ליחידה</p>` : ''}
-      ${i.capped ? html`<p class="line-warn">${icon('alert')} נשארו רק ${i.qty} במלאי</p>` : ''}
+      ${i.capped ? html`<p class="line-warn">${icon('alert')} ${i.qty === 1 ? 'נשאר רק אחד במלאי' : `נשארו רק ${i.qty} במלאי`}</p>` : ''}
       <div class="line-ctl">
         ${stepper({ value: i.qty, max: i.qty + S.roomFor(p.id), key: i.key, label: 'כמות של ' + p.name })}
         ${compact ? '' : html`<button type="button" class="link-btn" data-remove="${i.key}" aria-label="${'הסרה של ' + p.name}">הסרה</button>`}
@@ -215,9 +231,14 @@ function drawDrawer() {
   }
   body.innerHTML = str(html`${shipBar(q)}<ul class="lines" role="list">${q.items.map(i => lineRow(i, { compact: true }))}</ul>`);
   foot.innerHTML = str(html`
-    <dl class="sum"><div><dt>סכום ביניים</dt><dd>${money(q.subtotal)}</dd></div>${q.discount ? html`<div class="disc"><dt>הנחה (${q.coupon.code})</dt><dd>−${money(q.discount)}</dd></div>` : ''}</dl>
-    <p class="muted small">משלוח ייחושב בקופה. המחירים כוללים מע״מ.</p>
-    <a class="btn block" href="${BASE}/checkout">להשלמת ההזמנה · ${money(q.total - q.shipping)}</a>
+    <dl class="sum">
+      <div><dt>סכום ביניים</dt><dd>${money(q.subtotal)}</dd></div>
+      ${q.discount ? html`<div class="disc"><dt>הנחה (${q.coupon.code})</dt><dd>−${money(q.discount)}</dd></div>` : ''}
+      <div><dt>משלוח · ${q.method.label}</dt><dd>${q.shipping ? money(q.shipping) : 'חינם'}</dd></div>
+      <div class="total"><dt>סה״כ</dt><dd>${money(q.total)}</dd></div>
+    </dl>
+    ${q.shipping && catalog.store.shipping.some(m => !m.price) ? html`<p class="muted small">איסוף עצמי בחינם אפשר לבחור בקופה.</p>` : ''}
+    <a class="btn block" href="${BASE}/checkout">להשלמת ההזמנה · ${money(q.total)}</a>
     <a class="btn ghost block" href="${BASE}/cart">צפייה בסל המלא</a>`);
 }
 
@@ -254,6 +275,10 @@ export function handleLineEvents(root) {
     const inp = e.target.closest('input[data-qty]');
     if (inp && inp.dataset.qty) {
       const v = parseInt(inp.value, 10);
+      if (v <= 0) return remove(inp.dataset.qty);
+      const line = S.cartQuote().items.find(i => i.key === inp.dataset.qty);
+      const cap = line ? line.qty + S.roomFor(line.id) : 0;
+      if (line && v > cap) toast(`יש במלאי רק ${cap} מ${line.product.name}`);
       S.setQty(inp.dataset.qty, isNaN(v) ? 1 : v);
       announceLine(inp.dataset.qty);
       refocus(root, `[data-line="${CSS.escape(inp.dataset.qty)}"] input[data-qty]`, 'h1, h2');
@@ -296,21 +321,66 @@ function refocus(root, sel, fallback) {
 
 /* ---------- search ---------- */
 const searchBox = $('#search'), sInput = $('#search-q'), sResults = $('#search-results');
-export function searchProducts(q) {
-  const n = norm(q);
-  if (!n) return [];
-  const words = n.split(' ');
-  const scored = [];
-  for (const p of catalog.products) {
-    const cat = catalog.categories.find(c => c.slug === p.cat);
-    const name = norm(p.name), hay = norm([p.name, p.short, p.desc, (p.details || []).join(' '), cat && cat.name, p.options && p.options.values.join(' ')].join(' '));
-    if (!words.every(w => hay.includes(w))) continue;
-    let s = 0;
-    for (const w of words) { if (name.startsWith(w)) s += 6; else if (name.includes(w)) s += 3; else s += 1; }
-    if (soldOut(p)) s -= 2;
-    scored.push([s, p]);
+/* Hebrew-aware search. Each word is also tried without plural or construct endings (ים, ות, יות, a final
+   י or ה) and without a leading ה or ו ("the", "and"), which hardly ever start a product's noun. The other
+   one-letter prefixes (מ/ב/ל/ש/כ) are peeled only when the word as typed finds nothing, since they do start
+   real words: „מארז” must not turn into „ארז”. Words match from their start: „ספלים” finds „ספל”, „עגילים”
+   finds „עגילי חישוק”, „הספל” finds the mug, and „נר” no longer matches inside „כרית”.
+   When no product has every word, products with some of them are listed, the most matches first. */
+const SAFE = 'הו', PFX = 'הובלמשכ';
+function forms(w, loose) {
+  const set = loose ? PFX : SAFE;
+  const base = [w];
+  if (w.length > 3 && set.includes(w[0])) {
+    base.push(w.slice(1));
+    if (w.length > 4 && set.includes(w[1])) base.push(w.slice(2));
   }
-  return scored.sort((a, b) => b[0] - a[0]).map(x => x[1]);
+  const out = new Set();
+  for (const b of base) {
+    out.add(b);
+    for (const end of ['יות', 'ימ', 'ות']) if (b.endsWith(end) && b.length - end.length >= 2) out.add(b.slice(0, -end.length));
+    if (b.length >= 4 && (b.endsWith('י') || b.endsWith('ה'))) out.add(b.slice(0, -1));
+  }
+  return [...out];
+}
+const index = new WeakMap();
+function tokensOf(p) {
+  let t = index.get(p);
+  if (!t) {
+    const cat = catalog.categories.find(c => c.slug === p.cat);
+    const words = v => norm(v).split(' ').filter(Boolean);
+    const name = words(p.name);
+    const rest = words([p.short, p.desc, (p.details || []).join(' '), cat && cat.name, p.options && p.options.values.join(' ')].join(' '));
+    const expand = (list, loose) => [...new Set(list.flatMap(w => forms(w, loose)))];
+    t = { first: name[0] || '', name: [expand(name, false), expand(name, true)], rest: [expand(rest, false), expand(rest, true)] };
+    index.set(p, t);
+  }
+  return t;
+}
+const hit = (qf, tf) => (qf.length <= 2 ? tf === qf : tf.startsWith(qf));
+function wordScore(p, w, loose) {
+  const qfs = forms(w, loose), t = tokensOf(p), L = loose ? 1 : 0;
+  if (t.name[L].some(tf => qfs.some(qf => hit(qf, tf)))) return forms(t.first, loose).some(tf => qfs.some(qf => hit(qf, tf))) ? 8 : 5;
+  if (t.rest[L].some(tf => qfs.some(qf => hit(qf, tf)))) return 1;
+  return 0;
+}
+export function searchProducts(q) {
+  const words = norm(q).split(' ').filter(Boolean);
+  if (!words.length) return [];
+  const perWord = words.map(w => {
+    for (const loose of [false, true]) {
+      const m = new Map();
+      for (const p of catalog.products) { const sc = wordScore(p, w, loose); if (sc) m.set(p, sc); }
+      if (m.size) return m;
+    }
+    return new Map();
+  });
+  const rows = catalog.products.map(p => {
+    const found = perWord.filter(m => m.has(p));
+    return { p, n: found.length, s: found.reduce((a, m) => a + m.get(p), 0) - (soldOut(p) ? 2 : 0) };
+  }).filter(r => r.n > 0);
+  const all = rows.filter(r => r.n === words.length);
+  return (all.length ? all : rows).sort((a, b) => b.n - a.n || b.s - a.s).map(r => r.p);
 }
 function openSearch() {
   searchBox.hidden = false;
@@ -365,9 +435,11 @@ function wire() {
     if (add) {
       const p = catalog.products.find(x => x.id === add.dataset.add);
       if (!p) return;
+      if (add.getAttribute('aria-disabled') === 'true') { toast(`כל הכמות של ${p.name} כבר בסל`); return; }
       const n = S.addToCart(p.id, 1, '');
       if (n) { pulse(add); toast(`${p.name} נוסף לסל`, { action: 'לסל', onAction: () => openCart() }); }
       else toast(`אין עוד ${p.name} במלאי`);
+      if (!S.roomFor(p.id)) for (const b of $$(`[data-add="${CSS.escape(p.id)}"]`)) b.setAttribute('aria-disabled', 'true');
       return;
     }
     const fav = e.target.closest('[data-fav]');

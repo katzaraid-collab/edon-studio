@@ -118,12 +118,14 @@ export function say(msg) {
 /* ---------- toasts ---------- */
 export function toast(msg, { action, onAction, ms = 4200 } = {}) {
   const box = $('#toasts');
+  for (const old of [...box.children]) if (old.dataset.msg === msg) old.remove();
   const t = document.createElement('div');
+  t.dataset.msg = msg;
   t.className = 'toast';
   t.innerHTML = str(html`<span>${msg}</span>${action ? html`<button type="button">${action}</button>` : ''}`);
   if (action) t.querySelector('button').addEventListener('click', () => { onAction && onAction(); kill(); });
   box.appendChild(t);
-  while (box.children.length > 3) box.firstElementChild.remove();
+  while (box.children.length > 2) box.firstElementChild.remove();
   let timer = setTimeout(kill, action ? ms + 2000 : ms);
   const hold = () => clearTimeout(timer), resume = () => { clearTimeout(timer); timer = setTimeout(kill, 2400); };
   t.addEventListener('mouseenter', hold); t.addEventListener('focusin', hold);

@@ -42,9 +42,9 @@ export default function home({ catalog }) {
   </section>
 
   ${(st.benefits || []).length ? html`<section class="benefits" aria-label="למה לקנות אצלנו">
-    <ul class="wrap ben-list" role="list">
+    <div class="wrap"><ul class="ben-list" role="list">
       ${st.benefits.map(b => html`<li>${icon(b.icon)}<div><h2>${b.title}</h2><p>${b.text}</p></div></li>`)}
-    </ul>
+    </ul></div>
   </section>` : ''}
 
   <section class="sec" aria-labelledby="cats-h">
