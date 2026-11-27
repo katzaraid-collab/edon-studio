@@ -60,7 +60,7 @@
   <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.6 5.6 1.9-5.6 1.9-1.9 5.6-1.9-5.6-5.6-1.9 5.6-1.9z"/></symbol>
 </svg>
 
-<div class="announce" id="announce" hidden></div>
+<aside class="announce" id="announce" aria-label="הודעת החנות" hidden></aside>
 
 <header class="hdr" id="hdr">
   <div class="wrap hdr-bar">
@@ -69,8 +69,8 @@
     <nav class="cats-nav only-d" aria-label="קטגוריות" id="cats-nav"></nav>
     <div class="hdr-tools">
       <button class="icon-btn" type="button" id="search-btn" aria-label="חיפוש" aria-expanded="false" aria-controls="search"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg></button>
-      <a class="icon-btn" href="/shop/favorites" id="fav-link" aria-label="המועדפים שלי"><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg><span class="badge" id="fav-count" hidden></span></a>
-      <button class="icon-btn cart-btn" type="button" id="cart-btn" aria-haspopup="dialog" aria-controls="drawer"><svg class="i" aria-hidden="true"><use href="#i-cart"/></svg><span class="vh" id="cart-label">סל הקניות</span><span class="badge" id="cart-count" hidden></span></button>
+      <a class="icon-btn" href="/shop/favorites" id="fav-link" aria-label="המועדפים שלי"><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg><span class="badge" id="fav-count" aria-hidden="true" hidden></span></a>
+      <button class="icon-btn cart-btn" type="button" id="cart-btn" aria-haspopup="dialog" aria-controls="drawer"><svg class="i" aria-hidden="true"><use href="#i-cart"/></svg><span class="vh" id="cart-label">סל הקניות</span><span class="badge" id="cart-count" aria-hidden="true" hidden></span></button>
     </div>
   </div>
   <div class="search" id="search" hidden>
@@ -82,7 +82,7 @@
         <button class="icon-btn" type="button" id="search-close" aria-label="סגירת החיפוש"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button>
       </form>
       <p class="vh" id="search-hint">התוצאות מתעדכנות תוך כדי הקלדה</p>
-      <div class="search-results" id="search-results" aria-live="polite"></div>
+      <div class="search-results" id="search-results"></div>
     </div>
   </div>
 </header>
@@ -114,6 +114,7 @@
 </div>
 
 <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
-<p class="vh" id="route-announcer" aria-live="assertive" aria-atomic="true"></p>
+<p class="vh" id="route-announcer" aria-live="polite" aria-atomic="true"></p>
+<p class="vh" id="sr-status" role="status" aria-atomic="true"></p>
 </body>
 </html>

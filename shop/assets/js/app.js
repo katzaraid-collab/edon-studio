@@ -3,7 +3,7 @@
    that isn't under /shop/assets/ to this page, so deep links and refreshes land here too. */
 import { BASE, html, str, raw, money, icon, $, $$, debounce, norm, reducedMotion } from './lib.js';
 import * as S from './state.js';
-import { toast, openSheet, closeSheet, sheetOpen, wireSheets, productUrl, catUrl, productMedia, stepper, soldOut } from './ui.js';
+import { toast, say, openSheet, closeSheet, sheetOpen, wireSheets, productUrl, catUrl, productMedia, stepper, soldOut } from './ui.js';
 import home from './views/home.js';
 import listing from './views/listing.js';
 import product from './views/product.js';
@@ -63,8 +63,9 @@ function render({ fresh = false, pop = false } = {}) {
   const r = resolve(url);
   if (r.redirect) { history.replaceState(history.state, '', r.redirect); return render({ fresh }); }
   if (cleanup) { try { cleanup(); } catch (e) { console.error(e); } cleanup = null; }
-  const samePage = lastPath === url.pathname;
-  lastPath = url.pathname;
+  const pageKey = url.pathname + url.search;
+  const samePage = lastPath === pageKey;
+  lastPath = pageKey;
   // a link inside the menu or the cart drawer leads to a new page: the dialog closes with it
   closeSheet('menu', { restore: false });
   closeSheet('drawer', { restore: false });
@@ -85,11 +86,12 @@ function render({ fresh = false, pop = false } = {}) {
   else if (url.hash && document.getElementById(url.hash.slice(1))) document.getElementById(url.hash.slice(1)).scrollIntoView();
   else if (fresh && !samePage) scrollTo(0, 0);
 
-  // focus and announce the new page for keyboard and screen-reader users (not on the very first load)
-  if (fresh && !samePage) {
+  // keyboard and screen-reader users land on the new page's heading (not on the very first load);
+  // focusing the h1 already reads it, so the title is announced only on a page without one
+  if ((fresh || pop) && !samePage) {
     const h1 = main.querySelector('h1');
     if (h1) { h1.setAttribute('tabindex', '-1'); h1.focus({ preventScroll: true }); }
-    const ann = $('#route-announcer'); ann.textContent = ''; setTimeout(() => { ann.textContent = document.title; }, 60);
+    else { const ann = $('#route-announcer'); ann.textContent = ''; setTimeout(() => { ann.textContent = document.title; }, 60); }
   }
 }
 
@@ -195,7 +197,7 @@ export function lineRow(i, { compact = false } = {}) {
       ${i.capped ? html`<p class="line-warn">${icon('alert')} נשארו רק ${i.qty} במלאי</p>` : ''}
       <div class="line-ctl">
         ${stepper({ value: i.qty, max: i.qty + S.roomFor(p.id), key: i.key, label: 'כמות של ' + p.name })}
-        ${compact ? '' : html`<button type="button" class="link-btn" data-remove="${i.key}">הסרה</button>`}
+        ${compact ? '' : html`<button type="button" class="link-btn" data-remove="${i.key}" aria-label="${'הסרה של ' + p.name}">הסרה</button>`}
       </div>
     </div>
     <p class="line-total">${money(i.total)}</p>
@@ -224,15 +226,25 @@ export function openCart(opener) { drawDrawer(); openSheet('drawer', opener || $
 /* quantity steppers and remove buttons work the same in the drawer and on the cart page */
 export function handleLineEvents(root) {
   root.addEventListener('click', e => {
+    const undo = e.target.closest('[data-undo]');
+    if (undo) {
+      const li = undo.closest('.line-gone');
+      S.restoreLine(li._gone);
+      say(`${li._name} חזר לסל`);
+      refocus(root, `[data-line="${CSS.escape(li._key)}"] [data-step="1"]`, '.line [data-step="1"]');
+      return;
+    }
     const st = e.target.closest('[data-step][data-key]');
     if (st && st.dataset.key) {
       const key = st.dataset.key;
       const line = S.cartLines().find(l => (l.opt ? l.id + '|' + l.opt : l.id) === key);
       if (!line) return;
+      if (st.getAttribute('aria-disabled') === 'true') { say('זו כל הכמות שיש במלאי'); return; }
       const next = line.qty + Number(st.dataset.step);
       if (next <= 0) return remove(key);
       S.setQty(key, next);
-      refocus(root, `[data-line="${CSS.escape(key)}"] [data-step="${st.dataset.step}"]`, `[data-line="${CSS.escape(key)}"] [data-step="1"]`);
+      announceLine(key);
+      refocus(root, `[data-line="${CSS.escape(key)}"] [data-step="${st.dataset.step}"]`, `[data-line="${CSS.escape(key)}"] input[data-qty]`);
       return;
     }
     const rm = e.target.closest('[data-remove]');
@@ -240,21 +252,44 @@ export function handleLineEvents(root) {
   });
   root.addEventListener('change', e => {
     const inp = e.target.closest('input[data-qty]');
-    if (inp && inp.dataset.qty) { const v = parseInt(inp.value, 10); S.setQty(inp.dataset.qty, isNaN(v) ? 1 : v); }
+    if (inp && inp.dataset.qty) {
+      const v = parseInt(inp.value, 10);
+      S.setQty(inp.dataset.qty, isNaN(v) ? 1 : v);
+      announceLine(inp.dataset.qty);
+      refocus(root, `[data-line="${CSS.escape(inp.dataset.qty)}"] input[data-qty]`, 'h1, h2');
+    }
   });
+  /* the removed line leaves a note in its place with an undo button, and focus goes to that button:
+     reachable by keyboard and by screen reader, and it doesn't time out */
   function remove(key) {
-    const p = S.cartQuote().items.find(i => i.key === key);
+    const item = S.cartQuote().items.find(i => i.key === key);
     const gone = S.removeLine(key);
-    if (gone && p) toast(`${p.product.name} הוסר מהסל`, { action: 'ביטול', onAction: () => S.restoreLine(gone) });
-    const next = root.querySelector('.line .stepper button, .btn');
-    if (next) next.focus();
+    if (!gone || !item) return;
+    const name = item.product.name;
+    const li = document.createElement('li');
+    li.className = 'line-gone';
+    li.innerHTML = str(html`<span>${name} הוסר מהסל</span><button type="button" class="link-btn" data-undo>ביטול ההסרה<span class="vh">: ${name}</span></button>`);
+    Object.assign(li, { _gone: gone, _key: key, _name: name });
+    let list = root.querySelector('.lines');
+    if (!list) {
+      const empty = root.querySelector('.empty');
+      if (!empty) return;
+      list = document.createElement('ul'); list.className = 'lines'; list.setAttribute('role', 'list');
+      empty.before(list);
+    }
+    list.insertBefore(li, list.children[gone.index] || null);
+    li.querySelector('button').focus();
+    say(`${name} הוסר מהסל`);
   }
+}
+function announceLine(key) {
+  const i = S.cartQuote().items.find(x => x.key === key);
+  if (i) say(`${i.product.name}: כמות ${i.qty}, ${money(i.total)}`);
 }
 /* after a redraw, put focus back on the equivalent control so keyboard users keep their place */
 function refocus(root, sel, fallback) {
   requestAnimationFrame(() => {
-    const n = root.querySelector(sel);
-    const el = n && !n.disabled ? n : root.querySelector(fallback);
+    const el = root.querySelector(sel) || root.querySelector(fallback);
     if (el) el.focus();
   });
 }
@@ -293,6 +328,7 @@ const liveSearch = debounce(() => {
   const q = sInput.value.trim();
   if (!q) { sResults.innerHTML = ''; return; }
   const hits = searchProducts(q);
+  say(hits.length ? (hits.length === 1 ? 'נמצא מוצר אחד' : `נמצאו ${hits.length} מוצרים`) : 'לא נמצאו מוצרים');
   sResults.innerHTML = str(hits.length
     ? html`<p class="sr-count">${hits.length === 1 ? 'נמצא מוצר אחד' : `נמצאו ${hits.length} מוצרים`}</p>
       <ul role="list" class="sr-list">${hits.slice(0, 6).map(p => html`<li><a href="${productUrl(p)}"><span class="sr-media">${productMedia(p)}</span><span class="sr-name">${p.name}</span><span class="sr-price">${money(p.price)}</span></a></li>`)}</ul>
@@ -314,6 +350,10 @@ function wire() {
     if (q) go(`${BASE}/search?q=${encodeURIComponent(q)}`);
   });
   searchBox.addEventListener('keydown', e => { if (e.key === 'Escape') { e.preventDefault(); closeSearch(); } });
+  searchBox.addEventListener('focusout', e => {
+    const to = e.relatedTarget;
+    if (to && !searchBox.contains(to) && to !== $('#search-btn')) closeSearch(false);
+  });
   document.addEventListener('pointerdown', e => {
     if (!searchBox.hidden && !e.target.closest('#search') && !e.target.closest('#search-btn')) closeSearch(false);
   });
@@ -337,7 +377,6 @@ function wire() {
       const on = S.toggleFav(p.id);
       for (const b of $$(`[data-fav="${CSS.escape(p.id)}"]`)) {
         b.setAttribute('aria-pressed', String(on));
-        b.setAttribute('aria-label', (on ? 'הסרה מהמועדפים: ' : 'הוספה למועדפים: ') + p.name);
       }
       toast(on ? `${p.name} נשמר במועדפים` : `${p.name} הוסר מהמועדפים`);
     }

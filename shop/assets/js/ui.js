@@ -45,7 +45,7 @@ export function badges(p) {
 
 export function favBtn(p, cls = '') {
   const on = isFav(p.id);
-  return html`<button type="button" class="fav ${cls}" data-fav="${p.id}" aria-pressed="${String(on)}" aria-label="${(on ? 'הסרה מהמועדפים: ' : 'הוספה למועדפים: ') + p.name}">${icon('heart')}</button>`;
+  return html`<button type="button" class="fav ${cls}" data-fav="${p.id}" aria-pressed="${String(on)}" aria-label="${'שמירה במועדפים: ' + p.name}">${icon('heart')}</button>`;
 }
 
 export function card(p, { eager = false } = {}) {
@@ -105,6 +105,16 @@ export function breadcrumbLd(items) {
   };
 }
 
+/* ---------- screen-reader status ----------
+   Quantity changes, coupon results, search counts: said once, politely, without moving focus. */
+let sayTimer;
+export function say(msg) {
+  const n = $('#sr-status'); if (!n) return;
+  clearTimeout(sayTimer);
+  n.textContent = '';
+  sayTimer = setTimeout(() => { n.textContent = msg; }, 80);
+}
+
 /* ---------- toasts ---------- */
 export function toast(msg, { action, onAction, ms = 4200 } = {}) {
   const box = $('#toasts');
@@ -115,8 +125,9 @@ export function toast(msg, { action, onAction, ms = 4200 } = {}) {
   box.appendChild(t);
   while (box.children.length > 3) box.firstElementChild.remove();
   let timer = setTimeout(kill, action ? ms + 2000 : ms);
-  t.addEventListener('mouseenter', () => clearTimeout(timer));
-  t.addEventListener('mouseleave', () => { timer = setTimeout(kill, 1800); });
+  const hold = () => clearTimeout(timer), resume = () => { clearTimeout(timer); timer = setTimeout(kill, 2400); };
+  t.addEventListener('mouseenter', hold); t.addEventListener('focusin', hold);
+  t.addEventListener('mouseleave', resume); t.addEventListener('focusout', resume);
   function kill() { clearTimeout(timer); t.classList.add('out'); setTimeout(() => t.remove(), reducedMotion() ? 0 : 260); }
 }
 
@@ -127,10 +138,11 @@ const open = [];
 const OUTSIDE = ['#hdr', '#main', '#ftr', '#announce', '.skip'];
 export function openSheet(id, opener) {
   const el = document.getElementById(id);
-  if (!el || !el.hidden) return;
+  if (!el || (!el.hidden && !el._closing)) return;
+  clearTimeout(el._t); el._closing = false; el.inert = false;
   el.hidden = false;
   el._opener = opener || document.activeElement;
-  open.push(el);
+  if (!open.includes(el)) open.push(el);
   for (const s of OUTSIDE) { const n = $(s); if (n) n.inert = true; }
   document.documentElement.classList.add('locked');
   requestAnimationFrame(() => el.classList.add('in'));
@@ -138,21 +150,24 @@ export function openSheet(id, opener) {
   if (first) first.focus();
   if (el._opener && el._opener.setAttribute && el._opener.hasAttribute('aria-expanded')) el._opener.setAttribute('aria-expanded', 'true');
 }
+/* The page behind is released immediately, so focus can move there right away (to the opener, or to the
+   next page's heading after a link inside the sheet); only hiding the panel waits for its slide-out. */
 export function closeSheet(id, { restore = true } = {}) {
   const el = typeof id === 'string' ? document.getElementById(id) : id;
-  if (!el || el.hidden) return;
+  if (!el || el.hidden || el._closing) return;
+  el._closing = true;
   el.classList.remove('in');
-  const done = () => {
-    el.hidden = true;
-    open.splice(open.indexOf(el), 1);
-    if (!open.length) {
-      for (const s of OUTSIDE) { const n = $(s); if (n) n.inert = false; }
-      document.documentElement.classList.remove('locked');
-    }
-    if (el._opener && el._opener.hasAttribute && el._opener.hasAttribute('aria-expanded')) el._opener.setAttribute('aria-expanded', 'false');
-    if (restore && el._opener && document.contains(el._opener)) el._opener.focus();
-  };
-  if (reducedMotion()) done(); else setTimeout(done, 280);
+  el.inert = true;
+  const i = open.indexOf(el); if (i >= 0) open.splice(i, 1);
+  if (!open.length) {
+    for (const s of OUTSIDE) { const n = $(s); if (n) n.inert = false; }
+    document.documentElement.classList.remove('locked');
+  }
+  const opener = el._opener;
+  if (opener && opener.hasAttribute && opener.hasAttribute('aria-expanded')) opener.setAttribute('aria-expanded', 'false');
+  if (restore && opener && document.contains(opener)) opener.focus();
+  const done = () => { el.hidden = true; el.inert = false; el._closing = false; };
+  if (reducedMotion()) done(); else el._t = setTimeout(done, 280);
 }
 export const sheetOpen = id => { const el = document.getElementById(id); return !!el && !el.hidden; };
 export function wireSheets() {
@@ -175,9 +190,9 @@ export function wireSheets() {
 /* a quantity stepper; the caller handles [data-step] clicks and the input's change */
 export function stepper({ value, max, key = '', label }) {
   return html`<div class="stepper" role="group" aria-label="${label}">
-    <button type="button" data-step="-1" data-key="${key}" aria-label="${value <= 1 && key ? 'הסרה מהסל' : 'הפחתת כמות'}" ${value <= 1 && !key ? raw('disabled') : ''}>${icon(value <= 1 && key ? 'trash' : 'minus')}</button>
+    <button type="button" data-step="-1" data-key="${key}" aria-label="${value <= 1 && key ? 'הסרה מהסל' : 'הפחתת כמות'}" aria-disabled="${String(value <= 1 && !key)}">${icon(value <= 1 && key ? 'trash' : 'minus')}</button>
     <input type="number" inputmode="numeric" min="1" max="${max}" value="${value}" data-qty="${key}" aria-label="כמות">
-    <button type="button" data-step="1" data-key="${key}" aria-label="הוספת כמות" ${value >= max ? raw('disabled') : ''}>${icon('plus')}</button>
+    <button type="button" data-step="1" data-key="${key}" aria-label="הוספת כמות" aria-disabled="${String(value >= max)}">${icon('plus')}</button>
   </div>`;
 }
 

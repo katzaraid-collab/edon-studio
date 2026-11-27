@@ -1,5 +1,5 @@
 import { BASE, html, str, raw, money, icon, $, $$ } from '../lib.js';
-import { crumbs, setMeta, breadcrumbLd, catOf, catUrl, productUrl, productMedia, price, badges, favBtn, grid, soldOut, lowStock, pctOff, stepper, toast, absUrl } from '../ui.js';
+import { crumbs, setMeta, breadcrumbLd, catOf, catUrl, productUrl, productMedia, price, badges, favBtn, grid, soldOut, lowStock, pctOff, stepper, toast, say, absUrl } from '../ui.js';
 import * as S from '../state.js';
 import { openCart } from '../app.js';
 
@@ -106,20 +106,23 @@ export default function product({ catalog, params }) {
         const m = max();
         qtyIn.max = String(m);
         if (qty() > m) qtyIn.value = String(m);
-        $('[data-step="-1"]', root).disabled = qty() <= 1;
-        $('[data-step="1"]', root).disabled = qty() >= m;
+        // aria-disabled, not disabled: a disabled button drops the keyboard focus that just pressed it
+        $('[data-step="-1"]', root).setAttribute('aria-disabled', String(qty() <= 1));
+        $('[data-step="1"]', root).setAttribute('aria-disabled', String(qty() >= m));
         const sum = $('#add-sum', root); if (sum) sum.textContent = money(p.price * qty());
         const left = S.roomFor(p.id);
         const add = $('#add-btn', root);
-        if (add && !out) add.disabled = left === 0;
+        if (add && !out) add.setAttribute('aria-disabled', String(left === 0));
         room.textContent = left === 0 && !out ? 'כל הכמות שבמלאי כבר בסל שלכם' : '';
       };
 
       form.addEventListener('click', e => {
         const b = e.target.closest('[data-step]');
         if (!b || b.dataset.key) return;
+        if (b.getAttribute('aria-disabled') === 'true') { say(Number(b.dataset.step) > 0 ? 'זו כל הכמות שיש במלאי' : 'הכמות המינימלית היא 1'); return; }
         qtyIn.value = String(Math.min(max(), Math.max(1, qty() + Number(b.dataset.step))));
         paintQty();
+        say(`כמות ${qty()}, ${money(p.price * qty())}`);
       });
       if (qtyIn) qtyIn.addEventListener('input', paintQty);
       form.addEventListener('change', e => {

@@ -3,7 +3,7 @@
    Otherwise the same order is handed to WhatsApp as a ready-to-send message, so the store works
    from day one without a mail provider. Either way no card details ever touch this site. */
 import { BASE, html, str, raw, money, icon, $, $$, session, uid } from '../lib.js';
-import { crumbs, setMeta, productMedia, toast } from '../ui.js';
+import { crumbs, setMeta, productMedia, toast, say } from '../ui.js';
 import * as S from '../state.js';
 import { summary, wireCoupon } from './cart.js';
 
@@ -106,8 +106,8 @@ export default function checkout({ catalog, go }) {
         <fieldset class="co-step">
           <legend><span class="n" aria-hidden="true">3</span>איך תרצו לשלם?</legend>
           <div class="radios">
-            ${st.payments.map(p => html`<label class="radio-card"><input type="radio" name="payment" value="${p.id}" ${p.id === pay ? raw('checked') : ''} aria-describedby="pn-${p.id}">
-              <span class="rc-main"><b>${p.label}</b><span class="muted" id="pn-${p.id}">${p.note}</span></span></label>`)}
+            ${st.payments.map(p => html`<label class="radio-card"><input type="radio" name="payment" value="${p.id}" ${p.id === pay ? raw('checked') : ''}>
+              <span class="rc-main"><b>${p.label}</b><span class="muted">${p.note}</span></span></label>`)}
           </div>
         </fieldset>
 
@@ -180,6 +180,8 @@ export default function checkout({ catalog, go }) {
         const v = val('email'), h = $('#h-email', root);
         const m = v.match(/^([^@\s]+)@([^@\s]+)$/);
         const sug = m && !DOMAINS.includes(m[2].toLowerCase()) ? DOMAINS.find(d => near(m[2].toLowerCase(), d)) : null;
+        if (sug && h.dataset.sug !== sug) say(`התכוונתם ל־${m[1]}@${sug}?`);
+        h.dataset.sug = sug || '';
         h.innerHTML = sug ? str(html`התכוונתם ל־<button type="button" class="link-btn" data-fix-email="${m[1]}@${sug}" dir="ltr">${m[1]}@${sug}</button>?`) : 'לשם נשלח את אישור ההזמנה';
       }
 
@@ -195,7 +197,7 @@ export default function checkout({ catalog, go }) {
         for (const s of st.shipping) {
           const t = $(`[data-ship-price="${s.id}"]`, root);
           const free = !s.price || (q.freeShippingFrom && q.subtotal - q.discount >= q.freeShippingFrom);
-          if (t) t.innerHTML = str(free ? html`<b class="free">חינם</b>${s.price ? html`<s>${money(s.price)}</s>` : ''}` : money(s.price));
+          if (t) t.innerHTML = str(free ? html`<b class="free">חינם</b>${s.price ? html`<s><span class="vh">במקום </span>${money(s.price)}</s>` : ''}` : money(s.price));
         }
         const items = html`<ul class="mini" role="list">${q.items.map(i => html`<li>
           <span class="mini-media">${productMedia(i.product)}<span class="mini-q" aria-hidden="true">${i.qty}</span></span>

@@ -1,5 +1,5 @@
 import { BASE, html, str, money, icon, $ } from '../lib.js';
-import { crumbs, setMeta, grid, soldOut } from '../ui.js';
+import { crumbs, setMeta, grid, soldOut, say } from '../ui.js';
 import * as S from '../state.js';
 import { shipBar, lineRow, handleLineEvents } from '../app.js';
 
@@ -21,7 +21,7 @@ export function summary(q, { coupon = true, shipKnown = false } = {}) {
 export function couponForm(q) {
   const code = S.getCoupon();
   if (q.coupon) {
-    return html`<div class="coupon on"><p>${icon('tag')}<span>הקוד <b>${q.coupon.code}</b> הופעל: ${q.coupon.label}</span></p><button type="button" class="link-btn" data-coupon-off>הסרה</button></div>`;
+    return html`<div class="coupon on"><p>${icon('tag')}<span>הקוד <b>${q.coupon.code}</b> הופעל: ${q.coupon.label}</span></p><button type="button" class="link-btn" data-coupon-off aria-label="${'הסרת הקוד ' + q.coupon.code}">הסרה</button></div>`;
   }
   const err = code && q.couponError ? COUPON_ERR[q.couponError] + (q.couponError === 'min' ? ` (מ־${money(S.getCatalog().store.coupons.find(c => c.code.toUpperCase() === code).min)})` : '') : '';
   return html`<form class="coupon" data-coupon novalidate>
@@ -40,10 +40,12 @@ export function wireCoupon(root, after) {
     if (!f) return;
     e.preventDefault();
     S.setCoupon(f.code.value);
+    const q = S.cartQuote();
+    say(q.coupon ? `הקוד ${q.coupon.code} הופעל: ${q.coupon.label}` : S.getCoupon() ? COUPON_ERR[q.couponError] || 'הקוד לא הופעל' : 'לא הוזן קוד');
     after && after('coupon');
   });
   root.addEventListener('click', e => {
-    if (e.target.closest('[data-coupon-off]')) { S.setCoupon(''); after && after('coupon-off'); }
+    if (e.target.closest('[data-coupon-off]')) { S.setCoupon(''); say('הקוד הוסר'); after && after('coupon-off'); }
   });
 }
 
