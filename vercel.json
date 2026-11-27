@@ -49,6 +49,11 @@
       "source": "/timur/",
       "destination": "/faisal/",
       "permanent": true
+    },
+    {
+      "source": "/monkeyz",
+      "destination": "/monkeyz/",
+      "permanent": true
     }
   ],
   "headers": [
@@ -100,6 +105,24 @@
         {
           "key": "Service-Worker-Allowed",
           "value": "/money/"
+        }
+      ]
+    },
+    {
+      "source": "/monkeyz/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/monkeyz/fonts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
         }
       ]
     }
