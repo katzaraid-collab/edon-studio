@@ -2,3 +2,5 @@
 *.cjs
 skills-lock.json
 money/tests
+shop/tests
+shop/README.md

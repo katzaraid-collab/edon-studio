@@ -2,6 +2,12 @@
   "functions": {
     "api/contact.js": {
       "maxDuration": 10
+    },
+    "api/order.js": {
+      "maxDuration": 15
+    },
+    "api/subscribe.js": {
+      "maxDuration": 10
     }
   },
   "redirects": [
@@ -48,6 +54,11 @@
     {
       "source": "/timur/",
       "destination": "/faisal/",
+      "permanent": true
+    },
+    {
+      "source": "/shop",
+      "destination": "/shop/",
       "permanent": true
     }
   ],
@@ -102,6 +113,21 @@
           "value": "/money/"
         }
       ]
+    },
+    {
+      "source": "/shop/assets/catalog.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/shop/((?!assets/).+)",
+      "destination": "/shop/index.html"
     }
   ]
 }

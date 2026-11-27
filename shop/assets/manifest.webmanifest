@@ -1,0 +1,12 @@
+{
+  "name": "חמש · חנות",
+  "short_name": "חמש",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "/shop/",
+  "scope": "/shop/",
+  "display": "browser",
+  "background_color": "#F6F3EE",
+  "theme_color": "#F6F3EE",
+  "icons": [{ "src": "/shop/assets/img/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
